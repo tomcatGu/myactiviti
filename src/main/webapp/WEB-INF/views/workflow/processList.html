@@ -1,0 +1,82 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Deploy activiti workflow</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css"
+	href="/css/ui-lightness/jquery-ui-1.10.0.custom.css"
+	th:href="@{/css/ui-lightness/jquery-ui-1.10.0.custom.css}" />
+<link href="/bootstrap/css/DT_bootstrap.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/DT_bootstrap.css}" />
+<link href="/bootstrap/css/prettify.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/prettify.css}" />
+<script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
+	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
+<script src="/scripts/jquery-ui-1.10.3.custom.min.js"
+	type="text/javascript"
+	th:src="@{/scripts/jquery-ui-1.10.3.custom.min.js}"></script>
+<script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"
+	th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script src="/bootstrap/js/bootstrap-paginator.js"
+	type="text/javascript" th:src="@{/bootstrap/js/bootstrap-paginator.js}"></script>
+<script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
+	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
+<script src="/bootstrap/js/datatablesBootstrap.js"
+	type="text/javascript" th:src="@{/bootstrap/js/datatablesBootstrap.js}"></script>
+<script src="/scripts/json2.js" type="text/javascript"
+	th:src="@{/scripts/json2.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+
+		var options = {
+			currentPage : 3,
+			totalPages : 3,
+			itemContainerClass : function(type, page, current) {
+				return (page === current) ? "active" : "pointer-cursor";
+			}
+		};
+
+		$('#paginator').bootstrapPaginator(options);
+	});
+	/*]]>*/
+</script>
+</head>
+<body>
+	<table>
+		<tr>
+			<th>ProcessDefinitionId</th>
+			<th>DeploymentId</th>
+			<th>name</th>
+			<th>KEY</th>
+			<th>version</th>
+			<th>XML</th>
+			<th>image</th>
+			<th>date</th>
+			<th>operation</th>
+		</tr>
+		<tr th:each="obj :${processes}"
+			th:with="process=${obj[0]},deployment=${obj[1]}">
+			<td th:text="${process.id}">1</td>
+			<td th:text="${process.deploymentId}">2</td>
+			<td th:text="${process.name}">processName</td>
+			<td th:text="${process.key}">1</td>
+			<td th:text="${process.version}">1</td>
+			<td><a target="_blank"
+				th:href="@{deployment(deploymentId=${process.deploymentId},resourceName=${process.resourceName})}"
+				th:text="${process.resourceName}">resourceName</a></td>
+			<td><a target="_blank"
+				th:href="@{deployment(deploymentId=${process.deploymentId},resourceName=${process.diagramResourceName})}"
+				th:text="${process.diagramResourceName}">diagramResourceName</a></td>
+			<td th:text="${deployment.deploymentTime}">2012-9-18 21:00:00</td>
+			<td><a
+				th:href="@{/workflow/process/delete(deploymentId=${process.deploymentId})}">delete</a>
+				<a th:href="@{/workflow/process/start(processKey=${process.key})}">start</a></td>
+		</tr>
+	</table>
+	<div id="paginator"></div>
+</body>
+</html>

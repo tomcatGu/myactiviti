@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:groovy="http://www.sillycat.com/schema/groovy"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd 
         http://www.springframework.org/schema/context  
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+        http://www.sillycat.com/schema/groovy http://www.sillycat.com/schema/groovy/groovy.xsd 
 		http://www.springframework.org/schema/mvc 
-		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+
+
+	<!-- Scans the classpath of this application for @Components to deploy as 
+		beans -->
+
+	<context:component-scan
+		base-package="org.crusoe.mvc.*,org.crusoe.mvc.ajax.*,org.crusoe.myauth.vo.*" />
+
+	<!-- Application Message Bundle -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="/WEB-INF/messages/messages" />
+		<property name="cacheSeconds" value="0" />
+	</bean>
+
+	<!-- Configures Spring MVC -->
 
 	<!-- Configures the @Controller programming model -->
 	<mvc:annotation-driven />
@@ -16,8 +36,17 @@
 
 	<bean
 		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
-	<bean
-		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+
+	<bean id="handlerAdapter"
+		class="com.sillycat.easygroovyplugin.servlet.proxy.ProxyAwareAnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jsonConverter" />
+			</list>
+		</property>
+	</bean>
+	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" 
+		/> -->
 
 	<context:component-scan base-package="org.start.mvc.ajax.account" />
 
@@ -26,10 +55,8 @@
 
 	<!-- Configures Handler Interceptors -->
 	<mvc:interceptors>
-		<!--
-			Changes the locale when a 'locale' request parameter is sent; e.g.
-			/?locale=de
-		-->
+		<!-- Changes the locale when a 'locale' request parameter is sent; e.g. 
+			/?locale=de -->
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
 	</mvc:interceptors>
 
@@ -37,14 +64,76 @@
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.CookieLocaleResolver" />
 
-	<!--
-		Resolves view names to protected .jsp resources within the
-		/WEB-INF/views directory
-	-->
-	<bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+	<!-- **************************************************************** -->
+	<!-- THYMELEAF-SPECIFIC ARTIFACTS -->
+	<!-- TemplateResolver <- TemplateEngine <- ViewResolver -->
+	<!-- **************************************************************** -->
+	<bean id="servletContextTemplateResolver"
+		class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
 		<property name="prefix" value="/WEB-INF/views/" />
-		<property name="suffix" value=".jsp" />
+		<property name="order" value="1" />
+		<property name="suffix" value=".html" />
+		<property name="templateMode" value="HTML5" />
+		<property name="cacheable" value="false" />
 	</bean>
 
+	<bean id="workflowLoaderTemplateResolver" class="org.thymeleaf.templateresolver.TemplateResolver">
+		<property name="order" value="2" />
+		<property name="templateMode" value="HTML5" />
+		<property name="prefix" value="resources/diagrams/" />
+		<property name="suffix" value=".html" />
+		<property name="resourceResolver">
+			<ref bean="activitiResourceResolver" />
+		</property>
+	</bean>
+	<bean id="activitiResourceResolver" class="org.crusoe.mvc.resolver.ActivitiResourceResolver"></bean>
+	<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+		<property name="templateResolvers">
+			<set>
+				<ref bean="servletContextTemplateResolver" />
+				<ref bean="workflowLoaderTemplateResolver" />
+			</set>
+		</property>
+		<property name="dialects">
+			<set>
+				<bean class="org.crusoe.web.MergeDialect" />
+				<bean class="org.thymeleaf.spring4.dialect.SpringStandardDialect" />
+
+			</set>
+		</property>
+	</bean>
+
+
+	<bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+		<property name="templateEngine" ref="templateEngine" />
+		<property name="order" value="1" />
+		<property name="contentType" value="text/html; charset=UTF-8" />
+	</bean>
+
+
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 指定所上传文件的总大小不能超过200KB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
+		<property name="maxUploadSize" value="200000" />
+	</bean>
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		lazy-init="false">
+		<property name="locations">
+			<list>
+				<value>classpath*:easygroovy.properties
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="jsonConverter"
+		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+		<property name="supportedMediaTypes" value="application/json" />
+	</bean>
+	<lang:defaults refresh-check-delay="5" />
+	<!-- <groovy:scan source-pattern="groovy/*.groovy" /> -->
 </beans>

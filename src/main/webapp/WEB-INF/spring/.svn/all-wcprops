@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/spring-samples/!svn/ver/278/mvc-ajax/trunk/src/main/webapp/WEB-INF/spring
+END
+app-config.xml
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/spring-samples/!svn/ver/278/mvc-ajax/trunk/src/main/webapp/WEB-INF/spring/app-config.xml
+END
+mvc-config.xml
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/spring-samples/!svn/ver/278/mvc-ajax/trunk/src/main/webapp/WEB-INF/spring/mvc-config.xml
+END

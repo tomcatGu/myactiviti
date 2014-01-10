@@ -25,6 +25,14 @@
 		<security:intercept-url pattern="/css/**"
 			filters="none" />
 
+		<security:intercept-url pattern="/workflow/**"
+			filters="none" />
+
+		<security:intercept-url pattern="/task/**"
+			filters="none" />
+
+
+
 		<security:intercept-url pattern="/account/**"
 			access="ROLE_USER" />
 		<security:intercept-url pattern="/**"

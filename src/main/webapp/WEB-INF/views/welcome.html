@@ -1,39 +1,188 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>jQuery EasyUI</title>
-<link rel="stylesheet" type="text/css" href="./themes/default/easyui.css">
-<link rel="stylesheet" type="text/css" href="./themes/icon.css">
-<script type="text/javascript" src="./scripts/jquery-1.4.min.js"></script>
-<script type="text/javascript" src="./scripts/jquery.easyui.min.js"></script>
+<title>Activiti Show</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<!-- 
+
+	<link rel="stylesheet" type="text/css" media="screen"
+	href="/css/ui.multiselect.css" th:href="@{/css/ui.multiselect.css}" />
+	
+	
+<link href="/themes/blue/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/themes/blue/style.css}" />
+
+-->
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css"
+	href="/css/ui-lightness/jquery-ui-1.10.3.custom.css"
+	th:href="@{/css/ui-lightness/jquery-ui-1.10.3.custom.css}" />
+<link href="/bootstrap/css/DT_bootstrap.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/DT_bootstrap.css}" />
+<link href="/bootstrap/css/prettify.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/prettify.css}" />
+<script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
+	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
+<script src="/scripts/jquery-ui-1.10.3.custom.min.js"
+	type="text/javascript"
+	th:src="@{/scripts/jquery-ui-1.10.3.custom.min.js}"></script>
+<script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"
+	th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
+	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
+<script src="/bootstrap/js/DT_bootstrap.js" type="text/javascript"
+	th:src="@{/bootstrap/js/DT_bootstrap.js}"></script>
+<script src="/scripts/json2.js" type="text/javascript"
+	th:src="@{/scripts/json2.js}"></script>
 <script type="text/javascript">
-		function setsize(){
-			$('#cc').width(700).height(350);
-			$('#aa').trigger('_resize');
-		}
-		function select(){
-			$('#aa').accordion('select','Title1');
-		}
-	</script>
+	function load(url) {
+		$("#content")
+				.load(
+						url,
+						function(event) {
+							$('#breadcrumb').empty();
+							$('#breadcrumb')
+									.append(
+											'<li><a href="#">首页</a> <span class="divider">/</span></li>');
+							$('#breadcrumb')
+									.append(
+											'<li><a href="#">UserManage</a> <span class="divider">/</span></li>');
+							$('#breadcrumb').append(
+									'<li class="active">UserList</li>');
+							//$("#submitButton").bind("click",function(event){$("#loadResource").dialog('close');});
+						});
+
+	};
+	$(document).ready(function() {
+		//ajaxify menus
+		$('ul.nav a').click(function(e) {
+			/*
+			if($.browser.msie) e.which=1;
+			if(e.which!=1 || !$('#is-ajax').prop('checked') || $(this).parent().hasClass('active')) return;
+			e.preventDefault();
+			if($('.btn-navbar').is(':visible'))
+			{
+				$('.btn-navbar').click();
+			}
+			$('#loading').remove();
+			$('#content').fadeOut().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
+			 */
+			var $clink = $(this);
+			//History.pushState(null, null, $clink.attr('href'));
+			$('ul li.active').removeClass('active');
+			$clink.parent('li').addClass('active');
+		});
+
+		//animating menus on hover
+		$('ul.nav li:not(.nav-header)').hover(function() {
+			$(this).animate({
+				'margin-left' : '+=5'
+			}, 300);
+		}, function() {
+			$(this).animate({
+				'margin-left' : '-=5'
+			}, 300);
+		});
+	});
+</script>
 </head>
 <body>
-<h1>Accordion</h1>
-<div style="margin-bottom: 10px;"><a href="#" onclick="setsize()">setsize</a>
-<a href="#" onclick="select()">select</a></div>
-<div id="cc"
-	style="overflow: auto; width: 600px; height: 300px; padding: 10px; border: 1px solid #ccc;">
-<div id="aa" class="easyui-accordion" fit="true"
-	style="width: 300px; height: 200px;">
-<div title="Title1" icon="icon-ok"
-	style="overflow: auto; padding: 10px;">
-<h3 style="color: #0099FF;">Accordion for jQuery</h3>
-<p>Accordion is a part of easyui framework for jQuery. It lets you
-define your accordion component on web page more easily.</p>
-</div>
-<div title="Title2" icon="icon-reload" selected="true"
-	style="padding: 10px;">content2</div>
-<div title="Title3">content3</div>
-</div>
-</div>
+	<div class="span12">
+		<div class="navbar navbar-inverse navbar-fixed-top showgrid">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<button type="button" class="btn btn-navbar" data-toggle="collapse"
+						data-target=".nav-collapse">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+					<a class="brand" href="#">Project name</a>
+					<div class="nav-collapse collapse">
+						<ul class="nav pull-right">
+							<li class="dropdown"><a href="#" class="dropdown"><lable
+										th:text="${T(org.apache.shiro.SecurityUtils).subject.principal}" /></a>
+								<ul class="dropdown-menu">
+									<li class="active"><a href="#">Home</a></li>
+									<li><a href="#about">About</a></li>
+									<li><a href="#contact">Contact</a></li>
+								</ul></li>
+						</ul>
+						<p class="navbar-text pull-right">
+							Logged in as <a href="#" class="dropdown"><lable
+									th:text="${T(org.apache.shiro.SecurityUtils).subject.principal}" /></a>
+						</p>
+						<ul class="nav">
+							<li class="active"><a href="#">Home</a></li>
+							<li><a href="#about">About</a></li>
+							<li><a href="#contact">Contact</a></li>
+						</ul>
+					</div>
+					<!--/.nav-collapse -->
+				</div>
+			</div>
+		</div>
+		<div class="container showgrid">
+			<div class="row">
+				<div class="span3 bs-docs-sidebar">
+					<div class="well sidebar-nav">
+						<ul class="nav nav-list bs-docs-sidenav">
+							<li class="nav-header">Demo</li>
+							<li><a href="#" onClick="load('demolition/index')">list1<i
+									class="icon-chevron-right"></i></a></li>
+							<li class="active"><a href="#"
+								onClick="load('demolition/create')">new</a></li>
+							<li><a href="#" onClick="load('demolition/')"
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER')==true}">汇总</a></li>
+							<li><a href="#">Link</a></li>
+							<li><a href="#">Link</a></li>
+							<li class="nav-header">demo2</li>
+							<li><a href="#">new</a></li>
+							<li class="nav-header"
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">用户管理</li>
+							<li
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
+								href="#" onClick="load('user/index')">用户列表<i
+									class="icon-chevron-right"></i></a></li>
+							<li class="nav-header"
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">角色管理</li>
+							<li
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
+								href="#" onClick="load('role/index')">角色列表<i
+									class="icon-chevron-right"></i></a></li>
+						</ul>
+					</div>
+					<!--/.well -->
+				</div>
+				<!--/span-->
+				<div class="span9">
+					<ul class="breadcrumb" id="breadcrumb">
+						<li><a href="#">首页</a> <span class="divider">/</span></li>
+						<li><a href="#">Library</a> <span class="divider">/</span></li>
+						<li class="active">Data</li>
+					</ul>
+					<div class="" id="content">
+						<div class="container">
+							<h1>Hello, world!</h1>
+							<p>This is a template for a simple marketing or informational
+								website. It includes a large callout called the hero unit and
+								three supporting pieces of content. Use it as a starting point
+								to create something more unique.</p>
+							<p>
+								<a href="#" class="btn btn-primary btn-large">Learn more
+									&raquo;</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/row-->
+			<hr />
+			<footer>
+				<p>&copy; Company 2013</p>
+			</footer>
+		</div>
+		<!--/.fluid-container-->
+	</div>
 </body>
 </html>

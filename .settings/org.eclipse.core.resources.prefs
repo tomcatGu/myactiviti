@@ -1,5 +1,4 @@
-#Sat Jan 22 21:15:49 CST 2011
 eclipse.preferences.version=1
 encoding//src/main/java/log4j.properties=UTF-8
-encoding//src/main/java/org/crusoe/myauth/dao/JPAGenericEntityDao.java=UTF-8
-encoding//src/main/java/org/crusoe/myauth/service/MyUserDetailsService.java=UTF-8
+encoding//src/main/webapp/WEB-INF/messages/messages_zh_CN.properties=UTF-8
+encoding/<project>=UTF-8

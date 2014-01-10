@@ -1,0 +1,80 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html>
+<head thy:merge="/common::headerFragment">
+<title>创建角色</title>
+<script type="text/javascript">
+
+function submitForm() {
+
+	var  role= $("#Form").serializeObject();
+	//alert(JSON.stringify(user));
+	$.postJSON("create", JSON.stringify(role), false,
+			function(data) {
+				if (data.err == "true") {
+					var errors = {};
+					for ( var obj in data) {
+						if (obj != "err")
+							errors[obj] = data[obj];
+
+					}
+					validator.showErrors(errors);
+				} else {
+					$("#dialog-message").html(
+							"Data has been saved!Its ID is:"
+									+ data.id);
+					$("#userForm").trigger("evtSuccess", {
+						msg : "OK"
+					});
+					$("#dialog-message").dialog({
+						modal : true,
+						buttons : {
+							Ok : function() {
+								$(this).dialog("close");
+
+							}
+						}
+
+					});
+				}
+
+			});
+	return false;
+};
+
+	var validator;
+	$(document).ready(function() {
+		validator = $("#Form").validate();
+		$("#submitButton").bind("click", submitForm);
+	});
+</script>
+<style type="text/css">
+* {
+	font-family: Verdana;
+	font-size: 96%;
+}
+
+label.error {
+	color: red;
+	padding-left: .5em;
+	vertical-align: top;
+}
+
+em {
+	font-weight: bold;
+	padding-right: 1em;
+	vertical-align: top;
+}
+</style>
+</head>
+<body>
+	<h1>创建角色</h1>
+	<form id="Form" method="POST" th:object="${role}">
+		<fieldset>
+			<label for="username">角色名:</label> <input id="name"
+				placeholder="输入角色名…" type="text" th:field="*{name}" /> <input
+				type="submit" id="submitButton" value="创建角色" class="btn btn-primary"/>
+		</fieldset>
+	</form>
+	<div id="dialog-message"></div>
+</body>
+</html>

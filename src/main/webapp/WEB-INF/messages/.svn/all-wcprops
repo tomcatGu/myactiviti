@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/spring-samples/!svn/ver/278/mvc-ajax/trunk/src/main/webapp/WEB-INF/messages
+END
+messages.properties
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/spring-samples/!svn/ver/278/mvc-ajax/trunk/src/main/webapp/WEB-INF/messages/messages.properties
+END
+messages_es.properties
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/spring-samples/!svn/ver/278/mvc-ajax/trunk/src/main/webapp/WEB-INF/messages/messages_es.properties
+END
+messages_de.properties
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/spring-samples/!svn/ver/278/mvc-ajax/trunk/src/main/webapp/WEB-INF/messages/messages_de.properties
+END

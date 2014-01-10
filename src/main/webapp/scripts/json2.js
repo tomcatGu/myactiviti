@@ -1,4 +1,3 @@
-
 if (!this.JSON)
 	this.JSON = {};
 (function() {
@@ -7,11 +6,12 @@ if (!this.JSON)
 	}
 	function n(a) {
 		o.lastIndex = 0;
-		return o.test(a) ? '"' + a.replace(o, function(c) {
-			var d = q[c];
-			return typeof d === "string" ? d : "\\u"
-					+ ("0000" + c.charCodeAt(0).toString(16)).slice(-4)
-		}) + '"' : '"' + a + '"'
+		return o.test(a) ? '"'
+				+ a.replace(o, function(c) {
+					var d = q[c];
+					return typeof d === "string" ? d : "\\u"
+							+ ("0000" + c.charCodeAt(0).toString(16)).slice(-4)
+				}) + '"' : '"' + a + '"'
 	}
 	function l(a, c) {
 		var d, f, i = g, e, b = c[a];
@@ -125,7 +125,7 @@ if (!this.JSON)
 									/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
 									"]").replace(/(?:^|:|,)(?:\s*\[)+/g, ""))) {
 				a = eval("(" + a + ")");
-				return typeof c === "function" ? d( {
+				return typeof c === "function" ? d({
 					"" : a
 				}, "") : a
 			}
@@ -133,119 +133,212 @@ if (!this.JSON)
 		}
 })();
 
+function parseAttrRecursion(o, name, value, setFun) {
+	// alert(name); //user[i].address[j].name=value
+	// user[i].email
+	// user.phone
+	if (name.split == undefined)
+		alert(name);
+	var attr = name.split(".");
 
+	if (attr.length == 1) {// likes "name"=value
+		// alert("1:" + name);
+		// var obj = {};
+		if (setFun != undefined) {
+			o[name] = setFun(o[name], value);
+			// alert(o[name]);
+		} else
+			o[name] = value;
+		// alert(obj);
+		return obj;
+	} else {// likes "user[i].name"=value
+		// alert("2:" + name);
+		var tempName = name.replace(attr[0] + ".", "");
+		// alert(tempName);
+		var properties = attr[0].split(/\[|\]/);
+		// alert(properties.length);
+		if (properties.length >= 2) {// likes user[i]
+
+			if (o[properties[0]] == undefined) {
+				o[properties[0]] = [];
+			}
+			var obj = o[properties[0]];
+			// alert(properties[1]);
+			var subobj = obj[parseInt(properties[1])];
+			if (subobj == undefined) {
+				subobj = {};
+				obj[parseInt(properties[1])] = subobj;
+			}
+			parseAttrRecursion(subobj, tempName, value, setFun);
+			return subobj;
+
+		} else {// likes "user.name"=value
+			// alert("3:" + name);
+			if (o[properties[0]] == undefined) {
+				o[properties[0]] = {};
+			}
+			var subobj = o[properties[0]];
+			parseAttrRecursion(subobj, tempName, value, setFun);
+			return subobj;
+		}
+
+	}
+
+};
+function parseAttr(o, name, value, setFun) {
+
+	parseAttrRecursion(o, name, value, setFun);
+	return;
+
+	var nameTemp = name;
+	var attrs0 = nameTemp.split(".");
+	// var attrs0 = [];
+	var attrs = name.replace('.', '').split(/\[|\]/);
+	if (attrs.length == 3) {// name likes "abroadRelatives[0].birthday"
+		// attrs[0]=>abroadRelatives
+		// attrs[1]=>0
+		// attrs[2]=>birthday
+
+		var obj = [];
+		var subobj = {};
+		if (o[attrs[0]] != undefined) {
+			obj = o[attrs[0]];
+			subobj = obj[parseInt(attrs[1])];
+			if (subobj == undefined) {
+				subobj = {};
+			}
+		} else {
+			o[attrs[0]] = obj;
+		}
+		obj[parseInt(attrs[1])] = subobj;
+		if (setFun != undefined) {
+			setFun(subobj[attrs[2]], value);
+		} else
+			subobj[attrs[2]] = value;
+	} else if (attrs.length != 3 && attrs0.length == 2) {
+		// name likes "user.name"
+		// attrs[0]=>user
+		// attrs[1]=>name
+
+		var obj = {};
+		if (o[attrs0[0]] != undefined) {
+			obj = o[attrs0[0]];
+		} else {
+			o[attrs0[0]] = obj;
+		}
+
+		if (setFun != undefined) {
+			setFun(obj, value);
+		} else
+			obj[attrs0[1]] = value;
+
+	} else {
+		if (setFun != undefined) {
+			if (o[name] == undefined)
+				o[name] = [];
+			setFun(o[name], value);
+		} else
+			o[name] = value;
+
+	}
+};
 
 $.fn.serializeObject = function() {
 	var o = {};
 	// 文本框
-	//alert(this);
+	// alert(this);
 	$(this).find(":text").each(function(i) {
-		//alert(this.name);
-			// alert(this.value);
-			
-		o[this.name]=this.value;
-		
 
-		});
+		parseAttr(o, this.name, this.value);
+
+	});
 	// 下拉列表
 	$(this).find("select").each(function(i) {
-		// alert(this.name);
-			// alert(this.value);
-		o[this.name]=this.value;
 
-		});
+		parseAttr(o, this.name, this.value);
+
+	});
 	// 单选框
 	this.find(":radio").filter(":checked").each(function(i) {
-		// alert(this.name);
-			// alert(this.value);
-		o[this.name]=this.value;
-		});
+
+		parseAttr(o, this.name, this.value);
+
+	});
 	// 复选框开始
 
 	this.find(":checkbox").filter(":checked").each(function(i) {
-		//if (temp_cb.indexOf(this.name) == -1) {
-		//	temp_cb += this.name + ",";
-		//}
-		
-		if (o[this.name]) {
-			if (!o[this.name].push) {
-				o[this.name] = [{"id": o[this.name]} ];
-			}
-			o[this.name].push({"id":this.value || ''});
-		} else {
-			o[this.name] = [{"id": this.value} ];
-		}
 
+		var setFun = function(obj, value) {
+
+			if (obj) {
+				if (!obj.push) {
+					obj = [ {
+						"id" : obj
+					} ];
+				}
+				obj.push({
+					"id" : value || ''
+				});
+			} else {
+				obj = [ {
+					"id" : value
+				} ];
+			}
+			return obj;
+		};
+
+		parseAttr(o, this.name, this.value, setFun);
+		/*
+		 * if (o[this.name]) { if (!o[this.name].push) { o[this.name] = [ { "id" :
+		 * o[this.name] } ]; } o[this.name].push({ "id" : this.value || '' }); }
+		 * else { o[this.name] = [ { "id" : this.value } ]; }
+		 */
 	});
-	
+
 	return o;
 	/*
-	var temp_cb_arr = temp_cb.split(",");
-	var cb_name = "";
-	var cb_value = "";
-	for ( var temp_cb_i = 0; temp_cb_i < temp_cb_arr.length - 1; temp_cb_i++) {
-		cb_name = temp_cb_arr[temp_cb_i];
-		var cb_value_length = $("input[name='" + temp_cb_arr[temp_cb_i]
-				+ "']:checked").length;
-		$("input[name='" + temp_cb_arr[temp_cb_i] + "']:checked").each(
-				function(i) {
-					if (i == cb_value_length - 1)
-						cb_value += this.value;
-					else
-						cb_value += this.value + ",";
-
-				});
-		// alert(cb_name);
-		// alert(cb_value);
-		a.push( {
-			name : cb_name,
-			value : cb_value
-		});
-	}
-	return a;
-	
-	// 复选框结束
-
-	// 组合为JSON
-	var temp_json = "";
-	for ( var json_i = 0; json_i < a.length; json_i++) {
-		if (json_i != a.length - 1) {
-			temp_json += '"' + a[json_i].name + '":"' + a[json_i].value + '",';
-		} else {
-			temp_json += '"' + a[json_i].name + '":"' + a[json_i].value + '"';
-		}
-	}
-	return "{" + temp_json + "}";
-	
-	*/
+	 * var temp_cb_arr = temp_cb.split(","); var cb_name = ""; var cb_value =
+	 * ""; for ( var temp_cb_i = 0; temp_cb_i < temp_cb_arr.length - 1;
+	 * temp_cb_i++) { cb_name = temp_cb_arr[temp_cb_i]; var cb_value_length =
+	 * $("input[name='" + temp_cb_arr[temp_cb_i] + "']:checked").length;
+	 * $("input[name='" + temp_cb_arr[temp_cb_i] + "']:checked").each(
+	 * function(i) { if (i == cb_value_length - 1) cb_value += this.value; else
+	 * cb_value += this.value + ",";
+	 * 
+	 * }); // alert(cb_name); // alert(cb_value); a.push( { name : cb_name,
+	 * value : cb_value }); } return a; // 复选框结束 // 组合为JSON var temp_json = "";
+	 * for ( var json_i = 0; json_i < a.length; json_i++) { if (json_i !=
+	 * a.length - 1) { temp_json += '"' + a[json_i].name + '":"' +
+	 * a[json_i].value + '",'; } else { temp_json += '"' + a[json_i].name +
+	 * '":"' + a[json_i].value + '"'; } } return "{" + temp_json + "}";
+	 * 
+	 */
 };
 
+$.postJSON = function(url, data, async, success, error) {
+	if (url == "") {
+		$.ajax({
+			'type' : "POST",
+			'contentType' : "application/json",
+			'data' : data,
+			'async' : async,
+			'dataType' : "json",
+			'error' : error,
+			'success' : success
 
+		});
+	} else {
+		$.ajax({
+			'type' : "POST",
+			'url' : url,
+			'contentType' : "application/json",
+			'data' : data,
+			'async' : async,
+			'dataType' : "json",
+			'error' : error,
+			'success' : success
 
-$.postJSON = function(url, data,async, success,error) {
-if(url==""){
-	$.ajax({
-		'type' : "POST",
-		'contentType' : "application/json",
-		'data' : data,
-		'async':async,
-		'dataType' : "json",
-	    'error': error,
-	    'success': success
-
-	});
-}else{
-	$.ajax({
-		'type' : "POST",
-		'url' : url,
-		'contentType' : "application/json",
-		'data' : data,
-		'async':async,
-		'dataType' : "json",
-	    'error': error,
-	    'success': success
-
-	});
-}
+		});
+	}
 
 };

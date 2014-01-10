@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Create Resource</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="/css/blueprint/screen.css" rel="stylesheet" type="text/css"
+	th:href="@{/css/blueprint/screen.css}" />
+
+<link rel="stylesheet" type="text/css" media="screen"
+	href="/css/ui-lightness/jquery-ui-1.8.11.custom.css"
+	th:href="@{/css/ui-lightness/jquery-ui-1.8.11.custom.css}" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="/css/ui.jqgrid.css" th:href="@{/css/ui.jqgrid.css}" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="/css/ui.multiselect.css" th:href="@{/css/ui.multiselect.css}" />
+
+
+<script src="/scripts/jquery-1.5.1.min.js" type="text/javascript"
+	th:src="@{/scripts/jquery-1.5.1.min.js}"></script>
+
+<script src="/scripts/jquery-ui-1.8.11.custom.min.js"
+	type="text/javascript"
+	th:src="@{/scripts/jquery-ui-1.8.11.custom.min.js}"></script>
+<script src="/scripts/i18n/grid.locale-cn.js" type="text/javascript"
+	th:src="@{/scripts/i18n/grid.locale-cn.js}"></script>
+<script src="/scripts/jquery.jqGrid.min.js" type="text/javascript"
+	th:src="@{/scripts/jquery.jqGrid.min.js}"></script>
+
+<script src="/scripts/json2.js" type="text/javascript"
+	th:src="@{/scripts/json2.js}"></script>
+
+
+
+
+
+
+</head>
+<body>
+<div class="container">
+<h1>Create User</h1>
+<div class="span-12 last">
+<form th:object="${resource}" method="post" id="resource"
+	style="width: 250px;">
+<p>name:<br />
+<input id="name" type="text" th:field="*{name}" /></p>
+
+<p>type:<br />
+<input id="type" type="text" th:field="*{type}" /></p>
+<p>value<br />
+<input id="value" type="text" th:field="*{value}" /></p>
+
+
+<ul>
+	<li th:each="role : ${resource.roles}"><input type="checkbox"
+		th:field="*{roles}" th:value="${role.id}" /> <label
+		th:text="${role.name}">ROLE_USER</label></li>
+</ul>
+</form>
+</div>
+
+
+</div>
+<div id="dialog-message"></div>
+</body>
+
+<script type="text/javascript">
+	$(function() {
+		// check name availability on focus lost
+		$('#name').blur(function() {
+			if ($('#name').val()) {
+				//checkAvailability();
+			}
+		});
+		$("#resource").submit(
+				function() {
+
+					var resource = $(this).serializeObject();
+					alert(JSON.stringify(resource));
+
+					$.postJSON("", JSON.stringify(resource), false, function(
+							data) {
+
+						$("#dialog-message").html(
+								"Data has been saved!Its ID is:" + data.id);
+						$("#dialog-message").dialog({
+							modal : true,
+							buttons : {
+								Ok : function() {
+									$(this).trigger({type:"evt_closed",msg:"OK"});
+									$(this).dialog("close");
+								}
+							}
+
+						});
+
+					});
+					return false;
+				});
+	});
+</script>
+
+</html>

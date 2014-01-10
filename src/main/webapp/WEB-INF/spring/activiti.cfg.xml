@@ -2,15 +2,29 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
 
-		<property name="databaseType" value="mySql" />
+		<property name="databaseType" value="mysql" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="databaseSchemaUpdate" value="true" />
+		<property name="customSessionFactories">
+			<list>
+				<bean class="org.crusoe.service.JPAUserManagerFactory">
+
+				</bean>
+				<bean class="org.crusoe.service.JPAGroupManagerFactory">
+
+				</bean>
+			</list>
+		</property>
+
+
 		<property name="jpaEntityManagerFactory" ref="entityManagerFactory" />
+		<!-- <property name="jpaPersistenceUnitName" value="myactiviti" /> -->
 		<property name="jpaHandleTransaction" value="true" />
 		<property name="jpaCloseEntityManager" value="true" />
 		<property name="jobExecutorActivate" value="false" />
@@ -26,11 +40,14 @@
 		factory-method="getRepositoryService" />
 	<bean id="runtimeService" factory-bean="processEngine"
 		factory-method="getRuntimeService" />
+	<bean id="formService" factory-bean="processEngine"
+		factory-method="getFormService" />
+	<bean id="identityService" factory-bean="processEngine"
+		factory-method="getIdentityService" />
 	<bean id="taskService" factory-bean="processEngine"
 		factory-method="getTaskService" />
 	<bean id="historyService" factory-bean="processEngine"
 		factory-method="getHistoryService" />
 	<bean id="managementService" factory-bean="processEngine"
 		factory-method="getManagementService" />
-
 </beans>

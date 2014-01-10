@@ -1,0 +1,368 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd">
+<html>
+<head thy:merge="/common::headerFragment">
+<title>创建单项拆迁工程实施情况明细表</title>
+<script type="text/javascript">
+	var validator;
+	$(document).ready(function() {
+
+		$(".datepicker").datepickerB();
+		validator = $("#userForm").validate();
+		$("#submitButton").bind("click", submitForm);
+	});
+</script>
+</head>
+<body>
+	<h1>单项拆迁工程实施情况明细表</h1>
+	<form id="demolitionForm" method="POST" th:object="${demolition}"
+		class="">
+		<fieldset>
+			<div class="well">
+				<div class="box">
+					<legend>基本情况</legend>
+					<div class="control-group">
+						<label for="id" class="control-label text-info">编号：</label>
+						<div class="controls">
+							<input id="id" class="input-xlarge uneditable-input"
+								disabled="disabled" type="text" th:field="*{id}" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label for="department" class="control-label text-info">上报单位：</label>
+						<div class="controls">
+							<input id="department" class="" disabled="disabled" type="text"
+								th:field="*{department}" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label for="subjectName" class="control-label text-info">项目名称：</label>
+						<div class="controls">
+							<input id="subjectName" disabled="disabled" type="text"
+								th:field="*{subjectName}" />
+						</div>
+					</div>
+					<div class="control-group">
+						<lable for="mappingCompany" class="control-label text-info">测绘公司：</lable>
+						<div id="mappingCompany"
+							th:each="mappingCompany ,stat: *{mappingCompany}"
+							class="controls">
+							<div>
+								<div class="input-prepend">
+									<span class="add-on" th:text="${mappingCompany.tender}">标段</span>
+									<input style="display: none" type="text" disabled="disabled"
+										th:field="*{mappingCompany[__${stat.index}__].tender}" /> <input
+										type="text" disabled="disabled"
+										th:field="*{mappingCompany[__${stat.index}__].name}" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<lable for="assessmentCompany" class="control-label text-info">评估公司：</lable>
+						<div th:each="assessmentCompany ,stat: *{assessmentCompany}"
+							class="controls" id="assessmentCompany">
+							<div class="input-prepend">
+								<span class="add-on" th:text="${assessmentCompany.tender}">标段</span>
+								<input type="text" style="display: none"
+									th:field="*{assessmentCompany[__${stat.index}__].tender}" /> <input
+									type="text" disabled="disabled"
+									th:field="*{assessmentCompany[__${stat.index}__].name}" />
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<lable for="demolitionCompany" class="control-label text-info">拆迁公司：</lable>
+						<div th:each="demolitionCompany,stat : *{demolitionCompany}"
+							class="controls" id="demolitionCompany">
+							<div class="input-prepend">
+								<span class="add-on" th:text="${demolitionCompany.tender}">标段</span>
+								<input type="text" style="display: none"
+									th:field="*{demolitionCompany[__${stat.index}__].tender}" /> <input
+									type="text" disabled="disabled"
+									th:field="*{demolitionCompany[__${stat.index}__].name}" />
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label for="" class="control-label text-info">计划拆迁量：</label>
+						<div class="controls" id="planned">
+							<div class="input-prepend input-append">
+								<span class="add-on">民居</span><input id="dwelling"
+									placeholder="计划拆迁民居…" type="text" disabled="disabled"
+									th:field="*{planned.dwelling}" /><span class="add-on">（户）</span>
+							</div>
+						</div>
+						<div class="controls">
+							<div class="input-prepend input-append">
+								<span class="add-on">面积</span><input id="acreageOfDwelling"
+									placeholder="计划拆迁面积…" type="text" disabled="disabled"
+									th:field="*{planned.acreageOfDwelling}" /> <span
+									class="add-on">（m<SUP>2</SUP> ）
+								</span>
+							</div>
+						</div>
+						<br />
+						<div class="controls">
+							<div class="input-prepend input-append">
+								<span class="add-on">非居</span><input id="nonDwelling"
+									placeholder="计划拆迁非居…" type="text" disabled="disabled"
+									th:field="*{planned.nonDwelling}" /> <span class="add-on">（户）</span>
+							</div>
+						</div>
+						<div class="controls">
+							<div class="input-prepend input-append">
+								<span class="add-on">面积</span><input id="acreageOfNonDwelling"
+									placeholder="计划拆迁面积…" type="text" disabled="disabled"
+									th:field="*{planned.acreageOfNonDwelling}" /> <span
+									class="add-on">（m<SUP>2</SUP> ）
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label for="capitalBudget" class="control-label text-info">资金概算总额：</label>
+						<div class="controls">
+							<div class="input-append">
+								<input id="capitalBudget" disabled="disabled" type="text"
+									th:field="*{capitalBudget}" /> <span class="add-on">
+									（万元） </span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="box">
+					<legend>丈量评估情况</legend>
+					<div class="control-group"
+						th:each="measureToAssessTheSituation,stat : *{measureToAssessTheSituations}">
+						<label for="theFirstDayOfAssessment"
+							class="control-label text-info">进场丈量评估首日日期：</label>
+						<div class="controls">
+							<input id="theFirstDayOfAssessment" placeholder="进场丈量评估首日日期…"
+								type="text" class="datepicker" data-date-format="yyyy-mm-dd"
+								th:field="*{measureToAssessTheSituations[__${stat.index}__].theFirstDayOfAssessment}" />
+						</div>
+						<br /> <label for="dwelling" class="control-label text-info">已丈量评估户数：</label>
+						<div class="controls">
+							<div class="input-prepend input-append">
+								<span class="add-on">民居 </span> <input id="dwelling"
+									placeholder="" type="text"
+									th:field="*{measureToAssessTheSituations[__${stat.index}__].dwelling}" />
+								<span class="add-on">户</span>
+							</div>
+						</div>
+						<div class="controls">
+							<div class="input-prepend input-append">
+								<span class="add-on">非居 </span> <input id="nonDwelling"
+									placeholder="" type="text"
+									th:field="*{measureToAssessTheSituations[__${stat.index}__].nonDwelling}" />
+								<span class="add-on">户</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="box">
+					<legend>签约拆除进展</legend>
+					<div class="control-group"
+						th:each="demolitionProgress,stat : *{signeds}">
+						<label for="theFirstDayOfFormallySigned"
+							class="control-label text-info">正式签约首日日期：</label>
+						<div class="controls">
+							<input id="theFirstDayOfFormallySigned" placeholder="进场丈量评估首日日期…"
+								type="text" class="datepicker" data-date-format="yyyy-mm-dd"
+								th:field="*{signeds[__${stat.index}__].theFirstDayOfFormallySigned}" />
+						</div>
+						<br /> <label for="" class="control-label text-info">已签约：</label>
+						<div th:each="contracted,stat1:${demolitionProgress.contracted}">
+							<div class="controls">
+								<div class="input-prepend input-append">
+									<span class="add-on">民居(<span
+										th:text="${contracted.tender}"></span>)
+									</span> <input id="dwelling" placeholder="" type="text"
+										th:field="*{signeds[__${stat.index}__].contracted[__${stat1.index}__].dwelling}" />
+									<span class="add-on">户</span>
+								</div>
+								<div class="input-prepend input-append">
+									<span class="add-on">民居(<span
+										th:text="${contracted.tender}"></span>)
+									</span> <input id="acreageOfDwelling" placeholder="" type="text"
+										th:field="*{signeds[__${stat.index}__].contracted[__${stat1.index}__].acreageOfDwelling}" />
+									<span class="add-on">（m<SUP>2</SUP> ）
+									</span>
+								</div>
+							</div>
+						</div>
+						<br /> <label for="" class="control-label text-info">已拆除：</label>
+						<div th:each="dismantled,stat1:${demolitionProgress.dismantled}">
+							<div class="controls">
+								<div class="input-prepend input-append">
+									<span class="add-on">民居(<span
+										th:text="${dismantled.tender}"></span>)
+									</span> <input id="dwelling" placeholder="" type="text"
+										th:field="*{signeds[__${stat.index}__].dismantled[__${stat1.index}__].dwelling}" />
+									<span class="add-on">户</span>
+								</div>
+								<div class="input-prepend input-append">
+									<span class="add-on">民居(<span
+										th:text="${dismantled.tender}"></span>)
+									</span> <input id="acreageOfDwelling" placeholder="" type="text"
+										th:field="*{signeds[__${stat.index}__].dismantled[__${stat1.index}__].acreageOfDwelling}" />
+									<span class="add-on">（m<SUP>2</SUP> ）
+									</span>
+								</div>
+							</div>
+						</div>
+						<br /> <label for="acceptance" class="control-label text-info">拆除验收日期：</label>
+						<div class="controls">
+							<input id="acceptance" placeholder="拆除验收日期…" type="text"
+								class="datepicker" data-date-format="yyyy-mm-dd"
+								th:field="*{signeds[__${stat.index}__].acceptance}" />
+						</div>
+					</div>
+				</div>
+				<div class="box">
+					<legend>实际拆迁情况</legend>
+					<div class="control-group"
+						th:each="actualAmountOfDemolition,stat : *{actuals}">
+						<div class="controls input-prepend input-append">
+							<span class="add-on">民居 </span> <input id="dwelling1"
+								placeholder="" type="text"
+								th:field="*{actuals[__${stat.index}__].dwelling}" /> <span
+								class="add-on">（户）</span>
+						</div>
+						<div class="controls input-prepend input-append">
+							<span class="add-on">民居面积</span> <input id="acreageOfDwelling1"
+								placeholder="" type="text"
+								th:field="*{actuals[__${stat.index}__].acreageOfDwelling}" /> <span
+								class="add-on">（m<SUP>2</SUP>）
+							</span>
+						</div>
+						<div class="controls input-prepend input-append">
+							<span class="add-on">非居 </span> <input id="nonDwelling1"
+								placeholder="" type="text"
+								th:field="*{actuals[__${stat.index}__].nonDwelling}" /> <span
+								class="add-on">（户）</span>
+						</div>
+						<div class="controls input-prepend input-append">
+							<span class="add-on">非居面积</span> <input
+								id="acreageOfNonDwelling1" placeholder="" type="text"
+								th:field="*{actuals[__${stat.index}__].acreageOfNonDwelling}" />
+							<span class="add-on">（m<SUP>2</SUP>）
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="box">
+					<legend>安置情况</legend>
+					<div class="control-group"
+						th:each="resettlment,stat:*{resettlments}">
+						<div class="controls input-prepend input-append">
+							<span class="add-on">货币安置 </span> <input
+								id="houseHoldsOfMonetaryResettlement" placeholder="" type="text"
+								th:field="*{resettlments[__${stat.index}__].houseHoldsOfMonetaryResettlement}" />
+							<span class="add-on">（户）</span>
+						</div>
+						<div class="controls input-prepend input-append">
+							<span class="add-on">货币安置总价 </span> <input
+								id="priceOfMonetaryResettlement" placeholder="" type="text"
+								th:field="*{resettlments[__${stat.index}__].priceOfMonetaryResettlement}" />
+							<span class="add-on">（万元）</span>
+						</div>
+						<div class="controls input-prepend input-append">
+							<span class="add-on">实物安置 </span> <input
+								id="houseHoldsOfMaterialResettlement" placeholder="" type="text"
+								th:field="*{resettlments[__${stat.index}__].houseHoldsOfMaterialResettlement}" />
+							<span class="add-on">（户）</span>
+						</div>
+						<div class="controls input-prepend input-append">
+							<span class="add-on">实物安置套数 </span> <input
+								id="ploidyOfMaterialResettlement" placeholder="" type="text"
+								th:field="*{resettlments[__${stat.index}__].ploidyOfMaterialResettlement}" />
+							<span class="add-on">（套）</span>
+						</div>
+						<div class="controls input-prepend input-append">
+							<span class="add-on">实物安置面积 </span> <input
+								id="acreageOfMaterialResettlement" placeholder="" type="text"
+								th:field="*{resettlments[__${stat.index}__].acreageOfMaterialResettlement}" />
+							<span class="add-on">（m<SUP>2</SUP>）
+							</span>
+						</div>
+						<label for="" class="control-label text-info">其中：</label>
+						<div class="control-group well"
+							th:each="resettlment,stat1:${resettlment.resettlementDetails}">
+							<div class="controls">
+								<label for="resettlementName" class="control-label text-info">安置项目名称：</label>
+								<input id="resettlementName" placeholder="" type="text"
+									th:field="*{resettlments[__${stat.index}__].resettlementDetails[__${stat1.index}__].resettlementName}" />
+							</div>
+							<div class="controls">
+								<label for="houseHolds" class="control-label text-info">安置户数：</label>
+								<input id="houseHolds" placeholder="" type="text"
+									th:field="*{resettlments[__${stat.index}__].resettlementDetails[__${stat1.index}__].houseHolds}" />
+							</div>
+							<div class="controls">
+								<label for="ploidy" class="control-label text-info">安置项目套数：</label>
+								<input id="ploidy" placeholder="" type="text"
+									th:field="*{resettlments[__${stat.index}__].resettlementDetails[__${stat1.index}__].ploidy}" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="box">
+					<legend>备注</legend>
+					<div class="control-group">
+						<div class="controls ">
+							<label for="remark" class="control-label text-info">备注：</label> <input
+								id="remark" type="text" th:field="*{remark}" class="span6" />
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<input type="button" id="submitButton" value="保存"
+							class="btn btn-primary" />
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<script type="text/javascript">
+			function submitForm() {
+
+				var user = $("#demolitionForm").serializeObject();
+				alert(JSON.stringify(user));
+				$.postJSON("../append", JSON.stringify(user), false,
+						function(data) {
+							if (data.err == "true") {
+								var errors = {};
+								for ( var obj in data) {
+									if (obj != "err")
+										errors[obj] = data[obj];
+
+								}
+								validator.showErrors(errors);
+							} else {
+								$("#dialog-message").html(
+										"Data has been saved!Its ID is:"
+												+ data.id);
+								$("#userForm").trigger("evtSuccess", {
+									msg : "OK"
+								});
+								$("#dialog-message").dialog({
+									modal : true,
+									buttons : {
+										Ok : function() {
+											$(this).dialog("close");
+
+										}
+									}
+
+								});
+							}
+
+						});
+				return false;
+			}
+		</script>
+	</form>
+	<div id="dialog-message"></div>
+</body>
+</html>

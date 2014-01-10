@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Resource List</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+</style>
+
+<link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css"
+	th:href="@{/css/bootstrap.min.css}" />
+<!--  
+<link href="/css/blueprint/screen.css"
+	rel="stylesheet" type="text/css" th:href="@{/css/blueprint/screen.css}" />
+-->
+<link rel="stylesheet" type="text/css" media="screen"
+	href="/css/ui-lightness/jquery-ui-1.8.11.custom.css"
+	th:href="@{/css/ui-lightness/jquery-ui-1.8.11.custom.css}" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="/css/ui.jqgrid.css" th:href="@{/css/ui.jqgrid.css}" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="/css/ui.multiselect.css" th:href="@{/css/ui.multiselect.css}" />
+
+
+<script src="/scripts/jquery-1.5.1.min.js" type="text/javascript"
+	th:src="@{/scripts/jquery-1.5.1.min.js}"></script>
+
+<script src="/scripts/bootstrap.min.js" type="text/javascript"
+	th:src="@{/scripts/bootstrap.min.js}"></script>
+
+<script src="/scripts/jquery-ui-1.8.11.custom.min.js"
+	type="text/javascript"
+	th:src="@{/scripts/jquery-ui-1.8.11.custom.min.js}"></script>
+<script src="/scripts/i18n/grid.locale-cn.js" type="text/javascript"
+	th:src="@{/scripts/i18n/grid.locale-cn.js}"></script>
+<script src="/scripts/jquery.jqGrid.min.js" type="text/javascript"
+	th:src="@{/scripts/jquery.jqGrid.min.js}"></script>
+
+<script src="/scripts/json2.js" type="text/javascript"
+	th:src="@{/scripts/json2.js}"></script>
+
+
+
+<script type="text/javascript" th:inline="javascript">
+	/*         */
+
+	var rid = /*[[ #{resource.id} ]]*/'id';
+	$(document).ready(
+			function() {
+				function roleFormatter(cellvalue, options, rowObject) {
+					//alert(typeof rowObject.roles);
+					if (rowObject.roles.length > 0) {
+						return JSON.stringify(cellvalue);
+					} else {
+						return '';
+					}
+
+				}
+				;
+
+				$("#list").jqGrid(
+						{
+							url : 'getResources',
+							datatype : 'json',
+							mtype : 'POST',
+							//ajaxGridOptions: { contentType: 'application/json; charset=utf-8' },
+							colNames : [ rid, '#{resource.name}',
+									'#{resource.value}', '#{resource.type}',
+									'#{resource.roles}' ],
+							colModel : [ {
+								name : 'id',
+								index : 'id',
+								width : 55,
+								editable : false,
+								editoptions : {
+									readonly : true,
+									size : 10
+								}
+							}, {
+								name : 'name',
+								index : 'name',
+								width : 90,
+								width : 80,
+								editable : true,
+								editoptions : {
+									size : 10
+								}
+							}, {
+								name : 'value',
+								index : 'value',
+								width : 80,
+								align : 'right',
+								editable : true,
+								editoptions : {
+									size : 10
+								}
+							}, {
+								name : 'type',
+								index : 'type',
+								width : 80,
+								align : 'right',
+								editable : true,
+								editoptions : {
+									size : 10
+								}
+							}, {
+								name : 'roles',
+								index : 'roles',
+								width : 80,
+								align : 'right',
+								formatter : roleFormatter
+							} ],
+							width : 480,
+							cache : false,
+							pager : '#pager',
+							rowNum : 20,
+							rowList : [ 10, 20, 30 ],
+							sortname : 'name',
+							sortorder : 'desc',
+							viewrecords : true,
+							//height:210,
+							editurl : 'resource/edit',
+							caption : 'My first grid',
+							jsonReader : {
+								repeatitems : false
+							}
+
+						});
+				addFunc = function() {
+
+					var success = function() {
+						alert("success");
+					}
+					jQuery("#createResource").load('add', function() {
+						jQuery("#createResource").dialog({
+							cache : false,
+							show : 'blind',
+							buttons : {
+								'OK' : function() {
+
+									$('#createResource form').submit();
+
+									$(this).dialog('close');
+									jQuery("#list").trigger('reloadGrid');
+
+								},
+								'Cancle' : function() {
+									$(this).dialog('close');
+								}
+							}
+						});
+
+					});
+
+				};
+
+				editFunc = function(str) {
+					jQuery("#createResource").load(str + '/edit', function() {
+
+						jQuery("#createResource").dialog({
+							cache : false,
+							show : 'blind',
+							buttons : {
+								'OK' : function() {
+									$('#createResource form').submit();
+									$("#list").trigger('reloadGrid');
+
+									$(this).dialog('close');
+
+								},
+								'Cancle' : function() {
+									$(this).dialog('close');
+								}
+							}
+						});
+					});
+
+				};
+
+				delFunc = function(str) {
+
+					$.ajax({
+						type : "DELETE",
+						url : str,
+						success : function(msg) {
+							alert("Data Saved: " + msg);
+						}
+					});
+
+					//alert("deleted!");
+					jQuery("#list").trigger('reloadGrid');
+
+				};
+				jQuery("#list").jqGrid('navGrid', '#pager', {
+					addfunc : addFunc,
+					editfunc : editFunc,
+					delfunc : delFunc
+				}, //options
+				{
+					height : 280,
+					reloadAfterSubmit : false
+				}, // edit options
+				{
+					height : 280,
+					reloadAfterSubmit : false
+				}, // add options
+				{
+					reloadAfterSubmit : false
+				}, // del options
+				{} // search options
+				);
+
+			});
+
+	/*   */
+</script>
+</head>
+<body>
+	<div class="container showgrid">
+
+
+		<h1>Resource List</h1>
+
+		<div class="span-8"></div>
+		<div class="span-16 last">
+
+			<table id="list"></table>
+			<div id="pager"></div>
+			<div id="createResource"></div>
+		</div>
+
+
+	</div>
+</body>
+
+
+
+</html>

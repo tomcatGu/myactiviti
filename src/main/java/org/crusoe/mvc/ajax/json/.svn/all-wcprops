@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/spring-samples/!svn/ver/299/mvc-ajax/trunk/src/main/java/org/springframework/samples/mvc/ajax/json
+END
+FormatAnnotationIntrospector.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/spring-samples/!svn/ver/299/mvc-ajax/trunk/src/main/java/org/springframework/samples/mvc/ajax/json/FormatAnnotationIntrospector.java
+END
+ConvertingDeserializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/spring-samples/!svn/ver/299/mvc-ajax/trunk/src/main/java/org/springframework/samples/mvc/ajax/json/ConvertingDeserializer.java
+END
+ConversionServiceAwareObjectMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/svn/spring-samples/!svn/ver/299/mvc-ajax/trunk/src/main/java/org/springframework/samples/mvc/ajax/json/ConversionServiceAwareObjectMapper.java
+END
+JacksonConversionServiceConfigurer.java
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/svn/spring-samples/!svn/ver/299/mvc-ajax/trunk/src/main/java/org/springframework/samples/mvc/ajax/json/JacksonConversionServiceConfigurer.java
+END
+ConvertingSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/spring-samples/!svn/ver/299/mvc-ajax/trunk/src/main/java/org/springframework/samples/mvc/ajax/json/ConvertingSerializer.java
+END

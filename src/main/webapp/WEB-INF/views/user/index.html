@@ -1,0 +1,147 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>用户列表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<!-- 
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+<link href="/themes/blue/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/themes/blue/style.css}" />
+	
+	<link rel="stylesheet" type="text/css" media="screen"
+	href="/css/ui.multiselect.css" th:href="@{/css/ui.multiselect.css}" />
+	
+-->
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css"
+	href="/css/ui-lightness/jquery-ui-1.10.0.custom.css"
+	th:href="@{/css/ui-lightness/jquery-ui-1.10.0.custom.css}" />
+<link href="/bootstrap/css/DT_bootstrap.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/DT_bootstrap.css}" />
+<link href="/bootstrap/css/prettify.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/prettify.css}" />
+<script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
+	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
+<script src="/scripts/jquery-ui-1.10.3.custom.min.js"
+	type="text/javascript"
+	th:src="@{/scripts/jquery-ui-1.10.3.custom.min.js}"></script>
+<script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"
+	th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
+	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
+<script src="/bootstrap/js/DT_bootstrap.js" type="text/javascript"
+	th:src="@{/bootstrap/js/DT_bootstrap.js}"></script>
+<script src="/scripts/json2.js" type="text/javascript"
+	th:src="@{/scripts/json2.js}"></script>
+<script type="text/javascript">
+	function addUser() {
+		//alert("create user...");
+		$("#createUser").load('user/create', function(data) {
+			$("#createUser").bind("evtSuccess", function(evt, data) {
+				//alert($(this).attr("id"));
+				//alert(evt);
+				//alert(data.msg);
+				$("#createUser").dialog("close");
+				var iCurrentPage = oTable.fnSettings()._iDisplayStart;
+				var oSettings = oTable.fnSettings();
+				oSettings._iDisplayStart = iCurrentPage;
+				oTable.fnDraw(oSettings);
+			});
+			//alert(data);
+			//$('#createUser .modal-body').html(data);
+			//$("#createUser").modal();
+			/**/
+			$("#createUser").dialog({
+				width:600,
+				show : 'blind',
+				modal : true
+			});
+
+		});
+	}
+	$(document)
+			.ready(
+					function() {
+
+						/* add a click handler for the add row */
+						$('#addBtn').bind('click', addUser);
+						/* Add a click handler for the delete row */
+						$('#deleteBtn')
+								.click(
+										function() {
+											$("input[type='checkbox']")
+													.not($("#selectAll"))
+													.each(
+															function() {
+
+																if (this.checked == true) {
+																	$
+																			.ajax({
+																				type : "DELETE",
+																				url : "user/"
+																						+ this.value,
+																				success : function(
+																						msg) {
+																					var iCurrentPage = oTable
+																							.fnSettings()._iDisplayStart;
+																					var oSettings = oTable
+																							.fnSettings();
+																					oSettings._iDisplayStart = iCurrentPage;
+																					oTable
+																							.fnDraw(oSettings);
+																					alert("Data Deleted: "
+																							+ msg.msg);
+																				}
+																			});
+																}
+															});
+										});
+
+					});
+</script>
+</head>
+<body>
+	<div class="box">
+		<h1>用户列表</h1>
+		<table id="userList" cellpadding="0" cellspacing="0" border="0"
+			class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th><input type="checkbox" name="check" value="" /></th>
+					<th>Id</th>
+					<th>Name</th>
+					<th>LoginName</th>
+					<th>Mobile</th>
+					<th>Email</th>
+					<th>Roles</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Student01</td>
+					<td>Languages</td>
+					<td>male</td>
+					<td>80</td>
+					<td>70</td>
+					<td>75</td>
+				</tr>
+				<tr>
+					<td>Student02</td>
+					<td>Languagesee</td>
+					<td>female</td>
+					<td>802</td>
+					<td>703</td>
+					<td>75e</td>
+				</tr>
+			</tbody>
+		</table>
+		<input type="button" id="addBtn" value="增加" class="btn btn-primary" />
+		<input type="button" id="deleteBtn" value="删除选中"
+			class="btn btn-danger" />
+	</div>
+	<div id="createUser" title="创建"></div>
+</body>
+</html>

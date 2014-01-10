@@ -1,0 +1,172 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd">
+<html>
+<head thy:merge="/common::headerFragment">
+<title>Create Person</title>
+<script type="text/javascript">
+	var validator;
+	$(document).ready(function() {
+		validator = $("#personForm").validate();
+		$("#birthday").datepicker({
+			"dateFormat" : "yy-mm-dd"
+		});
+		$("#abroadTime").datepicker({
+			"dateFormat" : "yy-mm-dd"
+		});
+		$('#submitButton').bind('click', submitForm);
+		
+		 //$('form').bind('submit',submitForm);
+	});
+</script>
+
+
+<script type="text/javascript">
+	function submitForm() {
+
+		var person = $("#personForm").serializeObject();
+		alert(JSON.stringify(person));
+
+		$.postJSON("create", JSON.stringify(person), false, function(data) {
+
+			if (data.err == "true") {
+				var errors = {};
+				for ( var obj in data) {
+					if (obj != "err")
+						errors[obj] = data[obj];
+
+				}
+
+				validator.showErrors(errors);
+
+			} else {
+				$("#personForm").trigger("evtSuccess", {
+					msg : "OK"
+				});
+				$("#dialog-message").html(
+						"Data has been saved!Its ID is:" + data.id);
+				$("#dialog-message").dialog({
+					modal : true,
+					buttons : {
+						Ok : function() {
+							$(this).dialog("close");
+						}
+					}
+
+				});
+			}
+
+		});
+		return false;
+	};
+	
+</script>
+<style type="text/css">
+label.error {
+	color: red;
+	padding-left: .5em;
+	vertical-align: top;
+}
+</style>
+
+</head>
+<body>
+
+	<h1>Create Person</h1>
+	<div class="span-4"></div>
+	<div class="span-8">
+		<form id="personForm" method="POST" th:object="${person}">
+			<fieldset>
+				<label for="orderNumber">编号:</label> <input id="loginName"
+					placeholder="输入登陆名…" type="text" th:field="*{orderNumber}" /> <label
+					for="name">姓名:</label> <input id="name" type="text"
+					th:field="*{name}" /> 
+					
+					 
+					
+					<label for="sex">性别:</label> <select
+					id="sex" th:field="*{sex}">
+					<option value="0">男</option>
+					<option value="1">女</option>
+				</select>
+
+				<div class="control-group">
+					<label class="control-label" for="birthday">出生年月:</label>
+					<div class="controls">
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-envelope"></i></span> <input
+								id="birthday" type="text" th:field="*{birthday}"
+								placeholder="输入出生年月（如1970-03-22)…" />
+
+						</div>
+					</div>
+				</div>
+
+				<label for="nativeHome">原籍:</label> <input id="nativeHome"
+					type="text" th:field="*{nativeHome}" /> <label for="abroadTime">外出时间:</label>
+				<input id="abroadTime" type="text" th:field="*{abroadTime}" /> <label
+					for="residenceCountry">居住国/地区:</label> <input id="residenceCountry"
+					type="text" th:field="*{residenceCountry}" /> <label
+					for="toLocate">是否定居:</label> <input id="toLocate" type="text"
+					th:field="*{toLocate}" /> <label for="degree">学位:</label> <input
+					id="degree" type="text" th:field="*{degree}" /> <label
+					for="politicalLandscape">政治面貌:</label> <input
+					id="politicalLandscape" type="text"
+					th:field="*{politicalLandscape}" /> <label for="expertise">专业特长:</label>
+				<input id="expertise" type="text" th:field="*{expertise}" /> <label
+					for="interest">兴趣爱好:</label> <input id="interest" type="text"
+					th:field="*{interest}" /> <label for="post">就职/就学单位及职务:</label> <input
+					id="post" type="text" th:field="*{post}" /> <label for="telephone">联系电话:</label>
+				<input id="telephone" type="text" th:field="*{telephone}" /> <label
+					for="email">电子邮箱:</label> <input id="email" type="text"
+					th:field="*{email}" /> <label for="overseasMailingAddress">海外邮寄地址:</label>
+				<input id="overseasMailingAddress" type="text"
+					th:field="*{overseasMailingAddress}" /> <label for="resume">本人简介:</label>
+				<textarea id="resume" type="text" th:field="*{resume}" />
+				 
+				
+				<label for="abroadRelatives">国外及港澳亲属</label>
+				<div class="span6">
+					<table>
+						<tr>
+							<th>称谓</th>
+							<th>姓名</th>
+							<th>出生年月</th>
+							<th>工作单位、职务、专业</th>
+						</tr>
+						<tr th:each="ar,stat : *{abroadRelatives}">
+							<td><input type="text"
+								th:field="*{abroadRelatives[__${stat.index}__].appellation}" /></td>
+							<td><input type="text"
+								th:field="*{abroadRelatives[__${stat.index}__].name}" /></td>
+							<td><input type="text"
+								th:field="*{abroadRelatives[__${stat.index}__].birthday}" /></td>
+							<td><input type="text"
+								th:field="*{abroadRelatives[__${stat.index}__].post}" /></td>
+
+						</tr>
+						<tr th:if="${#sets.isEmpty(person.abroadRelatives)}">
+							<td>empty</td>
+						</tr>
+
+					</table>
+
+
+				</div>
+				<!--
+				-->
+				<div class="span12">
+					<label for="remark">备注:</label>
+					<textarea id="remark" type="text" th:field="*{resume}" />
+
+
+
+					<input type="button" id="submitButton" value="创建" class="btn" />
+				</div>
+			</fieldset>
+
+		</form>
+
+	</div>
+
+
+</body>
+</html>

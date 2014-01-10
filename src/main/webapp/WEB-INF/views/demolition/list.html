@@ -1,0 +1,373 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>单项拆迁项目情况列表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<!-- 
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+<link href="/themes/blue/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/themes/blue/style.css}" />
+	
+	
+	
+-->
+<link rel="stylesheet" type="text/css"
+	href="/bootstrap/css/TableTools.css"
+	th:href="@{/bootstrap/css/TableTools.css}" />
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css"
+	href="/css/ui-lightness/jquery-ui-1.10.0.custom.css"
+	th:href="@{/css/ui-lightness/jquery-ui-1.10.0.custom.css}" />
+<link href="/bootstrap/css/DT_bootstrap.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/DT_bootstrap.css}" />
+<link href="/bootstrap/css/prettify.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/prettify.css}" />
+<script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
+	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
+<script src="/scripts/jquery-ui-1.10.3.custom.min.js"
+	type="text/javascript"
+	th:src="@{/scripts/jquery-ui-1.10.3.custom.min.js}"></script>
+<script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"
+	th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
+	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
+<script src="/bootstrap/js/ZeroClipboard.js" type="text/javascript"
+	th:src="@{/bootstrap/js/ZeroClipboard.js}"></script>
+<script src="/bootstrap/js/TableTools.min.js" type="text/javascript"
+	th:src="@{/bootstrap/js/TableTools.min.js}"></script>
+<script src="/bootstrap/js/demolitionBootstrap.js"
+	type="text/javascript" th:src="@{/bootstrap/js/demolitionBootstrap.js}"></script>
+<script src="/scripts/json2.js" type="text/javascript"
+	th:src="@{/scripts/json2.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+
+	function add() {
+		//alert("create user...");
+		$("#create").load('demolition/create', function(data) {
+			$("#create").bind("evtSuccess", function(evt, data) {
+				//alert($(this).attr("id"));
+				//alert(evt);
+				//alert(data.msg);
+				$("#create").dialog("close");
+				var iCurrentPage = oTable.fnSettings()._iDisplayStart;
+				var oSettings = oTable.fnSettings();
+				oSettings._iDisplayStart = iCurrentPage;
+				oTable.fnDraw(oSettings);
+			});
+			//alert(data);
+			//$('#createUser .modal-body').html(data);
+			//$("#createUser").modal();
+			/**/
+			$("#create").dialog({
+				width : 600,
+				show : 'blind',
+				modal : true
+			});
+
+		});
+	}
+	/* Table initialisation */
+	var oTable;
+	var aSelected = [];
+	$(document).ready(
+
+	function() {
+
+	});
+
+	$(document)
+			.ready(
+					function() {
+						if ($('#demolitionList').fnDraw != undefined) {
+							return;
+						}
+						oTable = $('#demolitionList')
+								.dataTable(
+										{
+											"oTableTools" : {
+												"sSwfPath" : "swf/copy_csv_xls_pdf.swf"
+											},
+											"sScrollX" : "100%",
+											"sScrollY" : "200px",
+											//"bSort" : false,
+
+											"bProcessing" : true,
+											"bServerSide" : true,
+											"bStateSave" : true,
+											"sAjaxSource" : "demolition/getDemolitions",
+
+											"aoColumns" : [
+													{
+														"sTitle" : "序号",
+														"mDataProp" : "id"
+													},
+													{
+														"sTitle" : "镇区园",
+														"mDataProp" : "department"
+													},
+													{
+														"sTitle" : "项目名称",
+														"mDataProp" : "subjectName"
+													},
+													{
+														"sTitle" : "户数",/*计划拆迁情况*/
+														"mDataProp" : "planned.dwelling"
+
+													},
+													{
+														"sTitle" : "面积",
+														"mDataProp" : "planned.acreageOfDwelling"
+
+													},
+													{
+														"sTitle" : "户数",
+														"mDataProp" : "planned.nonDwelling"
+													},
+													{
+														"sTitle" : "面积",
+														"mDataProp" : "planned.acreageOfNonDwelling"
+													},
+													{
+														"sTitle" : "资金概算总额",
+														"mDataProp" : "capitalBudget"
+													},
+													{
+														"sTitle" : "户数",/*丈量评估情况*/
+														"mDataProp" : "measureToAssessTheSituations[0].dwelling"
+
+													},
+													{
+														"sTitle" : "面积",
+														"mDataProp" : "measureToAssessTheSituations[0].acreageOfDwelling"
+													},
+													{
+														"sTitle" : "户数",
+														"mDataProp" : "measureToAssessTheSituations[0].nonDwelling"
+													},
+													{
+														"sTitle" : "面积",
+														"mDataProp" : "measureToAssessTheSituations[0].acreageOfNonDwelling"
+													},
+
+													{
+														"sTitle" : "其中本期进展"
+													},
+													{
+														"sTitle" : "户数",/*签约情况*/
+														"mDataProp" : "signeds[0].contracted.dwelling"
+													},
+													{
+														"sTitle" : "面积",
+														"mDataProp" : "signeds[0].contracted.acreageOfDwelling"
+													},
+													{
+														"sTitle" : "占比"
+													},
+													{
+														"sTitle" : "其中本期进展"
+													},
+													{
+														"sTitle" : "户数",
+														"mDataProp" : "signeds[0].contracted.NonDwelling"
+													},
+													{
+														"sTitle" : "面积",
+														"mDataProp" : "signeds[0].contracted.acreageOfNonDwelling"
+													},
+													{
+														"sTitle" : "占比"
+													},
+													{
+														"sTitle" : "其中本期进展"
+													},
+													{
+														"sTitle" : "已拆除面积"
+													},
+													{
+														"sTitle" : "户数",/*实际拆迁情况*/
+														"mDataProp" : "signeds[0].dismantled.dwelling"
+													},
+													{
+														"sTitle" : "面积",
+														"mDataProp" : "signeds[0].dismantled.acreageOfDwelling"
+													},
+													{
+														"sTitle" : "户数",
+														"mDataProp" : "signeds[0].dismantled.NonDwelling"
+													},
+													{
+														"sTitle" : "面积",
+														"mDataProp" : "signeds[0].dismantled.acreageOfNonDwelling"
+													},
+													{
+														"sTitle" : "拆迁补偿资金总额（不含拆迁安置）"
+													},
+													{
+														"sTitle" : "户数",/*安置情况*/
+														"mDataProp" : "resettlments[0].houseHoldsOfMonetaryResettlement"
+													},
+													{
+														"sTitle" : "金额",
+														"mDataProp" : "resettlments[0].priceOfMonetaryResettlement"
+													},
+													{
+														"sTitle" : "户数",
+														"mDataProp" : "resettlments[0].houseHoldsOfMaterialResettlement"
+													},
+													{
+														"sTitle" : "套数",
+														"mDataProp" : "resettlments[0].ploidyOfMaterialResettlement"
+													},
+													{
+														"sTitle" : "面积",
+														"mDataProp" : "resettlments[0].acreageOfMaterialResettlement"
+													},
+													{
+														"sTitle" : "安置点",
+														"mDataProp" : "resettlments[0].acreageOfMaterialResettlement"
+													}, {
+														"sTitle" : "备注",
+														"mDataProp" : "remark"
+													}
+
+											],
+											/*
+											 "aoColumnDefs" : [ {
+											 "aTargets" : [ 0 ],
+											 "mRender" : function(data,
+											 type, row) {
+											 // alert(data);
+											 return data;
+
+											 }
+
+											 } ],
+											 */
+											"fnServerData" : retrieveData, // 获取数据的处理函数
+											"fnServerParams" : customParams,
+											"sDom" : "T<'clear'>lfrtip",
+											"sPaginationType" : "bootstrap",
+											"oLanguage" : {
+												"sLengthMenu" : "_MENU_ records per page"
+											},
+											"fnRowCallback" : function(nRow,
+													aData, iDisplayIndex) {
+												if (jQuery.inArray(
+														aData.DT_RowId,
+														aSelected) !== -1) {
+													$(nRow).addClass(
+															'row_selected');
+												}
+											}
+										});
+
+						/* add a click handler for the add row */
+						//$('#addBtn').bind('click', add);
+						/* Add a click handler for the delete row */
+
+					});
+
+	/*]]>*/
+
+	function customParams(aoData) {
+		/*<![CDATA[*/
+		//var username = /*${T(org.apache.shiro.SecurityUtils).subject.principal}*/'admin';
+		//aoData.push({
+		//	"name" : "thePersonOfFillIn.name#EQ",
+		//	"value" : username
+		//});
+		/*]]>*/
+	};
+
+	function retrieveData(sSource, aoData, fnCallback) {
+		// 将客户名称加入参数数组
+		// aoData.push( { "name": "customerName", "value": $("#customerName").val()
+		// } );
+
+		$.ajax({
+			"type" : "POST",
+			"contentType" : "application/json",
+			"url" : sSource,
+			"dataType" : "json",
+			"data" : JSON.stringify(aoData), // 以json格式传递
+			"success" : function(resp) {
+				fnCallback(resp); // 服务器端返回的对象的returnObject部分是要求的格式
+			}
+		});
+	};
+</script>
+</head>
+<body>
+	<div class="box">
+		<h1>各镇区园拆迁项目汇总</h1>
+		<table id="demolitionList" cellpadding="0" cellspacing="0" border="0"
+			class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th rowspan="3">id</th>
+					<th rowspan="3">department</th>
+					<th rowspan="3">subjectName</th>
+					<th colspan="5"><p align="center">计划拆迁情况</p></th>
+					<th colspan="5"><p align="center">丈量评估情况</p></th>
+					<th colspan="8"><p align="center">签约情况</p></th>
+					<th rowspan="3">已拆除面积</th>
+					<th colspan="5"><p align="center">实际拆迁情况</p></th>
+					<th colspan="5"><p align="center">安置情况</p></th>
+					<th rowspan="3">安置点</th>
+					<th rowspan="3">备注</th>
+				</tr>
+				<tr>
+					<th colspan="2"><p align="center">民居</p></th>
+					<th colspan="2"><p align="center">非居</p></th>
+					<th rowspan="2" style="width: 51px;"><p align="center">capitalBudget</p></th>
+					<th colspan="4"><p align="center">(户)</p></th>
+					<th rowspan="2" style="width: 59px;"><p align="center">其中本期进展</p></th>
+					<th colspan="3"><p align="center">民居</p></th>
+					<th rowspan="2">其中本期进展</th>
+					<th colspan="3"><p align="center">非居</p></th>
+					<th rowspan="2">其中本期进展</th>
+					<th colspan="2"><p align="center">民居</p></th>
+					<th colspan="2"><p align="center">非居</p></th>
+					<th rowspan="2">拆迁补偿资金总额（不含拆迁安置）</th>
+					<th colspan="2"><p align="center">货币安置</p></th>
+					<th colspan="3"><p align="center">实物安置</p></th>
+				</tr>
+				<tr>
+					<th>户数</th>
+					<th>面积</th>
+					<th>户数</th>
+					<th>面积</th>
+					<th>民居</th>
+					<th>占比</th>
+					<th>非居</th>
+					<th>占比</th>
+					<th>户数</th>
+					<th>面积</th>
+					<th>占比</th>
+					<th>户数</th>
+					<th>面积</th>
+					<th>占比</th>
+					<th>户数</th>
+					<th>面积</th>
+					<th>户数</th>
+					<th>面积</th>
+					<th>户数</th>
+					<th>金额</th>
+					<th>户数</th>
+					<th>套数</th>
+					<th>面积</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<input type="button" id="addBtn" value="增加" class="btn btn-primary" />
+		<input type="button" id="deleteBtn" value="删除选中"
+			class="btn btn-danger" />
+	</div>
+	<div id="create" title="创建"></div>
+</body>
+</html>
