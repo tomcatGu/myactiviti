@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value = "/resource")
+@RequestMapping(value = "/permission")
 public class PermissionController {
 	@Autowired
 	private PermissionService permissionService;
