@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.crusoe.dto.PermissionDTO;
 import org.crusoe.dto.ResourceDTO;
@@ -19,13 +20,10 @@ import org.crusoe.dto.RoleDTO;
 import org.crusoe.dto.UserDTO;
 import org.crusoe.entity.Permission;
 import org.crusoe.entity.Resource;
-
 import org.crusoe.entity.Role;
-
 import org.crusoe.service.PermissionService;
 import org.crusoe.service.ResourceService;
 import org.crusoe.service.RoleService;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(value = "/permission")
@@ -60,8 +59,26 @@ public class PermissionController {
 	public String getCreateForm(Model model) {
 		PermissionDTO permission = new PermissionDTO();
 
-		model.addAttribute(permission);
+		model.addAttribute("permission", permission);
 		return "permission/createForm";
+	}
+	@RequestMapping(value = "create", method = RequestMethod.POST)
+	public @ResponseBody
+	Map<String, ? extends Object> create(@Valid @RequestBody PermissionDTO newPermission,
+			RedirectAttributes redirectAttributes) {
+
+		Permission permission = new Permission();
+
+		BeanUtils.copyProperties(newPermission,permission);
+
+		try {
+			permissionService.save(permission);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		redirectAttributes.addFlashAttribute("message", "创建资源成功");
+		return Collections.singletonMap("id", permission.getId());
 	}
 
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
