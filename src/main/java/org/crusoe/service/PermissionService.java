@@ -59,4 +59,11 @@ public class PermissionService {
 		// TODO Auto-generated method stub
 		permissionDao.save(permission);
 	}
+
+	public void save(Permission permission) {
+		// TODO Auto-generated method stub
+		permissionDao.save(permission);
+	}
+
+
 }
