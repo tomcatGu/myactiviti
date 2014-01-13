@@ -2,51 +2,7 @@
 <html>
 <head thy:merge="/common::headerFragment">
 <title>创建角色</title>
-<script type="text/javascript">
 
-function submitForm() {
-
-	var  role= $("#Form").serializeObject();
-	//alert(JSON.stringify(user));
-	$.postJSON("create", JSON.stringify(role), false,
-			function(data) {
-				if (data.err == "true") {
-					var errors = {};
-					for ( var obj in data) {
-						if (obj != "err")
-							errors[obj] = data[obj];
-
-					}
-					validator.showErrors(errors);
-				} else {
-					$("#dialog-message").html(
-							"Data has been saved!Its ID is:"
-									+ data.id);
-					$("#userForm").trigger("evtSuccess", {
-						msg : "OK"
-					});
-					$("#dialog-message").dialog({
-						modal : true,
-						buttons : {
-							Ok : function() {
-								$(this).dialog("close");
-
-							}
-						}
-
-					});
-				}
-
-			});
-	return false;
-};
-
-	var validator;
-	$(document).ready(function() {
-		validator = $("#Form").validate();
-		$("#submitButton").bind("click", submitForm);
-	});
-</script>
 <style type="text/css">
 * {
 	font-family: Verdana;
@@ -68,12 +24,56 @@ em {
 </head>
 <body>
 	<h1>创建角色</h1>
-	<form id="Form" method="POST" th:object="${role}">
+	<form id="roleForm" th:object="${role}">
 		<fieldset>
-			<label for="username">角色名:</label> <input id="name"
+			<label for="name">角色名:</label> <input id="name"
 				placeholder="输入角色名…" type="text" th:field="*{name}" /> <input
-				type="submit" id="submitButton" value="创建角色" class="btn btn-primary"/>
+				type="button" id="submitButton" value="创建角色" class="btn btn-primary" />
 		</fieldset>
+		<script type="text/javascript">
+			function submitForm() {
+
+				var role = $("#roleForm").serializeObject();
+				//alert(JSON.stringify(user));
+				$.postJSON("role/create", JSON.stringify(role), false,
+						function(data) {
+							if (data.err == "true") {
+								var errors = {};
+								for ( var obj in data) {
+									if (obj != "err")
+										errors[obj] = data[obj];
+
+								}
+								validator.showErrors(errors);
+							} else {
+								$("#dialog-message").html(
+										"Data has been saved!Its ID is:"
+												+ data.id);
+								$("#roleForm").trigger("evtSuccess", {
+									msg : "OK"
+								});
+								$("#dialog-message").dialog({
+									modal : true,
+									buttons : {
+										Ok : function() {
+											$(this).dialog("close");
+
+										}
+									}
+
+								});
+							}
+
+						});
+				return false;
+			};
+
+			var validator;
+			$(document).ready(function() {
+				validator = $("#roleForm").validate();
+				$("#submitButton").bind("click", submitForm);
+			});
+		</script>
 	</form>
 	<div id="dialog-message"></div>
 </body>
