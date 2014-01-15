@@ -31,8 +31,7 @@
 	th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
 <script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
 	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
-<script src="/bootstrap/js/DT_bootstrap.js" type="text/javascript"
-	th:src="@{/bootstrap/js/DT_bootstrap.js}"></script>
+
 <script src="/scripts/json2.js" type="text/javascript"
 	th:src="@{/scripts/json2.js}"></script>
 <script type="text/javascript">
@@ -141,14 +140,11 @@
 							<li class="nav-header"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">用户管理</li>
 							<li
-								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
+								><a
 								href="#" onClick="load('user/index')">用户列表<i
 									class="icon-chevron-right"></i></a></li>
-							<li class="nav-header"
-								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">角色管理</li>
-							<li
-								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
-								href="#" onClick="load('role/index')">角色列表<i
+							<li class="nav-header">角色管理</li>
+							<li><a href="#" onClick="load('role/index')">角色列表<i
 									class="icon-chevron-right"></i></a></li>
 						</ul>
 					</div>

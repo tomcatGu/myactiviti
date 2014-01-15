@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Validator;
@@ -62,14 +63,16 @@ public class PermissionController {
 		model.addAttribute("permission", permission);
 		return "permission/createForm";
 	}
+
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public @ResponseBody
-	Map<String, ? extends Object> create(@Valid @RequestBody PermissionDTO newPermission,
+	Map<String, ? extends Object> create(
+			@Valid @RequestBody PermissionDTO newPermission,
 			RedirectAttributes redirectAttributes) {
 
 		Permission permission = new Permission();
 
-		BeanUtils.copyProperties(newPermission,permission);
+		BeanUtils.copyProperties(newPermission, permission);
 
 		try {
 			permissionService.save(permission);
@@ -96,16 +99,19 @@ public class PermissionController {
 		return "permission/index";
 	}
 
-	@RequestMapping(value = "listPermissions", method = RequestMethod.POST)
+	@RequestMapping(value = "listPermissions", method = RequestMethod.GET)
 	public @ResponseBody
 	Map<String, Object> listPermissions(@RequestParam("sort") String sort,
 			@RequestParam("order") String order,
 			@RequestParam(value = "start", defaultValue = "0") int start,
 			@RequestParam(value = "size", defaultValue = "10") int size)
 			throws IllegalAccessException, InvocationTargetException {
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
+				Direction.DESC, new String[] { sort }) : new Sort(
+				Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size,
+				sortRequest);
 
-		PageRequest pageRequest = new PageRequest(start / size, size, new Sort(
-				order));
 		Page<Permission> permissions = permissionService
 				.getPermissions(pageRequest);
 		List<PermissionDTO> permissionDTOList = new ArrayList<PermissionDTO>();
@@ -121,7 +127,7 @@ public class PermissionController {
 		rets.put("count", permissions.getTotalElements());
 		rets.put("start", start);
 		rets.put("size", size);
-		rets.put("tasks", permissionDTOList);
+		rets.put("permissions", permissionDTOList);
 		return rets;
 	}
 

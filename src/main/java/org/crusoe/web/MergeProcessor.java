@@ -59,6 +59,7 @@ public class MergeProcessor extends AbstractAttrProcessor {
 		} else {
 
 			for (final Node fragmentNode : fragmentNodes) {
+
 				element.insertBefore(firstNode, fragmentNode);
 
 			}
