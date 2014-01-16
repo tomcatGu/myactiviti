@@ -46,21 +46,19 @@
 				function(data) {
 					$("#create").bind("evtSuccess", function(evt, data) {
 						$("#create").modal("hide");
-						//var iCurrentPage = oTable.fnSettings()._iDisplayStart;
-						//var oSettings = oTable.fnSettings();
-						//oSettings._iDisplayStart = iCurrentPage;
-						//oTable.fnDraw(oSettings);
+						$("#permissionList tr").nextAll().remove();
+						$.ajax({
+							url : "listPermissions?sort=id&order=desc",
+							success : function(data) {
+								paginator(data);
+
+							}
+						});
+
 					});
-					//alert(data);
-					//$('#createBody').html(data);
+
 					$("#create").modal();
-					/*
-					$("#create").dialog({
-						width : 600,
-						show : 'blind',
-						modal : true
-					});
-					 */
+
 				});
 	};
 	function paginator(data) {
@@ -72,19 +70,19 @@
 
 		var options = {
 			currentPage : start / size + 1,
-			totalPages : (count - remainder) / size + 1,
+			totalPages : remainder == 0 ? count / size : (count - remainder)
+					/ size + 1,
 			onPageChanged : function(e, oldPage, newPage) {
 				$("#permissionList tr").nextAll().remove();
 
-				$
-						.ajax({
-							url : "listPermissions?sort=id&order=desc&start="
-									+ (newPage-1)*size,
-							success : function(data) {
-								paginator(data);
+				$.ajax({
+					url : "listPermissions?sort=id&order=desc&start="
+							+ (newPage - 1) * size,
+					success : function(data) {
+						paginator(data);
 
-							}
-						});
+					}
+				});
 
 			},
 			itemContainerClass : function(type, page, current) {
