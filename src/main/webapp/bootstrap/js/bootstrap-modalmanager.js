@@ -99,7 +99,7 @@
 						};
 
 						transition ?
-							modal.$element.one($.support.transition.end, complete) :
+							modal.$element.one($.support.transition.end, complete):
 							complete();
 					});
 				};

@@ -1,6 +1,6 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+<head thy:merge="/common::headerFragment" th:remove="tag">
 <title>资源列表</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <!-- 
@@ -12,7 +12,7 @@
 	<link rel="stylesheet" type="text/css" media="screen"
 	href="/css/ui.multiselect.css" th:href="@{/css/ui.multiselect.css}" />
 	
--->
+
 <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
 <link rel="stylesheet" type="text/css"
@@ -37,85 +37,103 @@
 	type="text/javascript" th:src="@{/bootstrap/js/datatablesBootstrap.js}"></script>
 <script src="/scripts/json2.js" type="text/javascript"
 	th:src="@{/scripts/json2.js}"></script>
+	-->
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
-	$(document)
-			.ready(
-					function() {
-
-						$
-								.ajax({
-									url : "listPermissions?sort=url&order=desc",
-									success : function(data) {
-										count = Number(data.count);
-										start = Number(data.start);
-										size = Number(data.size);
-
-										remainder = (count - start) % size;
-
-										var options = {
-											currentPage : start / size + 1,
-											totalPages : (count - remainder)
-													/ size + 1,
-											itemContainerClass : function(type,
-													page, current) {
-												return (page === current) ? "active"
-														: "pointer-cursor";
-											}
-										};
-										for (i = 0; i < data.permissions.length; i++) {
-											var newRow = "<tr><td><input type=\"checkbox\" /></td><td>"
-													+ data.permissions[i].id
-													+ "</td><td>"
-													+ data.permissions[i].url
-													+ "</td><td>"
-													+ data.permissions[i].token
-													+ "</td><td>"
-													+ data.permissions[i].description
-													+ "</td><td><a href=\"claim/"+data.permissions[i].id+"\">接受</a></td></tr>";
-											$("#permissionList tr:last").after(
-													newRow);
-
-										}
-
-										$("#permissionList tr:gt(0)").hover(
-												function() {
-													$(this).addClass("hover")
-												},
-												function() {
-													$(this)
-															.removeClass(
-																	"hover")
-												});
-										$("#permissionList td")
-												.click(
-														function() {
-															var tdSeq = $(this)
-																	.parent()
-																	.find("td")
-																	.index(
-																			$(this));
-															var trSeq = $(this)
-																	.parent()
-																	.parent()
-																	.find("tr")
-																	.index(
-																			$(
-																					this)
-																					.parent());
-															alert("第"
-																	+ (trSeq)
-																	+ "行，第"
-																	+ (tdSeq + 1)
-																	+ "列");
-														});
-										$('#paginator').bootstrapPaginator(
-												options);
-
-									}
-								});
-
+	function addPermission() {
+		//$('body').modalmanager('loading');
+		$("#create").load('create?' + (new Date()).valueOf(), '',
+				function(data) {
+					$("#create").bind("evtSuccess", function(evt, data) {
+						$("#create").modal("hide");
+						//var iCurrentPage = oTable.fnSettings()._iDisplayStart;
+						//var oSettings = oTable.fnSettings();
+						//oSettings._iDisplayStart = iCurrentPage;
+						//oTable.fnDraw(oSettings);
 					});
+					//alert(data);
+					//$('#createBody').html(data);
+					$("#create").modal();
+					/*
+					$("#create").dialog({
+						width : 600,
+						show : 'blind',
+						modal : true
+					});
+					 */
+				});
+	};
+	function paginator(data) {
+		count = Number(data.count);
+		start = Number(data.start);
+		size = Number(data.size);
+
+		remainder = (count - start) % size;
+
+		var options = {
+			currentPage : start / size + 1,
+			totalPages : (count - remainder) / size + 1,
+			onPageChanged : function(e, oldPage, newPage) {
+				$("#permissionList tr").nextAll().remove();
+
+				$
+						.ajax({
+							url : "listPermissions?sort=id&order=desc&start="
+									+ (newPage-1)*size,
+							success : function(data) {
+								paginator(data);
+
+							}
+						});
+
+			},
+			itemContainerClass : function(type, page, current) {
+				return (page === current) ? "active" : "pointer-cursor";
+
+			}
+		};
+		for (i = 0; i < data.permissions.length; i++) {
+			var newRow = "<tr><td><input type=\"checkbox\" /></td><td>"
+					+ data.permissions[i].id
+					+ "</td><td>"
+					+ data.permissions[i].url
+					+ "</td><td>"
+					+ data.permissions[i].token
+					+ "</td><td>"
+					+ data.permissions[i].description
+					+ "</td><td><a href=\"claim/"+data.permissions[i].id+"\">接受</a></td></tr>";
+			$("#permissionList tr:last").after(newRow);
+
+		}
+
+		$("#permissionList tr:gt(0)").hover(function() {
+			$(this).addClass("hover")
+		}, function() {
+			$(this).removeClass("hover")
+		});
+		$("#permissionList td").click(
+				function() {
+					var tdSeq = $(this).parent().find("td").index($(this));
+					var trSeq = $(this).parent().parent().find("tr").index(
+							$(this).parent());
+					alert("第" + (trSeq) + "行，第" + (tdSeq + 1) + "列");
+				});
+		$('#paginator').bootstrapPaginator(options);
+
+	};
+	$(document).ready(function() {
+		$('#addBtn').bind('click', addPermission);
+
+		$.ajax({
+			url : "listPermissions?sort=id&order=desc",
+			success : function(data) {
+				paginator(data);
+
+			}
+		});
+
+	});
+
 	/*]]>*/
 </script>
 <style>
@@ -132,10 +150,10 @@
 			<thead>
 				<tr>
 					<th><input type="checkbox" name="check" value="" /></th>
-					<th>任务ID</th>
-					<th>任务名称</th>
-					<th>任务实施者</th>
-					<th>动作</th>
+					<th>ID</th>
+					<th>路径</th>
+					<th>权限</th>
+					<th>描述</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -153,6 +171,7 @@
 		<input type="button" id="deleteBtn" value="删除选中"
 			class="btn btn-danger" />
 	</div>
-	<div id="create" title="创建"></div>
+	<div tabindex="-1" class="modal hide fade" id="create"
+		data-keyboard="false" data-backdrop="static"></div>
 </body>
 </html>
