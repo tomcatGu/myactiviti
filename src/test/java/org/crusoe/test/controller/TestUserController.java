@@ -52,8 +52,6 @@ public class TestUserController {
 	@Test
 	public void testGetCreateForm() throws Exception {
 
-		// uc = (UserController) applicationContext.getBean("userController");
-
 		mockMvc.perform(get("/user/create").accept(MediaType.TEXT_PLAIN))
 				.andExpect(status().isOk());
 
