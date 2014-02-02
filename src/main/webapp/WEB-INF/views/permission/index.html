@@ -2,42 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment" th:remove="tag">
 <title>资源列表</title>
+<script src="/bootstrap/js/jquery.simpleTable.js" type="text/javascript"
+	th:src="@{/bootstrap/js/jquery.simpleTable.js}"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
-<!-- 
-<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
-<link href="/themes/blue/style.css" rel="stylesheet" type="text/css"
-	th:href="@{/themes/blue/style.css}" />
-	
-	<link rel="stylesheet" type="text/css" media="screen"
-	href="/css/ui.multiselect.css" th:href="@{/css/ui.multiselect.css}" />
-	
 
-<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
-<link rel="stylesheet" type="text/css"
-	href="/css/ui-lightness/jquery-ui-1.10.0.custom.css"
-	th:href="@{/css/ui-lightness/jquery-ui-1.10.0.custom.css}" />
-<link href="/bootstrap/css/DT_bootstrap.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/DT_bootstrap.css}" />
-<link href="/bootstrap/css/prettify.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/prettify.css}" />
-<script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
-	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
-<script src="/scripts/jquery-ui-1.10.3.custom.min.js"
-	type="text/javascript"
-	th:src="@{/scripts/jquery-ui-1.10.3.custom.min.js}"></script>
-<script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-<script src="/bootstrap/js/bootstrap-paginator.js"
-	type="text/javascript" th:src="@{/bootstrap/js/bootstrap-paginator.js}"></script>
-<script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
-<script src="/bootstrap/js/datatablesBootstrap.js"
-	type="text/javascript" th:src="@{/bootstrap/js/datatablesBootstrap.js}"></script>
-<script src="/scripts/json2.js" type="text/javascript"
-	th:src="@{/scripts/json2.js}"></script>
-	-->
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	function addPermission() {
@@ -61,6 +29,7 @@
 
 				});
 	};
+	/*
 	function paginator(data) {
 		count = Number(data.count);
 		start = Number(data.start);
@@ -119,19 +88,30 @@
 		$('#paginator').bootstrapPaginator(options);
 
 	};
-	$(document).ready(function() {
-		$('#addBtn').bind('click', addPermission);
+	*/
+	$(document).ready(
+			function() {
+				$('#addBtn').bind('click', addPermission);
+				$("#permissionList").simpleTable(
+						"listPermissions?sort=id&order=desc", render,
+						$("#paginator"), null);
+				/*
+				 $.ajax({
+				 url : "listPermissions?sort=id&order=desc",
+				 success : function(data) {
+				 paginator(data);
 
-		$.ajax({
-			url : "listPermissions?sort=id&order=desc",
-			success : function(data) {
-				paginator(data);
-
-			}
-		});
-
-	});
-
+				 }
+				 });
+				 */
+			});
+	function render(data) {
+		var newRow = "<tr><td><input type=\"checkbox\" /></td><td>" + data.id
+				+ "</td><td>" + data.url + "</td><td>" + data.token
+				+ "</td><td>" + data.description
+				+ "</td><td><a href=\"claim/"+data.id+"\">接受</a></td></tr>";
+		return newRow;
+	};
 	/*]]>*/
 </script>
 <style>

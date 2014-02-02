@@ -127,7 +127,7 @@ public class PermissionController {
 		rets.put("count", permissions.getTotalElements());
 		rets.put("start", start);
 		rets.put("size", size);
-		rets.put("permissions", permissionDTOList);
+		rets.put("records", permissionDTOList);
 		return rets;
 	}
 
