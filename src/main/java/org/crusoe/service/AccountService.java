@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -78,11 +79,9 @@ public class AccountService {
 		}
 
 		userDao.save(user);
-		
-		
 
 	}
-	
+
 	@Transactional(readOnly = false)
 	public void deleteUser(User user) throws Exception {
 
@@ -108,13 +107,14 @@ public class AccountService {
 		user.setPasswordSalt(salt);
 	}
 
-	public Page<User> searchUser(Map<String, Object> searchParams,Pageable pageRequest) {
+	public Page<User> searchUser(Map<String, Object> searchParams,
+			Pageable pageRequest) {
 
-		 Map<String, SearchFilter> filters = SearchFilter.parse3(searchParams);
-		 Specification<User> spec =
-		 DynamicSpecifications.bySearchFilter2(filters.values(), User.class);
+		Map<String, SearchFilter> filters = SearchFilter.parse3(searchParams);
+		Specification<User> spec = DynamicSpecifications.bySearchFilter2(
+				filters.values(), User.class);
 
-		return userDao.findAll(spec,pageRequest);
+		return userDao.findAll(spec, pageRequest);
 	}
 
 	/**
@@ -209,6 +209,11 @@ public class AccountService {
 	@Autowired
 	public void setRoleDao(RoleDao roleDao) {
 		this.roleDao = roleDao;
+	}
+
+	public Page<User> searchUser(PageRequest pageRequest) {
+		// TODO Auto-generated method stub
+		return userDao.findAll(pageRequest);
 	}
 
 }

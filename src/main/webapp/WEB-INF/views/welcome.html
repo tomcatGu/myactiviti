@@ -1,6 +1,6 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html>
-<head>
+<head thy:merge="/common::headerFragment" th:remove="tag">
 <title>Activiti Show</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <!-- 
@@ -12,7 +12,7 @@
 <link href="/themes/blue/style.css" rel="stylesheet" type="text/css"
 	th:href="@{/themes/blue/style.css}" />
 
--->
+
 <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
 <link rel="stylesheet" type="text/css"
@@ -34,6 +34,7 @@
 
 <script src="/scripts/json2.js" type="text/javascript"
 	th:src="@{/scripts/json2.js}"></script>
+	-->
 <script type="text/javascript">
 	function load(url) {
 		$("#content")
@@ -139,9 +140,7 @@
 							<li><a href="#">new</a></li>
 							<li class="nav-header"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">用户管理</li>
-							<li
-								><a
-								href="#" onClick="load('user/index')">用户列表<i
+							<li><a href="#" onClick="load('user/index')">用户列表<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="nav-header">角色管理</li>
 							<li><a href="#" onClick="load('role/index')">角色列表<i

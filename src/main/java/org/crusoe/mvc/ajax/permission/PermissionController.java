@@ -161,8 +161,18 @@ public class PermissionController {
 	// update a Resource when RequestMethod.PUT
 	@RequestMapping(value = "update/{id}", method = RequestMethod.PUT)
 	public @ResponseBody
-	Map<String, ? extends Object> update(@RequestBody PermissionDTO permission) {
+	Map<String, ? extends Object> update(
+			@RequestBody PermissionDTO permissionDTO) {
+		Permission permission = new Permission();
 
+		BeanUtils.copyProperties(permissionDTO, permission);
+
+		try {
+			permissionService.save(permission);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return Collections.singletonMap("id", permission.getId());
 	}
 

@@ -1,105 +1,60 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+<head thy:merge="/common::headerFragment" >
 <title>用户列表</title>
+<style>
+.hover {
+	background-color: #cccc00;
+}
+</style>
+<script src="/bootstrap/js/jquery.simpleTable.js" type="text/javascript"
+	th:src="@{/bootstrap/js/jquery.simpleTable.js}"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
-<!-- 
-<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
-<link href="/themes/blue/style.css" rel="stylesheet" type="text/css"
-	th:href="@{/themes/blue/style.css}" />
-	
-	<link rel="stylesheet" type="text/css" media="screen"
-	href="/css/ui.multiselect.css" th:href="@{/css/ui.multiselect.css}" />
-	
--->
-<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
-<link rel="stylesheet" type="text/css"
-	href="/css/ui-lightness/jquery-ui-1.10.0.custom.css"
-	th:href="@{/css/ui-lightness/jquery-ui-1.10.0.custom.css}" />
-<link href="/bootstrap/css/DT_bootstrap.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/DT_bootstrap.css}" />
-<link href="/bootstrap/css/prettify.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/prettify.css}" />
-<script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
-	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
-<script src="/scripts/jquery-ui-1.10.3.custom.min.js"
-	type="text/javascript"
-	th:src="@{/scripts/jquery-ui-1.10.3.custom.min.js}"></script>
-<script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-<script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
-<script src="/bootstrap/js/DT_bootstrap.js" type="text/javascript"
-	th:src="@{/bootstrap/js/DT_bootstrap.js}"></script>
-<script src="/scripts/json2.js" type="text/javascript"
-	th:src="@{/scripts/json2.js}"></script>
-<script type="text/javascript">
+
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+
 	function addUser() {
 		//alert("create user...");
-		$("#createUser").load('user/create', function(data) {
+		$("#createUser").load('user/create?' + (new Date()).valueOf(), function(data) {
 			$("#createUser").bind("evtSuccess", function(evt, data) {
-				//alert($(this).attr("id"));
-				//alert(evt);
-				//alert(data.msg);
-				$("#createUser").dialog("close");
-				var iCurrentPage = oTable.fnSettings()._iDisplayStart;
-				var oSettings = oTable.fnSettings();
-				oSettings._iDisplayStart = iCurrentPage;
-				oTable.fnDraw(oSettings);
+				$("#createUser").modal("hide");
+				$("#userList tr").nextAll().remove();
+				$.ajax({
+					url : "listUsers?sort=id&order=desc",
+					success : function(data) {
+						paginator(data);
+
+					}
+				});
 			});
-			//alert(data);
-			//$('#createUser .modal-body').html(data);
-			//$("#createUser").modal();
-			/**/
-			$("#createUser").dialog({
-				width:600,
-				show : 'blind',
-				modal : true
-			});
+			$("#createUser").modal();
 
 		});
 	};
-	$(document)
-			.ready(
-					function() {
+	$(document).ready(
+			function() {
+				$('#addBtn').bind('click', addUser);
+				$("#userList").simpleTable("user/listUsers?sort=id&order=desc",
+						render, $("#paginator"), null);
+				/*
+				 $.ajax({
+				 url : "listPermissions?sort=id&order=desc",
+				 success : function(data) {
+				 paginator(data);
 
-						/* add a click handler for the add row */
-						$('#addBtn').bind('click', addUser);
-						/* Add a click handler for the delete row */
-						$('#deleteBtn')
-								.click(
-										function() {
-											$("input[type='checkbox']")
-													.not($("#selectAll"))
-													.each(
-															function() {
-
-																if (this.checked == true) {
-																	$
-																			.ajax({
-																				type : "DELETE",
-																				url : "user/"
-																						+ this.value,
-																				success : function(
-																						msg) {
-																					var iCurrentPage = oTable
-																							.fnSettings()._iDisplayStart;
-																					var oSettings = oTable
-																							.fnSettings();
-																					oSettings._iDisplayStart = iCurrentPage;
-																					oTable
-																							.fnDraw(oSettings);
-																					alert("Data Deleted: "
-																							+ msg.msg);
-																				}
-																			});
-																}
-															});
-										});
-
-					});
+				 }
+				 });
+				 */
+			});
+	function render(data) {
+		var newRow = "<tr><td><input type=\"checkbox\" /></td><td>" + data.id
+				+ "</td><td>" + data.name + "</td><td>" + data.loginName
+				+ "</td><td>" + data.mobile
+				+ "</td><td><a href=\"claim/"+data.id+"\">接受</a></td></tr>";
+		return newRow;
+	};
+	/*]]>*/
 </script>
 </head>
 <body>
@@ -120,7 +75,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
+				<tr th:remove="all">
 					<td>Student01</td>
 					<td>Languages</td>
 					<td>male</td>
@@ -128,7 +83,7 @@
 					<td>70</td>
 					<td>75</td>
 				</tr>
-				<tr>
+				<tr th:remove="all">
 					<td>Student02</td>
 					<td>Languagesee</td>
 					<td>female</td>
@@ -138,10 +93,12 @@
 				</tr>
 			</tbody>
 		</table>
+		<div id="paginator"></div>
 		<input type="button" id="addBtn" value="增加" class="btn btn-primary" />
 		<input type="button" id="deleteBtn" value="删除选中"
 			class="btn btn-danger" />
 	</div>
-	<div id="createUser" title="创建"></div>
+		<div tabindex="-1" class="modal hide fade" id="createUser"
+		data-keyboard="false" data-backdrop="static"></div>
 </body>
 </html>

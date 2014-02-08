@@ -14,14 +14,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.activiti.engine.impl.Direction;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.RoleDTO;
 import org.crusoe.dto.UserDTO;
 import org.crusoe.entity.Resource;
-
 import org.crusoe.entity.Role;
-
 import org.crusoe.entity.User;
 import org.crusoe.service.AccountService;
 import org.crusoe.service.RoleService;
@@ -36,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -253,47 +251,22 @@ public class UserController {
 		return "redirect:/task/";
 	}
 
-	@RequestMapping(value = "getUsers", method = RequestMethod.POST)
+	@RequestMapping(value = "listUsers", method = RequestMethod.GET)
 	public @ResponseBody
-	DataTableReturnObject getUsers(@RequestBody JSONParam[] params) {
+	Map<String, Object> listlUsers(@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size) {
 
-		// System.out.println(order);
-		Map<String, Object> rets = new ConcurrentHashMap<String, Object>();
-
-		// convertToMap定义于父类，将参数数组中的所有元素加入一个HashMap
-		HashMap<String, Object> paramMap = JSONUtil.convertToMap(params);
-		int sEcho = Integer.valueOf(paramMap.get("sEcho").toString());
-		// String customerName = paramMap.get("customerName");
-		int start = Integer.parseInt(paramMap.get("iDisplayStart").toString());
-		int length = Integer
-				.parseInt(paramMap.get("iDisplayLength").toString());
-
-		// customerService.search返回的第一个元素是满足查询条件的记录总数，后面的是
-		// 页面当前页需要显示的记录数据
-
-		String iSortingCols = paramMap.get("iSortingCols").toString();
-
-		int sortingCols = Integer.parseInt(iSortingCols);
-		Sort.Order[] orders = new Sort.Order[sortingCols];
-		for (int i = 0; i < sortingCols; i++) {
-			Object sortCol = paramMap.get("iSortCol_" + String.valueOf(i));
-			String sortName = paramMap.get("mDataProp_" + sortCol.toString())
-					.toString();
-			String sortDirection = paramMap
-					.get("sSortDir_" + String.valueOf(i)).toString();
-			orders[i] = new Sort.Order(
-					"asc".equals(sortDirection) ? Sort.Direction.ASC
-							: Sort.Direction.DESC, sortName);
-
-		}
-
-		PageRequest pageRequest = new PageRequest(start / length, length,
-				new Sort(orders));
-		// new PageRequest(1,15,new Sort() );
-		Page<User> users = accountService.searchUser(paramMap, pageRequest);
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
+				Direction.DESC, new String[] { sort }) : new Sort(
+				Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size,
+				sortRequest);
+		Page<User> users = accountService.searchUser(pageRequest);
 
 		// 将查询结果转换为一维数组
-		Object[] data = new Object[users.getNumberOfElements()];
+		List<UserDTO> userDTOList = new ArrayList<UserDTO>();
 		Iterator iter = users.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
@@ -311,12 +284,16 @@ public class UserController {
 			}
 
 			// userDTO.getRoles().clear();
-			data[i++] = userDTO;
+			userDTOList.add(userDTO);
 
 		}
 
-		return new DataTableReturnObject(users.getTotalElements(),
-				users.getTotalElements(), sEcho, data);
+		Map<String, Object> rets = new ConcurrentHashMap<String, Object>();
+		rets.put("count", users.getTotalElements());
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", userDTOList);
+		return rets;
 	}
 
 	/**
