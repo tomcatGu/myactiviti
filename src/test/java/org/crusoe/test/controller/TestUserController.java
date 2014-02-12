@@ -61,14 +61,14 @@ public class TestUserController {
 
 		mockMvc.perform(get("/user/create").accept(MediaType.TEXT_PLAIN))
 				.andExpect(content().string(containsString("loginName")));
-		UserDTO formObject=new UserDTO();
+/*		UserDTO formObject=new UserDTO();
 		mockMvc.perform(post("/user/create")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(IntegrationTestUtil.convertObjectToFormUrlEncodedBytes(formObject))
                 .sessionAttr("user", formObject)
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("todo/add"));
+                .andExpect(view().name("todo/add"));*/
 
 	}
 }
