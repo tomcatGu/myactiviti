@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -237,6 +238,27 @@ public class UserController {
 		accountService.deleteUser(user);
 		// redirectAttributes.addFlashAttribute("message", "删除用户成功");
 
+		Map<String, String> msgs = new HashMap<String, String>();
+
+		msgs.put("msg", "删除用户成功");
+		return msgs;
+	}
+
+	/**
+	 * 　批量删除　
+	 * 
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "delete", method = RequestMethod.DELETE)
+	public @ResponseBody
+	Map<String, ? extends Object> batchDelete(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String[] items = request.getParameterValues("items");
+		for (int i = 0; i < items.length; i++) {
+			java.lang.Long id = new java.lang.Long(items[i]);
+			User user = accountService.getUser(id);
+			accountService.deleteUser(user);
+		}
 		Map<String, String> msgs = new HashMap<String, String>();
 
 		msgs.put("msg", "删除用户成功");
