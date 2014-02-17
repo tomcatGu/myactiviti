@@ -82,18 +82,25 @@
 
 	};
 	function batchDelete() {
-		var items = [];
+		var selctedItems = new Array();
 		$("input[name='selectFlag']:checkbox").each(function() { //遍历所有的name为selectFlag的 checkbox
 			if ($(this).prop("checked") == true) {
-				items[items.length] = $(this).prop("id");
+				selctedItems.push($(this).prop("value"));
 			}
 		});
-		jQuery.ajax({
-			type : "DELETE",
-			url : "user/delete",
+		$('#deleteBtn').confirm({
+			'title' : '测试一下',
+			'message' : '测试修改modal内容'
+		});
+		$.ajax({
+			type : "POST",
+			url : "user",
 			data : {
-				"items" : items
+				_method : 'DELETE',
+				items : selctedItems
 			},
+			//contentType : 'application/json',
+			dataType : 'json',
 			success : function(data) {
 				alert(data);
 

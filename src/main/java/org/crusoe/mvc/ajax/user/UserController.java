@@ -249,11 +249,17 @@ public class UserController {
 	 * 
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "delete", method = RequestMethod.DELETE)
+	/**
+	 * @param items
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(method = RequestMethod.DELETE)
 	public @ResponseBody
-	Map<String, ? extends Object> batchDelete(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		String[] items = request.getParameterValues("items");
+	Map<String, ? extends Object> batchDelete(
+			@RequestParam(value = "items[]", required = false) int[] items)
+			throws Exception {
+		// String[] items = request.getParameterValues("items");
 		for (int i = 0; i < items.length; i++) {
 			java.lang.Long id = new java.lang.Long(items[i]);
 			User user = accountService.getUser(id);
