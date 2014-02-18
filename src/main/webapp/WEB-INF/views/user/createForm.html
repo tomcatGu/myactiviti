@@ -49,7 +49,7 @@
 					function submitForm() {
 
 						var user = $("#userForm").serializeObject();
-						alert(JSON.stringify(user));
+						//alert(JSON.stringify(user));
 						$.postJSON("user/create", JSON.stringify(user), false,
 								function(data) {
 									if (data.err == "true") {
@@ -91,7 +91,7 @@
 			</div>
 			<div class="modal-footer">
 
-				<button class="btn btn-primary" type="button" data-dismiss="modal">Continue
+				<button class="btn btn-primary" type="button" data-dismiss="modal">¼ÌÐø
 				</button>
 			</div>
 		</div>

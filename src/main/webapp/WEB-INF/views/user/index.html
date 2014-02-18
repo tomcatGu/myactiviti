@@ -7,36 +7,30 @@
 	background-color: #cccc00;
 }
 </style>
-<script src="/bootstrap/js/jquery.simpleTable.js" type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.simpleTable.js}"></script>
+
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 
-	function addUser() {
-		//alert("create user...");
-		$("#createUser").load('user/create?' + (new Date()).valueOf(),
-				function(data) {
-					$("#createUser").bind("evtSuccess", function(evt, data) {
-						$("#createUser").modal("hide");
-						$("#userList tr").nextAll().remove();
-						$.ajax({
-							url : "listUsers?sort=id&order=desc",
-							success : function(data) {
-								paginator(data);
-
-							}
-						});
-					});
-					$("#createUser").modal();
-
-				});
-	};
 	$(document).ready(
 			function() {
 				$('#addBtn').bind('click', addUser);
 				$('#checkAll').bind('click', checkAll);
-				$('#deleteBtn').bind('click', batchDelete);
+				$('#deleteBtn').bind('click', function() {
+
+					$("#confirmDiv").confirm({
+						heading : '确认删除',
+						body : '你真的要删除吗?',
+						yesBtn : '是',
+						noBtn : '否',
+						callback : function() {
+							batchDelete();
+
+						}
+					});
+
+				});
+
 				$("#userList").simpleTable("user/listUsers?sort=id&order=desc",
 						render, $("#paginator"), null);
 				/*
@@ -81,6 +75,24 @@
 		}
 
 	};
+	function addUser() {
+		//alert("create user...");
+		$("#createUser").load(
+				'user/create?' + (new Date()).valueOf(),
+				function(data) {
+					$("#createUser").bind(
+							"evtSuccess",
+							function(evt, data) {
+								$("#createUser").modal("hide");
+								$("#userList tr").nextAll().remove();
+								$("#userList").simpleTable(
+										"user/listUsers?sort=id&order=desc",
+										render, $("#paginator"), null);
+							});
+					$("#createUser").modal();
+
+				});
+	};
 	function batchDelete() {
 		var selctedItems = new Array();
 		$("input[name='selectFlag']:checkbox").each(function() { //遍历所有的name为selectFlag的 checkbox
@@ -88,10 +100,7 @@
 				selctedItems.push($(this).prop("value"));
 			}
 		});
-		$('#deleteBtn').confirm({
-			'title' : '测试一下',
-			'message' : '测试修改modal内容'
-		});
+
 		$.ajax({
 			type : "POST",
 			url : "user",
@@ -102,7 +111,9 @@
 			//contentType : 'application/json',
 			dataType : 'json',
 			success : function(data) {
-				alert(data);
+				$("#userList tr").nextAll().remove();
+				$("#userList").simpleTable("user/listUsers?sort=id&order=desc",
+						render, $("#paginator"), null);
 
 			}
 		});
@@ -154,5 +165,6 @@
 	</div>
 	<div tabindex="-1" class="modal hide fade" id="createUser"
 		data-keyboard="false" data-backdrop="static"></div>
+	<div id="confirmDiv"></div>
 </body>
 </html>
