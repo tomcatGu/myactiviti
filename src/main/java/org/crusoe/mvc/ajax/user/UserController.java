@@ -194,13 +194,15 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
-	public String update(@Valid @RequestBody UserDTO newUser,
+	public @ResponseBody
+	Map<String, ? extends Object> update(@Valid @RequestBody UserDTO newUser,
 			RedirectAttributes redirectAttributes) {
 		User user = new User();
 		user.setId(newUser.getId());
 		user.setLoginName(newUser.getLoginName());
 		user.setName(newUser.getName());
 		user.setEmail(newUser.getEmail());
+		user.setMobile(newUser.getMobile());
 		user.setPassword(newUser.getPassword());
 
 		// BeanUtils.copyProperties(newUser, user);
@@ -224,9 +226,7 @@ public class UserController {
 			e.printStackTrace();
 		}
 
-		redirectAttributes.addFlashAttribute("message", "更新用户成功");
-
-		return "redirect:/task/";
+		return Collections.singletonMap("id", user.getId());
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

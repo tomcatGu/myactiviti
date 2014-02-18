@@ -56,7 +56,7 @@
 				+ data.email
 				+ "</td><td>"
 				+ data.stauts
-				+ "</td><td><a href=\"user/update/"+data.id+"\"><i class='icon-edit'></i></a></td></tr>";
+				+ "</td><td><a href=\"javascript:updateUser("+data.id+");\"><i class='icon-edit'></i></a></td></tr>";
 		return newRow;
 	};
 	function checkAll() {
@@ -79,6 +79,24 @@
 		//alert("create user...");
 		$("#createUser").load(
 				'user/create?' + (new Date()).valueOf(),
+				function(data) {
+					$("#createUser").bind(
+							"evtSuccess",
+							function(evt, data) {
+								$("#createUser").modal("hide");
+								$("#userList tr").nextAll().remove();
+								$("#userList").simpleTable(
+										"user/listUsers?sort=id&order=desc",
+										render, $("#paginator"), null);
+							});
+					$("#createUser").modal();
+
+				});
+	};
+	function updateUser(id) {
+		//alert("create user...");
+		$("#createUser").load(
+				'user/update/'+id +'?'+ (new Date()).valueOf(),
 				function(data) {
 					$("#createUser").bind(
 							"evtSuccess",
