@@ -7,24 +7,27 @@
 	background-color: #cccc00;
 }
 </style>
-
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 
 	$(document).ready(
 			function() {
-				$('#addBtn').bind('click', addUser);
-				$('#checkAll').bind('click', checkAll);
-				$('#deleteBtn').bind('click', function() {
+				$('#addBtn').bind('click', function() {
+					create('#createUser', 'user/create', successCallback);
+				});
+				$('#checkAll').bind('click', function() {
+					checkAll("#checkAll");
+				});
 
+				$('#deleteBtn').bind('click', function() {
 					$("#confirmDiv").confirm({
 						heading : '确认删除',
 						body : '你真的要删除吗?',
 						yesBtn : '是',
 						noBtn : '否',
 						callback : function() {
-							batchDelete();
+							batchDelete("user", successCallback);
 
 						}
 					});
@@ -43,6 +46,15 @@
 				 });
 				 */
 			});
+	function successCallback() {
+
+		$("#createUser").modal("hide");
+		$("#userList tr").nextAll().remove();
+
+		$("#userList").simpleTable("user/listUsers?sort=id&order=desc", render,
+				$("#paginator"), null);
+
+	}
 	function render(data) {
 		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
 				+ data.id
@@ -56,87 +68,12 @@
 				+ data.email
 				+ "</td><td>"
 				+ data.stauts
-				+ "</td><td><a href=\"javascript:updateUser("+data.id+");\"><i class='icon-edit'></i></a></td></tr>";
+				+ "</td><td><a href=\"javascript:update('#createUser','user/update/"
+				+ data.id
+				+ "',successCallback);\"><i class='icon-edit'></i></a></td></tr>";
 		return newRow;
 	};
-	function checkAll() {
 
-		if ($("#checkAll").prop("checked") == true) {
-			//alert("checked");
-			$("input[name='selectFlag']:checkbox").each(function() { //遍历所有的name为selectFlag的 checkbox
-				$(this).prop("checked", true);
-			});
-		} else { //反之 取消全选 
-			//alert("unchecked");
-			$("input[name='selectFlag']:checkbox").each(function() { //遍历所有的name为selectFlag的 checkbox
-				$(this).prop("checked", false);
-				//alert("f");
-			});
-		}
-
-	};
-	function addUser() {
-		//alert("create user...");
-		$("#createUser").load(
-				'user/create?' + (new Date()).valueOf(),
-				function(data) {
-					$("#createUser").bind(
-							"evtSuccess",
-							function(evt, data) {
-								$("#createUser").modal("hide");
-								$("#userList tr").nextAll().remove();
-								$("#userList").simpleTable(
-										"user/listUsers?sort=id&order=desc",
-										render, $("#paginator"), null);
-							});
-					$("#createUser").modal();
-
-				});
-	};
-	function updateUser(id) {
-		//alert("create user...");
-		$("#createUser").load(
-				'user/update/'+id +'?'+ (new Date()).valueOf(),
-				function(data) {
-					$("#createUser").bind(
-							"evtSuccess",
-							function(evt, data) {
-								$("#createUser").modal("hide");
-								$("#userList tr").nextAll().remove();
-								$("#userList").simpleTable(
-										"user/listUsers?sort=id&order=desc",
-										render, $("#paginator"), null);
-							});
-					$("#createUser").modal();
-
-				});
-	};
-	function batchDelete() {
-		var selctedItems = new Array();
-		$("input[name='selectFlag']:checkbox").each(function() { //遍历所有的name为selectFlag的 checkbox
-			if ($(this).prop("checked") == true) {
-				selctedItems.push($(this).prop("value"));
-			}
-		});
-
-		$.ajax({
-			type : "POST",
-			url : "user",
-			data : {
-				_method : 'DELETE',
-				items : selctedItems
-			},
-			//contentType : 'application/json',
-			dataType : 'json',
-			success : function(data) {
-				$("#userList tr").nextAll().remove();
-				$("#userList").simpleTable("user/listUsers?sort=id&order=desc",
-						render, $("#paginator"), null);
-
-			}
-		});
-
-	}
 	/*]]>*/
 </script>
 </head>

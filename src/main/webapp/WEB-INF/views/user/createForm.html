@@ -11,89 +11,84 @@
 </script>
 </head>
 <body>
-	<div>
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true">×</button>
+		<h3>创建用户</h3>
+	</div>
+	<div class="modal-body">
+		<form id="userForm" method="POST" th:object="${user}">
+			<fieldset>
+				<label for="username">登陆名:</label> <input id="loginName"
+					placeholder="输入登陆名…" type="text" th:field="*{loginName}" /> <label
+					for="name">真实姓名:</label> <input id="name" type="text"
+					th:field="*{name}" /> <label for="mobile">手机号码:</label> <input
+					id="mobile" type="text" th:field="*{mobile}" /><br /> <label
+					class="control-label" for="email">电子邮箱:</label>
+				<div class="input-prepend">
+					<span class="add-on"><i class="icon-envelope"></i></span> <input
+						id="email" type="text" th:field="*{email}"
+						placeholder="输入电子邮箱（如123@sina.com)…" />
+				</div>
+				<label for="password">密码:</label> <input id="password" type="text"
+					th:field="*{password}" />
+				<div class="form-actions">
+					<div class="control-group">
+						<div class="controls">
+							<label class="checkbox" th:each="role : ${user.roles}"> <input
+								type="checkbox" th:field="*{roles}" th:value="${role.id}" /> <label
+								th:text="${role.name}">ROLE_USER</label>
+							</label>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<script type="text/javascript">
+				function submitForm() {
+
+					var user = $("#userForm").serializeObject();
+					//alert(JSON.stringify(user));
+					$.postJSON("user/create", JSON.stringify(user), false,
+							function(data) {
+								if (data.err == "true") {
+									var errors = {};
+									for ( var obj in data) {
+										if (obj != "err")
+											errors[obj] = data[obj];
+
+									}
+									validator.showErrors(errors);
+								} else {
+									$("#dialog-message .modal-body").html(
+											"数据已经保存!其ID号为:" + data.id);
+									$("#userForm").trigger("evtSuccess", {
+										msg : "OK"
+									});
+									$("#dialog-message").modal();
+								}
+
+							});
+					return false;
+				}
+			</script>
+		</form>
+		<div class="modal-footer">
+			<button type="button" id="submitButton" class="btn btn-primary">创建用户</button>
+		</div>
+	</div>
+	<div tabindex="-1" class="modal hide fade" id="dialog-message"
+		data-keyboard="false" data-backdrop="static">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
 				aria-hidden="true">×</button>
-			<h3>创建用户</h3>
+			<h3>消息</h3>
 		</div>
 		<div class="modal-body">
-			<form id="userForm" method="POST" th:object="${user}">
-				<fieldset>
-					<label for="username">登陆名:</label> <input id="loginName"
-						placeholder="输入登陆名…" type="text" th:field="*{loginName}" /> <label
-						for="name">真实姓名:</label> <input id="name" type="text"
-						th:field="*{name}" /> <label for="mobile">手机号码:</label> <input
-						id="mobile" type="text" th:field="*{mobile}" /><br /> <label
-						class="control-label" for="email">电子邮箱:</label>
-					<div class="input-prepend">
-						<span class="add-on"><i class="icon-envelope"></i></span> <input
-							id="email" type="text" th:field="*{email}"
-							placeholder="输入电子邮箱（如123@sina.com)…" />
-					</div>
-					<label for="password">密码:</label> <input id="password" type="text"
-						th:field="*{password}" />
-					<div class="form-actions">
-						<div class="control-group">
-							<div class="controls">
-								<label class="checkbox" th:each="role : ${user.roles}">
-									<input type="checkbox" th:field="*{roles}"
-									th:value="${role.id}" /> <label th:text="${role.name}">ROLE_USER</label>
-								</label>
-							</div>
-						</div>
-					</div>
-
-				</fieldset>
-				<script type="text/javascript">
-					function submitForm() {
-
-						var user = $("#userForm").serializeObject();
-						//alert(JSON.stringify(user));
-						$.postJSON("user/create", JSON.stringify(user), false,
-								function(data) {
-									if (data.err == "true") {
-										var errors = {};
-										for ( var obj in data) {
-											if (obj != "err")
-												errors[obj] = data[obj];
-
-										}
-										validator.showErrors(errors);
-									} else {
-										$("#dialog-message .modal-body").html(
-												"数据已经保存!其ID号为:" + data.id);
-										$("#userForm").trigger("evtSuccess", {
-											msg : "OK"
-										});
-										$("#dialog-message").modal();
-									}
-
-								});
-						return false;
-					}
-				</script>
-			</form>
-			<div class="modal-footer">
-
-				<button type="button" id="submitButton" class="btn btn-primary">创建用户</button>
-			</div>
+			<p>Would you like to continue with some arbitrary task?</p>
 		</div>
-		<div tabindex="-1" class="modal hide fade" id="dialog-message"
-			data-keyboard="false" data-backdrop="static">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
-				<h3>消息</h3>
-			</div>
-			<div class="modal-body">
-				<p>Would you like to continue with some arbitrary task?</p>
-			</div>
-			<div class="modal-footer">
-
-				<button class="btn btn-primary" type="button" data-dismiss="modal">继续
-				</button>
-			</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="button" data-dismiss="modal">继续
+			</button>
 		</div>
 	</div>
 </body>

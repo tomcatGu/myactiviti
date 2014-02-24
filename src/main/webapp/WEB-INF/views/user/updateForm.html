@@ -50,7 +50,7 @@
 					function submitForm() {
 
 						var user = $("#userForm").serializeObject();
-						alert(JSON.stringify(user));
+						//alert(JSON.stringify(user));
 						$.postJSON("user/update", JSON.stringify(user), false,
 								function(data) {
 									if (data.err == "true") {
