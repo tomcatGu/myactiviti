@@ -1,9 +1,8 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html>
-<head>
+<head thy:merge="/common::headerFragment">
 <title>角色列表</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
-
 <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
 <link rel="stylesheet" type="text/css"
@@ -24,7 +23,7 @@
 	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
 <script src="/bootstrap/js/bootstrap_DT.js" type="text/javascript"
 	th:src="@{/bootstrap/js/bootstrap_DT.js}"></script>
-	<script src="/bootstrap/js/role.js" type="text/javascript"
+<script src="/bootstrap/js/role.js" type="text/javascript"
 	th:src="@{/bootstrap/js/role.js}"></script>
 <script src="/scripts/json2.js" type="text/javascript"
 	th:src="@{/scripts/json2.js}"></script>

@@ -1,50 +1,13 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
-
-
-
-
-
 <title>Activiti Show</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
-<!-- 
-
-	<link rel="stylesheet" type="text/css" media="screen"
-	href="/css/ui.multiselect.css" th:href="@{/css/ui.multiselect.css}" />
-	
-	
-<link href="/themes/blue/style.css" rel="stylesheet" type="text/css"
-	th:href="@{/themes/blue/style.css}" />
-
-
-<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
-<link rel="stylesheet" type="text/css"
-	href="/css/ui-lightness/jquery-ui-1.10.3.custom.css"
-	th:href="@{/css/ui-lightness/jquery-ui-1.10.3.custom.css}" />
-<link href="/bootstrap/css/DT_bootstrap.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/DT_bootstrap.css}" />
-<link href="/bootstrap/css/prettify.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/prettify.css}" />
-<script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
-	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
-<script src="/scripts/jquery-ui-1.10.3.custom.min.js"
-	type="text/javascript"
-	th:src="@{/scripts/jquery-ui-1.10.3.custom.min.js}"></script>
-<script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-<script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
-
-<script src="/scripts/json2.js" type="text/javascript"
-	th:src="@{/scripts/json2.js}"></script>
-	-->
 <script type="text/javascript">
 	function load(url) {
 		$("#content")
 				.load(
-						url,
+						url + '?' + (new Date()).valueOf(),
 						function(event) {
 							$('#breadcrumb').empty();
 							$('#breadcrumb')
@@ -131,7 +94,7 @@
 			<div class="row">
 				<div class="span3 bs-docs-sidebar">
 					<div class="well sidebar-nav">
-						<ul class="nav nav-list bs-docs-sidenav">
+						<ul class="nav nav-list">
 							<li class="nav-header">Demo</li>
 							<li><a href="#" onClick="load('demolition/index')">list1<i
 									class="icon-chevron-right"></i></a></li>
@@ -145,7 +108,7 @@
 							<li><a href="#">new</a></li>
 							<li class="nav-header"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">用户管理</li>
-							<li><a href="#" onClick="load('user/index')">用户列表<i
+							<li><a href="#" onClick="load('user/index')">user<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="nav-header">角色管理</li>
 							<li><a href="#" onClick="load('role/index')">角色列表<i
@@ -161,7 +124,7 @@
 						<li><a href="#">Library</a> <span class="divider">/</span></li>
 						<li class="active">Data</li>
 					</ul>
-					<div class="" id="content">
+					<div id="content">
 						<div class="container">
 							<h1>Hello, world!</h1>
 							<p>This is a template for a simple marketing or informational
