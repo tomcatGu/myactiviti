@@ -17,8 +17,8 @@
 
 					var options = {
 						currentPage : start / size + 1,
-						totalPages : remainder == 0 ? count / size
-								: (count - remainder) / size + 1,
+						totalPages : remainder == 0 ? (count == 0 ? 1 : count
+								/ size) : (count - remainder) / size + 1,
 						onPageChanged : function(e, oldPage, newPage) {
 							table.find("tr").nextAll().remove();
 

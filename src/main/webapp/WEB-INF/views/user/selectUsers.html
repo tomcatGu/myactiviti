@@ -1,0 +1,79 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<title>用户列表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+
+	$(document).ready(
+			function() {
+
+				$('#checkAll').bind('click', function() {
+					checkAll("#checkAll");
+				});
+				$('#select').bind('click', function() {
+					var selectedItems = new Array();
+					$("input[name='selectFlag']:checkbox").each(function() { // 遍历所有的name为selectFlag的
+						// checkbox
+						if ($(this).prop("checked") == true) {
+							selectedItems.push($(this).prop("value"));
+						}
+					});
+					//alert(selectedItems);
+					$("#userList").trigger("evtSelectUser", {
+						users : selectedItems
+					});
+
+				});
+
+				$("#userList").simpleTable(
+						"../../user/listUsers?sort=id&order=desc", render,
+						$("#paginator"), null);
+
+			});
+
+	function render(data) {
+		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+				+ data.id + "</td><td>" + data.name + "</td><td>";
+		return newRow;
+	};
+
+	/*]]>*/
+</script>
+</head>
+<body>
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true">×</button>
+		<h3>用户列表</h3>
+	</div>
+	<div class="modal-body" id="body">
+		<table id="userList" cellpadding="0" cellspacing="0" border="0"
+			class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th><input type="checkbox" id="checkAll" /></th>
+					<th>Id</th>
+					<th>Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:remove="all">
+					<td>Student01</td>
+					<td>Languages</td>
+				</tr>
+				<tr th:remove="all">
+					<td>Student02</td>
+					<td>Languagesee</td>
+				</tr>
+			</tbody>
+		</table>
+		<div id="paginator"></div>
+		<div class="modal-footer">
+			<input type="button" id="select" value="确定" class="btn btn-primary" />
+			<input type="button" id="cancle" value="取消" class="btn btn-danger" />
+		</div>
+	</div>
+</body>
+</html>

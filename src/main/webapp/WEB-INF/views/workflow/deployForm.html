@@ -1,4 +1,4 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -32,7 +32,7 @@
 	th:src="@{/scripts/json2.js}"></script>
 </head>
 <body>
-	<form action="deploy" method="post"
+	<form action="deployments" method="post"
 		enctype="multipart/form-data">
 		<input type="file" name="file" /> <input type="submit" value="Submit" />
 	</form>

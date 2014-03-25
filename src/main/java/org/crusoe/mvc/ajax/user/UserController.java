@@ -85,6 +85,12 @@ public class UserController {
 		return "user/index";
 	}
 
+	@RequestMapping(value = "select")
+	public String selectUsers() {
+
+		return "user/selectUsers";
+	}
+
 	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String createForm(Model model) {
 		UserDTO userDTO = new UserDTO();
