@@ -8,6 +8,7 @@ import org.activiti.engine.FormService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -78,14 +79,24 @@ public class ProcessController {
 		return rets;
 	}
 
-	@RequestMapping(value = "{id}/start")
-	public String start(@PathVariable String id) {
+	@RequestMapping(value = "{id}/start", method = RequestMethod.GET)
+	public String start(@PathVariable String id, Model model) {
 		RuntimeService runtimeService = processEngine.getRuntimeService();
-		ProcessInstance processInstance = runtimeService
-				.startProcessInstanceById(id);
-		runtimeService.addUserIdentityLink(
-				processInstance.getProcessInstanceId(), "admin", "candidate");
+		ProcessDefinition processDefinition = repositoryService
+				.getProcessDefinition(id);
 
-		return "redirect:/runtime/tasks/index";
+		// runtimeService.addUserIdentityLink(
+		// processInstance.getProcessInstanceId(), "admin", "candidate");
+		String startFormKey = formService.getStartFormKey(processDefinition
+				.getId());
+		if (startFormKey != null) {
+			model.addAttribute("processDefinitionId", processDefinition.getId());
+			return startFormKey;
+		} else {
+			ProcessInstance processInstance = runtimeService
+					.startProcessInstanceById(id);
+			return "redirect:/runtime/tasks/index";
+
+		}
 	}
 }

@@ -26,6 +26,12 @@
 					});
 
 				});
+				$('#cancle').bind('click', function() {//if user click cancle button then trigger the evtCancled event.
+					$("#userList").trigger("evtCancled", {
+						msg : 'cancled'
+					});
+
+				});
 
 				$("#userList").simpleTable(
 						"../../user/listUsers?sort=id&order=desc", render,

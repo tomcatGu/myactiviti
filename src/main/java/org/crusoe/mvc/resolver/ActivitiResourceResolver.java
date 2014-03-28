@@ -49,7 +49,7 @@ public class ActivitiResourceResolver implements IResourceResolver {
 
 		}
 		try {
-			if (version == -1) {
+			if (version != -1) {
 				processDefinition = repositoryService
 						.createProcessDefinitionQuery()
 						.processDefinitionKey(strs[0])
