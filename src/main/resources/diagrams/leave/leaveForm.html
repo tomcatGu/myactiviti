@@ -5,11 +5,13 @@
 </head>
 <body>
 	<form
-		th:action="@{/runtime/form/submitStartForm/${processDefinitionId}}"
+		th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
 		method="POST">
-		<label for="name">名称:</label> <input id="name" placeholder="输入名称…"
-			th:text="${processDefinitionId}" type="text" /> <input type="submit"
-			id="submitButton" value="提交" class="btn btn-primary" />
+		<p th:text="${processDefinitionId}"></p>
+		<label for="name">名称:</label> <input id="name" name="name" placeholder="输入名称…"
+			type="text" /> <input type="submit" id="submitButton" value="提交"
+			class="btn btn-primary" /> <a
+			th:href="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"></a>
 	</form>
 </body>
 </html>

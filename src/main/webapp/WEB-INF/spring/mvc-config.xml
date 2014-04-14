@@ -86,6 +86,7 @@
 		<property name="resourceResolver">
 			<ref bean="activitiResourceResolver" />
 		</property>
+		<property name="cacheable" value="false" />
 	</bean>
 	<bean id="activitiResourceResolver" class="org.crusoe.mvc.resolver.ActivitiResourceResolver"></bean>
 	<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">

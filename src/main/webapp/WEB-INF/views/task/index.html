@@ -6,12 +6,12 @@
 	/*<![CDATA[*/
 	function render(data) {
 		var newRow = "<tr><td><input type=\"checkbox\" /></td><td>"
-				+ data.tasks[i].id
+				+ data.id
 				+ "</td><td>"
-				+ data.tasks[i].name
+				+ data.name
 				+ "</td><td>"
-				+ data.tasks[i].assignee
-				+ "</td><td><a href=\"claim/"+data.tasks[i].id+"\">接受</a></td></tr>";
+				+ data.assignee
+				+ "</td><td><a href=\"claim/"+data.id+"\">接受</a></td></tr>";
 		return newRow;
 	};
 	$(document).ready(

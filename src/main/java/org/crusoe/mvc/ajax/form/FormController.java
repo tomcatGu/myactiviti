@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -32,7 +33,9 @@ public class FormController {
 	private FormService formService;
 
 	@RequestMapping(value = "submitStartForm/{processDefinitionId}", method = RequestMethod.POST)
-	public ModelAndView submitForm(@PathVariable String processDefinitionId,
+	public @ResponseBody
+	HashMap<String, Object> submitForm(
+			@PathVariable String processDefinitionId,
 			HttpServletRequest request, HttpServletResponse response) {
 		Map<String, String> map = null;
 		Map<String, String[]> map1 = request.getParameterMap();
@@ -59,7 +62,9 @@ public class FormController {
 			returnMap.put(name, value);
 		}
 
-		formService.submitStartFormData(processDefinitionId, map);
-		return new ModelAndView();
+		formService.submitStartFormData(processDefinitionId, returnMap);
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		rets.put("msg", "OK");
+		return rets;
 	}
 }
