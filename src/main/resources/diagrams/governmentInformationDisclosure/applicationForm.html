@@ -1,7 +1,8 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
-<title>请假FORM</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>申请人信息表单</title>
 </head>
 <body>
 	<form
@@ -66,11 +67,11 @@
 				<td><input name="groupDelegateEmail" /></td>
 			</tr>
 			<tr>
-				<td >申请时间</td>
+				<td>申请时间</td>
 				<td colspan="4"><input name="applicationTime" /></td>
 			</tr>
 			<tr>
-				<td >提交部门</td>
+				<td>提交部门</td>
 				<td colspan="4"><input name="submitDepartment" /></td>
 			</tr>
 			<tr>
@@ -84,17 +85,19 @@
 			</tr>
 			<tr>
 				<td>所需信息的指定提供方式</td>
-				<td><input type="checkbox" value="0" name="mode" /><label>纸面</label></label><input
-					type="checkbox" value="1" name="mode" /><label>电子邮件</label></label></td>
+				<td><input type="checkbox" value="0" name="mode" /><label>纸面</label><input
+					type="checkbox" value="1" name="mode" /><label>电子邮件</label></td>
 				<td>读取信息的方式</td>
-				<td colspan="2"><input type="checkbox" value="0" name="obtainMode" /><label>电子邮件</label></label><input
-					type="checkbox" value="1" name="obtainMode" /><label>传真</label></label><input
-					type="checkbox" value="2" name="obtainMode" /><label>自行领取</label></label></td>
-				
+				<td colspan="2"><input type="checkbox" value="0"
+					name="obtainMode" /><label>电子邮件</label><input type="checkbox"
+					value="1" name="obtainMode" /><label>传真</label><input
+					type="checkbox" value="2" name="obtainMode" /><label>自行领取</label></td>
 			</tr>
 		</table>
-		<input type="submit" id="submitButton" value="提交"
-			class="btn btn-primary" />
+		<input type="button" id="selectBtn" value="选择用户"
+			class="btn btn-primary" /> <input type="hidden" name="assigneeList"
+			id="assigneeList" /> <input type="submit" id="submitButton"
+			value="提交" class="btn btn-primary" />
 	</form>
 </body>
 </html>

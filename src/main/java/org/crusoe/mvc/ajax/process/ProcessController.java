@@ -89,6 +89,7 @@ public class ProcessController {
 		// processInstance.getProcessInstanceId(), "admin", "candidate");
 		String startFormKey = formService.getStartFormKey(processDefinition
 				.getId());
+		
 		if (startFormKey != null) {
 			model.addAttribute("processDefinitionId", processDefinition.getId());
 			return startFormKey;

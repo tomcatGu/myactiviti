@@ -8,9 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.FormService;
+import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +34,8 @@ public class FormController {
 	private ProcessEngine processEngine;
 	@Autowired
 	private FormService formService;
+	@Autowired
+	private IdentityService identityService;
 
 	@RequestMapping(value = "submitStartForm/{processDefinitionId}", method = RequestMethod.POST)
 	public @ResponseBody
@@ -61,8 +66,12 @@ public class FormController {
 			}
 			returnMap.put(name, value);
 		}
-
+		Subject currentUser = SecurityUtils.getSubject();
+		if (currentUser != null)
+			identityService.setAuthenticatedUserId(currentUser.getPrincipal()
+					.toString());
 		formService.submitStartFormData(processDefinitionId, returnMap);
+
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("msg", "OK");
 		return rets;
