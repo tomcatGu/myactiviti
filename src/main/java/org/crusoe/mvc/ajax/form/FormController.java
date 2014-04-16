@@ -110,24 +110,13 @@ public class FormController {
 				value = "";
 			} else if (valueObj instanceof String[]) {
 				String[] values = (String[]) valueObj;
-				if ("assigneeList".equals(name)) {
-					List<String> assigneeList = new ArrayList<String>();
-					for (int i = 0; i < values.length; i++) {
 
-						User user = accountService.getUser(Long
-								.parseLong(values[i]));
-						assigneeList.add(user.getLoginName());
+				for (int i = 0; i < values.length; i++) {
 
-					}
-					returnMap.put(name, assigneeList);
-					continue;
-				} else {
-					for (int i = 0; i < values.length; i++) {
-
-						value = values[i] + ",";
-					}
-					value = value.substring(0, value.length() - 1);
+					value = values[i] + ",";
 				}
+				value = value.substring(0, value.length() - 1);
+
 			} else {
 				value = valueObj.toString();
 
