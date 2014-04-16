@@ -1,11 +1,15 @@
 package org.crusoe.mvc.ajax.form;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.crusoe.entity.User;
 
 import org.activiti.engine.FormService;
 import org.activiti.engine.IdentityService;
@@ -14,6 +18,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.crusoe.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.common.collect.Lists;
 
 @Controller
 @RequestMapping(value = "/runtime/form")
@@ -36,6 +43,9 @@ public class FormController {
 	private FormService formService;
 	@Autowired
 	private IdentityService identityService;
+
+	@Autowired
+	protected AccountService accountService;
 
 	@RequestMapping(value = "submitStartForm/{processDefinitionId}", method = RequestMethod.POST)
 	public @ResponseBody
@@ -57,12 +67,27 @@ public class FormController {
 				value = "";
 			} else if (valueObj instanceof String[]) {
 				String[] values = (String[]) valueObj;
-				for (int i = 0; i < values.length; i++) {
-					value = values[i] + ",";
+				if ("assigneeList".equals(name)) {
+					List<String> assigneeList = new ArrayList<String>();
+					for (int i = 0; i < values.length; i++) {
+
+						User user = accountService.getUser(Long
+								.parseLong(values[i]));
+						assigneeList.add(user.getLoginName());
+
+					}
+					returnMap.put(name, assigneeList);
+					continue;
+				} else {
+					for (int i = 0; i < values.length; i++) {
+
+						value = values[i] + ",";
+					}
+					value = value.substring(0, value.length() - 1);
 				}
-				value = value.substring(0, value.length() - 1);
 			} else {
 				value = valueObj.toString();
+
 			}
 			returnMap.put(name, value);
 		}
