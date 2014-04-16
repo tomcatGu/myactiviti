@@ -67,24 +67,11 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<!---->
-	<display-name>Activiti REST</display-name>
-	<listener>
-		<listener-class>org.activiti.rest.servlet.ActivitiServletContextListener</listener-class>
-	</listener>
-	<servlet>
-		<servlet-name>RestletServlet</servlet-name>
-		<servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
-		<init-param>
-			<param-name>org.restlet.application</param-name>
-			<param-value>org.activiti.rest.application.ActivitiRestServicesApplication</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RestletServlet</servlet-name>
-		<url-pattern>/service/*</url-pattern>
-	</servlet-mapping>
-
+	<!-- <display-name>Activiti REST</display-name> <listener> <listener-class>org.activiti.rest.servlet.ActivitiServletContextListener</listener-class> 
+		</listener> <servlet> <servlet-name>RestletServlet</servlet-name> <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class> 
+		<init-param> <param-name>org.restlet.application</param-name> <param-value>org.activiti.rest.application.ActivitiRestServicesApplication</param-value> 
+		</init-param> </servlet> <servlet-mapping> <servlet-name>RestletServlet</servlet-name> 
+		<url-pattern>/service/*</url-pattern> </servlet-mapping> -->
 	<!-- <filter> <filter-name>springSecurityFilterChain</filter-name> <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> 
 		</filter> <filter-mapping> <filter-name>springSecurityFilterChain</filter-name> 
 		<url-pattern>/*</url-pattern> </filter-mapping> -->

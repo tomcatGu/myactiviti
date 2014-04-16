@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.activiti.engine.FormService;
+import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -12,8 +13,11 @@ import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.crusoe.dto.ProcessDefinitionDTO;
 import org.crusoe.dto.repository.DeploymentDTO;
+import org.crusoe.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +45,12 @@ public class ProcessController {
 	private ProcessEngine processEngine;
 	@Autowired
 	private FormService formService;
+
+	@Autowired
+	private IdentityService identityService;
+
+	@Autowired
+	protected AccountService accountService;
 
 	@RequestMapping(value = "listProcessDefinitions", method = RequestMethod.GET)
 	public @ResponseBody
@@ -89,15 +99,21 @@ public class ProcessController {
 		// processInstance.getProcessInstanceId(), "admin", "candidate");
 		String startFormKey = formService.getStartFormKey(processDefinition
 				.getId());
-		
+
 		if (startFormKey != null) {
 			model.addAttribute("processDefinitionId", processDefinition.getId());
 			return startFormKey;
 		} else {
+			Subject currentUser = SecurityUtils.getSubject();
+			if (currentUser != null)
+				identityService.setAuthenticatedUserId(currentUser
+						.getPrincipal().toString());
 			ProcessInstance processInstance = runtimeService
 					.startProcessInstanceById(id);
 			return "redirect:/runtime/tasks/index";
 
 		}
 	}
+	
+
 }

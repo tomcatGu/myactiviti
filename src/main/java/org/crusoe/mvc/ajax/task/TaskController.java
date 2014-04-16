@@ -66,14 +66,17 @@ public class TaskController {
 	}
 
 	@RequestMapping(value = "claim/{taskId}")
-	public String claimTask(@PathVariable("taskId") String taskId) {
+	public String claimTask(@PathVariable("taskId") String taskId, Model model) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		User user = accountService.findUserByLoginName(SecurityUtils
 				.getSubject().getPrincipal().toString());
 		taskService.claim(task.getId(), user.getLoginName());
 		String formKey = formService.getTaskFormData(task.getId()).getFormKey();
-
-		return formKey;
+		if (formKey != null) {
+			model.addAttribute("taskId", taskId);
+			return formKey;
+		} else
+			return ".";
 	}
 
 	@RequestMapping(value = "getTasks", method = RequestMethod.POST)

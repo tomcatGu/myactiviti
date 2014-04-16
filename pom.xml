@@ -325,6 +325,41 @@
 			<artifactId>poi</artifactId>
 			<version>3.9</version>
 		</dependency>
+		<!-- <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-engine</artifactId> 
+			<version>${activiti.version}</version> </dependency> <dependency> <groupId>org.activiti</groupId> 
+			<artifactId>activiti-spring</artifactId> <version>${activiti.version}</version> 
+			</dependency> <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-json-converter</artifactId> 
+			<version>${activiti.version}</version> </dependency> <dependency> <groupId>org.activiti</groupId> 
+			<artifactId>activiti-bpmn-model</artifactId> <version>${activiti.version}</version> 
+			</dependency> <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-bpmn-converter</artifactId> 
+			<version>${activiti.version}</version> </dependency> <dependency> <groupId>org.activiti</groupId> 
+			<artifactId>activiti-bpmn-layout</artifactId> <version>${activiti.version}</version> 
+			</dependency> <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-camel</artifactId> 
+			<version>${activiti.version}</version> <type>bundle</type> </dependency> 
+			<dependency> <groupId>org.activiti</groupId> <artifactId>activiti-cdi</artifactId> 
+			<version>${activiti.version}</version> </dependency> <dependency> <groupId>org.activiti</groupId> 
+			<artifactId>activiti-common-rest</artifactId> <version>${activiti.version}</version> 
+			</dependency> <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-cxf</artifactId> 
+			<version>${activiti.version}</version> </dependency> <dependency> <groupId>org.activiti</groupId> 
+			<artifactId>activiti-diagram-rest</artifactId> <version>${activiti.version}</version> 
+			</dependency> <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-explorer</artifactId> 
+			<version>${activiti.version}</version> </dependency> <dependency> <groupId>org.activiti</groupId> 
+			<artifactId>activiti-ldap</artifactId> <version>${activiti.version}</version> 
+			</dependency> <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-modeler</artifactId> 
+			<version>${activiti.version}</version> </dependency> <dependency> <groupId>org.activiti</groupId> 
+			<artifactId>activiti-mule</artifactId> <version>${activiti.version}</version> 
+			</dependency> <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-osgi</artifactId> 
+			<version>${activiti.version}</version> <type>bundle</type> </dependency> 
+			<dependency> <groupId>org.activiti</groupId> <artifactId>activiti-process-validation</artifactId> 
+			<version>${activiti.version}</version> </dependency> <dependency> <groupId>org.activiti</groupId> 
+			<artifactId>activiti-rest</artifactId> <version>${activiti.version}</version> 
+			</dependency> <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-simple-workflow</artifactId> 
+			<version>${activiti.version}</version> </dependency> -->
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-process-validation</artifactId>
+			<version>${activiti.version}</version>
+		</dependency>
 	</dependencies>
 
 	<modules>
@@ -339,6 +374,6 @@
 		<jetty.version>1</jetty.version>
 		<junit.version>4.10</junit.version>
 		<groovy.version>2.2.1</groovy.version>
-		<activiti.version>5.13</activiti.version>
+		<activiti.version>5.15</activiti.version>
 	</properties>
 </project>

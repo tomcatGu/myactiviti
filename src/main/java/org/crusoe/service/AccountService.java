@@ -31,7 +31,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Lists;
 
 /**
  * 用户管理业务类.
@@ -39,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author gwx
  */
 // Spring Service Bean的标识.
-@Component
+@Service
 @Transactional(readOnly = true)
 public class AccountService {
 	public static final String HASH_ALGORITHM = "SHA-1";
@@ -214,6 +217,17 @@ public class AccountService {
 	public Page<User> searchUser(PageRequest pageRequest) {
 		// TODO Auto-generated method stub
 		return userDao.findAll(pageRequest);
+	}
+
+	// users: "1,2,3..."etc
+	public List<String> resolveUsername(String users, String separatorChars) {
+		List<String> usernames = Lists.newArrayList();
+		String[] ids = StringUtils.split(users, separatorChars);
+		for (String id : ids) {
+			User user = userDao.findOne(Long.parseLong(id));
+			usernames.add(user.getLoginName());
+		}
+		return usernames;
 	}
 
 }

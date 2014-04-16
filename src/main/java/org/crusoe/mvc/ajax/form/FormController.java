@@ -49,8 +49,51 @@ public class FormController {
 
 	@RequestMapping(value = "submitStartForm/{processDefinitionId}", method = RequestMethod.POST)
 	public @ResponseBody
-	HashMap<String, Object> submitForm(
+	HashMap<String, Object> submitStartForm(
 			@PathVariable String processDefinitionId,
+			HttpServletRequest request, HttpServletResponse response) {
+		Map<String, String> map = null;
+		Map<String, String[]> map1 = request.getParameterMap();
+		Map returnMap = new HashMap();
+		Iterator entries = map1.entrySet().iterator();
+		Map.Entry entry;
+		String name = "";
+		String value = "";
+		while (entries.hasNext()) {
+			entry = (Map.Entry) entries.next();
+			name = (String) entry.getKey();
+			Object valueObj = entry.getValue();
+			if (null == valueObj) {
+				value = "";
+			} else if (valueObj instanceof String[]) {
+				String[] values = (String[]) valueObj;
+
+				for (int i = 0; i < values.length; i++) {
+
+					value = values[i] + ",";
+				}
+				value = value.substring(0, value.length() - 1);
+
+			} else {
+				value = valueObj.toString();
+
+			}
+			returnMap.put(name, value);
+		}
+		Subject currentUser = SecurityUtils.getSubject();
+		if (currentUser != null)
+			identityService.setAuthenticatedUserId(currentUser.getPrincipal()
+					.toString());
+		formService.submitStartFormData(processDefinitionId, returnMap);
+
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		rets.put("msg", "OK");
+		return rets;
+	}
+
+	@RequestMapping(value = "submitTaskForm/{taskId}", method = RequestMethod.POST)
+	public @ResponseBody
+	HashMap<String, Object> submitTaskForm(@PathVariable String taskId,
 			HttpServletRequest request, HttpServletResponse response) {
 		Map<String, String> map = null;
 		Map<String, String[]> map1 = request.getParameterMap();
@@ -91,12 +134,8 @@ public class FormController {
 			}
 			returnMap.put(name, value);
 		}
-		Subject currentUser = SecurityUtils.getSubject();
-		if (currentUser != null)
-			identityService.setAuthenticatedUserId(currentUser.getPrincipal()
-					.toString());
-		formService.submitStartFormData(processDefinitionId, returnMap);
 
+		formService.submitTaskFormData(taskId, returnMap);
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("msg", "OK");
 		return rets;
