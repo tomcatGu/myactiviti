@@ -4,7 +4,7 @@
     <startEvent id="startevent1" name="Start" activiti:initiator="startUserId" activiti:formKey="governmentInformationDisclosure/applicationForm">
       <documentation>启动流程，显示申请人表单</documentation>
     </startEvent>
-    <userTask id="usertask2" name="单位回复意见" activiti:assignee="${assignee}">
+    <userTask id="usertask2" name="单位回复意见" activiti:assignee="${assignee}" activiti:formKey="governmentInformationDisclosure/replyForm">
       <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${accountService.resolveUsername(assigneeList,&quot;,&quot;)}" activiti:elementVariable="assignee">
         <completionCondition>${nrOfActiveInstances==0}</completionCondition>
       </multiInstanceLoopCharacteristics>
