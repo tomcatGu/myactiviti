@@ -1,5 +1,7 @@
 package org.crusoe.mvc.ajax.task;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.task.Task;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.shiro.SecurityUtils;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.task.TaskDTO;
@@ -36,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping(value = "/runtime/tasks")
@@ -73,8 +77,7 @@ public class TaskController {
 		taskService.claim(task.getId(), user.getLoginName());
 		String formKey = formService.getTaskFormData(task.getId()).getFormKey();
 		if (formKey != null) {
-			Map<String, Object> variables = taskService
-					.getVariables(taskId);
+			Map<String, Object> variables = taskService.getVariables(taskId);
 			model.addAllAttributes(variables);
 			model.addAttribute("taskId", taskId);
 			return formKey;
@@ -140,6 +143,32 @@ public class TaskController {
 		rets.put("start", start);
 		rets.put("size", size);
 		rets.put("records", todoList);
+
+		return rets;
+
+	}
+
+	@RequestMapping(value = "uploadAttachment/{taskId}", method = RequestMethod.POST)
+	public @ResponseBody
+	HashMap<String, Object> uploadAttachment(
+			@PathVariable("taskId") String taskId,
+			@RequestParam(value = "file", required = false) MultipartFile file) {
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		String fileName = file.getOriginalFilename();
+
+		try {
+			InputStream fileInputStream = file.getInputStream();
+			BufferedInputStream bis = new BufferedInputStream(fileInputStream);
+			String processInstanceId = taskService.createTaskQuery()
+					.taskId(taskId).singleResult().getProcessInstanceId();
+			taskService.createAttachment(FilenameUtils.getExtension(fileName),
+					taskId, processInstanceId, file.getName(), "file", bis);
+			rets.put("msg", "OK");
+			rets.put("filename", fileName);
+			rets.put("size", file.getSize());
+		} catch (Exception e) {
+			rets.put("msg", "upload failed.");
+		}
 
 		return rets;
 
