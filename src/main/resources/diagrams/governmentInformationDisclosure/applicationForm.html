@@ -35,6 +35,7 @@
 	<form
 		th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
 		method="POST">
+		<label>申请事项：</label> <input name="applicationName" />
 		<table style="width: 100%;" border="1">
 			<tr>
 				<td rowspan="14">申请人信息</td>

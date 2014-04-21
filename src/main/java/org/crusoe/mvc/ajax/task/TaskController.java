@@ -82,7 +82,18 @@ public class TaskController {
 			model.addAttribute("taskId", taskId);
 			return formKey;
 		} else
-			return ".";
+			return "task/index";
+	}
+
+	@RequestMapping(value = "complete/{taskId}")
+	public String completeTask(@PathVariable("taskId") String taskId,
+			Model model) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		User user = accountService.findUserByLoginName(SecurityUtils
+				.getSubject().getPrincipal().toString());
+		taskService.complete(taskId);
+
+		return "redirect:task/index";
 	}
 
 	@RequestMapping(value = "getTasks", method = RequestMethod.POST)
@@ -124,7 +135,8 @@ public class TaskController {
 				.getSubject().getPrincipal().toString());
 
 		List<Task> taskList = taskService.createTaskQuery()
-				.taskAssignee(user.getLoginName()).listPage(start, size);
+				.taskAssignee(user.getLoginName()).orderByTaskCreateTime()
+				.desc().listPage(start, size);
 		List<TaskDTO> todoList = new ArrayList();
 		int i = 0;
 		for (Task task : taskList) {

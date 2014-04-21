@@ -2,78 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
-<title>回复意见</title>
-<style>
-form {
-	display: block;
-	margin: 20px auto;
-	background: #eee;
-	border-radius: 10px;
-	padding: 15px
-}
-
-#progress {
-	position: relative;
-	width: 400px;
-	border: 1px solid #ddd;
-	padding: 1px;
-	border-radius: 3px;
-}
-
-#bar {
-	background-color: #B4F5B4;
-	width: 0%;
-	height: 20px;
-	border-radius: 3px;
-}
-
-#percent {
-	position: absolute;
-	display: inline-block;
-	top: 3px;
-	left: 48%;
-}
-</style>
+<title>审核意见</title>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
-	$(document)
-			.ready(
-					function() {
+	$(document).ready(function() {
 
-						var options = {
-							beforeSend : function() {
-								$("#progress").show();
-								//clear everything
-								$("#bar").width('0%');
-								$("#message").html("");
-								$("#percent").html("0%");
-							},
-							uploadProgress : function(event, position, total,
-									percentComplete) {
-								$("#bar").width(percentComplete + '%');
-								$("#percent").html(percentComplete + '%');
-
-							},
-							success : function() {
-								$("#bar").width('100%');
-								$("#percent").html('100%');
-
-							},
-							complete : function(response) {
-								$("#message").html(
-										"<font color='green'>"
-												+ response.responseText
-												+ "</font>");
-							},
-							error : function() {
-								$("#message")
-										.html(
-												"<font color='red'> ERROR: unable to upload files</font>");
-
-							}
-						};
-						$("#uploadForm").ajaxForm(options);
-					});
+	});
 	/*]]>*/
 </script>
 </head>
@@ -167,25 +101,12 @@ form {
 		</tr>
 	</table>
 	<div>
-		<label>回复意见：</label>
+		<label>审核意见：</label>
 		<form th:action="@{'/runtime/tasks/complete/'+${taskId}}"
 			method="post">
-			<textarea name="replay" rows="8" cols="20"></textarea>
-			<input type="submit" value="回复" />
+			<textarea name="review" rows="8" cols="20"></textarea>
+			<input type="submit" id="submitBtn" value="审核" />
 		</form>
-	</div>
-	<div>
-		<label>上传附件：</label>
-		<form id="uploadForm"
-			th:action="@{'/runtime/tasks/uploadAttachment/'+${taskId}}"
-			method="post" enctype="multipart/form-data">
-			<input type="file" name="file" /> <input type="submit" value="上传" />
-		</form>
-		<div id="progress">
-			<div id="bar"></div>
-			<div id="percent">0%</div>
-		</div>
-		<div id="message"></div>
 	</div>
 </body>
 </html>
