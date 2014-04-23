@@ -21,6 +21,7 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.shiro.SecurityUtils;
+import org.crusoe.dto.AttachmentDTO;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.task.TaskDTO;
 import org.crusoe.entity.User;
@@ -41,6 +42,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.google.common.collect.Lists;
 
 @Controller
 @RequestMapping(value = "/runtime/tasks")
@@ -71,7 +74,8 @@ public class TaskController {
 	}
 
 	@RequestMapping(value = "claim/{taskId}")
-	public String claimTask(@PathVariable("taskId") String taskId, Model model) {
+	public String claimTask(@PathVariable("taskId") String taskId, Model model)
+			throws IllegalAccessException, InvocationTargetException {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		User user = accountService.findUserByLoginName(SecurityUtils
 				.getSubject().getPrincipal().toString());
@@ -79,9 +83,18 @@ public class TaskController {
 		String formKey = formService.getTaskFormData(task.getId()).getFormKey();
 		if (formKey != null) {
 			Map<String, Object> variables = taskService.getVariables(taskId);
-			List<Attachment> attachments = taskService
-					.getTaskAttachments(taskId);
-
+			List<Attachment> taskAttachments = taskService
+					.getProcessInstanceAttachments(task.getProcessInstanceId());
+			List<AttachmentDTO> attachments = Lists.newArrayList();
+			Iterator iter = taskAttachments.iterator();
+			while (iter.hasNext()) {
+				AttachmentDTO attachmentDTO = new AttachmentDTO();
+				Attachment attachment = (Attachment) iter.next();
+				BeanUtils.copyProperties(attachmentDTO, attachment);
+				attachments.add(attachmentDTO);
+			}
+			model.addAttribute("attachments", attachments);
+			// model.addAllAttributes(attachments);
 			model.addAllAttributes(variables);
 			model.addAttribute("taskId", taskId);
 			return formKey;
@@ -178,7 +191,7 @@ public class TaskController {
 			String processInstanceId = taskService.createTaskQuery()
 					.taskId(taskId).singleResult().getProcessInstanceId();
 			taskService.createAttachment(FilenameUtils.getExtension(fileName),
-					taskId, processInstanceId, file.getName(), "file", bis);
+					taskId, processInstanceId, fileName, "description", bis);
 			rets.put("msg", "OK");
 			rets.put("filename", fileName);
 			rets.put("size", file.getSize());

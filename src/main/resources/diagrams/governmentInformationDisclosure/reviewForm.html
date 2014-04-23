@@ -104,6 +104,10 @@
 				type="checkbox" value="2" name="obtainMode"
 				th:checked="${#lists.contains(#strings.listSplit(obtainMode,','),'2')}" /><label>自行领取</label></td>
 		</tr>
+		<tr th:each="attachment:${attachments}">
+			<td><a th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
+					th:text="${attachment.name}">file.ext</span></a></td>
+		</tr>
 	</table>
 	<div>
 		<label>审核意见：</label>
