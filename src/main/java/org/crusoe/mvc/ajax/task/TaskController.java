@@ -16,6 +16,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -78,6 +79,9 @@ public class TaskController {
 		String formKey = formService.getTaskFormData(task.getId()).getFormKey();
 		if (formKey != null) {
 			Map<String, Object> variables = taskService.getVariables(taskId);
+			List<Attachment> attachments = taskService
+					.getTaskAttachments(taskId);
+
 			model.addAllAttributes(variables);
 			model.addAttribute("taskId", taskId);
 			return formKey;
@@ -93,7 +97,7 @@ public class TaskController {
 				.getSubject().getPrincipal().toString());
 		taskService.complete(taskId);
 
-		return "redirect:task/index";
+		return "redirect:../index";
 	}
 
 	@RequestMapping(value = "getTasks", method = RequestMethod.POST)

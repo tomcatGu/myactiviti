@@ -67,10 +67,10 @@ public class FormController {
 				value = "";
 			} else if (valueObj instanceof String[]) {
 				String[] values = (String[]) valueObj;
-
+				value = "";
 				for (int i = 0; i < values.length; i++) {
 
-					value = values[i] + ",";
+					value += values[i] + ",";
 				}
 				value = value.substring(0, value.length() - 1);
 

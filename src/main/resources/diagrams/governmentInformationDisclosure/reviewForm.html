@@ -91,13 +91,18 @@
 		</tr>
 		<tr>
 			<td>所需信息的指定提供方式</td>
-			<td><input type="checkbox" value="0" name="mode" /><label>纸面</label><input
-				type="checkbox" value="1" name="mode" /><label>电子邮件</label></td>
+			<td><input type="checkbox" value="0" name="mode"
+				th:checked="${#lists.contains(#strings.listSplit(mode,','),'0')}" /><label>纸面</label><input
+				type="checkbox" value="1" name="mode"
+				th:checked="${#lists.contains(#strings.listSplit(mode,','),'1')}" /><label>电子邮件</label></td>
 			<td>读取信息的方式</td>
 			<td colspan="2"><input type="checkbox" value="0"
-				name="obtainMode" /><label>电子邮件</label><input type="checkbox"
-				value="1" name="obtainMode" /><label>传真</label><input
-				type="checkbox" value="2" name="obtainMode" /><label>自行领取</label></td>
+				name="obtainMode"
+				th:checked="${#lists.contains(#strings.listSplit(obtainMode,','),'0')}" /><label>电子邮件</label><input
+				type="checkbox" value="1" name="obtainMode"
+				th:checked="${#lists.contains(#strings.listSplit(obtainMode,','),'1')}" /><label>传真</label><input
+				type="checkbox" value="2" name="obtainMode"
+				th:checked="${#lists.contains(#strings.listSplit(obtainMode,','),'2')}" /><label>自行领取</label></td>
 		</tr>
 	</table>
 	<div>
