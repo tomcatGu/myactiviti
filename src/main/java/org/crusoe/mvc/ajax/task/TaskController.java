@@ -77,6 +77,11 @@ public class TaskController {
 		return "task/index";
 	}
 
+	@RequestMapping(value = "historicTasks")
+	public String getHistoricTaskForm() {
+		return "task/historicTask";
+	}
+
 	@RequestMapping(value = "claim/{taskId}")
 	public String claimTask(@PathVariable("taskId") String taskId, Model model)
 			throws IllegalAccessException, InvocationTargetException {
@@ -195,8 +200,9 @@ public class TaskController {
 				.getSubject().getPrincipal().toString());
 		List<HistoricTaskInstance> historictaskList = historyService
 				.createHistoricTaskInstanceQuery()
-				.taskAssignee(user.getLoginName()).finished()
-				.orderByHistoricTaskInstanceEndTime().listPage(start, size);
+				.taskAssignee(user.getLoginName())
+				.orderByHistoricTaskInstanceEndTime().desc().finished()
+				.listPage(start, size);
 
 		List<TaskDTO> todoList = new ArrayList();
 		int i = 0;
@@ -205,6 +211,9 @@ public class TaskController {
 			taskDTO.setId(task.getId());
 			taskDTO.setName(task.getName());
 			taskDTO.setAssignee(task.getAssignee());
+			taskDTO.setEndTime(task.getEndTime());
+			taskDTO.setStartTime(task.getStartTime());
+
 			// BeanUtils.copyProperties(task, taskDTO);
 			todoList.add(taskDTO);
 

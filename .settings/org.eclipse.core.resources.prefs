@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-encoding//src/main/java/log4j.properties=UTF-8
+encoding//src/main/resources/diagrams/governmentInformationDisclosure/log4j.properties=UTF-8
 encoding//src/main/webapp/WEB-INF/messages/messages_zh_CN.properties=UTF-8
 encoding//src/main/webapp/bootstrap/css/bootstrap-modal.css=UTF-8
 encoding/<project>=UTF-8
