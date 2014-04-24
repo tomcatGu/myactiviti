@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.FormService;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.form.StartFormData;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
@@ -60,6 +62,8 @@ public class TaskController {
 	private AccountService accountService;
 	@Autowired
 	private FormService formService;
+	@Autowired
+	private HistoryService historyService;
 
 	@RequestMapping(value = "todo", method = RequestMethod.GET)
 	public String getTodo(Map<String, Object> map) {
@@ -167,6 +171,46 @@ public class TaskController {
 		}
 		long count = taskService.createTaskQuery()
 				.taskAssignee(user.getLoginName()).count();
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		rets.put("count", count);
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", todoList);
+
+		return rets;
+
+	}
+
+	@RequestMapping(value = "listHistoryTasks", method = RequestMethod.GET)
+	public @ResponseBody
+	HashMap<String, Object> listHistoryTasks(@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size)
+			throws IllegalAccessException, InvocationTargetException {
+
+		// convertToMap定义于父类，将参数数组中的所有元素加入一个HashMap
+
+		User user = accountService.findUserByLoginName(SecurityUtils
+				.getSubject().getPrincipal().toString());
+		List<HistoricTaskInstance> historictaskList = historyService
+				.createHistoricTaskInstanceQuery()
+				.taskAssignee(user.getLoginName()).finished()
+				.orderByHistoricTaskInstanceEndTime().listPage(start, size);
+
+		List<TaskDTO> todoList = new ArrayList();
+		int i = 0;
+		for (HistoricTaskInstance task : historictaskList) {
+			TaskDTO taskDTO = new TaskDTO();
+			taskDTO.setId(task.getId());
+			taskDTO.setName(task.getName());
+			taskDTO.setAssignee(task.getAssignee());
+			// BeanUtils.copyProperties(task, taskDTO);
+			todoList.add(taskDTO);
+
+		}
+		long count = historyService.createHistoricTaskInstanceQuery()
+				.taskAssignee(user.getLoginName()).finished().count();
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("count", count);
 		rets.put("start", start);
