@@ -31,7 +31,7 @@
 								.ajax({
 									type : "GET", //提交的类型
 									dataType : "json",
-									url : /*[[@{'/statistical/counter/policemenVote:31:6906?statisticalRange=policeman&separatorChars=,'}]]*/"", //提交地址
+									url : /*[[@{'/statistical/counter/policemenVote:19:1548?statisticalRange=policeman&separatorChars=,'}]]*/"", //提交地址
 									success : function(data) {
 										var dataValue = new Array(); //数据
 										var ticks = new Array(); //横坐标值
@@ -64,7 +64,8 @@
 																//设置横（纵）坐标的刻度上的值，可为该ticks数组中的值
 																},
 																yaxis : {
-																	//renderer : $.jqplot.CategoryAxisRenderer,
+																	min : 0,
+																	tickInterval : 1,
 																	pad : 2, // 一个相乘因子
 																	tickOptions : {
 																		formatString : '%d'
