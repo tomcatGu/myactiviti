@@ -1,0 +1,208 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>十佳警察投票</title>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+
+	});
+	function checkSelected() {
+		count = 0;
+		$("input[name='policeman']:checkbox").each(function() {
+			if ($(this).prop("checked") == true)
+				count++;
+		});
+		if (count != 10) {
+			alert("请选择10个候选人，您一共选择了" + count + "人 。");
+			return false;
+		}
+		valid = true;
+
+		$
+				.ajax({
+					type : 'POST',
+					url : /*[[@{'/policemenVote/validator/'+${processDefinitionId}}]]*/""
+							+ "?policemanNumber=" + $('#policemanNumber').val(),
+					async : false,
+					success : function(data) {
+						if (data.err == true) {
+							alert(data.msg);
+							valid = false;
+						}
+
+					}
+
+				});
+		return valid;
+
+		isValid = false;
+		$.postJSON(
+		/*[[@{'/policemenVote/validator/'+${processDefinitionId}}]]*/""
+				+ "?policemanNumber=" + $('#policemanNumber').value, "", false,
+				function(data) {
+					if (data.err == "true") {
+						alert("您已经投过票了。");
+						isValid = true;
+					}
+
+				});
+		return isValid;
+	};
+	/*]]>*/
+</script>
+<style type="text/css">
+body {
+	background-color: #ffffff;
+}
+
+.STYLE1 {
+	color: #333333;
+	line-height: 22px;
+	padding: 12px;
+	font-size: 14px;
+}
+
+.STYLE5 {
+	color: #FFFFFF;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.item {
+	color: #333333;
+	line-height: 24px;
+	font-size: 14px;
+}
+</style>
+</head>
+<body>
+	<table border="0">
+		<tr>
+			<td colspan="2" bgcolor="#F20000"><h1>LOGO</h1></td>
+		</tr>
+		<tr>
+			<td width="200px" valign="top"><table width="255" border="0"
+					cellpadding="0" cellspacing="0">
+					<tbody>
+						<tr>
+							<td height="30" bgcolor="#F20000"><div align="center"
+									class="STYLE5">活动介绍</div></td>
+						</tr>
+						<tr>
+							<td valign="top" bgcolor="#FFFFFF" class="STYLE1">&nbsp;
+								近年来，全区广大青年民警在局党委的坚强领导下，大力弘扬“五四”精神，紧密围绕公安中心工作，勤奋学习、探索创新、扎实工作，为我局公安工作和队伍建设的健康发展作出了积极贡献。为了表彰先进，激励斗志，在共青团建团92周年来临之际，区局将结合党的群众路线教育实践活动和民警职业生涯规划工作，开展2014年度“十佳青年民警”评选活动”。</td>
+						</tr>
+						<tr>
+							<td height="30" bgcolor="#F20000" class="STYLE5"><div
+									align="center">投票须知</div></td>
+						</tr>
+						<tr>
+							<td height="162" align="left" class="STYLE1">1.本次网上投票采用一人一票制方式；<br />
+								2.点击照片可查阅候选人事迹简介； <br /> 3.公示、投票截止时间：2014年4月30日；<br />
+								4.联系电话：86545700。
+							</td>
+						</tr>
+						<tr>
+							<td bgcolor="#F20000" class="item"><div align="center"
+									class="STYLE5">投票方式</div></td>
+						</tr>
+						<tr>
+							<td align="left" class="item"><p class="STYLE1">
+									1.请在候选人姓名后方框内打勾（每张选票只许推荐10人。不足或超过10人均无效）；<br />
+									2.输入警号，点击提交按钮，完成投票。
+								</p></td>
+						</tr>
+					</tbody>
+				</table></td>
+			<td>
+				<form
+					th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
+					method="POST" onsubmit="return checkSelected();">
+					<table>
+						<tr>
+							<td align="center"><a href="/" target="_blank"><img
+									width="150" height="200"
+									src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\csh.jpg"
+									th:src="@{/images/policemen/csh.jpg}" /></a><br /> 1、曹松华<input
+								type="checkbox" value="曹松华" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\clj.jpg"
+								th:src="@{/images/policemen/clj.jpg}" /><br /> 2、陈李军<input
+								type="checkbox" value="陈李军" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\djf.jpg"
+								th:src="@{/images/policemen/djf.jpg}" /><br />3、戴金风 <input
+								type="checkbox" value="戴金风" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\ljw.jpg"
+								th:src="@{/images/policemen/ljw.jpg}" /><br /> 4、刘加武<input
+								type="checkbox" value="刘加武" name="policeman" /></td>
+						</tr>
+						<tr>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\lsq.jpg"
+								th:src="@{/images/policemen/lsq.jpg}" /><br /> 5、陆枢琦<input
+								type="checkbox" value="陆枢琦" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\mj.jpg"
+								th:src="@{/images/policemen/mj.jpg}" /><br />6、茅健 <input
+								type="checkbox" value="茅健" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\mjj.jpg"
+								th:src="@{/images/policemen/mjj.jpg}" /><br /> 7、茅金吉<input
+								type="checkbox" value="茅金吉" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\mjw.jpg"
+								th:src="@{/images/policemen/mjw.jpg}" /><br /> 8、孟俊伟<input
+								type="checkbox" value="孟俊伟" name="policeman" /></td>
+						</tr>
+						<tr>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\qzf.jpg"
+								th:src="@{/images/policemen/qzf.jpg}" /><br /> 9、秦志锋<input
+								type="checkbox" value="秦志锋" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\ryq.jpg"
+								th:src="@{/images/policemen/ryq.jpg}" /><br /> 10、饶玉琪<input
+								type="checkbox" value="饶玉琪" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\stl.jpg"
+								th:src="@{/images/policemen/stl.jpg}" /><br /> 11、沈天龙<input
+								type="checkbox" value="沈天龙" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\syf.jpg"
+								th:src="@{/images/policemen/syf.jpg}" /><br /> 12、宋宇飞<input
+								type="checkbox" value="宋宇飞" name="policeman" /></td>
+						</tr>
+						<tr>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\wjf.jpg"
+								th:src="@{/images/policemen/wjf.jpg}" /><br />13、吴江峰 <input
+								type="checkbox" value="吴江峰" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\wjq.jpg"
+								th:src="@{/images/policemen/wjq.jpg}" /><br /> 14、吴俊钱 <input
+								type="checkbox" value="吴俊钱" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\ycl.jpg"
+								th:src="@{/images/policemen/ycl.jpg}" /><br /> 15、严春林<input
+								type="checkbox" value="严春林" name="policeman" /></td>
+							<td align="center"><img width="150" height="200"
+								src="D:\eclipse-jee-juno-SR2-win32\eclipse\workspace\myactiviti\src\main\webapp\images\policemen\ym.jpg"
+								th:src="@{/images/policemen/ym.jpg}" /><br /> 16、杨萌<input
+								type="checkbox" value="杨萌" name="policeman" /></td>
+						</tr>
+						<tr>
+							<td colspan="4" align="center"><br /> <label><b>请输入警号：</b></label><input
+								name="policemanNumber" id="policemanNumber" /><input
+								type="submit" value="提交" class="btn btn-primary" /></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
