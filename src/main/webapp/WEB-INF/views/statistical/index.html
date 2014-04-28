@@ -31,15 +31,31 @@
 								.ajax({
 									type : "GET", //提交的类型
 									dataType : "json",
-									url : /*[[@{'/statistical/counter/policemenVote:19:1548?statisticalRange=policeman&separatorChars=,'}]]*/"", //提交地址
+									url : /*[[@{'/statistical/counter/policemenVote:35:7224?statisticalRange=policeman&separatorChars=,'}]]*/"", //提交地址
 									success : function(data) {
 										var dataValue = new Array(); //数据
 										var ticks = new Array(); //横坐标值
+										if (ticks.length == 0) {
+											ticks = [ "曹松华", "陈李军", "戴金风",
+													"刘加武", "陆枢琦", "茅健", "茅金吉",
+													"孟俊伟", "秦志锋", "饶玉琪", "沈天龙",
+													"宋宇飞", "吴江峰", "吴俊钱", "严春林",
+													"杨萌" ];
+											dataValue = [ 0, 0, 0, 0, 0, 0, 0,
+													0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
+										}
 										for (aData in data.statisticalResult) {
-											ticks.push(aData);
-											dataValue
-													.push(parseInt(data.statisticalResult[aData]));
+											//ticks.push(aData);
+											var i=0;
+											for(i=0;i<ticks.length;i++){
+												if(ticks[i]==aData)
+													break;
+												
+											}
+											dataValue[i]=data.statisticalResult[aData];
+											//dataValue
+											//		.push(parseInt(data.statisticalResult[aData]));
 
 										}
 

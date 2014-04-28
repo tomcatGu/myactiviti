@@ -1,7 +1,11 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
-<head thy:merge="/common::headerFragment">
+<head>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
+	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
+<script src="/bootstrap/js/jquery.form.js" type="text/javascript"
+	th:src="@{/bootstrap/js/jquery.form.js}"></script>
 <title>十佳青年民警投票</title>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
@@ -152,152 +156,120 @@ body {
 				<form id="myForm" method="POST">
 					<table>
 						<tr>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37556"
-								target="_blank"><img width="150px" height="200px"
-									src="/images/policemen/csh.jpg"
-									th:src="@{/images/policemen/csh.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images/policemen/csh.jpg"
+								th:src="@{/images/policemen/csh.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37556"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/曹松华.wmv"
 								target="_blank"> 微视频</a><br /> 1、曹松华<input type="checkbox"
 								value="曹松华" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37553"
-								target="_blank"><img width="150px" height="200px"
-									src="/images/policemen/clj.jpg"
-									th:src="@{/images/policemen/clj.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images/policemen/clj.jpg"
+								th:src="@{/images/policemen/clj.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37553"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/陈李军.wmv"
 								target="_blank"> 微视频</a><br /> 2、陈李军<input type="checkbox"
 								value="陈李军" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37552"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\djf.jpg"
-									th:src="@{/images/policemen/djf.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\djf.jpg"
+								th:src="@{/images/policemen/djf.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37552"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/戴金风.wmv"
 								target="_blank"> 微视频</a><br />3、戴金风 <input type="checkbox"
 								value="戴金风" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37548"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\ljw.jpg"
-									th:src="@{/images/policemen/ljw.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\ljw.jpg"
+								th:src="@{/images/policemen/ljw.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37548"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/刘加武.wmv"
 								target="_blank"> 微视频</a><br /> 4、刘加武<input type="checkbox"
 								value="刘加武" name="policeman" /></td>
 						</tr>
 						<tr>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37558"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\lsq.jpg"
-									th:src="@{/images/policemen/lsq.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\lsq.jpg"
+								th:src="@{/images/policemen/lsq.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37558"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/陆枢琦.wmv"
 								target="_blank"> 微视频</a><br /> 5、陆枢琦<input type="checkbox"
 								value="陆枢琦" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37554"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\mj.jpg"
-									th:src="@{/images/policemen/mj.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\mj.jpg"
+								th:src="@{/images/policemen/mj.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37554"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/茅健.wmv"
 								target="_blank"> 微视频</a><br /> 6、茅健 <input type="checkbox"
 								value="茅健" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37546"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\mjj.jpg"
-									th:src="@{/images/policemen/mjj.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\mjj.jpg"
+								th:src="@{/images/policemen/mjj.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37546"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/茅金吉.wmv"
 								target="_blank"> 微视频</a><br /> 7、茅金吉<input type="checkbox"
 								value="茅金吉" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37561"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\mjw.jpg"
-									th:src="@{/images/policemen/mjw.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\mjw.jpg"
+								th:src="@{/images/policemen/mjw.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37561"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/孟俊伟.wmv"
 								target="_blank"> 微视频</a><br /> 8、孟俊伟<input type="checkbox"
 								value="孟俊伟" name="policeman" /></td>
 						</tr>
 						<tr>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37555"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\qzf.jpg"
-									th:src="@{/images/policemen/qzf.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\qzf.jpg"
+								th:src="@{/images/policemen/qzf.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37555"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/秦志锋.wmv"
 								target="_blank"> 微视频</a><br /> 9、秦志锋<input type="checkbox"
 								value="秦志锋" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37551"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\ryq.jpg"
-									th:src="@{/images/policemen/ryq.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\ryq.jpg"
+								th:src="@{/images/policemen/ryq.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37551"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/饶玉琪.wmv"
 								target="_blank"> 微视频</a><br /> 10、饶玉琪<input type="checkbox"
 								value="饶玉琪" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37550"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\stl.jpg"
-									th:src="@{/images/policemen/stl.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\stl.jpg"
+								th:src="@{/images/policemen/stl.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37550"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/沈天龙.wmv"
 								target="_blank"> 微视频</a><br /> 11、沈天龙<input type="checkbox"
 								value="沈天龙" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37547"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\syf.jpg"
-									th:src="@{/images/policemen/syf.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\syf.jpg"
+								th:src="@{/images/policemen/syf.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37547"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/宋宇飞.wmv"
 								target="_blank"> 微视频</a><br /> 12、宋宇飞<input type="checkbox"
 								value="宋宇飞" name="policeman" /></td>
 						</tr>
 						<tr>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37557"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\wjf.jpg"
-									th:src="@{/images/policemen/wjf.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\wjf.jpg"
+								th:src="@{/images/policemen/wjf.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37557"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/吴江峰.wmv"
 								target="_blank"> 微视频</a><br />13、吴江峰 <input type="checkbox"
 								value="吴江峰" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37549"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\wjq.jpg"
-									th:src="@{/images/policemen/wjq.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\wjq.jpg"
+								th:src="@{/images/policemen/wjq.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37549"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/吴俊钱.wmv"
 								target="_blank"> 微视频</a><br />14、吴俊钱 <input type="checkbox"
 								value="吴俊钱" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37559"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\ycl.jpg"
-									th:src="@{/images/policemen/ycl.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\ycl.jpg"
+								th:src="@{/images/policemen/ycl.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37559"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/ycl/wmv"
 								target="_blank"> 微视频</a><br />15、严春林<input type="checkbox"
 								value="严春林" name="policeman" /></td>
-							<td align="center"><a
-								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37560"
-								target="_blank"><img width="150px" height="200px"
-									src="/images\policemen\ym.jpg"
-									th:src="@{/images/policemen/ym.jpg}" /></a><br /> <a
+							<td align="center"><img width="150px" height="200px"
+								src="/images\policemen\ym.jpg"
+								th:src="@{/images/policemen/ym.jpg}" /><br /> <a
 								href="http://10.36.96.11/Article/ShowArticle.asp?ArticleID=37560"
 								target="_blank">简介 </a><a href="ftp://10.36.96.16/sj/杨萌.wmv"
 								target="_blank"> 微视频</a><br />16、杨萌<input type="checkbox"
