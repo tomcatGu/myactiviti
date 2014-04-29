@@ -7,7 +7,7 @@
 	function render(data) {
 		var newRow = "<tr><td><input type=\"checkbox\" /></td><td>" + data.id
 				+ "</td><td><a href=\"claim/"+data.id+"\">" + data.name
-				+ "</a></td><td>" + data.assignee + "</td><td>" + data.endTime
+				+ "</a></td><td>" + data.assignee + "</td><td>" + data.endTime.toString()
 				+ "</td></tr>";
 		return newRow;
 	};

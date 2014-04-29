@@ -1,21 +1,27 @@
 package org.crusoe.mvc.ajax.process;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.activiti.engine.FormService;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.form.StartFormData;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.crusoe.dto.ProcessDefinitionDTO;
+import org.crusoe.dto.HistoriceProcessInstanceDTO;
+import org.crusoe.dto.ProcessInstanceDTO;
 import org.crusoe.dto.repository.DeploymentDTO;
 import org.crusoe.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +51,8 @@ public class ProcessController {
 	private ProcessEngine processEngine;
 	@Autowired
 	private FormService formService;
+	@Autowired
+	private HistoryService historyService;
 
 	@Autowired
 	private IdentityService identityService;
@@ -114,6 +122,85 @@ public class ProcessController {
 
 		}
 	}
-	
+
+	@RequestMapping(value = "finishedProcessIndex/{processDefinitionId}", method = RequestMethod.GET)
+	public String finishedProcessIndex(
+			@PathVariable String processDefinitionId, Model model) {
+		model.addAttribute("processDefinitionId", processDefinitionId);
+		return "process/finishedInstanceIndex";
+	}
+
+	@RequestMapping(value = "listFinishedProcessInstances/{processDefinitionId}", method = RequestMethod.GET)
+	public @ResponseBody
+	HashMap<String, Object> listFinishedProcessInstances(
+			@PathVariable String processDefinitionId,
+			@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			Model model) throws IllegalAccessException,
+			InvocationTargetException {
+
+		List<Object> objects = new ArrayList<Object>();
+		List<HistoricProcessInstance> finishedProcessInstances = historyService
+				.createHistoricProcessInstanceQuery()
+				.processDefinitionId(processDefinitionId).finished()
+				.listPage(start, size);
+		for (HistoricProcessInstance historicProcessInstance : finishedProcessInstances) {
+			HistoriceProcessInstanceDTO piDTO = new HistoriceProcessInstanceDTO();
+			BeanUtils.copyProperties(piDTO, historicProcessInstance);
+
+			objects.add(piDTO);
+
+		}
+		long count = historyService.createHistoricProcessInstanceQuery()
+				.processDefinitionId(processDefinitionId).finished().count();
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		rets.put("count", count);
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", objects);
+		return rets;
+	}
+
+	@RequestMapping(value = "activeProcessIndex/{processDefinitionId}", method = RequestMethod.GET)
+	public String activeProcessIndex(@PathVariable String processDefinitionId,
+			Model model) {
+		model.addAttribute("processDefinitionId", processDefinitionId);
+		return "process/activeInstanceIndex";
+	}
+
+	@RequestMapping(value = "listActiveProcessInstances/{processDefinitionId}", method = RequestMethod.GET)
+	public @ResponseBody
+	HashMap<String, Object> listActiveProcessInstances(
+			@PathVariable String processDefinitionId,
+			@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			Model model) throws IllegalAccessException,
+			InvocationTargetException {
+
+		List<Object> objects = new ArrayList<Object>();
+		List<ProcessInstance> activeProcessInstances = runtimeService
+				.createProcessInstanceQuery()
+				.processDefinitionId(processDefinitionId).active()
+				.listPage(start, size);
+		for (ProcessInstance processInstance : activeProcessInstances) {
+			ProcessInstanceDTO piDTO = new ProcessInstanceDTO();
+			BeanUtils.copyProperties(piDTO, processInstance);
+
+			objects.add(piDTO);
+
+		}
+		long count = runtimeService.createProcessInstanceQuery()
+				.processDefinitionId(processDefinitionId).active().count();
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		rets.put("count", count);
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", objects);
+		return rets;
+	}
 
 }

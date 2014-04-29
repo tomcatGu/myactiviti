@@ -2,20 +2,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
-<title>repository</title>
+<title>finishedProcess</title>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
-	$(document).ready(
-			function() {
+	$(document)
+			.ready(
+					function() {
 
-				$('#checkAll').bind('click', function() {
-					checkAll("#checkAll");
-				});
+						$('#checkAll').bind('click', function() {
+							checkAll("#checkAll");
+						});
 
-				$("#processList").simpleTable(
-						"listProcessDefinitions?sort=id&order=desc", render,
-						$("#paginator"), null);
-			});
+						$("#processList")
+								.simpleTable(
+										/*[[@{'/runtime/process/listFinishedProcessInstances/'+${processDefinitionId}+'?sort=id&order=desc'}]]*/"",
+										render, $("#paginator"), null);
+					});
 	function successCallback() {
 
 		//$("#createUser").modal("hide");
@@ -29,24 +31,16 @@
 		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
 				+ data.id
 				+ "</td><td>"
-				+ data.name
+				+ data.processDefinitionId
 				+ "</td><td>"
-				+ data.deploymentId
+				+ data.startUserId
 				+ "</td><td>"
-				+ data.key
+				+ new Date(data.startTime).ToString("yyyy-MM-dd HH:mm:ss")
 				+ "</td><td>"
-				+ data.version
-				+ "</td><td>"
-				+ data.resourceName
-				+ "</td><td>"
-				+ data.diagramResourceName
+				+ new Date(data.endTime).ToString("yyyy-MM-dd HH:mm:ss")
 				+ "</td><td><a href=\"./"
 				+ data.id
-				+ "/start/\"><i class='icon-play'></i></a><a href=\"finishedProcessIndex/"
-				+ data.id
-				+ "/\"><i class='icon-briefcase'></i></a><a href=\"activeProcessIndex/"
-				+ data.id
-				+ "/\"><i class='icon-tasks'></i></a></td></tr>";
+				+ "/start/\"><i class='icon-edit'></i></a></td></tr>";
 		return newRow;
 	};
 	/*]]>*/
@@ -58,12 +52,10 @@
 		<tr>
 			<th><input type="checkbox" id="checkAll" /></th>
 			<th>ID</th>
-			<th>Name</th>
-			<th>DeploymentId</th>
-			<th>Key</th>
-			<th>version</th>
-			<th>ResourceName</th>
-			<th>DiagramResourceName</th>
+			<th>ProcessDefinitionId</th>
+			<th>StartUserId</th>
+			<th>StartTime</th>
+			<th>EndTime</th>
 			<th>operation</th>
 		</tr>
 		<tr th:remove="all">
