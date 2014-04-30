@@ -4,7 +4,7 @@
 <title>Activiti Show</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript">
-	function load(url) {
+	function load(title, url) {
 		$("#content")
 				.load(
 						url + '?' + (new Date()).valueOf(),
@@ -13,11 +13,8 @@
 							$('#breadcrumb')
 									.append(
 											'<li><a href="#">首页</a> <span class="divider">/</span></li>');
-							$('#breadcrumb')
-									.append(
-											'<li><a href="#">UserManage</a> <span class="divider">/</span></li>');
 							$('#breadcrumb').append(
-									'<li class="active">UserList</li>');
+									'<li class="active">' + title + '</li>');
 							//$("#submitButton").bind("click",function(event){$("#loadResource").dialog('close');});
 						});
 
@@ -40,6 +37,7 @@
 			//History.pushState(null, null, $clink.attr('href'));
 			$('ul li.active').removeClass('active');
 			$clink.parent('li').addClass('active');
+
 		});
 
 		//animating menus on hover
@@ -52,6 +50,7 @@
 				'margin-left' : '-=5'
 			}, 300);
 		});
+		$("#task").trigger("click");
 	});
 </script>
 </head>
@@ -90,20 +89,22 @@
 				</div>
 			</div>
 		</div>
-		<div class="container showgrid">
+		<div class="container ">
 			<div class="row">
 				<div class="span3 bs-docs-sidebar">
 					<div class="well sidebar-nav">
 						<ul class="nav nav-list">
-							<li class="nav-header">Demo</li>
-							<li><a href="#" onClick="load('demolition/index')">list1<i
+							<li class="nav-header">政府信息公开</li>
+							<li><a href="#"
+								onClick="load('创建','runtime/process/governmentInformationDisclosure:40:7471/start')">创建<i
 									class="icon-chevron-right"></i></a></li>
-							<li class="active"><a href="#"
-								onClick="load('demolition/create')">new</a></li>
-							<li><a href="#" onClick="load('demolition/')"
-								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER')==true}">汇总</a></li>
-							<li><a href="#">Link</a></li>
-							<li><a href="#">Link</a></li>
+							<li class="active"><a href="#" id="tasks"
+								onClick="load('待办','runtime/tasks/index')">待办</a></li>
+							<li><a href="#"
+								onClick="load('所有','runtime/process/finishedProcessIndex/governmentInformationDisclosure:40:7471/')">所有</a></li>
+							<li><a href="#"
+								onClick="load('runtime/tasks/historicTask/governmentInformationDisclosure:40:7471/')"
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER')==true}">已办</a></li>
 							<li class="nav-header">demo2</li>
 							<li><a href="#" class="animation-fadeIn"><i
 									class="icon-tasks"></i><span class="badge badge-success">3</span></a></li>
