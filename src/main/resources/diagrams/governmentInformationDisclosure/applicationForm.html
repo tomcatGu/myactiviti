@@ -12,9 +12,9 @@
 
 				$("#selectUsers").bind("evtSelectUser", function(evt, data) {
 					console.log(data);
-					str="";
-					for(var i=0;i<data.users.length;i++){
-						str+=data.users[i]+",";
+					str = "";
+					for ( var i = 0; i < data.users.length; i++) {
+						str += data.users[i] + ",";
 					}
 					$('#assigneeList').val(str);
 					$('#selectUsers').modal("hide");
@@ -36,7 +36,7 @@
 		th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
 		method="POST">
 		<label>申请事项：</label> <input name="applicationName" />
-		<table style="width: 100%;" border="1">
+		<table style="width: 100%;" border="1" class="table">
 			<tr>
 				<td rowspan="14">申请人信息</td>
 				<td rowspan="5">公民</td>
@@ -105,7 +105,7 @@
 			<tr>
 				<td rowspan="3">所需信息情况</td>
 				<td>所需信息的内容描述</td>
-				<td colspan="4"><input name="description" /></td>
+				<td colspan="4"><textarea name="description" rows="8" cols="80"></textarea></td>
 			</tr>
 			<tr>
 				<td>所需信息的用途</td>

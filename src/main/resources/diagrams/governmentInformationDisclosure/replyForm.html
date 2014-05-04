@@ -80,7 +80,7 @@ form {
 <body>
 	<label>申请事项：</label>
 	<label th:text="${applicationName}" />
-	<table style="width: 100%;" border="1">
+	<table style="width: 100%;" border="1" class="table">
 		<tr>
 			<td rowspan="14">申请人信息</td>
 			<td rowspan="5">公民</td>
@@ -173,7 +173,7 @@ form {
 	</table>
 	<div>
 		<label>回复意见：</label>
-		<form th:action="@{'/runtime/tasks/complete/'+${taskId}}"
+		<form th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
 			method="post">
 			<textarea name="replay" rows="8" cols="20"></textarea>
 			<input type="submit" value="回复" />

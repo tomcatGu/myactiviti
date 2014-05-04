@@ -360,6 +360,11 @@
 			<artifactId>activiti-process-validation</artifactId>
 			<version>${activiti.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
 	</dependencies>
 
 	<modules>
@@ -375,5 +380,6 @@
 		<junit.version>4.10</junit.version>
 		<groovy.version>2.2.1</groovy.version>
 		<activiti.version>5.15</activiti.version>
+		<lucene.version>4.7.0</lucene.version>
 	</properties>
 </project>
