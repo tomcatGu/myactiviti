@@ -17,6 +17,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
@@ -91,9 +92,22 @@ public class TaskController {
 		taskService.claim(task.getId(), user.getLoginName());
 		String formKey = formService.getTaskFormData(task.getId()).getFormKey();
 		if (formKey != null) {
-			Map<String, Object> variables = taskService.getVariables(taskId);
+
+			List<HistoricVariableInstance> variables = historyService
+					.createHistoricVariableInstanceQuery()
+					.processInstanceId(task.getProcessInstanceId()).list();
+			// Map<String, Object> variables = taskService.getVariables(taskId);
 			List<Attachment> taskAttachments = taskService
 					.getProcessInstanceAttachments(task.getProcessInstanceId());
+
+			for (HistoricVariableInstance hvi : variables) {
+				if (model.containsAttribute(hvi.getVariableName())) {
+					
+					
+					
+				} else
+					model.addAttribute(hvi.getVariableName(), hvi.getValue());
+			}
 			List<AttachmentDTO> attachments = Lists.newArrayList();
 			Iterator iter = taskAttachments.iterator();
 			while (iter.hasNext()) {
@@ -104,7 +118,7 @@ public class TaskController {
 			}
 			model.addAttribute("attachments", attachments);
 			// model.addAllAttributes(attachments);
-			model.addAllAttributes(variables);
+			// model.addAllAttributes(variables);
 			model.addAttribute("taskId", taskId);
 			return formKey;
 		} else

@@ -16,6 +16,8 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.crusoe.service.AccountService;
@@ -43,6 +45,8 @@ public class FormController {
 	private FormService formService;
 	@Autowired
 	private IdentityService identityService;
+	@Autowired
+	private TaskService taskService;
 
 	@Autowired
 	protected AccountService accountService;
@@ -124,7 +128,14 @@ public class FormController {
 			returnMap.put(name, value);
 		}
 
-		formService.submitTaskFormData(taskId, returnMap);
+		// formService.submitTaskFormData(taskId, returnMap);
+
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		User user = accountService.findUserByLoginName(SecurityUtils
+				.getSubject().getPrincipal().toString());
+		taskService.setVariablesLocal(taskId, returnMap);
+
+		taskService.complete(taskId);
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("msg", "OK");
 		return rets;
