@@ -26,16 +26,18 @@ em {
 	<h1>创建角色</h1>
 	<form id="roleForm" th:object="${role}">
 		<fieldset>
-			<label for="name">角色名:</label> <input id="name"
-				placeholder="输入角色名…" type="text" th:field="*{name}" /> <input
-				type="button" id="submitButton" value="创建角色" class="btn btn-primary" />
+			<label for="name">角色名:</label> <input id="name" placeholder="输入角色名…"
+				type="text" th:field="*{name}" /> <input type="button"
+				id="submitButton" value="创建角色" class="btn btn-primary" />
 		</fieldset>
-		<script type="text/javascript">
+		<script type="text/javascript" th:inline="javascript">
+			/*<![CDATA[*/
 			function submitForm() {
 
 				var role = $("#roleForm").serializeObject();
 				//alert(JSON.stringify(user));
-				$.postJSON("role/create", JSON.stringify(role), false,
+				$.postJSON(/*[[@{'/role/create'}]]*/"",
+						JSON.stringify(role), false,
 						function(data) {
 							if (data.err == "true") {
 								var errors = {};
@@ -73,6 +75,7 @@ em {
 				validator = $("#roleForm").validate();
 				$("#submitButton").bind("click", submitForm);
 			});
+			/*]]>*/
 		</script>
 	</form>
 	<div id="dialog-message"></div>

@@ -43,33 +43,35 @@
 					</div>
 				</div>
 			</fieldset>
-			<script type="text/javascript">
+			<script type="text/javascript" th:inline="javascript">
+				/*<![CDATA[*/
 				function submitForm() {
 
 					var user = $("#userForm").serializeObject();
 					//alert(JSON.stringify(user));
-					$.postJSON("user/create", JSON.stringify(user), false,
-							function(data) {
-								if (data.err == "true") {
-									var errors = {};
-									for ( var obj in data) {
-										if (obj != "err")
-											errors[obj] = data[obj];
+					$.postJSON(/*[[@{'/user/create'}]]*/'', JSON
+							.stringify(user), false, function(data) {
+						if (data.err == "true") {
+							var errors = {};
+							for ( var obj in data) {
+								if (obj != "err")
+									errors[obj] = data[obj];
 
-									}
-									validator.showErrors(errors);
-								} else {
-									$("#dialog-message .modal-body").html(
-											"数据已经保存!其ID号为:" + data.id);
-									$("#userForm").trigger("evtSuccess", {
-										msg : "OK"
-									});
-									$("#dialog-message").modal();
-								}
-
+							}
+							validator.showErrors(errors);
+						} else {
+							$("#dialog-message .modal-body").html(
+									"数据已经保存!其ID号为:" + data.id);
+							$("#userForm").trigger("evtSuccess", {
+								msg : "OK"
 							});
+							$("#dialog-message").modal();
+						}
+
+					});
 					return false;
 				}
+				/*]]>*/
 			</script>
 		</form>
 		<div class="modal-footer">

@@ -9,7 +9,7 @@
 	$(document).ready(
 			function() {
 				$('#addBtn').bind('click', function() {
-					create('#createUser', 'user/create', successCallback);
+					create('#createUser', /*[[@{'/user/create'}]]*/'', successCallback);
 				});
 				$('#checkAll').bind('click', function() {
 					checkAll("#checkAll");
@@ -29,7 +29,7 @@
 
 				});
 
-				$("#userList").simpleTable("user/listUsers?sort=id&order=desc",
+				$("#userList").simpleTable(/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/,
 						render, $("#paginator"), null);
 
 			});
