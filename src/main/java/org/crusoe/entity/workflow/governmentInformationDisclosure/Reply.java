@@ -8,12 +8,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.joda.time.DateTime;
+
 @Entity
 @Table(name = "workflow_reply")
 public class Reply {
 	private Long id;
 	private String reply;
-	private String userId;
+	private String userLoginName;
 	private Date replyTime;
 
 	@Id
@@ -34,12 +36,12 @@ public class Reply {
 		this.reply = reply;
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getUserLoginName() {
+		return userLoginName;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserLoginName(String userLoginName) {
+		this.userLoginName = userLoginName;
 	}
 
 	public Date getReplyTime() {

@@ -133,9 +133,9 @@ public class FormController {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		User user = accountService.findUserByLoginName(SecurityUtils
 				.getSubject().getPrincipal().toString());
-		taskService.setVariablesLocal(taskId, returnMap);
+		// taskService.setVariablesLocal(taskId, returnMap);
 
-		taskService.complete(taskId);
+		taskService.complete(taskId, returnMap);
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("msg", "OK");
 		return rets;
