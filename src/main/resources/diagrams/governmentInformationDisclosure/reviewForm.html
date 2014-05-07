@@ -110,6 +110,12 @@
 		</tr>
 	</table>
 	<div>
+		<ul>
+			<li th:each="areply:${result.replies}" th:text="${areply.reply}" />
+		</ul>
+	</div>
+
+	<div>
 		<label>…Û∫À“‚º˚£∫</label>
 		<form th:action="@{'/runtime/tasks/complete/'+${taskId}}"
 			method="post">
