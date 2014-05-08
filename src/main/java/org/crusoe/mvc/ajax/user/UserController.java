@@ -85,6 +85,16 @@ public class UserController {
 		return "user/index";
 	}
 
+	@RequestMapping(value = "name/{id}")
+	public @ResponseBody
+	String getUsername(@PathVariable("id") Long id) {
+
+		User user = accountService.getUser(id);
+		if (user == null)
+			return "No this user";
+		return user.getName();
+	}
+
 	@RequestMapping(value = "select")
 	public String selectUsers() {
 
