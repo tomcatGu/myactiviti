@@ -9,7 +9,17 @@
 			.ready(
 					function() {
 
-						$(".datepicker").datepickerB();
+						$("#datetimepicker1").datetimepicker({
+							language : 'zh_CN',
+
+							format : 'yyyy-mm-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
 						$("#submitButton")
 								.click(
 										function() {
@@ -52,7 +62,7 @@
 																					console
 																							.log(data);
 																					str = "";
-																					for (var i = 0; i < data.users.length; i++) {
+																					for ( var i = 0; i < data.users.length; i++) {
 																						str += data.users[i]
 																								+ ",";
 																					}
@@ -180,7 +190,6 @@
 						</div>
 					</div>
 					<div class="row">
-
 						<div class="span6">
 							<label class="control-label text-info">联系地址：</label>
 							<div class="controls">
@@ -202,10 +211,7 @@
 							</div>
 						</div>
 					</div>
-
-
 				</div>
-
 				<div class="box">
 					<legend>法人/其它组织</legend>
 					<div class="control-group">
@@ -237,10 +243,6 @@
 								</div>
 							</div>
 						</div>
-
-
-
-
 						<div class="row">
 							<div class="span6">
 								<label class="control-label text-info">联系人电话：</label>
@@ -255,9 +257,6 @@
 								</div>
 							</div>
 						</div>
-
-
-
 						<div class="row">
 							<div class="span6">
 								<label class="control-label text-info">联系地址：</label>
@@ -272,19 +271,21 @@
 								</div>
 							</div>
 						</div>
-
-
 					</div>
 				</div>
 				<div class="box">
 					<div class="control-group">
-
 						<div class="row">
 							<div class="span6">
 								<label class="control-label text-info">申请时间：</label>
 								<div class="controls">
-									<input name="applicationTime" class="datepicker"
-										data-date-format="yyyy-mm-dd" />
+									<div id="datetimepicker1" class="input-append date">
+										<input name="applicationTime" class="datepicker"
+											data-date-format="yyyy-mm-dd hh:mm:ss" /> <span
+											class="add-on"> <i data-time-icon="icon-time"
+											data-date-icon="icon-calendar"> </i>
+										</span>
+									</div>
 								</div>
 							</div>
 							<div class="span6">
@@ -294,7 +295,6 @@
 								</div>
 							</div>
 						</div>
-
 						<div class="row">
 							<div class="span12">
 								<label class="control-label text-info">所需信息的内容描述：</label>
@@ -303,7 +303,6 @@
 								</div>
 							</div>
 						</div>
-
 						<div class="row">
 							<div class="span12">
 								<label class="control-label text-info">所需信息的用途：</label>
@@ -312,7 +311,6 @@
 								</div>
 							</div>
 						</div>
-
 						<label class="control-label text-info">所需信息的指定提供方式：</label>
 						<div class="controls">
 							<label class="checkbox inline"> <input type="checkbox"
@@ -334,7 +332,6 @@
 					<legend>处理人员</legend>
 					<label class="control-label text-info">已选择处理单位人员：</label> <label
 						id="selectedUser"></label>
-
 				</div>
 			</div>
 		</fieldset>

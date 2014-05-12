@@ -78,119 +78,222 @@ form {
 </script>
 </head>
 <body>
-	<label>申请事项：</label>
-	<label th:text="${applicationName}" />
-	<table style="width: 100%;" border="1" class="table">
-		<tr>
-			<td rowspan="14">申请人信息</td>
-			<td rowspan="5">公民</td>
-			<td>姓名</td>
-			<td><label th:text="${result.citizenName}" /></td>
-			<td>工作单位</td>
-			<td><label th:text="${result.citizenWorkunit}" /></td>
-		</tr>
-		<tr>
-			<td>证件名称</td>
-			<td><label th:text="${result.citizenCertificate}" /></td>
-			<td>证件号码</td>
-			<td><label th:text="${result.citizenCertificateID}" /></td>
-		</tr>
-		<tr>
-			<td>联系电话</td>
-			<td><label th:text="${result.citizenTelphone}" /></td>
-			<td>邮件编码</td>
-			<td><label th:text="${result.citizenZipcode}" /></td>
-		</tr>
-		<tr>
-			<td>联系地址</td>
-			<td><label th:text="${result.citizenAddress}" /></td>
-			<td>传真</td>
-			<td><label th:text="${result.citizenFax}" /></td>
-		</tr>
-		<tr>
-			<td>电子邮箱</td>
-			<td><label th:text="${result.citizenEmail}" /></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
-			<td rowspan="4">法人/其它组织</td>
-			<td>名称</td>
-			<td><label th:text="${result.groupName}" /></td>
-			<td>组织机构代码</td>
-			<td><label th:text="${result.groupID}" /></td>
-		</tr>
-		<tr>
-			<td>法人代表</td>
-			<td><label th:text="${result.groupDelegate}" /></td>
-			<td>联系人名称</td>
-			<td><label th:text="${result.groupDelegateName}" /></td>
-		</tr>
-		<tr>
-			<td>联系人电话</td>
-			<td><label th:text="${result.groupDelegateTelphone}" /></td>
-			<td>传真</td>
-			<td><label th:text="${result.groupDelegateFax}" /></td>
-		</tr>
-		<tr>
-			<td>联系地址</td>
-			<td><label th:text="${result.groupDelegateAddress}" /></td>
-			<td>电子邮箱</td>
-			<td><label th:text="${result.groupDelegateEmail}" /></td>
-		</tr>
-		<tr>
-			<td>申请时间</td>
-			<td colspan="4"><label th:text="${result.applicationTime}" /></td>
-		</tr>
-		<tr>
-			<td>提交部门</td>
-			<td colspan="4"><label th:text="${result.submitDepartment}" /></td>
-		</tr>
-		<tr>
-			<td rowspan="3">所需信息情况</td>
-			<td>所需信息的内容描述</td>
-			<td colspan="4"><label th:text="${result.description}" /></td>
-		</tr>
-		<tr>
-			<td>所需信息的用途</td>
-			<td colspan="4"><label th:text="${result.purpose}" /></td>
-		</tr>
-		<tr>
-			<td>所需信息的指定提供方式</td>
-			<td><input type="checkbox" value="0" name="mode"
-				th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'0'):false}" /><label>纸面</label><input
-				type="checkbox" value="1" name="mode"
-				th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'1'):false}" /><label>电子邮件</label></td>
-			<td>读取信息的方式</td>
-			<td colspan="2"><input type="checkbox" value="0"
-				name="obtainMode"
-				th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'0'):false}" /><label>电子邮件</label><input
-				type="checkbox" value="1" name="obtainMode"
-				th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'1'):false}" /><label>传真</label><input
-				type="checkbox" value="2" name="obtainMode"
-				th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" /><label>自行领取</label></td>
-		</tr>
-	</table>
-	<div>
-		<label>回复意见：</label>
-		<form th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
-			method="post">
-			<textarea name="reply" rows="8" cols="20"></textarea>
-			<input type="submit" value="回复" />
-		</form>
-	</div>
-	<div>
-		<label>上传附件：</label>
-		<form id="uploadForm"
-			th:action="@{'/runtime/tasks/uploadAttachment/'+${taskId}}"
-			method="post" enctype="multipart/form-data">
-			<input type="file" name="file" /> <input type="submit" value="上传" />
-		</form>
-		<div id="progress">
-			<div id="bar"></div>
-			<div id="percent">0%</div>
+	<div class="well">
+		<div class="box">
+			<div class="control-group">
+				<label class="control-label text-info">申请事项：</label>
+				<div class="controls">
+					<label th:text="${result.applicationName}" />
+				</div>
+			</div>
 		</div>
-		<div id="message"></div>
+		<div class="box">
+			<legend>公民</legend>
+			<div class="control-group">
+				<div class="row">
+					<div class="span6">
+						<label class="control-label text-info">姓名：</label>
+						<div class="controls">
+							<label th:text="${result.citizenName}" />
+						</div>
+					</div>
+					<div class="span6">
+						<label class="control-label text-info">工作单位：</label>
+						<div class="controls">
+							<label th:text="${result.citizenWorkunit}" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					<label class="control-label text-info">证件名称：</label>
+					<div class="controls">
+						<label th:text="${result.citizenCertificate}" />
+					</div>
+				</div>
+				<div class="span6">
+					<label class="control-label text-info">证件号码：</label>
+					<div class="controls">
+						<label th:text="${result.citizenCertificateID}" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					<label class="control-label text-info">联系电话：</label>
+					<div class="controls">
+						<label th:text="${result.citizenTelphone}" />
+					</div>
+				</div>
+				<div class="span6">
+					<label class="control-label text-info">邮件编码：</label>
+					<div class="controls">
+						<label th:text="${result.citizenZipcode}" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					<label class="control-label text-info">联系地址：</label>
+					<div class="controls">
+						<label th:text="${result.citizenAddress}" />
+					</div>
+				</div>
+				<div class="span6">
+					<label class="control-label text-info">传真：</label>
+					<div class="controls">
+						<label th:text="${result.citizenFax}" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					<label class="control-label text-info">电子邮箱：</label>
+					<div class="controls">
+						<label th:text="${result.citizenEmail}" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="box">
+			<legend>法人/其它组织</legend>
+			<div class="control-group">
+				<div class="row">
+					<div class="span6">
+						<label class="control-label text-info">名称：</label>
+						<div class="controls">
+							<label th:text="${result.groupName}" />
+						</div>
+					</div>
+					<div class="span6">
+						<label class="control-label text-info">组织机构代码：</label>
+						<div class="controls">
+							<label th:text="${result.groupID}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span6">
+						<label class="control-label text-info">法人代表：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegate}" />
+						</div>
+					</div>
+					<div class="span6">
+						<label class="control-label text-info">联系人名称：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegateName}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span6">
+						<label class="control-label text-info">联系人电话：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegateTelphone}" />
+						</div>
+					</div>
+					<div class="span6">
+						<label class="control-label text-info">传真：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegateFax}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span6">
+						<label class="control-label text-info">联系地址：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegateAddress}" />
+						</div>
+					</div>
+					<div class="span6">
+						<label class="control-label text-info">电子邮箱：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegateEmail}" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="box">
+			<div class="control-group">
+				<div class="row">
+					<div class="span6">
+						<label class="control-label text-info">申请时间：</label>
+						<div class="controls">
+							<label th:text="${result.applicationTime}" />
+						</div>
+					</div>
+					<div class="span6">
+						<label class="control-label text-info">提交部门：</label>
+						<div class="controls">
+							<label th:text="${result.submitDepartment}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label class="control-label text-info">所需信息的内容描述：</label>
+						<div class="controls">
+							<label th:text="${result.description}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label class="control-label text-info">所需信息的用途：</label>
+						<div class="controls">
+							<label th:text="${result.purpose}" />
+						</div>
+					</div>
+				</div>
+				<label class="control-label text-info">所需信息的指定提供方式：</label>
+				<div class="controls">
+					<label class="checkbox inline"><input type="checkbox"
+						value="0" name="mode"
+						th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'0'):false}" />纸面</label><label
+						class="checkbox inline"><input type="checkbox" value="1"
+						name="mode"
+						th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'1'):false}" />电子邮件</label>
+				</div>
+				<label class="control-label text-info">读取信息的方式：</label>
+				<div class="controls">
+					<label class="checkbox inline"><input type="checkbox"
+						value="0" name="obtainMode"
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'0'):false}" />电子邮件</label><label
+						class="checkbox inline"><input type="checkbox" value="1"
+						name="obtainMode"
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'1'):false}" />传真</label><label
+						class="checkbox inline"><input type="checkbox" value="2"
+						name="obtainMode"
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
+				</div>
+			</div>
+		</div>
+		<div class="box">
+			<label>回复意见：</label>
+			<form th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
+				method="post">
+				<textarea name="reply" rows="8" cols="20"></textarea>
+				<input type="submit" value="回复" class="btn btn-primary" />
+			</form>
+		</div>
+		<div class="box">
+			<label>上传附件：</label>
+			<form id="uploadForm"
+				th:action="@{'/runtime/tasks/uploadAttachment/'+${taskId}}"
+				method="post" enctype="multipart/form-data">
+				<input type="file" name="file" /> <input type="submit" value="上传"
+					class="btn btn-primary" />
+			</form>
+			<div id="progress">
+				<div id="bar"></div>
+				<div id="percent">0%</div>
+			</div>
+			<div id="message"></div>
+		</div>
 	</div>
 </body>
 </html>
