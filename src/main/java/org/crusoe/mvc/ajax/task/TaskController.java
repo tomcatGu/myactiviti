@@ -83,30 +83,30 @@ public class TaskController {
 		return "task/historicTask";
 	}
 
-	@RequestMapping(value = "claim/{taskId}")
-	public String claimTask(@PathVariable("taskId") String taskId, Model model)
-			throws IllegalAccessException, InvocationTargetException {
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		User user = accountService.findUserByLoginName(SecurityUtils
-				.getSubject().getPrincipal().toString());
-		taskService.claim(task.getId(), user.getLoginName());
-		String formKey = formService.getTaskFormData(task.getId()).getFormKey();
+	@RequestMapping(value = "reviewHistoric/{taskId}")
+	public String reviewTask(@PathVariable("taskId") String taskId,
+			@RequestParam("processDefinitionId") String processDefinitionId,
+			@RequestParam("taskDefinitionKey") String taskDefinitionKey,
+			Model model) throws IllegalAccessException,
+			InvocationTargetException {
+		HistoricTaskInstance hti = historyService
+				.createHistoricTaskInstanceQuery().taskId(taskId)
+				.singleResult();
+		String formKey = formService.getTaskFormKey(processDefinitionId,
+				taskDefinitionKey);
 		if (formKey != null) {
 
 			List<HistoricVariableInstance> variables = historyService
 					.createHistoricVariableInstanceQuery()
-					.processInstanceId(task.getProcessInstanceId()).list();
+					.processInstanceId(hti.getProcessInstanceId()).list();
+
 			// Map<String, Object> variables = taskService.getVariables(taskId);
 			List<Attachment> taskAttachments = taskService
-					.getProcessInstanceAttachments(task.getProcessInstanceId());
+					.getProcessInstanceAttachments(hti.getProcessInstanceId());
 
 			for (HistoricVariableInstance hvi : variables) {
-				if (model.containsAttribute(hvi.getVariableName())) {
-					
-					
-					
-				} else
-					model.addAttribute(hvi.getVariableName(), hvi.getValue());
+
+				model.addAttribute(hvi.getVariableName(), hvi.getValue());
 			}
 			List<AttachmentDTO> attachments = Lists.newArrayList();
 			Iterator iter = taskAttachments.iterator();
@@ -119,6 +119,39 @@ public class TaskController {
 			model.addAttribute("attachments", attachments);
 			// model.addAllAttributes(attachments);
 			// model.addAllAttributes(variables);
+			// model.addAttribute("taskId", taskId);
+			return formKey;
+		} else
+			return "task/index";
+	}
+
+	@RequestMapping(value = "claim/{taskId}")
+	public String claimTask(@PathVariable("taskId") String taskId, Model model)
+			throws IllegalAccessException, InvocationTargetException {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		User user = accountService.findUserByLoginName(SecurityUtils
+				.getSubject().getPrincipal().toString());
+		taskService.claim(task.getId(), user.getLoginName());
+		String formKey = formService.getTaskFormData(task.getId()).getFormKey();
+		if (formKey != null) {
+
+			
+			Map<String, Object> variables = taskService.getVariables(taskId);
+			List<Attachment> taskAttachments = taskService
+					.getProcessInstanceAttachments(task.getProcessInstanceId());
+
+
+			List<AttachmentDTO> attachments = Lists.newArrayList();
+			Iterator iter = taskAttachments.iterator();
+			while (iter.hasNext()) {
+				AttachmentDTO attachmentDTO = new AttachmentDTO();
+				Attachment attachment = (Attachment) iter.next();
+				BeanUtils.copyProperties(attachmentDTO, attachment);
+				attachments.add(attachmentDTO);
+			}
+			model.addAttribute("attachments", attachments);
+			// model.addAllAttributes(attachments);
+			model.addAllAttributes(variables);
 			model.addAttribute("taskId", taskId);
 			return formKey;
 		} else
@@ -218,7 +251,7 @@ public class TaskController {
 				.orderByHistoricTaskInstanceEndTime().desc().finished()
 				.listPage(start, size);
 
-		List<TaskDTO> todoList = new ArrayList();
+		List<TaskDTO> todoList = new ArrayList<TaskDTO>();
 		int i = 0;
 		for (HistoricTaskInstance task : historictaskList) {
 			TaskDTO taskDTO = new TaskDTO();
@@ -227,6 +260,8 @@ public class TaskController {
 			taskDTO.setAssignee(task.getAssignee());
 			taskDTO.setEndTime(task.getEndTime());
 			taskDTO.setStartTime(task.getStartTime());
+			taskDTO.setTaskDefinitionKey(task.getTaskDefinitionKey());
+			taskDTO.setProcessDefinitionId(task.getProcessDefinitionId());
 
 			// BeanUtils.copyProperties(task, taskDTO);
 			todoList.add(taskDTO);

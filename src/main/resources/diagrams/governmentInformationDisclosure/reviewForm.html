@@ -114,10 +114,9 @@
 			<li th:each="areply:${result.replies}" th:text="${areply.reply}" />
 		</ul>
 	</div>
-
 	<div>
 		<label>ЩѓКЫвтМћЃК</label>
-		<form th:action="@{'/runtime/tasks/complete/'+${taskId}}"
+		<form th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
 			method="post">
 			<textarea name="review" rows="8" cols="20"></textarea>
 			<input type="submit" id="submitBtn" value="ЩѓКЫ" />

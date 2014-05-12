@@ -11,6 +11,7 @@ import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInfo
 import org.crusoe.entity.workflow.governmentInformationDisclosure.Reply;
 import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.GovernmentInformationDisclosureDao;
 import org.crusoe.service.AccountService;
+import org.crusoe.util.LuceneIKUtil;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,8 +77,12 @@ public class GovernmentInformationDisclosureService {
 		gid.setPurpose(purpose);
 		gid.setMode(mode);
 		gid.setObtainMode(obtainMode);
+		gidDao.save(gid);
+		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
+				"/IK");
+		ik.updateIndex(gid.getId(), gid.getApplicationName(), "");
 
-		return gidDao.save(gid);
+		return gid;
 
 	}
 
@@ -91,6 +96,27 @@ public class GovernmentInformationDisclosureService {
 		replyEntity.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
 				.toString());
 		gid.getReplies().add(replyEntity);
+		String content = "";
+		for (Reply aReply : gid.getReplies()) {
+
+			content += aReply.getReply() + " ";
+
+		}
+
+		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
+				"/IK");
+		ik.updateIndex(gid.getId(), gid.getApplicationName(), content);
+		return gidDao.save(gid);
+
+	}
+
+	public GovernmentInformationDisclosure saveReview(
+			GovernmentInformationDisclosure gid, String review) {
+		gid.setReview(review);
+
+		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
+				"/IK");
+		ik.updateIndex(gid.getId(), gid.getApplicationName(), review);
 		return gidDao.save(gid);
 
 	}

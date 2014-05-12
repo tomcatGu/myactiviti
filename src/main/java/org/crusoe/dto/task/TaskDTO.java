@@ -8,6 +8,8 @@ public class TaskDTO {
 	private String assignee;
 	private Date endTime;
 	private Date startTime;
+	private String taskDefinitionKey;
+	private String processDefinitionId;
 
 	public String getId() {
 		return id;
@@ -47,6 +49,22 @@ public class TaskDTO {
 
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
+	}
+
+	public String getTaskDefinitionKey() {
+		return taskDefinitionKey;
+	}
+
+	public void setTaskDefinitionKey(String taskDefinitionKey) {
+		this.taskDefinitionKey = taskDefinitionKey;
+	}
+
+	public String getProcessDefinitionId() {
+		return processDefinitionId;
+	}
+
+	public void setProcessDefinitionId(String processDefinitionId) {
+		this.processDefinitionId = processDefinitionId;
 	}
 
 }
