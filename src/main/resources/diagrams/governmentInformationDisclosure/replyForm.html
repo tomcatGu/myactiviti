@@ -73,6 +73,29 @@ form {
 							}
 						};
 						$("#uploadForm").ajaxForm(options);
+						$("#submitButton")
+								.click(
+										function() {
+											$("#myForm")
+													.ajaxForm(
+															{
+																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
+																dataType : "text",
+																success : function(
+																		data) {
+
+																	$("#myForm")
+																			.trigger(
+																					"evtWFSuccess",
+																					{
+																						msg : 'OK'
+																					});
+																	alert(data);
+																},
+
+															}).submit();
+
+										});
 					});
 	/*]]>*/
 </script>
@@ -272,15 +295,17 @@ form {
 				</div>
 			</div>
 		</div>
-		<div class="box">
+		<div class="box" th:if="${not historicView}">
 			<label>回复意见：</label>
-			<form th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
+			<form id="myForm"
+				th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
 				method="post">
 				<textarea name="reply" rows="8" cols="20"></textarea>
-				<input type="submit" value="回复" class="btn btn-primary" />
+				<input type="button" id="submitButton" value="回复"
+					class="btn btn-primary" />
 			</form>
 		</div>
-		<div class="box">
+		<div class="box" th:if="${not historicView}">
 			<label>上传附件：</label>
 			<form id="uploadForm"
 				th:action="@{'/runtime/tasks/uploadAttachment/'+${taskId}}"
@@ -293,6 +318,24 @@ form {
 				<div id="percent">0%</div>
 			</div>
 			<div id="message"></div>
+		</div>
+		<div class="box" th:if="${historicView}">
+			<legend>附件</legend>
+			<div th:each="attachment:${attachments}">
+				<label class="checkbox inline"><a
+					th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
+						th:text="${attachment.name}">file.ext</span></a></label>
+			</div>
+		</div>
+		<div class="box" th:if="${historicView}">
+			<legend>回复意见</legend>
+			<div th:each="aReply:${result.replies}">
+				<blockquote>
+					<p th:text="${aReply.reply}" class="text-left" />
+					<small><span
+						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
+				</blockquote>
+			</div>
 		</div>
 	</div>
 </body>

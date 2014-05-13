@@ -9,9 +9,8 @@
 			.ready(
 					function() {
 						$("#datetimepicker1").datetimepicker({
-							language : 'zh_CN',
-
-							format : 'yyyy-mm-dd hh:mm:ss',
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
 							pickDate : true,
 							pickTime : true,
 							hourStep : 1,
@@ -31,7 +30,13 @@
 																success : function(
 																		data) {
 
-																	alert(data.msg);
+																	alert(data);
+																	$("#myForm")
+																			.trigger(
+																					"evtWFSuccess",
+																					{
+																						msg : "OK"
+																					});
 
 																},
 																beforeSubmit : function() {
@@ -58,8 +63,7 @@
 																				function(
 																						evt,
 																						data) {
-																					console
-																							.log(data);
+
 																					str = "";
 																					for ( var i = 0; i < data.users.length; i++) {
 																						str += data.users[i]
@@ -280,7 +284,7 @@
 								<div class="controls">
 									<div id="datetimepicker1" class="input-append date">
 										<input name="applicationTime" class="datepicker"
-											data-date-format="yyyy-mm-dd hh:mm:ss" /> <span
+											data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
 											class="add-on"> <i data-time-icon="icon-time"
 											data-date-icon="icon-calendar"> </i>
 										</span>

@@ -117,6 +117,7 @@ public class TaskController {
 				attachments.add(attachmentDTO);
 			}
 			model.addAttribute("attachments", attachments);
+			model.addAttribute("historicView", true);
 			// model.addAllAttributes(attachments);
 			// model.addAllAttributes(variables);
 			// model.addAttribute("taskId", taskId);
@@ -135,11 +136,9 @@ public class TaskController {
 		String formKey = formService.getTaskFormData(task.getId()).getFormKey();
 		if (formKey != null) {
 
-			
 			Map<String, Object> variables = taskService.getVariables(taskId);
 			List<Attachment> taskAttachments = taskService
 					.getProcessInstanceAttachments(task.getProcessInstanceId());
-
 
 			List<AttachmentDTO> attachments = Lists.newArrayList();
 			Iterator iter = taskAttachments.iterator();
@@ -153,6 +152,7 @@ public class TaskController {
 			// model.addAllAttributes(attachments);
 			model.addAllAttributes(variables);
 			model.addAttribute("taskId", taskId);
+			model.addAttribute("historicView", false);
 			return formKey;
 		} else
 			return "task/index";

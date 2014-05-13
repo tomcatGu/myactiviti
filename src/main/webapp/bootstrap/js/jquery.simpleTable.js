@@ -16,6 +16,9 @@
 					remainder = (count - start) % size;
 
 					var options = {
+						numberOfPages : remainder == 0 ? (count == 0 ? 1
+								: count / size) : (count - remainder) / size
+								+ 1,
 						currentPage : start / size + 1,
 						totalPages : remainder == 0 ? (count == 0 ? 1 : count
 								/ size) : (count - remainder) / size + 1,

@@ -6,7 +6,21 @@
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	$(document).ready(function() {
+		$("#submitButton").click(function() {
+			$("#myForm").ajaxForm({
+				url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
+				dataType : "text",
+				success : function(data) {
 
+					$("#myForm").trigger("evtWFSuccess", {
+						msg : 'OK'
+					});
+					alert(data);
+				},
+
+			}).submit();
+
+		});
 	});
 	/*]]>*/
 </script>
@@ -224,13 +238,22 @@
 				</blockquote>
 			</div>
 		</div>
-		<div class="box">
+		<div class="box" th:if="${not historicView}">
 			<legend>审核意见</legend>
-			<form th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
+			<form id="myForm"
+				th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
 				method="post">
 				<textarea name="review" rows="8" cols="20"></textarea>
-				<input type="submit" id="submitBtn" value="审核" />
+				<input type="button" id="submitButton" value="审核" />
 			</form>
+		</div>
+		<div class="box" th:if="${historicView}">
+			<legend>审核意见</legend>
+			<div>
+				<blockquote>
+					<p th:text="${result.review}" class="text-left" />
+				</blockquote>
+			</div>
 		</div>
 	</div>
 </body>
