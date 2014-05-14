@@ -49,6 +49,11 @@
 			// if (data == undefined)
 			// return;
 
+		},
+		clearSimpleTable : function() {
+			var table = this;
+			table.find("tr").nextAll().remove();
+
 		}
 	});
 })(jQuery);

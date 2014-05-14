@@ -85,7 +85,7 @@ public class UserController {
 		return "user/index";
 	}
 
-	@RequestMapping(value = "name/{id}")
+	@RequestMapping(value = "name/{id}", produces = "text/plain;charset=UTF-8")
 	public @ResponseBody
 	String getUsername(@PathVariable("id") Long id) {
 
@@ -323,6 +323,7 @@ public class UserController {
 				RoleDTO roleDTO = new RoleDTO();
 				Role role = (Role) roleIter.next();
 				BeanUtils.copyProperties(role, roleDTO);
+				userDTO.setPassword("");
 				userDTO.getRoles().add(roleDTO);
 
 			}

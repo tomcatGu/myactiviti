@@ -96,12 +96,12 @@
 						<ul class="nav nav-list">
 							<li class="nav-header">政府信息公开</li>
 							<li><a href="#"
-								onClick="load('创建','runtime/process/governmentInformationDisclosure:40:7471/start')">创建<i
+								onClick="load('创建','runtime/process/governmentInformationDisclosure:72:14108/start')">创建<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="active"><a href="#" id="tasks"
 								onClick="load('待办','runtime/tasks/index')">待办</a></li>
 							<li><a href="#"
-								onClick="load('所有','runtime/process/finishedProcessIndex/governmentInformationDisclosure:40:7471/')">所有</a></li>
+								onClick="load('已办','runtime/tasks/historicTasks')">已办</a></li>
 							<li><a href="#"
 								onClick="load('runtime/tasks/historicTask/governmentInformationDisclosure:40:7471/')"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER')==true}">已办</a></li>
@@ -110,7 +110,7 @@
 									class="icon-tasks"></i><span class="badge badge-success">3</span></a></li>
 							<li class="nav-header"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">用户管理</li>
-							<li><a href="#" onClick="load('user/index')">user<i
+							<li><a href="#" onClick="load('用户列表','user/index')">用户列表<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="nav-header">角色管理</li>
 							<li><a href="#" onClick="load('role/index')">角色列表<i

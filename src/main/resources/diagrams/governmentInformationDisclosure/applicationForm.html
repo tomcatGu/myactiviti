@@ -5,6 +5,15 @@
 <title>申请人信息表单</title>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
+	function encodeUTF8(str) {
+		var temp = "", rs = "";
+		for ( var i = 0, len = str.length; i < len; i++) {
+			temp = str.charCodeAt(i).toString(16);
+			rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
+		}
+		return rs;
+	};
+
 	$(document)
 			.ready(
 					function() {

@@ -19,36 +19,10 @@
 			function() {
 
 				$("#taskList").simpleTable(
-						"listHistoryTasks?sort=name&order=desc", render,
+						/*[[@{/runtime/tasks/listHistoryTasks?sort=name&order=desc}]]*/, render,
 						$("#paginator"), null);
 
-				$('#selectBtn').bind(
-						'click',
-						function() {
 
-							$("#selectUsers").load(
-									'../../user/select' + '?'
-											+ (new Date()).valueOf(),
-									function(data) {
-										$("#selectUsers").bind(
-												"evtSelectUser",
-												function(evt, data) {
-													console.log(data);
-													$('#selectUsers').modal(
-															"hide");
-												});
-										$("#selectUsers").bind(
-												"evtCancled",
-												function(evt, data) {
-													console.log(data);
-													$('#selectUsers').modal(
-															"hide");
-												});
-										$('#selectUsers').modal();
-
-									});
-
-						});
 			});
 	/*]]>*/
 </script>
@@ -64,7 +38,7 @@
 			<input name="keyword" /> <input type="button" id="fulltextSearch"
 				value="全文检索" />
 		</div>
-		<h1>任务列表</h1>
+		<h1>历史任务列表</h1>
 		<table id="taskList" cellpadding="0" cellspacing="0" border="0"
 			class="table table-striped table-bordered">
 			<thead>
@@ -87,10 +61,8 @@
 			</tbody>
 		</table>
 		<div id="paginator"></div>
-		<input type="button" id="addBtn" value="增加" class="btn btn-primary" />
 		<input type="button" id="deleteBtn" value="删除选中"
-			class="btn btn-danger" /> <input type="button" id="selectBtn"
-			value="选择用户" class="btn btn-primary" />
+			class="btn btn-danger" />
 	</div>
 	<div tabindex="-1" class="modal hide fade" id="selectUsers"
 		data-keyboard="false" data-backdrop="static"></div>
