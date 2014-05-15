@@ -86,6 +86,12 @@ public class UserController {
 		return "user/index";
 	}
 
+	@RequestMapping(value = "changePassword")
+	public String changePasswordForm() {
+
+		return "user/changePasswordForm";
+	}
+
 	@RequestMapping(value = "name/{id}", produces = "text/plain;charset=UTF-8")
 	public @ResponseBody
 	String getUsername(@PathVariable("id") Long id) {
@@ -126,10 +132,10 @@ public class UserController {
 	String changePassword(@RequestParam("oldPassword") String oldPassword,
 			@RequestParam("newPassword") String newPassword,
 			@RequestParam("confirmPassword") String confirmPassword) {
-
+		// Map<String, String> errs = new HashMap<String, String>();
 		User user = accountService.findUserByLoginName(SecurityUtils
 				.getSubject().getPrincipal().toString());
-		if (user != null && oldPassword.equals(confirmPassword)
+		if (user != null && newPassword.equals(confirmPassword)
 				&& accountService.isCorrectPassword(user, oldPassword)) {
 			user.setPassword(newPassword);
 			try {

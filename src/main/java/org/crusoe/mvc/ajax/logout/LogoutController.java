@@ -16,6 +16,6 @@ public class LogoutController {
 		Subject currentUser = SecurityUtils.getSubject();
 		if (currentUser != null)
 			currentUser.logout();
-		return "index";
+		return "redirect:login";
 	}
 }
