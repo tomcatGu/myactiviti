@@ -110,6 +110,19 @@ public class AccountService {
 		user.setPasswordSalt(salt);
 	}
 
+	public boolean isCorrectPassword(User user, String comparePassword) {
+
+		// RandomNumberGenerator rng = new SecureRandomNumberGenerator();
+		String salt = user.getPasswordSalt();
+
+		String hashedPasswordHex = new SimpleHash(HASH_ALGORITHM,
+				comparePassword, salt, HASH_INTERATIONS).toHex();
+		if (user.getPassword().equals(hashedPasswordHex))
+			return true;
+		else
+			return false;
+	}
+
 	public Page<User> searchUser(Map<String, Object> searchParams,
 			Pageable pageRequest) {
 

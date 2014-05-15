@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.shiro.SecurityUtils;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.RoleDTO;
 import org.crusoe.dto.UserDTO;
@@ -118,6 +119,30 @@ public class UserController {
 		// model.addAttribute("allRoles",))
 		model.addAttribute("action", "create");
 		return "user/createForm";
+	}
+
+	@RequestMapping(value = "changePassword", method = RequestMethod.POST)
+	public @ResponseBody
+	String changePassword(@RequestParam("oldPassword") String oldPassword,
+			@RequestParam("newPassword") String newPassword,
+			@RequestParam("confirmPassword") String confirmPassword) {
+
+		User user = accountService.findUserByLoginName(SecurityUtils
+				.getSubject().getPrincipal().toString());
+		if (user != null && oldPassword.equals(confirmPassword)
+				&& accountService.isCorrectPassword(user, oldPassword)) {
+			user.setPassword(newPassword);
+			try {
+				accountService.saveUser(user);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				// return "error";
+			}
+
+		} else
+			return "error";
+		return "OK";
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.POST)
