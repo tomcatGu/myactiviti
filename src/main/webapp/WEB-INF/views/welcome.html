@@ -61,11 +61,13 @@
 				'margin-left' : '-=5'
 			}, 300);
 		});
-		$("#task").trigger("click");
+
+		load('待办', 'runtime/tasks/index');
 
 	});
 	/*]]>*/
 </script>
+
 </head>
 <body>
 	<div class="span12">
@@ -110,10 +112,10 @@
 						<ul class="nav nav-list">
 							<li class="nav-header">政府信息公开</li>
 							<li><a href="#"
-								onClick="load('创建','runtime/process/governmentInformationDisclosure:72:14108/start')">创建<i
+								onClick="load('创建','runtime/process/governmentInformationDisclosure:22:1308/start')">创建<i
 									class="icon-chevron-right"></i></a></li>
-							<li class="active"><a href="#" id="tasks"
-								onClick="load('待办','runtime/tasks/index')">待办</a></li>
+							<li class="active"><a id="tasks"
+								onclick="load('待办','runtime/tasks/index')">待办</a></li>
 							<li><a href="#"
 								onClick="load('已办','runtime/tasks/historicTasks')">已办</a></li>
 							<li><a href="#"
@@ -137,19 +139,15 @@
 				<div class="span9">
 					<ul class="breadcrumb" id="breadcrumb">
 						<li><a href="#">首页</a> <span class="divider">/</span></li>
-						<li><a href="#">Library</a> <span class="divider">/</span></li>
-						<li class="active">Data</li>
+
+
 					</ul>
 					<div id="content">
 						<div class="container">
-							<h1>Hello, world!</h1>
-							<p>This is a template for a simple marketing or informational
-								website. It includes a large callout called the hero unit and
-								three supporting pieces of content. Use it as a starting point
-								to create something more unique.</p>
+							<h1>欢迎!</h1>
+							<p>这是一个政府公开信息系统.</p>
 							<p>
-								<a href="#" class="btn btn-primary btn-large">Learn more
-									&raquo;</a>
+								<a href="#" class="btn btn-primary btn-large">更多 &raquo;</a>
 							</p>
 						</div>
 					</div>

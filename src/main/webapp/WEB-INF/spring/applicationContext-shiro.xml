@@ -27,12 +27,21 @@
 		</property>
 		<property name="permissionDao" ref="permissionDao" />
 	</bean>
+	<!-- Shiro logout filter -->
+	<bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+		<property name="redirectUrl" value="/login" />
+	</bean>
 
 	<!-- Shiro Filter -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
 		<property name="loginUrl" value="/login" />
 		<property name="successUrl" value="/" />
+		<property name="filters">
+			<map>
+				<entry key="logout" value-ref="logoutFilter" />
+			</map>
+		</property>
 		<!-- shiro连接约束配置,在这里使用自定义的动态获取资源类 -->
 		<property name="filterChainDefinitionMap" ref="chainDefinitionSectionMetaSource" />
 	</bean>
