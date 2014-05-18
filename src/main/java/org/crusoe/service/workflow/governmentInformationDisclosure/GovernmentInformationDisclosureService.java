@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import org.activiti.engine.delegate.DelegateExecution;
 import org.apache.shiro.SecurityUtils;
 import org.crusoe.entity.User;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInformationDisclosure;
@@ -31,8 +33,8 @@ public class GovernmentInformationDisclosureService {
 	@Autowired
 	private AccountService accountService;
 
-	public GovernmentInformationDisclosure save(String applicationName,
-			String citizenName, String citizenWorkunit,
+	public GovernmentInformationDisclosure save(DelegateExecution execution,
+			String applicationName, String citizenName, String citizenWorkunit,
 			String citizenCertificate, String citizenCertificateID,
 			String citizenTelphone, String citizenZipcode,
 			String citizenAddress, String citizenFax, String citizenEmail,
@@ -80,14 +82,17 @@ public class GovernmentInformationDisclosureService {
 		gidDao.save(gid);
 		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
 				"/IK");
-		ik.updateIndex(gid.getId(), gid.getApplicationName(), "");
+		// execution.
+		ik.updateIndex(execution.getProcessInstanceId(), gid.getId(),
+				gid.getApplicationName(), "");
 
 		return gid;
 
 	}
 
 	public GovernmentInformationDisclosure addReply(
-			GovernmentInformationDisclosure gid, String reply) {
+			DelegateExecution execution, GovernmentInformationDisclosure gid,
+			String reply) {
 		Reply replyEntity = new Reply();
 		replyEntity.setReply(reply);
 
@@ -105,19 +110,31 @@ public class GovernmentInformationDisclosureService {
 
 		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
 				"/IK");
-		ik.updateIndex(gid.getId(), gid.getApplicationName(), content);
+		ik.updateIndex(execution.getProcessInstanceId(), gid.getId(),
+				gid.getApplicationName(), content);
 		return gidDao.save(gid);
 
 	}
 
 	public GovernmentInformationDisclosure saveReview(
-			GovernmentInformationDisclosure gid, String review) {
+			DelegateExecution execution, GovernmentInformationDisclosure gid,
+			String review) {
 		gid.setReview(review);
 
 		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
 				"/IK");
-		ik.updateIndex(gid.getId(), gid.getApplicationName(), review);
+		ik.updateIndex(execution.getProcessInstanceId(), gid.getId(),
+				gid.getApplicationName(), review);
 		return gidDao.save(gid);
+
+	}
+
+	public List<GovernmentInformationDisclosure> search(String[] fields,
+			String keyword, int start, int size) {
+
+		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
+				"/IK");
+		return ik.search(fields, keyword, start, size);
 
 	}
 }

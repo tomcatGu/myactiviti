@@ -51,8 +51,11 @@ public class LuceneIKUtil<T> {
 
 	}
 
-	public Document addDocument(Long id, String title, String content) {
+	public Document addDocument(String processInstanceId, Long id,
+			String title, String content) {
 		Document doc = new Document();
+		doc.add(new StringField("processInstanceId", String
+				.valueOf(processInstanceId), Field.Store.YES));
 		doc.add(new StringField("id", String.valueOf(id), Field.Store.YES));
 		doc.add(new TextField("title", title, Field.Store.YES));
 		doc.add(new TextField("content", content, Field.Store.YES));
@@ -60,13 +63,14 @@ public class LuceneIKUtil<T> {
 
 	}
 
-	public void updateIndex(Long id, String title, String content) {
+	public void updateIndex(String processInstanceId, Long id, String title,
+			String content) {
 		try {
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
 					Version.LUCENE_47, analyzer);
 			IndexWriter indexWriter = new IndexWriter(directory,
 					indexWriterConfig);
-			Document doc = addDocument(id, title, content);
+			Document doc = addDocument(processInstanceId, id, title, content);
 			Term term = new Term("id", String.valueOf(id));
 			indexWriter.updateDocument(term, doc);
 			indexWriter.close();
@@ -77,29 +81,41 @@ public class LuceneIKUtil<T> {
 		}
 	}
 
-	public List<T> search(String[] fields, String keyword) {
+	public List<T> search(String[] fields, String keyword, int start, int size) {
 		IndexSearcher indexSearcher = null;
 		List<T> result = Lists.newArrayList();
 		T obj;
-
+		int currentPage = start / size;
 		try {
 			IndexReader indexReader = DirectoryReader.open(directory);
 			indexSearcher = new IndexSearcher(indexReader);
 			MultiFieldQueryParser queryParser = new MultiFieldQueryParser(
 					Version.LUCENE_47, fields, analyzer);
 			Query query = queryParser.parse(keyword);
-			TopDocs topDocs = indexSearcher.search(query, 10);
-			int totalCount = topDocs.totalHits;
+			TopDocs topDocs = indexSearcher.search(query, size);
+			ScoreDoc scoreDoc = null;
+
 			ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+			if (start > 0) {
+
+				scoreDoc = scoreDocs[start - 1];
+			}
+			topDocs = indexSearcher.searchAfter(scoreDoc, query, size);
+			int totalCount = topDocs.totalHits;
 			for (ScoreDoc scDoc : scoreDocs) {
+				GovernmentInformationDisclosure gid = new GovernmentInformationDisclosure();
 				Document document = indexSearcher.doc(scDoc.doc);
 				Long id = Long.parseLong(document.get("id"));
+				gid.setId(id);
+				result.add((T) gid);
 
 			}
+			indexReader.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return (List<T>) result;
 	}
 }

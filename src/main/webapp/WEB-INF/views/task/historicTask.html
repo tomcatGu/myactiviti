@@ -61,12 +61,15 @@
 <body>
 	<div class="box" id="listView">
 		<div class="control-group pull-right">
-			<div class="controls">
-				<div class="input-append">
-					<input name="keyword" class="span4" /> <input class="btn"
-						type="button" id="fulltextSearch" value="全文检索" />
+			<form th:action="@{'/runtime/search/searchHistoryTasks'}"
+				method="POST">
+				<div class="controls">
+					<div class="input-append">
+						<input name="keyword" class="span4" /> <input class="btn"
+							type="submit" id="fulltextSearch" value="全文检索" />
+					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 		<table id="taskList" cellpadding="0" cellspacing="0" border="0"
 			class="table table-striped table-bordered">

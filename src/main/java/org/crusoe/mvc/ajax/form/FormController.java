@@ -17,6 +17,8 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.runtime.Execution;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -88,8 +90,11 @@ public class FormController {
 		if (currentUser != null)
 			identityService.setAuthenticatedUserId(currentUser.getPrincipal()
 					.toString());
-		formService.submitStartFormData(processDefinitionId, returnMap);
+		ProcessInstance pi = formService.submitStartFormData(
+				processDefinitionId, returnMap);
 
+		// runtimeService.setVariable(pi.getId(), "processInstanceId",
+		// pi.getProcessInstanceId());
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("msg", "OK");
 		return rets;
