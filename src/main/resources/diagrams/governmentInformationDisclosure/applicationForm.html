@@ -84,7 +84,10 @@
 																									str);
 																					var userids = str
 																							.split(',');
-
+																					$(
+																							'#selectedUser')
+																							.text(
+																									"");
 																					for (i = 0; i < userids.length; i++) {
 																						var id = userids[i];
 																						if (id == "")

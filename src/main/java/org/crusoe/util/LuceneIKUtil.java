@@ -2,6 +2,7 @@ package org.crusoe.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -26,6 +27,7 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.google.common.collect.Lists;
 
+import org.crusoe.dto.fulltextSearch.SearchResultDTO;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.*;
 
 public class LuceneIKUtil<T> {
@@ -81,10 +83,12 @@ public class LuceneIKUtil<T> {
 		}
 	}
 
-	public List<T> search(String[] fields, String keyword, int start, int size) {
+	public HashMap<String, Object> search(String[] fields, String keyword,
+			int start, int size) {
 		IndexSearcher indexSearcher = null;
-		List<T> result = Lists.newArrayList();
-		T obj;
+		List<SearchResultDTO> result = Lists.newArrayList();
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+
 		int currentPage = start / size;
 		try {
 			IndexReader indexReader = DirectoryReader.open(directory);
@@ -103,19 +107,23 @@ public class LuceneIKUtil<T> {
 			topDocs = indexSearcher.searchAfter(scoreDoc, query, size);
 			int totalCount = topDocs.totalHits;
 			for (ScoreDoc scDoc : scoreDocs) {
-				GovernmentInformationDisclosure gid = new GovernmentInformationDisclosure();
+				SearchResultDTO fsrDTO = new SearchResultDTO();
 				Document document = indexSearcher.doc(scDoc.doc);
 				Long id = Long.parseLong(document.get("id"));
-				gid.setId(id);
-				result.add((T) gid);
-
+				String processInstanceId = document.get("processInstanceId");
+				fsrDTO.setId(id);
+				fsrDTO.setProcessInstanceId(processInstanceId);
+				result.add(fsrDTO);
 			}
+
+			rets.put("count", totalCount);
+			rets.put("result", result);
 			indexReader.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return (List<T>) result;
+		return rets;
 	}
 }

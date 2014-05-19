@@ -26,15 +26,15 @@ public class HistoryController {
 	@RequestMapping(value = "searchHistoryTasks", method = RequestMethod.POST)
 	public @ResponseBody
 	HashMap<String, Object> listHistoryTasks(
+			@RequestParam(value = "keyword") String keyword,
 			@RequestParam(value = "sort", defaultValue = "id") String sort,
 			@RequestParam(value = "order", defaultValue = "DESC") String order,
 			@RequestParam(value = "start", defaultValue = "0") int start,
 			@RequestParam(value = "size", defaultValue = "10") int size)
 			throws IllegalAccessException, InvocationTargetException {
 
-		HashMap<String, Object> rets = new HashMap<String, Object>();
-		gidService.search(new String[] { "title", "content" }, "test", start,
-				size);
+		HashMap<String, Object> rets = gidService.search(new String[] {
+				"title", "content" }, keyword, start, size);
 		return rets;
 
 	}

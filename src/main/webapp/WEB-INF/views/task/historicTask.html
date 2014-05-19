@@ -21,6 +21,25 @@
 				$("#taskList").simpleTable(
 						/*[[@{/runtime/tasks/listHistoryTasks?sort=name&order=desc}]]*/, render,
 						$("#paginator"), null);
+				$("#fulltextSearch").click(function(){
+				
+					
+					$("#searchForm").ajaxForm({
+						url : /*[[@{'/runtime/search/searchHistoryTasks'}]]*/'',
+						dataType : "text",
+						data:"keyword="+$("#keyword").val(),
+						success : function(data) {
+							$("#fulltextsearch").trigger("evtWFSuccess", {
+								msg : 'OK'
+							});
+							var obj=JSON.parse(data);
+							$("#taskList").simpleTableFromData(obj, render,
+									$("#paginator"), null);
+						}
+					}).submit();
+					
+					
+				});
 
 
 			});
@@ -62,11 +81,11 @@
 	<div class="box" id="listView">
 		<div class="control-group pull-right">
 			<form th:action="@{'/runtime/search/searchHistoryTasks'}"
-				method="POST">
+				method="POST" id="searchForm">
 				<div class="controls">
 					<div class="input-append">
-						<input name="keyword" class="span4" /> <input class="btn"
-							type="submit" id="fulltextSearch" value="全文检索" />
+						<input id="keyword" name="keyword" class="span4" /> <input
+							class="btn" type="button" id="fulltextSearch" value="全文检索" />
 					</div>
 				</div>
 			</form>
