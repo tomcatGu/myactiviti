@@ -67,4 +67,18 @@ public class TaskDTO {
 		this.processDefinitionId = processDefinitionId;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (obj instanceof TaskDTO) {
+			TaskDTO temp = (TaskDTO) obj;
+			if (temp.getId().equals(this.id))
+				return true;
+			else
+				return false;
+
+		} else
+			return false;
+
+	}
 }

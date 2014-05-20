@@ -83,6 +83,24 @@ public class LuceneIKUtil<T> {
 		}
 	}
 
+	public void addIndex(String processInstanceId, Long id, String title,
+			String content) {
+		try {
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
+					Version.LUCENE_47, analyzer);
+			IndexWriter indexWriter = new IndexWriter(directory,
+					indexWriterConfig);
+			Document doc = addDocument(processInstanceId, id, title, content);
+			// Term term = new Term("id", String.valueOf(id));
+			indexWriter.addDocument(doc);
+			indexWriter.close();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+	}
+
 	public HashMap<String, Object> search(String[] fields, String keyword,
 			int start, int size) {
 		IndexSearcher indexSearcher = null;

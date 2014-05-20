@@ -17,6 +17,9 @@
 	$(document)
 			.ready(
 					function() {
+						$("#myForm").validate({
+							meta : "validate"
+						});
 						$("#datetimepicker1").datetimepicker({
 							language : 'zh-CN',
 							format : 'yyyy-MM-dd hh:mm:ss',
@@ -154,7 +157,8 @@
 					<div class="control-group">
 						<label class="control-label text-info">申请事项：</label>
 						<div class="controls">
-							<input name="applicationName" />
+							<input name="applicationName"
+								class="{validate:{required: true,maxlength:200,minlength: 2, messages:{required:'请输入...', maxlength:'请最多输入200个字符',minlength:'请至少输入两个字符'}}}" />
 						</div>
 					</div>
 				</div>

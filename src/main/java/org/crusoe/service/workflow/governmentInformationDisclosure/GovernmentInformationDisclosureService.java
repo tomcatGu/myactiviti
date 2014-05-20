@@ -94,8 +94,8 @@ public class GovernmentInformationDisclosureService {
 		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
 				"/IK");
 		// execution.
-		ik.updateIndex(execution.getProcessInstanceId(), gid.getId(),
-				gid.getApplicationName(), "");
+		ik.addIndex(execution.getProcessInstanceId(), gid.getId(),
+				gid.getApplicationName(), gid.getDescription());
 
 		return gid;
 
@@ -121,7 +121,7 @@ public class GovernmentInformationDisclosureService {
 
 		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
 				"/IK");
-		ik.updateIndex(execution.getProcessInstanceId(), gid.getId(),
+		ik.addIndex(execution.getProcessInstanceId(), gid.getId(),
 				gid.getApplicationName(), content);
 		return gidDao.save(gid);
 
@@ -134,7 +134,7 @@ public class GovernmentInformationDisclosureService {
 
 		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
 				"/IK");
-		ik.updateIndex(execution.getProcessInstanceId(), gid.getId(),
+		ik.addIndex(execution.getProcessInstanceId(), gid.getId(),
 				gid.getApplicationName(), review);
 		return gidDao.save(gid);
 
@@ -166,8 +166,8 @@ public class GovernmentInformationDisclosureService {
 				taskDTO.setStartTime(task.getStartTime());
 				taskDTO.setTaskDefinitionKey(task.getTaskDefinitionKey());
 				taskDTO.setProcessDefinitionId(task.getProcessDefinitionId());
-
-				taskList.add(taskDTO);
+				if (!taskList.contains(taskDTO))
+					taskList.add(taskDTO);
 				count++;
 			}
 
