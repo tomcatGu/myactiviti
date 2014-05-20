@@ -95,9 +95,9 @@
 							</ul>
 						</div>
 						<ul class="nav">
-							<li class="active"><a href="#">Home</a></li>
-							<li><a href="#about">About</a></li>
-							<li><a href="#contact">Contact</a></li>
+							<li class="active"><a href="#"></a></li>
+							<li><a href="#about"></a></li>
+							<li><a href="#contact"></a></li>
 						</ul>
 					</div>
 					<!--/.nav-collapse -->
@@ -111,6 +111,7 @@
 						<ul class="nav nav-list">
 							<li class="nav-header">政府信息公开</li>
 							<li><a href="#"
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"
 								onClick="load('创建','runtime/process/governmentInformationDisclosure:80:15362/start')">创建<i
 									class="icon-chevron-right pull-right"></i></a></li>
 							<li class="active"><a id="tasks"
@@ -118,8 +119,8 @@
 							<li><a href="#"
 								onClick="load('已办','runtime/tasks/historicTasks')">已办</a></li>
 							<li><a href="#"
-								onClick="load('runtime/tasks/historicTask/governmentInformationDisclosure:40:7471/')"
-								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER')==true}">已办</a></li>
+								onClick="load('已办结','runtime/tasks/historicTask/governmentInformationDisclosure:80:15362/')"
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">已办结</a></li>
 							<li class="nav-header">demo2</li>
 							<li><a href="#" class="animation-fadeIn"><i
 									class="icon-tasks"></i><span class="badge badge-success">3</span></a></li>
@@ -128,7 +129,7 @@
 							<li><a href="#" onClick="load('用户列表','user/index')">用户列表<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="nav-header">角色管理</li>
-							<li><a href="#" onClick="load('role/index')">角色列表<i
+							<li><a href="#" onClick="load('角色列表','role/index')">角色列表<i
 									class="icon-chevron-right"></i></a></li>
 						</ul>
 					</div>
@@ -153,7 +154,7 @@
 			<!--/row-->
 			<hr />
 			<footer>
-				<p>&copy; Company 2013</p>
+				<p>&copy; Company tomcat.gu@gmail.com</p>
 			</footer>
 		</div>
 		<!--/.fluid-container-->
