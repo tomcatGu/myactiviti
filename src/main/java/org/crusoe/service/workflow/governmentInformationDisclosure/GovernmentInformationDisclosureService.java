@@ -10,6 +10,7 @@ import java.util.Iterator;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
 import org.apache.shiro.SecurityUtils;
@@ -170,6 +171,39 @@ public class GovernmentInformationDisclosureService {
 					taskList.add(taskDTO);
 				count++;
 			}
+
+		}
+		rets.clear();
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("count", count);
+		rets.put("records", taskList);
+		return rets;
+
+	}
+	
+	public HashMap<String, Object> searchProcessInstance(String[] fields, String keyword,
+			int start, int size) {
+
+		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
+				"/IK");
+		HashMap<String, Object> rets = ik.search(fields, keyword, start, size);
+		List<TaskDTO> taskList = Lists.newArrayList();
+		List<SearchResultDTO> result = (List<SearchResultDTO>) rets
+				.get("result");
+		Iterator<SearchResultDTO> iter = result.iterator();
+		int count = 0;
+		while (iter.hasNext()) {
+			SearchResultDTO srDTO = iter.next();
+			List<HistoricActivityInstance> historicActivityInstanceList = historyService
+					.createHistoricActivityInstanceQuery()
+					.processInstanceId(srDTO.getProcessInstanceId()).list();
+
+			for (HistoricActivityInstance instance : historicActivityInstanceList) {
+
+			}
+			
+			historyService.createHistoricProcessInstanceQuery().processInstanceId(srDTO.getProcessInstanceId()).list();
 
 		}
 		rets.clear();

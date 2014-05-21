@@ -12,6 +12,7 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.form.StartFormData;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -146,6 +147,15 @@ public class ProcessController {
 				.createHistoricProcessInstanceQuery()
 				.processDefinitionId(processDefinitionId).finished()
 				.listPage(start, size);
+
+		List<HistoricActivityInstance> hainstances = historyService
+				.createHistoricActivityInstanceQuery()
+				.processDefinitionId(processDefinitionId).finished().list();
+		for (HistoricActivityInstance hai : hainstances) {
+
+			String activityName = hai.getActivityName();
+
+		}
 		for (HistoricProcessInstance historicProcessInstance : finishedProcessInstances) {
 			HistoriceProcessInstanceDTO piDTO = new HistoriceProcessInstanceDTO();
 			BeanUtils.copyProperties(piDTO, historicProcessInstance);
@@ -186,9 +196,11 @@ public class ProcessController {
 				.createProcessInstanceQuery()
 				.processDefinitionId(processDefinitionId).active()
 				.listPage(start, size);
+
 		for (ProcessInstance processInstance : activeProcessInstances) {
 			ProcessInstanceDTO piDTO = new ProcessInstanceDTO();
 			BeanUtils.copyProperties(piDTO, processInstance);
+			// processInstance
 
 			objects.add(piDTO);
 
