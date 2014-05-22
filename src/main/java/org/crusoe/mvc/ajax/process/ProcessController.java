@@ -15,6 +15,10 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -26,6 +30,7 @@ import org.crusoe.command.GenFlowImageCmd;
 import org.crusoe.dto.ProcessDefinitionDTO;
 import org.crusoe.dto.HistoriceProcessInstanceDTO;
 import org.crusoe.dto.ProcessInstanceDTO;
+import org.crusoe.dto.repository.ActivityDTO;
 import org.crusoe.dto.repository.DeploymentDTO;
 import org.crusoe.service.AccountService;
 import org.crusoe.service.BaseServiceImpl;
@@ -41,6 +46,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.common.collect.Lists;
 
 @Controller
 @RequestMapping(value = "/runtime/process")
@@ -238,12 +245,13 @@ public class ProcessController extends BaseServiceImpl {
 				.processDefinitionId(processDefinitionId).singleResult();
 		String diagramResourceName = procDef.getDiagramResourceName();
 
-		InputStream imageStream = this.commandExecutor
-				.execute(new GenFlowImageCmd(repositoryService,
-						processDefinitionId));
+		// InputStream imageStream = this.commandExecutor
+		// .execute(new GenFlowImageCmd(repositoryService,
+		// processDefinitionId));
 		// InputStream imageStream = repositoryService.getResourceAsStream(
 		// procDef.getDeploymentId(), diagramResourceName);
-
+		InputStream imageStream = repositoryService
+				.getProcessDiagram(processDefinitionId);
 		byte[] bb = IOUtils.toByteArray(imageStream);
 		HttpHeaders headers = new HttpHeaders();
 
@@ -262,37 +270,23 @@ public class ProcessController extends BaseServiceImpl {
 	 * @return
 	 * @throws Exception
 	 */
-	/*
-	 * public String getProcessMap() throws Exception { String procDefId =
-	 * getRequest().getParameter("procDefId"); String executionId =
-	 * getRequest().getParameter("executionId"); ProcessDefinition
-	 * processDefinition = repositoryService
-	 * .createProcessDefinitionQuery().processDefinitionId(procDefId)
-	 * .singleResult();
-	 * 
-	 * ProcessDefinitionImpl pdImpl = (ProcessDefinitionImpl) processDefinition;
-	 * String processDefinitionId = pdImpl.getId();// 流程标识
-	 * 
-	 * ProcessDefinitionEntity def = (ProcessDefinitionEntity)
-	 * ((RepositoryServiceImpl) repositoryService)
-	 * .getDeployedProcessDefinition(processDefinitionId); ActivityImpl actImpl
-	 * = null;
-	 * 
-	 * ExecutionEntity execution = (ExecutionEntity) runtimeService
-	 * .createExecutionQuery().executionId(executionId).singleResult();// 执行实例
-	 * 
-	 * String activitiId = execution.getActivityId();// 当前实例的执行到哪个节点 //
-	 * List<String>activitiIds = //
-	 * runtimeService.getActiveActivityIds(executionId);
-	 * 
-	 * List<ActivityImpl> activitiList = def.getActivities();// 获得当前任务的所有节点 //
-	 * for(String activitiId : activitiIds){ for (ActivityImpl activityImpl :
-	 * activitiList) { String id = activityImpl.getId(); if
-	 * (id.equals(activitiId)) {// 获得执行到那个节点 actImpl = activityImpl; break; } }
-	 * // }
-	 * 
-	 * getRequest().setAttribute("coordinateObj", actImpl);
-	 * getRequest().setAttribute("procDefId", procDefId); return SUCCESS; }
-	 */
+	@RequestMapping(value = "activityCoordinate/{processDefinitionId}")
+	public @ResponseBody
+	HashMap<String, Object> getActivityCoordinate(
+			@PathVariable String processDefinitionId) throws Exception {
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+
+		ProcessDefinitionEntity def = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+				.getDeployedProcessDefinition(processDefinitionId);
+		List<ActivityImpl> activitiList = def.getActivities();
+		List<ActivityDTO> coordinates = Lists.newArrayList();
+		for (ActivityImpl activityImpl : activitiList) {
+			ActivityDTO activityDTO = new ActivityDTO();
+			BeanUtils.copyProperties(activityDTO, activityImpl);
+			coordinates.add(activityDTO);
+		}
+		rets.put("coordinates", coordinates);
+		return rets;
+	}
 
 }

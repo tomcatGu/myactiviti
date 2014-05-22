@@ -3,7 +3,7 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
-<title>finishedProcess</title>
+<title>已结束的流程</title>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	$(document)
@@ -64,16 +64,43 @@
 				render, $("#paginator"), null);
 
 	};
-	function loadProcessDiagram(processDefinitionId) {
+	function loadProcessDiagram(processInstanceId, processDefinitionId) {
 		$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
 		+processDefinitionId);
+		$
+				.ajax({
+					type : 'GET',
+					url : /*[[@{'/runtime/process/activityCoordinate/'}]]*/''
+							+ processDefinitionId,
+					async : false,
+					success : function(data) {
+						var coord = data.coordinates;
+						var i = 0;
+						for (i = 0; i < coord.length; i++) {
+							var obj = coord[i];
+							//alert(obj.id);
+							//alert(obj.x);
+							//alert(obj.y);
+
+							var childdiv = $("<div style='position:absolute; border:2px solid red;'></div>"); //创建一个子div
+							childdiv.attr('left', obj.x);
+							childdiv.attr('top', obj.y);
+							childdiv.width(obj.width);
+							childdiv.height(obj.height);
+							childdiv.appendTo($("#parentDiv"));
+
+						}
+
+					}
+
+				});
 		$("#viewDiagram").modal();
 	};
 	function render(data) {
 		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
 				+ data.id
 				+ "</td><td>"
-				+ data.processDefinitionId
+				+ data.businessKey
 				+ "</td><td>"
 				+ data.startUserId
 				+ "</td><td>"
@@ -81,6 +108,8 @@
 				+ "</td><td>"
 				+ new Date(data.endTime).ToString("yyyy-MM-dd HH:mm:ss")
 				+ "</td><td><a href=\"javascript:loadProcessDiagram('"
+				+ data.id
+				+ "','"
 				+ data.processDefinitionId
 				+ "');\"><i class='icon-edit'></i></a></td></tr>";
 		return newRow;
@@ -90,7 +119,6 @@
 </head>
 <body>
 	<div class="box">
-
 		<div class="control-group pull-right">
 			<form th:action="@{'/runtime/search/searchHistoryTasks'}"
 				method="POST" id="searchForm">
@@ -107,7 +135,7 @@
 			<tr>
 				<th><input type="checkbox" id="checkAll" /></th>
 				<th>ID</th>
-				<th>流程名称</th>
+				<th>业务流程名称</th>
 				<th>发起者</th>
 				<th>开始时间</th>
 				<th>结束时间</th>
@@ -126,7 +154,17 @@
 		</table>
 		<div id="paginator"></div>
 		<div id="viewDiagram" class="modal hide fade">
-			<img id="processDiagram" src="" />
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h3>显示流程图</h3>
+			</div>
+			<div class="modal-body" id="parentDiv">
+				<img id="processDiagram" src="" usemap="#ImageMap" />
+				<map name="ImageMap" id="Mask">
+					<area shape="rect" coords="930,233,965,268" href="#" />
+				</map>
+			</div>
 		</div>
 	</div>
 </body>

@@ -90,8 +90,12 @@ public class FormController {
 		if (currentUser != null)
 			identityService.setAuthenticatedUserId(currentUser.getPrincipal()
 					.toString());
+		// 为启动的流程设置一个具体的业务名称
+		String businessKey = (String) returnMap.get("businessKey");
+		if (businessKey == null)
+			businessKey = "";
 		ProcessInstance pi = formService.submitStartFormData(
-				processDefinitionId, returnMap);
+				processDefinitionId, businessKey, returnMap);
 
 		// runtimeService.setVariable(pi.getId(), "processInstanceId",
 		// pi.getProcessInstanceId());

@@ -200,7 +200,7 @@ public class GovernmentInformationDisclosureService {
 					.processInstanceId(srDTO.getProcessInstanceId()).list();
 
 			for (HistoricActivityInstance instance : historicActivityInstanceList) {
-
+				//instance.getActivityName();
 			}
 			
 			historyService.createHistoricProcessInstanceQuery().processInstanceId(srDTO.getProcessInstanceId()).list();

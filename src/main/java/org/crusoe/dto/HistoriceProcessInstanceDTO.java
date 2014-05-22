@@ -8,34 +8,53 @@ public class HistoriceProcessInstanceDTO {
 	private String startUserId;
 	private Date startTime;
 	private Date endTime;
+	private String businessKey;
+
 	public String getId() {
 		return id;
 	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
+
 	public String getProcessDefinitionId() {
 		return processDefinitionId;
 	}
+
 	public void setProcessDefinitionId(String processDefinitionId) {
 		this.processDefinitionId = processDefinitionId;
 	}
+
 	public String getStartUserId() {
 		return startUserId;
 	}
+
 	public void setStartUserId(String startUserId) {
 		this.startUserId = startUserId;
 	}
+
 	public Date getStartTime() {
 		return startTime;
 	}
+
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
+
 	public Date getEndTime() {
 		return endTime;
 	}
+
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getBusinessKey() {
+		return businessKey;
+	}
+
+	public void setBusinessKey(String businessKey) {
+		this.businessKey = businessKey;
 	}
 }
