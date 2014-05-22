@@ -1,5 +1,6 @@
 package org.crusoe.mvc.ajax.process;
 
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,14 +19,21 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.poi.util.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.crusoe.command.GenFlowImageCmd;
 import org.crusoe.dto.ProcessDefinitionDTO;
 import org.crusoe.dto.HistoriceProcessInstanceDTO;
 import org.crusoe.dto.ProcessInstanceDTO;
 import org.crusoe.dto.repository.DeploymentDTO;
 import org.crusoe.service.AccountService;
+import org.crusoe.service.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +44,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/runtime/process")
-public class ProcessController {
+public class ProcessController extends BaseServiceImpl {
 	@RequestMapping(value = "index")
 	public String index(Model model) {
 
@@ -214,5 +222,77 @@ public class ProcessController {
 		rets.put("records", objects);
 		return rets;
 	}
+
+	/**
+	 * 显示流程图
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "processDiagram/{processDefinitionId}")
+	public ResponseEntity<byte[]> getProcessDiagram(
+			@PathVariable String processDefinitionId) throws Exception {
+
+		ProcessDefinition procDef = repositoryService
+				.createProcessDefinitionQuery()
+				.processDefinitionId(processDefinitionId).singleResult();
+		String diagramResourceName = procDef.getDiagramResourceName();
+
+		InputStream imageStream = this.commandExecutor
+				.execute(new GenFlowImageCmd(repositoryService,
+						processDefinitionId));
+		// InputStream imageStream = repositoryService.getResourceAsStream(
+		// procDef.getDeploymentId(), diagramResourceName);
+
+		byte[] bb = IOUtils.toByteArray(imageStream);
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setContentLength(bb.length);
+
+		headers.setCacheControl("no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
+		headers.setPragma("no-cache");
+		headers.setContentType(MediaType.IMAGE_PNG);
+
+		return new ResponseEntity<byte[]>(bb, headers, HttpStatus.OK);
+	}
+
+	/**
+	 * 获取跟踪信息
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	/*
+	 * public String getProcessMap() throws Exception { String procDefId =
+	 * getRequest().getParameter("procDefId"); String executionId =
+	 * getRequest().getParameter("executionId"); ProcessDefinition
+	 * processDefinition = repositoryService
+	 * .createProcessDefinitionQuery().processDefinitionId(procDefId)
+	 * .singleResult();
+	 * 
+	 * ProcessDefinitionImpl pdImpl = (ProcessDefinitionImpl) processDefinition;
+	 * String processDefinitionId = pdImpl.getId();// 流程标识
+	 * 
+	 * ProcessDefinitionEntity def = (ProcessDefinitionEntity)
+	 * ((RepositoryServiceImpl) repositoryService)
+	 * .getDeployedProcessDefinition(processDefinitionId); ActivityImpl actImpl
+	 * = null;
+	 * 
+	 * ExecutionEntity execution = (ExecutionEntity) runtimeService
+	 * .createExecutionQuery().executionId(executionId).singleResult();// 执行实例
+	 * 
+	 * String activitiId = execution.getActivityId();// 当前实例的执行到哪个节点 //
+	 * List<String>activitiIds = //
+	 * runtimeService.getActiveActivityIds(executionId);
+	 * 
+	 * List<ActivityImpl> activitiList = def.getActivities();// 获得当前任务的所有节点 //
+	 * for(String activitiId : activitiIds){ for (ActivityImpl activityImpl :
+	 * activitiList) { String id = activityImpl.getId(); if
+	 * (id.equals(activitiId)) {// 获得执行到那个节点 actImpl = activityImpl; break; } }
+	 * // }
+	 * 
+	 * getRequest().setAttribute("coordinateObj", actImpl);
+	 * getRequest().setAttribute("procDefId", procDefId); return SUCCESS; }
+	 */
 
 }

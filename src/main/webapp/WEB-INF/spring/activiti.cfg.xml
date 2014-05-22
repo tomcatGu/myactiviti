@@ -31,6 +31,8 @@
 
 		<!-- mail server configurations -->
 		<property name="mailServerPort" value="5025" />
+		<property name="activityFontName" value="宋体" />
+		<property name="labelFontName" value="宋体" />
 	</bean>
 	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
 		<property name="processEngineConfiguration" ref="processEngineConfiguration" />

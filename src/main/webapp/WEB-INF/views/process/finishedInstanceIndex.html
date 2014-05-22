@@ -63,7 +63,12 @@
 		$("#processList").simpleTable("user/listUsers?sort=id&order=desc",
 				render, $("#paginator"), null);
 
-	}
+	};
+	function loadProcessDiagram(processDefinitionId) {
+		$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
+		+processDefinitionId);
+		$("#viewDiagram").modal();
+	};
 	function render(data) {
 		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
 				+ data.id
@@ -75,9 +80,9 @@
 				+ new Date(data.startTime).ToString("yyyy-MM-dd HH:mm:ss")
 				+ "</td><td>"
 				+ new Date(data.endTime).ToString("yyyy-MM-dd HH:mm:ss")
-				+ "</td><td><a href=\"./"
-				+ data.id
-				+ "/start/\"><i class='icon-edit'></i></a></td></tr>";
+				+ "</td><td><a href=\"javascript:loadProcessDiagram('"
+				+ data.processDefinitionId
+				+ "');\"><i class='icon-edit'></i></a></td></tr>";
 		return newRow;
 	};
 	/*]]>*/
@@ -120,6 +125,9 @@
 			</tr>
 		</table>
 		<div id="paginator"></div>
+		<div id="viewDiagram" class="modal hide fade">
+			<img id="processDiagram" src="" />
+		</div>
 	</div>
 </body>
 </html>
