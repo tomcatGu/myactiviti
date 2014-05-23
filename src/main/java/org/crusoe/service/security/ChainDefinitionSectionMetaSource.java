@@ -5,12 +5,18 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.config.Ini.Section;
 import org.crusoe.entity.Permission;
 import org.crusoe.entity.Resource;
+import org.crusoe.entity.Role;
+import org.crusoe.entity.User;
 import org.crusoe.repository.jpa.PermissionDao;
 import org.crusoe.repository.jpa.ResourceDao;
+import org.crusoe.service.AccountService;
+import org.crusoe.service.ShiroDbRealm.ShiroUser;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;

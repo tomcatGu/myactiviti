@@ -55,7 +55,7 @@
 				+ data.email
 				+ "</td><td>"
 				+ data.stauts
-				+ "</td><td><a href=\"javascript:update('#createUser','user/update/"
+				+ "</td><td><a href=\"javascript:update('#createUser','"+/*[[@{'/user/update/'}]]*/''
 				+ data.id
 				+ "',successCallback);\"><i class='icon-edit'></i></a></td></tr>";
 		return newRow;

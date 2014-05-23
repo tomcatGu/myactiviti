@@ -2,7 +2,7 @@
 <html>
 <head thy:merge="/common::headerFragment">
 <title>创建资源</title>
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
 	function submitForm() {
 
 		var permission = $("#permissionForm").serializeObject();
@@ -65,11 +65,11 @@ em {
 		<div class="modal-body">
 			<form id="permissionForm" method="POST" th:object="${permission}">
 				<fieldset>
-					<label for="url">资源路径:</label> <input id="url" placeholder="输入角色名…"
+					<label for="url">资源路径:</label> <input id="url" placeholder="输入资源路径…"
 						type="text" th:field="*{url}" /> <label for="token">资源权限:</label>
-					<input id="token" placeholder="输入角色名…" type="text"
+					<input id="token" placeholder="输入资源权限…" type="text"
 						th:field="*{token}" /> <label for="description">资源描述:</label> <input
-						id="description" placeholder="输入角色名…" type="text"
+						id="description" placeholder="输入资源描述…" type="text"
 						th:field="*{description}" />
 
 

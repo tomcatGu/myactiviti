@@ -46,32 +46,32 @@
 						</div>
 					</div>
 				</fieldset>
-				<script type="text/javascript">
+				<script type="text/javascript" th:inline="javascript">
 					function submitForm() {
 
 						var user = $("#userForm").serializeObject();
-						//alert(JSON.stringify(user));
-						$.postJSON("user/update", JSON.stringify(user), false,
-								function(data) {
-									if (data.err == "true") {
-										var errors = {};
-										for ( var obj in data) {
-											if (obj != "err")
-												errors[obj] = data[obj];
+						alert(JSON.stringify(user));
+						$.postJSON(/*[[@{'/user/update/'}]]*/'', JSON
+								.stringify(user), false, function(data) {
+							if (data.err == "true") {
+								var errors = {};
+								for ( var obj in data) {
+									if (obj != "err")
+										errors[obj] = data[obj];
 
-										}
-										validator.showErrors(errors);
-									} else {
-										$("#dialog-message .modal-body").html(
-												"Data has been saved!Its ID is:"
-														+ data.id);
-										$("#userForm").trigger("evtSuccess", {
-											msg : "OK"
-										});
-										$("#dialog-message").modal();
-									}
-
+								}
+								validator.showErrors(errors);
+							} else {
+								$("#dialog-message .modal-body").html(
+										"Data has been saved!Its ID is:"
+												+ data.id);
+								$("#userForm").trigger("evtSuccess", {
+									msg : "OK"
 								});
+								$("#dialog-message").modal();
+							}
+
+						});
 						return false;
 					}
 				</script>
