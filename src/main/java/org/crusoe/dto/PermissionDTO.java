@@ -1,10 +1,15 @@
 package org.crusoe.dto;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 public class PermissionDTO {
 	private Long id;
 	private String token;
 	private String url;
 	private String description;
+	private List<RoleDTO> roles = Lists.newArrayList();
 
 	public Long getId() {
 		// TODO Auto-generated method stub
@@ -38,5 +43,13 @@ public class PermissionDTO {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<RoleDTO> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<RoleDTO> roles) {
+		this.roles = roles;
 	}
 }

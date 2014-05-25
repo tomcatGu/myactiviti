@@ -32,6 +32,7 @@ import org.crusoe.web.datatables.DataTableReturnObject;
 import org.crusoe.web.datatables.JSONParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -152,6 +153,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.POST)
+	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
 	public @ResponseBody
 	Map<String, ? extends Object> create(@Valid @RequestBody UserDTO newUser,
 			RedirectAttributes redirectAttributes) {
@@ -215,6 +217,7 @@ public class UserController {
 			Role role = (Role) iter.next();
 			RoleDTO roleDTO = new RoleDTO();
 			BeanUtils.copyProperties(role, roleDTO); // resource.getRoles().add(role);
+
 			allRoles.add(roleDTO); // allRoles.add(role);
 
 		}
@@ -224,6 +227,7 @@ public class UserController {
 		User user = accountService.getUser(id);
 		UserDTO userDTO = new UserDTO();
 		BeanUtils.copyProperties(user, userDTO);
+		userDTO.setPassword("");
 		userDTO.setRoles(new ArrayList<RoleDTO>());
 		iter = user.getRoles().iterator();
 		while (iter.hasNext()) {
@@ -241,6 +245,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
+	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
 	public @ResponseBody
 	Map<String, ? extends Object> update(@Valid @RequestBody UserDTO newUser,
 			RedirectAttributes redirectAttributes) {
@@ -277,6 +282,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
 	public @ResponseBody
 	Map<String, ? extends Object> delete(@PathVariable("id") Long id,
 			RedirectAttributes redirectAttributes) throws Exception {
@@ -302,6 +308,7 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@RequestMapping(method = RequestMethod.DELETE)
+	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
 	public @ResponseBody
 	Map<String, ? extends Object> batchDelete(
 			@RequestParam(value = "items[]", required = false) int[] items)

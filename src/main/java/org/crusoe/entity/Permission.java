@@ -1,15 +1,20 @@
 package org.crusoe.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.google.common.collect.Lists;
 
 @Entity
 @Table(name = "ss_permission")
@@ -19,6 +24,7 @@ public class Permission implements Serializable, AbstractSecureObject<Long> {
 	private String token;
 	private String url;
 	private String description;
+	private List<Role> roles = Lists.newArrayList();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +60,15 @@ public class Permission implements Serializable, AbstractSecureObject<Long> {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@ManyToMany(cascade = CascadeType.REFRESH, mappedBy = "permissions")
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 }

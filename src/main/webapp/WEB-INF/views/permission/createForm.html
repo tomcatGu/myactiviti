@@ -55,7 +55,6 @@ em {
 </style>
 </head>
 <body>
-
 	<div>
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
@@ -65,27 +64,29 @@ em {
 		<div class="modal-body">
 			<form id="permissionForm" method="POST" th:object="${permission}">
 				<fieldset>
-					<label for="url">资源路径:</label> <input id="url" placeholder="输入资源路径…"
-						type="text" th:field="*{url}" /> <label for="token">资源权限:</label>
-					<input id="token" placeholder="输入资源权限…" type="text"
-						th:field="*{token}" /> <label for="description">资源描述:</label> <input
-						id="description" placeholder="输入资源描述…" type="text"
+					<label for="url">资源路径:</label> <input id="url"
+						placeholder="输入资源路径…" type="text" th:field="*{url}" /> <label
+						for="token">资源权限:</label> <input id="token" placeholder="输入资源权限…"
+						type="text" th:field="*{token}" /> <label for="description">资源描述:</label>
+					<input id="description" placeholder="输入资源描述…" type="text"
 						th:field="*{description}" />
-
-
-
+					<div class="form-actions">
+						<div class="control-group">
+							<div class="controls">
+								<label class="checkbox" th:each="role : ${permission.roles}">
+									<input type="checkbox" th:field="*{roles}"
+									th:value="${role.id}" /> <label th:text="${role.name}">ROLE_USER</label>
+								</label>
+							</div>
+						</div>
+					</div>
 				</fieldset>
 			</form>
 		</div>
 		<div class="modal-footer">
-
 			<button type="button" id="submitButton" class="btn btn-primary">创建资源</button>
 		</div>
-
 	</div>
-
-
-
 	<div tabindex="-1" class="modal hide fade" id="dialog-message"
 		data-keyboard="false" data-backdrop="static">
 		<div class="modal-header">
@@ -97,11 +98,9 @@ em {
 			<p>Would you like to continue with some arbitrary task?</p>
 		</div>
 		<div class="modal-footer">
-
 			<button class="btn btn-primary" type="button" data-dismiss="modal">Continue
 			</button>
 		</div>
 	</div>
-
 </body>
 </html>

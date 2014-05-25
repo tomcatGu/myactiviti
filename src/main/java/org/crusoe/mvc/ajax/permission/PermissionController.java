@@ -27,6 +27,7 @@ import org.crusoe.service.RoleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -43,6 +44,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.common.collect.Lists;
+
 @Controller
 @RequestMapping(value = "/permission")
 public class PermissionController {
@@ -58,13 +61,21 @@ public class PermissionController {
 
 	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String getCreateForm(Model model) {
-		PermissionDTO permission = new PermissionDTO();
+		PermissionDTO permissionDTO = new PermissionDTO();
+		List<Role> roles = roleService.getAllRoles();
+		Iterator iter = roles.iterator();
+		while (iter.hasNext()) {
+			RoleDTO roleDTO = new RoleDTO();
+			BeanUtils.copyProperties((Role) iter.next(), roleDTO);
+			permissionDTO.getRoles().add(roleDTO);
 
-		model.addAttribute("permission", permission);
+		}
+		model.addAttribute("permission", permissionDTO);
 		return "permission/createForm";
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.POST)
+	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
 	public @ResponseBody
 	Map<String, ? extends Object> create(
 			@Valid @RequestBody PermissionDTO newPermission,
@@ -73,13 +84,23 @@ public class PermissionController {
 		Permission permission = new Permission();
 
 		BeanUtils.copyProperties(newPermission, permission);
-
+		permission.setRoles(new ArrayList<Role>());
 		try {
 			permissionService.save(permission);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		if (newPermission.getRoles() != null) {
+			Iterator iter = newPermission.getRoles().iterator();
+			while (iter.hasNext()) {
+				RoleDTO roleDTO = (RoleDTO) iter.next();
+				Role role = roleService.load(roleDTO.getId());
+				role.getPermissions().add(permission);
+				roleService.update(role);
+			}
+		}
+
 		redirectAttributes.addFlashAttribute("message", "创建资源成功");
 		return Collections.singletonMap("id", permission.getId());
 	}
@@ -132,6 +153,7 @@ public class PermissionController {
 	}
 
 	// add a Resource when RequestMethod.POST
+	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
 	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody
 	Map<String, ? extends Object> create(
@@ -153,12 +175,14 @@ public class PermissionController {
 	}
 
 	// delete a Resource when RequestMethod.DELETE
+	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable long id) {
 
 	}
 
 	// update a Resource when RequestMethod.PUT
+	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
 	@RequestMapping(value = "update/{id}", method = RequestMethod.PUT)
 	public @ResponseBody
 	Map<String, ? extends Object> update(
