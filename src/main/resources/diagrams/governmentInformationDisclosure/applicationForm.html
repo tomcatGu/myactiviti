@@ -7,7 +7,7 @@
 	/*<![CDATA[*/
 	function encodeUTF8(str) {
 		var temp = "", rs = "";
-		for ( var i = 0, len = str.length; i < len; i++) {
+		for (var i = 0, len = str.length; i < len; i++) {
 			temp = str.charCodeAt(i).toString(16);
 			rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
 		}
@@ -45,8 +45,9 @@
 																dataType : "text",
 																success : function(
 																		data) {
-
-																	alert(data);
+																	var ret = JSON
+																			.parse(data);
+																	alert(ret.msg);
 																	$("#myForm")
 																			.trigger(
 																					"evtWFSuccess",
@@ -81,7 +82,7 @@
 																						data) {
 
 																					str = "";
-																					for ( var i = 0; i < data.users.length; i++) {
+																					for (var i = 0; i < data.users.length; i++) {
 																						str += data.users[i]
 																								+ ",";
 																					}

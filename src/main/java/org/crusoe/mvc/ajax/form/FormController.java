@@ -100,7 +100,7 @@ public class FormController {
 		// runtimeService.setVariable(pi.getId(), "processInstanceId",
 		// pi.getProcessInstanceId());
 		HashMap<String, Object> rets = new HashMap<String, Object>();
-		rets.put("msg", "OK");
+		rets.put("msg", "成功保存.");
 		return rets;
 	}
 
@@ -146,7 +146,7 @@ public class FormController {
 
 		taskService.complete(taskId, returnMap);
 		HashMap<String, Object> rets = new HashMap<String, Object>();
-		rets.put("msg", "OK");
+		rets.put("msg", "成功保存.");
 		return rets;
 	}
 }

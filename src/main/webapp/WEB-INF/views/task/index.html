@@ -16,7 +16,8 @@
 			function() {
 
 				$("#taskList").simpleTable(
-				/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/"",
+				/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
+				+"&timestamp="+new Date().toString(),
 						render, $("#paginator"), null);
 
 			});
