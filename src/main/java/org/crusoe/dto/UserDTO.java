@@ -60,7 +60,7 @@ public class UserDTO implements Serializable {
 		this.loginName = loginName;
 	}
 
-	@NotEmpty
+	//@NotEmpty
 	public String getPassword() {
 		return password;
 	}

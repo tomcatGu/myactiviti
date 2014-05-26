@@ -20,6 +20,9 @@
 						$("#myForm").validate({
 							meta : "validate"
 						});
+
+						$('#myTab a:last').tab('show');
+
 						$("#datetimepicker1").datetimepicker({
 							language : 'zh-CN',
 							format : 'yyyy-MM-dd hh:mm:ss',
@@ -168,117 +171,54 @@
 						</div>
 					</div>
 				</div>
-				<div class="box">
-					<legend>公民</legend>
-					<div class="control-group">
-						<div class="row">
-							<div class="span6">
-								<label class="control-label text-info">姓名：</label>
-								<div class="controls">
-									<input name="citizenName" />
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="active"><a href="#citizen">公民</a></li>
+					<li><a href="#group">法人</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="box tab-pane active" id="citizen">
+						<legend>公民</legend>
+						<div class="control-group">
+							<div class="row">
+								<div class="span6">
+									<label class="control-label text-info">姓名：</label>
+									<div class="controls">
+										<input name="citizenName" />
+									</div>
 								</div>
-							</div>
-							<div class="span6">
-								<label class="control-label text-info">工作单位：</label>
-								<div class="controls">
-									<input name="citizenWorkunit" />
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="span6">
-							<label class="control-label text-info">证件名称：</label>
-							<div class="controls">
-								<input name="citizenCertificate" />
-							</div>
-						</div>
-						<div class="span6">
-							<label class="control-label text-info">证件号码：</label>
-							<div class="controls">
-								<input name="citizenCertificateID" />
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="span6">
-							<label class="control-label text-info">联系电话：</label>
-							<div class="controls">
-								<input name="citizenTelphone" />
-							</div>
-						</div>
-						<div class="span6">
-							<label class="control-label text-info">邮件编码：</label>
-							<div class="controls">
-								<input name="citizenZipcode" />
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="span6">
-							<label class="control-label text-info">联系地址：</label>
-							<div class="controls">
-								<input name="citizenAddress" />
-							</div>
-						</div>
-						<div class="span6">
-							<label class="control-label text-info">传真：</label>
-							<div class="controls">
-								<input name="citizenFax" />
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="span6">
-							<label class="control-label text-info">电子邮箱：</label>
-							<div class="controls">
-								<input name="citizenEmail" />
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="box">
-					<legend>法人/其它组织</legend>
-					<div class="control-group">
-						<div class="row">
-							<div class="span6">
-								<label class="control-label text-info">名称：</label>
-								<div class="controls">
-									<input name="groupName" />
-								</div>
-							</div>
-							<div class="span6">
-								<label class="control-label text-info">组织机构代码：</label>
-								<div class="controls">
-									<input name="groupID" />
+								<div class="span6">
+									<label class="control-label text-info">工作单位：</label>
+									<div class="controls">
+										<input name="citizenWorkunit" />
+									</div>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="span6">
-								<label class="control-label text-info">法人代表：</label>
+								<label class="control-label text-info">证件名称：</label>
 								<div class="controls">
-									<input name="groupDelegate" />
+									<input name="citizenCertificate" />
 								</div>
 							</div>
 							<div class="span6">
-								<label class="control-label text-info">联系人名称：</label>
+								<label class="control-label text-info">证件号码：</label>
 								<div class="controls">
-									<input name="groupDelegateName" />
+									<input name="citizenCertificateID" />
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="span6">
-								<label class="control-label text-info">联系人电话：</label>
+								<label class="control-label text-info">联系电话：</label>
 								<div class="controls">
-									<input name="groupDelegateTelphone" />
+									<input name="citizenTelphone" />
 								</div>
 							</div>
 							<div class="span6">
-								<label class="control-label text-info">传真：</label>
+								<label class="control-label text-info">邮件编码：</label>
 								<div class="controls">
-									<input name="groupDelegateFax" />
+									<input name="citizenZipcode" />
 								</div>
 							</div>
 						</div>
@@ -286,19 +226,89 @@
 							<div class="span6">
 								<label class="control-label text-info">联系地址：</label>
 								<div class="controls">
-									<input name="groupDelegateAddress" />
+									<input name="citizenAddress" />
 								</div>
 							</div>
 							<div class="span6">
+								<label class="control-label text-info">传真：</label>
+								<div class="controls">
+									<input name="citizenFax" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span6">
 								<label class="control-label text-info">电子邮箱：</label>
 								<div class="controls">
-									<input name="groupDelegateEmail" />
+									<input name="citizenEmail" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="box box tab-pane active" id="group">
+						<legend>法人/其它组织</legend>
+						<div class="control-group">
+							<div class="row">
+								<div class="span6">
+									<label class="control-label text-info">名称：</label>
+									<div class="controls">
+										<input name="groupName" />
+									</div>
+								</div>
+								<div class="span6">
+									<label class="control-label text-info">组织机构代码：</label>
+									<div class="controls">
+										<input name="groupID" />
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="span6">
+									<label class="control-label text-info">法人代表：</label>
+									<div class="controls">
+										<input name="groupDelegate" />
+									</div>
+								</div>
+								<div class="span6">
+									<label class="control-label text-info">联系人名称：</label>
+									<div class="controls">
+										<input name="groupDelegateName" />
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="span6">
+									<label class="control-label text-info">联系人电话：</label>
+									<div class="controls">
+										<input name="groupDelegateTelphone" />
+									</div>
+								</div>
+								<div class="span6">
+									<label class="control-label text-info">传真：</label>
+									<div class="controls">
+										<input name="groupDelegateFax" />
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="span6">
+									<label class="control-label text-info">联系地址：</label>
+									<div class="controls">
+										<input name="groupDelegateAddress" />
+									</div>
+								</div>
+								<div class="span6">
+									<label class="control-label text-info">电子邮箱：</label>
+									<div class="controls">
+										<input name="groupDelegateEmail" />
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="box">
+					<legend>申请信息</legend>
 					<div class="control-group">
 						<div class="row">
 							<div class="span6">
