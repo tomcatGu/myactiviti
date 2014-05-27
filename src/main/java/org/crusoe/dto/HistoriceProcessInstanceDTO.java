@@ -9,6 +9,7 @@ public class HistoriceProcessInstanceDTO {
 	private Date startTime;
 	private Date endTime;
 	private String businessKey;
+	private String status;
 
 	public String getId() {
 		return id;
@@ -56,5 +57,13 @@ public class HistoriceProcessInstanceDTO {
 
 	public void setBusinessKey(String businessKey) {
 		this.businessKey = businessKey;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

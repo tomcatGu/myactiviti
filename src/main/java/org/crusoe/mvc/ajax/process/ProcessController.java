@@ -146,6 +146,65 @@ public class ProcessController extends BaseServiceImpl {
 		return "process/finishedInstanceIndex";
 	}
 
+	@RequestMapping(value = "userProcessIndex", method = RequestMethod.GET)
+	public String userProcessIndex(Model model) {
+		// model.addAttribute("processDefinitionId", processDefinitionId);
+		return "process/userProcessInstanceIndex";
+	}
+
+	@RequestMapping(value = "listUserProcessInstances/{username}", method = RequestMethod.GET)
+	public @ResponseBody
+	HashMap<String, Object> listUserProcessInstances(
+			@PathVariable String username, @RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			Model model) throws IllegalAccessException,
+			InvocationTargetException {
+
+		List<Object> objects = new ArrayList<Object>();
+		List<HistoricProcessInstance> finishedProcessInstances = historyService
+				.createHistoricProcessInstanceQuery().startedBy(username)
+				.listPage(start, size);
+
+		List<HistoricActivityInstance> hainstances = historyService
+				.createHistoricActivityInstanceQuery()
+
+				.list();
+		for (HistoricActivityInstance hai : hainstances) {
+
+			String activityName = hai.getActivityName();
+
+		}
+		for (HistoricProcessInstance historicProcessInstance : finishedProcessInstances) {
+			HistoriceProcessInstanceDTO piDTO = new HistoriceProcessInstanceDTO();
+			// historicProcessInstance.g
+			// BeanUtils.copyProperties(piDTO, historicProcessInstance);
+			piDTO.setBusinessKey(historicProcessInstance.getBusinessKey());
+			piDTO.setId(historicProcessInstance.getId());
+			piDTO.setProcessDefinitionId(historicProcessInstance
+					.getProcessDefinitionId());
+			piDTO.setStartTime(historicProcessInstance.getStartTime());
+			piDTO.setEndTime(historicProcessInstance.getEndTime());
+			piDTO.setStartUserId(historicProcessInstance.getStartUserId());
+			if (piDTO.getEndTime() == null)
+				piDTO.setStatus("activited");
+			else
+				piDTO.setStatus("finished");
+
+			objects.add(piDTO);
+
+		}
+		long count = historyService.createHistoricProcessInstanceQuery()
+				.startedBy(username).count();
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		rets.put("count", count);
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", objects);
+		return rets;
+	}
+
 	@RequestMapping(value = "listFinishedProcessInstances/{processDefinitionId}", method = RequestMethod.GET)
 	public @ResponseBody
 	HashMap<String, Object> listFinishedProcessInstances(

@@ -25,7 +25,7 @@
 							meta : "validate"
 						});
 						$("#clearButton").click(function() {
-							clearSelectedUser();
+							$('#selectedUser').text("");
 						});
 
 						$('#myTab a:first').tab('show');
@@ -167,7 +167,7 @@
 			<div class="well">
 				<div class="box">
 					<div class="control-group">
-						<label class="control-label text-info">申请事项：</label>
+						<label class="control-label text-info">标题：</label>
 						<div class="controls">
 							<input id="businessKey" name="businessKey" type="hidden" /> <input
 								name="applicationName" id="applicationName"

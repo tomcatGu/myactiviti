@@ -75,6 +75,8 @@ Date.prototype.ToString = function(FormatString) {
 		return "";
 	}
 	;
+	if (this.getFullYear() == "1970")
+		return "";
 	if (FormatString == undefined) {
 		FormatString = "yyyy-MM-dd HH:mm:ss";
 	}
