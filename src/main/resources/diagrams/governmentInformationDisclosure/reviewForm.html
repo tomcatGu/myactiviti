@@ -51,7 +51,7 @@
 				$("#selectUsers").bind("evtSelectUser", function(evt, data) {
 
 					str = "";
-					for (var i = 0; i < data.users.length; i++) {
+					for ( var i = 0; i < data.users.length; i++) {
 						str += data.users[i] + ",";
 					}
 					$('#assigneeList').val(str);
@@ -239,7 +239,6 @@
 							<label th:text="${result.applicationTime}" />
 						</div>
 					</div>
-
 					<div class="span4">
 						<label class="control-label text-info">提交部门：</label>
 						<div class="controls">
@@ -303,7 +302,6 @@
 			</blockquote>
 		</div>
 	</div>
-
 	<div class="box">
 		<legend>处理人员</legend>
 		<div class="row">
@@ -317,7 +315,14 @@
 		</div>
 		<label id="selectedUser"></label>
 	</div>
-
+	<div class="box">
+		<legend>审核意见</legend>
+		<div>
+			<blockquote>
+				<p th:text="${result.review}" class="text-left" />
+			</blockquote>
+		</div>
+	</div>
 	<div class="box" th:if="${not historicView}">
 		<legend>审核意见</legend>
 		<form id="myForm"
@@ -325,7 +330,6 @@
 			method="post">
 			<textarea name="review" rows="8" cols="20" class="span7"></textarea>
 			<input type="button" id="submitButton" value="审核" />
-
 			<div class="control-group">
 				<div class="controls">
 					<input type="button" id="selectBtn" value="选择用户"
@@ -336,14 +340,6 @@
 			</div>
 			<input type="button" id="backButton" value="退回" />
 		</form>
-	</div>
-	<div class="box" th:if="${historicView}">
-		<legend>审核意见</legend>
-		<div>
-			<blockquote>
-				<p th:text="${result.review}" class="text-left" />
-			</blockquote>
-		</div>
 	</div>
 </body>
 </html>

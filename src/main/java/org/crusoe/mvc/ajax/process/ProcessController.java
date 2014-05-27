@@ -146,9 +146,9 @@ public class ProcessController extends BaseServiceImpl {
 		return "process/finishedInstanceIndex";
 	}
 
-	@RequestMapping(value = "userProcessIndex", method = RequestMethod.GET)
-	public String userProcessIndex(Model model) {
-		// model.addAttribute("processDefinitionId", processDefinitionId);
+	@RequestMapping(value = "userProcessIndex/{username}", method = RequestMethod.GET)
+	public String userProcessIndex(@PathVariable String username, Model model) {
+		model.addAttribute("username", username);
 		return "process/userProcessInstanceIndex";
 	}
 
@@ -163,7 +163,7 @@ public class ProcessController extends BaseServiceImpl {
 			InvocationTargetException {
 
 		List<Object> objects = new ArrayList<Object>();
-		List<HistoricProcessInstance> finishedProcessInstances = historyService
+		List<HistoricProcessInstance> userAllProcessInstances = historyService
 				.createHistoricProcessInstanceQuery().startedBy(username)
 				.listPage(start, size);
 
@@ -173,13 +173,11 @@ public class ProcessController extends BaseServiceImpl {
 				.list();
 		for (HistoricActivityInstance hai : hainstances) {
 
-			String activityName = hai.getActivityName();
+			//String activityName = hai.getActivityName();
 
 		}
-		for (HistoricProcessInstance historicProcessInstance : finishedProcessInstances) {
+		for (HistoricProcessInstance historicProcessInstance : userAllProcessInstances) {
 			HistoriceProcessInstanceDTO piDTO = new HistoriceProcessInstanceDTO();
-			// historicProcessInstance.g
-			// BeanUtils.copyProperties(piDTO, historicProcessInstance);
 			piDTO.setBusinessKey(historicProcessInstance.getBusinessKey());
 			piDTO.setId(historicProcessInstance.getId());
 			piDTO.setProcessDefinitionId(historicProcessInstance
@@ -309,8 +307,10 @@ public class ProcessController extends BaseServiceImpl {
 		// processDefinitionId));
 		// InputStream imageStream = repositoryService.getResourceAsStream(
 		// procDef.getDeploymentId(), diagramResourceName);
+		
 		InputStream imageStream = repositoryService
 				.getProcessDiagram(processDefinitionId);
+		
 		byte[] bb = IOUtils.toByteArray(imageStream);
 		HttpHeaders headers = new HttpHeaders();
 

@@ -17,7 +17,7 @@
 											$("#searchForm")
 													.ajaxForm(
 															{
-																url : /*[[@{'/runtime/search/searchHistoryTasks'}]]*/'',
+																url : /*[[@{'/runtime/search/searchProcessInstance'}]]*/'',
 																dataType : "text",
 																data : "keyword="
 																		+ $(
@@ -35,7 +35,7 @@
 																	var obj = JSON
 																			.parse(data);
 																	$(
-																			"#taskList")
+																			"#processList")
 																			.simpleTableFromData(
 																					obj,
 																					render,
@@ -52,7 +52,7 @@
 
 						$("#processList")
 								.simpleTable(
-										/*[[@{'/runtime/process/listUserProcessInstances/admin?sort=id&order=desc'}]]*/"",
+										/*[[@{'/runtime/process/listUserProcessInstances/'+${username}+'?sort=id&order=desc'}]]*/"",
 										render, $("#paginator"), null);
 					});
 	function successCallback() {
@@ -64,6 +64,14 @@
 				render, $("#paginator"), null);
 
 	};
+	function getProcessStatus(status) {
+		if (status == "activited")
+			return "运行中";
+		if (status == "finished")
+			return "已结束"
+		return status;
+
+	}
 	function loadProcessDiagram(processInstanceId, processDefinitionId) {
 		$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
 		+processDefinitionId);
@@ -87,7 +95,7 @@
 							childdiv.attr('top', obj.y);
 							childdiv.width(obj.width);
 							childdiv.height(obj.height);
-							childdiv.appendTo($("#parentDiv"));
+							//childdiv.appendTo($("#parentDiv"));
 
 						}
 
@@ -108,7 +116,7 @@
 				+ "</td><td>"
 				+ new Date(data.endTime).ToString("yyyy-MM-dd HH:mm:ss")
 				+ "</td><td>"
-				+ data.status
+				+ getProcessStatus(data.status)
 				+ "</td><td><a href=\"javascript:loadProcessDiagram('"
 				+ data.id
 				+ "','"
@@ -163,7 +171,7 @@
 				<h3>显示流程图</h3>
 			</div>
 			<div class="modal-body" id="parentDiv">
-				<img id="processDiagram" src="" usemap="#ImageMap" />
+				<img id="processDiagram" src="" usemap="#ImageMap" width="600" height="500"/>
 				<map name="ImageMap" id="Mask">
 					<area shape="rect" coords="930,233,965,268" href="#" />
 				</map>

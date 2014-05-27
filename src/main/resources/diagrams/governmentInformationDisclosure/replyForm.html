@@ -4,7 +4,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <title>回复意见</title>
 <style>
-
 form {
 	display: block;
 	margin: 20px auto;
@@ -12,6 +11,7 @@ form {
 	border-radius: 10px;
 	padding: 15px
 }
+
 #progress {
 	position: relative;
 	width: 400px;
@@ -255,7 +255,6 @@ form {
 						</div>
 					</div>
 				</div>
-				
 				<div class="row">
 					<div class="span8">
 						<label class="control-label text-info">所需信息的内容描述：</label>
@@ -295,6 +294,24 @@ form {
 				</div>
 			</div>
 		</div>
+		<div class="box">
+			<legend>附件</legend>
+			<div th:each="attachment:${attachments}">
+				<label class="checkbox inline"><a
+					th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
+						th:text="${attachment.name}">file.ext</span></a></label>
+			</div>
+		</div>
+		<div class="box">
+			<legend>回复意见</legend>
+			<div th:each="aReply:${result.replies}">
+				<blockquote>
+					<p th:text="${aReply.reply}" class="text-left" />
+					<small><span
+						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
+				</blockquote>
+			</div>
+		</div>
 		<div class="box" th:if="${not historicView}">
 			<label>回复意见：</label>
 			<form id="myForm"
@@ -326,24 +343,6 @@ form {
 					</div>
 				</div>
 			</form>
-		</div>
-		<div class="box" th:if="${historicView}">
-			<legend>附件</legend>
-			<div th:each="attachment:${attachments}">
-				<label class="checkbox inline"><a
-					th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
-						th:text="${attachment.name}">file.ext</span></a></label>
-			</div>
-		</div>
-		<div class="box" th:if="${historicView}">
-			<legend>回复意见</legend>
-			<div th:each="aReply:${result.replies}">
-				<blockquote>
-					<p th:text="${aReply.reply}" class="text-left" />
-					<small><span
-						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
-				</blockquote>
-			</div>
 		</div>
 	</div>
 </body>

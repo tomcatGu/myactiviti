@@ -66,4 +66,18 @@ public class HistoriceProcessInstanceDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (obj instanceof HistoriceProcessInstanceDTO) {
+			HistoriceProcessInstanceDTO temp = (HistoriceProcessInstanceDTO) obj;
+			if (temp.getId().equals(this.id))
+				return true;
+			else
+				return false;
+
+		} else
+			return false;
+	}
 }

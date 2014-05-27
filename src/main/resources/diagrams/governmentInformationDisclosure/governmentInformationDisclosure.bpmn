@@ -63,7 +63,7 @@ execution.setVariable("obtainMode", "")
         <omgdc:Bounds height="61.0" width="131.0" x="601.0" y="220.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="1030.0" y="233.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="997.0" y="233.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
         <omgdc:Bounds height="55.0" width="105.0" x="209.0" y="223.0"></omgdc:Bounds>
@@ -142,14 +142,14 @@ execution.setVariable("obtainMode", "")
         <omgdi:waypoint x="919.0" y="360.0"></omgdi:waypoint>
         <omgdi:waypoint x="761.0" y="359.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="865.0" y="339.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="24.0" x="865.0" y="339.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow33" id="BPMNEdge_flow33">
         <omgdi:waypoint x="940.0" y="250.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1030.0" y="250.0"></omgdi:waypoint>
+        <omgdi:waypoint x="997.0" y="250.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="950.0" y="250.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="48.0" x="939.0" y="252.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association2" id="BPMNEdge_association2">
