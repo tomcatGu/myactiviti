@@ -39,13 +39,13 @@
 			<legend>公民</legend>
 			<div class="control-group">
 				<div class="row">
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">姓名：</label>
 						<div class="controls">
 							<label th:text="${result.citizenName}" />
 						</div>
 					</div>
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">工作单位：</label>
 						<div class="controls">
 							<label th:text="${result.citizenWorkunit}" />
@@ -54,13 +54,13 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="span6">
+				<div class="span4">
 					<label class="control-label text-info">证件名称：</label>
 					<div class="controls">
 						<label th:text="${result.citizenCertificate}" />
 					</div>
 				</div>
-				<div class="span6">
+				<div class="span4">
 					<label class="control-label text-info">证件号码：</label>
 					<div class="controls">
 						<label th:text="${result.citizenCertificateID}" />
@@ -68,13 +68,13 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="span6">
+				<div class="span4">
 					<label class="control-label text-info">联系电话：</label>
 					<div class="controls">
 						<label th:text="${result.citizenTelphone}" />
 					</div>
 				</div>
-				<div class="span6">
+				<div class="span4">
 					<label class="control-label text-info">邮件编码：</label>
 					<div class="controls">
 						<label th:text="${result.citizenZipcode}" />
@@ -82,13 +82,13 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="span6">
+				<div class="span4">
 					<label class="control-label text-info">联系地址：</label>
 					<div class="controls">
 						<label th:text="${result.citizenAddress}" />
 					</div>
 				</div>
-				<div class="span6">
+				<div class="span4">
 					<label class="control-label text-info">传真：</label>
 					<div class="controls">
 						<label th:text="${result.citizenFax}" />
@@ -96,7 +96,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="span6">
+				<div class="span4">
 					<label class="control-label text-info">电子邮箱：</label>
 					<div class="controls">
 						<label th:text="${result.citizenEmail}" />
@@ -108,13 +108,13 @@
 			<legend>法人/其它组织</legend>
 			<div class="control-group">
 				<div class="row">
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">名称：</label>
 						<div class="controls">
 							<label th:text="${result.groupName}" />
 						</div>
 					</div>
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">组织机构代码：</label>
 						<div class="controls">
 							<label th:text="${result.groupID}" />
@@ -122,13 +122,13 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">法人代表：</label>
 						<div class="controls">
 							<label th:text="${result.groupDelegate}" />
 						</div>
 					</div>
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">联系人名称：</label>
 						<div class="controls">
 							<label th:text="${result.groupDelegateName}" />
@@ -136,13 +136,13 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">联系人电话：</label>
 						<div class="controls">
 							<label th:text="${result.groupDelegateTelphone}" />
 						</div>
 					</div>
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">传真：</label>
 						<div class="controls">
 							<label th:text="${result.groupDelegateFax}" />
@@ -150,13 +150,13 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">联系地址：</label>
 						<div class="controls">
 							<label th:text="${result.groupDelegateAddress}" />
 						</div>
 					</div>
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">电子邮箱：</label>
 						<div class="controls">
 							<label th:text="${result.groupDelegateEmail}" />
@@ -168,93 +168,93 @@
 		<div class="box">
 			<div class="control-group">
 				<div class="row">
-					<div class="span6">
+					<div class="span4">
 						<label class="control-label text-info">申请时间：</label>
 						<div class="controls">
 							<label th:text="${result.applicationTime}" />
 						</div>
 					</div>
-					<div class="span6">
+					
+					<div class="span4">
 						<label class="control-label text-info">提交部门：</label>
 						<div class="controls">
 							<label th:text="${result.submitDepartment}" />
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="span12">
-						<label class="control-label text-info">所需信息的内容描述：</label>
-						<div class="controls">
-							<label th:text="${result.description}" />
-						</div>
+				<div class="span7">
+					<label class="control-label text-info">所需信息的内容描述：</label>
+					<div class="controls">
+						<label th:text="${result.description}" />
 					</div>
 				</div>
-				<div class="row">
-					<div class="span12">
-						<label class="control-label text-info">所需信息的用途：</label>
-						<div class="controls">
-							<label th:text="${result.purpose}" />
-						</div>
+			</div>
+			<div class="row">
+				<div class="span7">
+					<label class="control-label text-info">所需信息的用途：</label>
+					<div class="controls">
+						<label th:text="${result.purpose}" />
 					</div>
 				</div>
-				<label class="control-label text-info">所需信息的指定提供方式：</label>
-				<div class="controls">
-					<label class="checkbox inline"><input type="checkbox"
-						value="0" name="mode"
-						th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'0'):false}" />纸面</label><label
-						class="checkbox inline"><input type="checkbox" value="1"
-						name="mode"
-						th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'1'):false}" />电子邮件</label>
-				</div>
-				<label class="control-label text-info">读取信息的方式：</label>
-				<div class="controls">
-					<label class="checkbox inline"><input type="checkbox"
-						value="0" name="obtainMode"
-						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'0'):false}" />电子邮件</label><label
-						class="checkbox inline"><input type="checkbox" value="1"
-						name="obtainMode"
-						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'1'):false}" />传真</label><label
-						class="checkbox inline"><input type="checkbox" value="2"
-						name="obtainMode"
-						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
-				</div>
+			</div>
+			<label class="control-label text-info">所需信息的指定提供方式：</label>
+			<div class="controls">
+				<label class="checkbox inline"><input type="checkbox"
+					value="0" name="mode"
+					th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'0'):false}" />纸面</label><label
+					class="checkbox inline"><input type="checkbox" value="1"
+					name="mode"
+					th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'1'):false}" />电子邮件</label>
+			</div>
+			<label class="control-label text-info">读取信息的方式：</label>
+			<div class="controls">
+				<label class="checkbox inline"><input type="checkbox"
+					value="0" name="obtainMode"
+					th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'0'):false}" />电子邮件</label><label
+					class="checkbox inline"><input type="checkbox" value="1"
+					name="obtainMode"
+					th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'1'):false}" />传真</label><label
+					class="checkbox inline"><input type="checkbox" value="2"
+					name="obtainMode"
+					th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
 			</div>
 		</div>
-		<div class="box">
-			<legend>附件</legend>
-			<div th:each="attachment:${attachments}">
-				<label class="checkbox inline"><a
-					th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
-						th:text="${attachment.name}">file.ext</span></a></label>
-			</div>
+	</div>
+	<div class="box">
+		<legend>附件</legend>
+		<div th:each="attachment:${attachments}">
+			<label class="checkbox inline"><a
+				th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
+					th:text="${attachment.name}">file.ext</span></a></label>
 		</div>
-		<div class="box">
-			<legend>回复意见</legend>
-			<div th:each="aReply:${result.replies}">
-				<blockquote>
-					<p th:text="${aReply.reply}" class="text-left" />
-					<small><span
-						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
-				</blockquote>
-			</div>
+	</div>
+	<div class="box">
+		<legend>回复意见</legend>
+		<div th:each="aReply:${result.replies}">
+			<blockquote>
+				<p th:text="${aReply.reply}" class="text-left" />
+				<small><span
+					th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
+			</blockquote>
 		</div>
-		<div class="box" th:if="${not historicView}">
-			<legend>审核意见</legend>
-			<form id="myForm"
-				th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
-				method="post">
-				<textarea name="review" rows="8" cols="20"></textarea>
-				<input type="button" id="submitButton" value="审核" />
-			</form>
+	</div>
+	<div class="box" th:if="${not historicView}">
+		<legend>审核意见</legend>
+		<form id="myForm"
+			th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
+			method="post">
+			<textarea name="review" rows="8" cols="20"></textarea>
+			<input type="button" id="submitButton" value="审核" />
+		</form>
+	</div>
+	<div class="box" th:if="${historicView}">
+		<legend>审核意见</legend>
+		<div>
+			<blockquote>
+				<p th:text="${result.review}" class="text-left" />
+			</blockquote>
 		</div>
-		<div class="box" th:if="${historicView}">
-			<legend>审核意见</legend>
-			<div>
-				<blockquote>
-					<p th:text="${result.review}" class="text-left" />
-				</blockquote>
-			</div>
-		</div>
+	</div>
 	</div>
 </body>
 </html>
