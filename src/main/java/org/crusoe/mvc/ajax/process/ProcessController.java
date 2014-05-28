@@ -307,7 +307,7 @@ public class ProcessController extends BaseServiceImpl {
 		// processDefinitionId));
 		// InputStream imageStream = repositoryService.getResourceAsStream(
 		// procDef.getDeploymentId(), diagramResourceName);
-		
+
 		InputStream imageStream = repositoryService
 				.getProcessDiagram(processDefinitionId);
 		

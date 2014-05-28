@@ -38,4 +38,21 @@ public class HistoryController {
 		return rets;
 
 	}
+
+	@RequestMapping(value = "searchProcessInstance", method = RequestMethod.POST)
+	public @ResponseBody
+	HashMap<String, Object> listProcessInstance(
+			@RequestParam(value = "keyword") String keyword,
+			@RequestParam(value = "sort", defaultValue = "id") String sort,
+			@RequestParam(value = "order", defaultValue = "DESC") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size)
+			throws IllegalAccessException, InvocationTargetException {
+
+		HashMap<String, Object> rets = gidService.searchProcessInstance(
+				new String[] { "title", "content" }, keyword, start, size);
+	
+		return rets;
+
+	}
 }
