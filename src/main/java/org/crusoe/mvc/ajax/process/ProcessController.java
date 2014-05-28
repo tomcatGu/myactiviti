@@ -173,7 +173,7 @@ public class ProcessController extends BaseServiceImpl {
 				.list();
 		for (HistoricActivityInstance hai : hainstances) {
 
-			//String activityName = hai.getActivityName();
+			// String activityName = hai.getActivityName();
 
 		}
 		for (HistoricProcessInstance historicProcessInstance : userAllProcessInstances) {
@@ -201,6 +201,26 @@ public class ProcessController extends BaseServiceImpl {
 		rets.put("size", size);
 		rets.put("records", objects);
 		return rets;
+	}
+
+	@RequestMapping(value = "processInstanceDetail/{processInstanceId}", method = RequestMethod.GET)
+	public String processInstanceDetail(@PathVariable String processInstanceId,
+			Model model) {
+
+		HistoricProcessInstance hpi = historyService
+				.createHistoricProcessInstanceQuery()
+				.processInstanceId(processInstanceId).singleResult();
+		ProcessDefinitionEntity def = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+				.getDeployedProcessDefinition(hpi.getProcessDefinitionId());
+		List<ActivityImpl> activitiList = def.getActivities();
+		
+		for (ActivityImpl activityImpl : activitiList) {
+			ActivityDTO activityDTO = new ActivityDTO();
+			//activityImpl.get
+			
+		}
+
+		return "process/processInstanceDetail";
 	}
 
 	@RequestMapping(value = "listFinishedProcessInstances/{processDefinitionId}", method = RequestMethod.GET)
@@ -310,7 +330,7 @@ public class ProcessController extends BaseServiceImpl {
 
 		InputStream imageStream = repositoryService
 				.getProcessDiagram(processDefinitionId);
-		
+
 		byte[] bb = IOUtils.toByteArray(imageStream);
 		HttpHeaders headers = new HttpHeaders();
 
@@ -323,7 +343,6 @@ public class ProcessController extends BaseServiceImpl {
 		return new ResponseEntity<byte[]>(bb, headers, HttpStatus.OK);
 	}
 
-	
 	/**
 	 * 获取跟踪信息
 	 * 
