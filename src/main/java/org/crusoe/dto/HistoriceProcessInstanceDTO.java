@@ -66,7 +66,6 @@ public class HistoriceProcessInstanceDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub

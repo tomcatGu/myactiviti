@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -23,6 +25,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.springframework.stereotype.Component;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.google.common.collect.Lists;
@@ -30,11 +33,13 @@ import com.google.common.collect.Lists;
 import org.crusoe.dto.fulltextSearch.SearchResultDTO;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.*;
 
-public class LuceneIKUtil<T> {
+@Component
+public class LuceneIKUtil {
 	private Directory directory;
 	private Analyzer analyzer;
+	private String indexFilePath = "/IK";
 
-	public LuceneIKUtil(String indexFilePath) {
+	public LuceneIKUtil() {
 
 		try {
 			directory = FSDirectory.open(new File(indexFilePath));
@@ -43,6 +48,22 @@ public class LuceneIKUtil<T> {
 			e.printStackTrace();
 		}
 		analyzer = new IKAnalyzer();
+	}
+
+	public LuceneIKUtil(String indexFilePath) {
+		this.indexFilePath = indexFilePath;
+		try {
+			directory = FSDirectory.open(new File(indexFilePath));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		analyzer = new IKAnalyzer();
+	}
+
+	@PostConstruct
+	public void postConstructLuceneIKUtil() {
+		// System.out.println("postConstruct1");
 	}
 
 	public void createIndex() throws IOException {
@@ -116,10 +137,8 @@ public class LuceneIKUtil<T> {
 			Query query = queryParser.parse(keyword);
 			TopDocs topDocs = indexSearcher.search(query, size);
 			ScoreDoc scoreDoc = null;
-
 			ScoreDoc[] scoreDocs = topDocs.scoreDocs;
 			if (start > 0) {
-
 				scoreDoc = scoreDocs[start - 1];
 			}
 			topDocs = indexSearcher.searchAfter(scoreDoc, query, size);

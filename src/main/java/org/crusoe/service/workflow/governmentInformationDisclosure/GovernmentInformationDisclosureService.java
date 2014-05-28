@@ -2,6 +2,7 @@ package org.crusoe.service.workflow.governmentInformationDisclosure;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,9 +12,11 @@ import java.util.Iterator;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
 import org.apache.shiro.SecurityUtils;
+import org.crusoe.dto.HistoriceProcessInstanceDTO;
 import org.crusoe.dto.fulltextSearch.SearchResultDTO;
 import org.crusoe.dto.task.TaskDTO;
 import org.crusoe.entity.User;
@@ -44,6 +47,8 @@ public class GovernmentInformationDisclosureService {
 	private AccountService accountService;
 	@Autowired
 	private HistoryService historyService;
+	@Autowired
+	private LuceneIKUtil ikUtil;
 
 	public GovernmentInformationDisclosure save(DelegateExecution execution,
 			String applicationName, String citizenName, String citizenWorkunit,
@@ -92,10 +97,9 @@ public class GovernmentInformationDisclosureService {
 		gid.setMode(mode);
 		gid.setObtainMode(obtainMode);
 		gidDao.save(gid);
-		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
-				"/IK");
+		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
 		// execution.
-		ik.addIndex(execution.getProcessInstanceId(), gid.getId(),
+		ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
 				gid.getApplicationName(), gid.getDescription());
 
 		return gid;
@@ -120,9 +124,8 @@ public class GovernmentInformationDisclosureService {
 
 		}
 
-		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
-				"/IK");
-		ik.addIndex(execution.getProcessInstanceId(), gid.getId(),
+		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
+		ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
 				gid.getApplicationName(), content);
 		return gidDao.save(gid);
 
@@ -133,9 +136,8 @@ public class GovernmentInformationDisclosureService {
 			String review) {
 		gid.setReview(review);
 
-		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
-				"/IK");
-		ik.addIndex(execution.getProcessInstanceId(), gid.getId(),
+		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
+		ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
 				gid.getApplicationName(), review);
 		return gidDao.save(gid);
 
@@ -144,9 +146,9 @@ public class GovernmentInformationDisclosureService {
 	public HashMap<String, Object> search(String[] fields, String keyword,
 			int start, int size) {
 
-		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
-				"/IK");
-		HashMap<String, Object> rets = ik.search(fields, keyword, start, size);
+		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
+		HashMap<String, Object> rets = ikUtil.search(fields, keyword, start,
+				size);
 		List<TaskDTO> taskList = Lists.newArrayList();
 		List<SearchResultDTO> result = (List<SearchResultDTO>) rets
 				.get("result");
@@ -167,9 +169,10 @@ public class GovernmentInformationDisclosureService {
 				taskDTO.setStartTime(task.getStartTime());
 				taskDTO.setTaskDefinitionKey(task.getTaskDefinitionKey());
 				taskDTO.setProcessDefinitionId(task.getProcessDefinitionId());
-				if (!taskList.contains(taskDTO))
+				if (!taskList.contains(taskDTO)) {
 					taskList.add(taskDTO);
-				count++;
+					count++;
+				}
 			}
 
 		}
@@ -181,36 +184,50 @@ public class GovernmentInformationDisclosureService {
 		return rets;
 
 	}
-	
-	public HashMap<String, Object> searchProcessInstance(String[] fields, String keyword,
-			int start, int size) {
 
-		LuceneIKUtil<GovernmentInformationDisclosure> ik = new LuceneIKUtil<GovernmentInformationDisclosure>(
-				"/IK");
-		HashMap<String, Object> rets = ik.search(fields, keyword, start, size);
+	public HashMap<String, Object> searchProcessInstance(String[] fields,
+			String keyword, int start, int size) {
+
+		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
+		HashMap<String, Object> rets = ikUtil.search(fields, keyword, start,
+				size);
 		List<TaskDTO> taskList = Lists.newArrayList();
 		List<SearchResultDTO> result = (List<SearchResultDTO>) rets
 				.get("result");
 		Iterator<SearchResultDTO> iter = result.iterator();
+		List<Object> objects = new ArrayList<Object>();
 		int count = 0;
 		while (iter.hasNext()) {
 			SearchResultDTO srDTO = iter.next();
-			List<HistoricActivityInstance> historicActivityInstanceList = historyService
-					.createHistoricActivityInstanceQuery()
+			List<HistoricProcessInstance> historicProcessInstanceList = historyService
+					.createHistoricProcessInstanceQuery()
 					.processInstanceId(srDTO.getProcessInstanceId()).list();
 
-			for (HistoricActivityInstance instance : historicActivityInstanceList) {
-				//instance.getActivityName();
+			for (HistoricProcessInstance instance : historicProcessInstanceList) {
+				HistoriceProcessInstanceDTO piDTO = new HistoriceProcessInstanceDTO();
+				piDTO.setBusinessKey(instance.getBusinessKey());
+				piDTO.setId(instance.getId());
+				piDTO.setProcessDefinitionId(instance.getProcessDefinitionId());
+				piDTO.setStartTime(instance.getStartTime());
+				piDTO.setEndTime(instance.getEndTime());
+				piDTO.setStartUserId(instance.getStartUserId());
+				if (piDTO.getEndTime() == null)
+					piDTO.setStatus("activited");
+				else
+					piDTO.setStatus("finished");
+
+				if (!objects.contains(piDTO)) {
+					objects.add(piDTO);
+					count++;
+				}
 			}
-			
-			historyService.createHistoricProcessInstanceQuery().processInstanceId(srDTO.getProcessInstanceId()).list();
 
 		}
 		rets.clear();
 		rets.put("start", start);
 		rets.put("size", size);
 		rets.put("count", count);
-		rets.put("records", taskList);
+		rets.put("records", objects);
 		return rets;
 
 	}
