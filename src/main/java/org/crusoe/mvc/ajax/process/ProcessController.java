@@ -15,6 +15,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -32,6 +33,7 @@ import org.crusoe.dto.HistoriceProcessInstanceDTO;
 import org.crusoe.dto.ProcessInstanceDTO;
 import org.crusoe.dto.repository.ActivityDTO;
 import org.crusoe.dto.repository.DeploymentDTO;
+import org.crusoe.dto.task.TaskDTO;
 import org.crusoe.service.AccountService;
 import org.crusoe.service.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -206,20 +208,22 @@ public class ProcessController extends BaseServiceImpl {
 	@RequestMapping(value = "processInstanceDetail/{processInstanceId}", method = RequestMethod.GET)
 	public String processInstanceDetail(@PathVariable String processInstanceId,
 			Model model) {
-
-		HistoricProcessInstance hpi = historyService
-				.createHistoricProcessInstanceQuery()
-				.processInstanceId(processInstanceId).singleResult();
-		ProcessDefinitionEntity def = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
-				.getDeployedProcessDefinition(hpi.getProcessDefinitionId());
-		List<ActivityImpl> activitiList = def.getActivities();
-		
-		for (ActivityImpl activityImpl : activitiList) {
-			ActivityDTO activityDTO = new ActivityDTO();
-			//activityImpl.get
-			
+		List<HistoricTaskInstance> historicTaskInstances = historyService
+				.createHistoricTaskInstanceQuery()
+				.processInstanceId(processInstanceId).list();
+		List<TaskDTO> todoList = new ArrayList<TaskDTO>();
+		for (HistoricTaskInstance hti : historicTaskInstances) {
+			TaskDTO taskDTO = new TaskDTO();
+			taskDTO.setId(hti.getId());
+			taskDTO.setProcessDefinitionId(hti.getProcessDefinitionId());
+			taskDTO.setTaskDefinitionKey(hti.getTaskDefinitionKey());
+			taskDTO.setStartTime(hti.getStartTime());
+			taskDTO.setEndTime(hti.getEndTime());
+			taskDTO.setName(hti.getName());
+			taskDTO.setAssignee(hti.getAssignee());
+			todoList.add(taskDTO);
 		}
-
+		model.addAttribute("tasks", todoList);
 		return "process/processInstanceDetail";
 	}
 
