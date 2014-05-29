@@ -51,7 +51,7 @@
 				$("#selectUsers").bind("evtSelectUser", function(evt, data) {
 
 					str = "";
-					for ( var i = 0; i < data.users.length; i++) {
+					for (var i = 0; i < data.users.length; i++) {
 						str += data.users[i] + ",";
 					}
 					$('#assigneeList').val(str);
@@ -302,15 +302,16 @@
 			</blockquote>
 		</div>
 	</div>
-	<div class="box">
+	<div class="box" th:if="${not historicView}">
 		<legend>处理人员</legend>
 		<div class="row">
 			<div class="span3">
 				<label class="control-label text-info">已选择处理单位人员：</label>
 			</div>
 			<div class="span3">
-				<input type="button" id="clearButton" value="清除"
-					class="btn btn-danger btn-mini" />
+				<input type="button" id="selectBtn" value="选择用户重新办理"
+					class="btn btn-info btn-mini" /> <input type="button"
+					id="clearButton" value="清除" class="btn btn-danger btn-mini" />
 			</div>
 		</div>
 		<label id="selectedUser"></label>
@@ -329,16 +330,15 @@
 			th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
 			method="post">
 			<textarea name="review" rows="8" cols="20" class="span7"></textarea>
-			<input type="button" id="submitButton" value="审核" />
+			<input type="button" id="submitButton" value="审核" /> <input
+				type="button" id="backButton" value="退回" />
 			<div class="control-group">
 				<div class="controls">
-					<input type="button" id="selectBtn" value="选择用户"
-						class="btn btn-info" /> <input type="hidden" name="assigneeList"
-						id="assigneeList" value="" /> <input type="hidden"
-						name="backFlag" id="backFlag" value="" />
+					<input type="hidden" name="assigneeList" id="assigneeList" value="" />
+					<input type="hidden" name="backFlag" id="backFlag" value="" />
 				</div>
 			</div>
-			<input type="button" id="backButton" value="退回" />
+
 		</form>
 	</div>
 </body>

@@ -324,7 +324,7 @@ public class ProcessController extends BaseServiceImpl {
 		ProcessDefinition procDef = repositoryService
 				.createProcessDefinitionQuery()
 				.processDefinitionId(processDefinitionId).singleResult();
-		String diagramResourceName = procDef.getDiagramResourceName();
+		//String diagramResourceName = procDef.getDiagramResourceName();
 
 		// InputStream imageStream = this.commandExecutor
 		// .execute(new GenFlowImageCmd(repositoryService,

@@ -48,25 +48,19 @@
 </head>
 <body>
 	<div class="box">
-		<div id="paginator"></div>
-		<div id="viewDiagram" class="modal">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">¡Á</button>
-				<h3>ÏÔÊ¾Á÷³ÌÍ¼</h3>
-			</div>
-			<div class="modal-body" id="parentDiv">
-				<img id="processDiagram" src="" usemap="#ImageMap" />
-			</div>
-			<div>
-				<ul>
-					<li th:each="task:${tasks}"><a
-						th:href="@{/runtime/tasks/reviewHistoric/}+${task.id}+
+
+		<div>
+			<ul>
+				<li th:each="task:${tasks}"><a target="_blank"
+					th:href="@{/runtime/tasks/reviewHistoric/}+${task.id}+
 						'?processDefinitionId='+${task.processDefinitionId}+'&amp;taskDefinitionKey='+${task.taskDefinitionKey}"><span
-							th:text="${task.name}"></span></a></li>
-				</ul>
-			</div>
+						th:text="${task.name}"></span><span
+						th:text="${#dates.format(task.endTime, 'yyyy/MM/dd HH:mm')}"
+						class="pull-right"></span><span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+						th:text="${task.assignee}" class="pull-right"></span></a></li>
+			</ul>
 		</div>
 	</div>
+
 </body>
 </html>

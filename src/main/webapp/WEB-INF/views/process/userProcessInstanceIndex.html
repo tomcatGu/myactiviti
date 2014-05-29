@@ -73,6 +73,12 @@
 
 	}
 	function loadProcessDiagram(processInstanceId, processDefinitionId) {
+		$("#detailDiv").load(/*[[@{'/runtime/process/processInstanceDetail/'}]]*/
+		+processInstanceId, function(data) {
+		}
+
+		);
+
 		$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
 		+processDefinitionId);
 		$
@@ -164,15 +170,20 @@
 			</tr>
 		</table>
 		<div id="paginator"></div>
+
 		<div id="viewDiagram" class="modal hide fade">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">×</button>
-				<h3>显示流程图</h3>
+				<h3>流程信息</h3>
 			</div>
 			<div class="modal-body" id="parentDiv">
-				<img id="processDiagram" src="" usemap="#ImageMap"/>
-				
+				<div id="diagramDiv">
+					<img id="processDiagram" src="" usemap="#ImageMap" />
+				</div>
+				<div id="detailDiv"></div>
+
+
 
 			</div>
 		</div>
