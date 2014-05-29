@@ -3,6 +3,8 @@ package org.crusoe.mvc.ajax.attachment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/runtime/attachment")
@@ -61,6 +65,20 @@ public class AttachmentController {
 
 		// response.setContentType("application/octet-stream;charset=UTF-8");
 		return new ResponseEntity<byte[]>(bb, headers, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "{attachmentId}", method = RequestMethod.DELETE)
+	public @ResponseBody
+	Map<String, ? extends Object> deleteAttachment(
+			@PathVariable String attachmentId) {
+		
+		
+		taskService.deleteAttachment(attachmentId);
+
+		Map<String, String> msg = new HashMap<String, String>();
+		msg.put("msg", "删除附件成功");
+		return msg;
+
 	}
 
 }
