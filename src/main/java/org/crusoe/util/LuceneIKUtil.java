@@ -16,6 +16,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -30,6 +31,7 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.google.common.collect.Lists;
 
+import org.crusoe.dto.FieldDTO;
 import org.crusoe.dto.fulltextSearch.SearchResultDTO;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.*;
 
@@ -86,6 +88,16 @@ public class LuceneIKUtil {
 
 	}
 
+	public Document addDocument(List<Field> fields) {
+		Document doc = new Document();
+		for (Field field : fields) {
+
+			doc.add(field);
+
+		}
+		return doc;
+	}
+
 	public void updateIndex(String processInstanceId, Long id, String title,
 			String content) {
 		try {
@@ -114,6 +126,28 @@ public class LuceneIKUtil {
 			Document doc = addDocument(processInstanceId, id, title, content);
 			// Term term = new Term("id", String.valueOf(id));
 			indexWriter.addDocument(doc);
+			indexWriter.close();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+	}
+
+	public void addIndex(List<FieldDTO> fieldDTOList) {
+		try {
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
+					Version.LUCENE_47, analyzer);
+			IndexWriter indexWriter = new IndexWriter(directory,
+					indexWriterConfig);
+			for (FieldDTO fieldDTO : fieldDTOList) {
+				//new
+			}
+
+			// Document doc = addDocument(processInstanceId, id, title,
+			// content);
+			// Term term = new Term("id", String.valueOf(id));
+			// indexWriter.addDocument(doc);
 			indexWriter.close();
 		} catch (Exception e) {
 

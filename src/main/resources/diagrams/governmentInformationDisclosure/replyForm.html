@@ -36,10 +36,27 @@ form {
 </style>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
+	function deleteAttachment(deleteUrl, attachmentId) {
+		$.ajax({
+			type : "POST",
+			url : deleteUrl+attachmentId,
+			data : {
+				_method : 'DELETE',
+			//items : selctedItems
+			},
+			// contentType : 'application/json',
+			//dataType : 'json',
+			success : function(data) {
+
+				$("#attachment" + attachmentId).remove();
+
+			}
+		});
+	};
+
 	$(document)
 			.ready(
 					function() {
-
 						var options = {
 							beforeSend : function() {
 								$("#progress").show();
@@ -60,10 +77,24 @@ form {
 
 							},
 							complete : function(response) {
+								var ret = JSON.parse(response.responseText);
 								$("#message").html(
 										"<font color='green'>"
 												+ response.responseText
 												+ "</font>");
+								var li = $("<li></li>");
+
+								var a = $("<a>" + ret.filename + "</a>");
+								var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+								a.attr("href", "javascript:deleteAttachment(\""
+										+ deleteUrl + "\"," + ret.attachmentId
+										+ ");");
+								var i = $("<i class=\"icon-remove\"></i>");
+								i.appendTo(a);
+								a.appendTo(li);
+								li.attr("id", "attachment" + ret.attachmentId);
+								li.appendTo($("#uploadedAttachment"));
+
 							},
 							error : function() {
 								$("#message")
@@ -96,6 +127,9 @@ form {
 
 										});
 					});
+	/*
+
+	 */
 	/*]]>*/
 </script>
 </head>
@@ -324,8 +358,11 @@ form {
 		</div>
 		<div class="box" th:if="${not historicView}">
 			<label>ÉÏ´«¸½¼þ£º</label>
+			<div>
+				<ul id="uploadedAttachment"></ul>
+			</div>
 			<form id="uploadForm"
-				th:action="@{'/runtime/tasks/uploadAttachment/'+${taskId}}"
+				th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
 				method="post" enctype="multipart/form-data">
 				<div class="row">
 					<div class="span3">
