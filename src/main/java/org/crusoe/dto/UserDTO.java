@@ -78,7 +78,7 @@ public class UserDTO implements Serializable {
 	}
 
 	@Email
-	@NotEmpty
+	//@NotEmpty
 	public String getEmail() {
 		return email;
 	}

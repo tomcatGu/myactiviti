@@ -1,12 +1,20 @@
 package org.crusoe.dto;
 
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Store;
 
 public class FieldDTO {
 	private String id;
 	private String fieldName;
 	private String fieldContent;
 	private Field.Store store;
+
+	public FieldDTO(String fieldName, String fieldContent, Store store) {
+		// TODO Auto-generated constructor stub
+		this.fieldName = fieldName;
+		this.fieldContent = fieldContent;
+		this.store = store;
+	}
 
 	public String getId() {
 		return id;

@@ -15,7 +15,9 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
+import org.apache.lucene.document.Field;
 import org.apache.shiro.SecurityUtils;
+import org.crusoe.dto.FieldDTO;
 import org.crusoe.dto.HistoriceProcessInstanceDTO;
 import org.crusoe.dto.fulltextSearch.SearchResultDTO;
 import org.crusoe.dto.task.TaskDTO;
@@ -99,8 +101,28 @@ public class GovernmentInformationDisclosureService {
 		gidDao.save(gid);
 		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
 		// execution.
-		ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
-				gid.getApplicationName(), gid.getDescription());
+		List<FieldDTO> fields = Lists.newArrayList();
+		FieldDTO field = new FieldDTO("id", gid.getId().toString(),
+				Field.Store.YES);
+		fields.add(field);
+		field = new FieldDTO("processInstanceId",
+				execution.getProcessInstanceId(), Field.Store.YES);
+		fields.add(field);
+		field = new FieldDTO("applicationName", gid.getApplicationName(),
+				Field.Store.YES);
+		fields.add(field);
+		field = new FieldDTO("description", gid.getDescription(),
+				Field.Store.YES);
+		fields.add(field);
+		field = new FieldDTO("citizenName", gid.getCitizenName(),
+				Field.Store.YES);
+		fields.add(field);
+		field = new FieldDTO("groupName", gid.getGroupName(), Field.Store.YES);
+		fields.add(field);
+		ikUtil.addIndex(fields);
+
+		// ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
+		// gid.getApplicationName(), gid.getDescription());
 
 		return gid;
 

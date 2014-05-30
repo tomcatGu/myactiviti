@@ -140,14 +140,41 @@ public class LuceneIKUtil {
 					Version.LUCENE_47, analyzer);
 			IndexWriter indexWriter = new IndexWriter(directory,
 					indexWriterConfig);
+			List<Field> fields = Lists.newArrayList();
 			for (FieldDTO fieldDTO : fieldDTOList) {
-				//new
+				Field field = new TextField(fieldDTO.getFieldName(),
+						fieldDTO.getFieldContent(), fieldDTO.getStore());
+				fields.add(field);
 			}
+			Document doc = addDocument(fields);
+			indexWriter.addDocument(doc);
 
-			// Document doc = addDocument(processInstanceId, id, title,
-			// content);
-			// Term term = new Term("id", String.valueOf(id));
-			// indexWriter.addDocument(doc);
+			indexWriter.close();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+	}
+
+	public void updateIndex(List<FieldDTO> fieldDTOList) {
+		try {
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
+					Version.LUCENE_47, analyzer);
+			IndexWriter indexWriter = new IndexWriter(directory,
+					indexWriterConfig);
+			List<Field> fields = Lists.newArrayList();
+			String id = "";
+			for (FieldDTO fieldDTO : fieldDTOList) {
+				Field field = new TextField(fieldDTO.getFieldName(),
+						fieldDTO.getFieldContent(), fieldDTO.getStore());
+				fields.add(field);
+				if (fieldDTO.getFieldName() == "id")
+					id = fieldDTO.getFieldName();
+			}
+			Document doc = addDocument(fields);
+			Term term = new Term("id", String.valueOf(id));
+			indexWriter.updateDocument(term, doc);
 			indexWriter.close();
 		} catch (Exception e) {
 
