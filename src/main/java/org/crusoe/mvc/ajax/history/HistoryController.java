@@ -50,8 +50,9 @@ public class HistoryController {
 			throws IllegalAccessException, InvocationTargetException {
 
 		HashMap<String, Object> rets = gidService.searchProcessInstance(
-				new String[] { "title", "content" }, keyword, start, size);
-	
+				new String[] { "applicationName", "description", "citizenName",
+						"groupName", "review", "reply" }, keyword, start, size);
+
 		return rets;
 
 	}

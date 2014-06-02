@@ -8,12 +8,15 @@ public class FieldDTO {
 	private String fieldName;
 	private String fieldContent;
 	private Field.Store store;
+	private boolean isCompleteMatch;
 
-	public FieldDTO(String fieldName, String fieldContent, Store store) {
+	public FieldDTO(String fieldName, String fieldContent, Store store,
+			boolean isCompleteMatch) {
 		// TODO Auto-generated constructor stub
 		this.fieldName = fieldName;
 		this.fieldContent = fieldContent;
 		this.store = store;
+		this.isCompleteMatch = isCompleteMatch;
 	}
 
 	public String getId() {
@@ -46,6 +49,14 @@ public class FieldDTO {
 
 	public void setStore(Field.Store store) {
 		this.store = store;
+	}
+
+	public boolean isCompleteMatch() {
+		return isCompleteMatch;
+	}
+
+	public void setCompleteMatch(boolean isCompleteMatch) {
+		this.isCompleteMatch = isCompleteMatch;
 	}
 
 }

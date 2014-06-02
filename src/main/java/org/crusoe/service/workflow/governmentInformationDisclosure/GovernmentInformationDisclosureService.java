@@ -103,22 +103,24 @@ public class GovernmentInformationDisclosureService {
 		// execution.
 		List<FieldDTO> fields = Lists.newArrayList();
 		FieldDTO field = new FieldDTO("id", gid.getId().toString(),
-				Field.Store.YES);
+				Field.Store.YES, true);
 		fields.add(field);
 		field = new FieldDTO("processInstanceId",
-				execution.getProcessInstanceId(), Field.Store.YES);
+				execution.getProcessInstanceId(), Field.Store.YES, true);
 		fields.add(field);
 		field = new FieldDTO("applicationName", gid.getApplicationName(),
-				Field.Store.YES);
+				Field.Store.YES, false);
 		fields.add(field);
 		field = new FieldDTO("description", gid.getDescription(),
-				Field.Store.YES);
+				Field.Store.YES, false);
 		fields.add(field);
 		field = new FieldDTO("citizenName", gid.getCitizenName(),
-				Field.Store.YES);
+				Field.Store.YES, false);
 		fields.add(field);
-		field = new FieldDTO("groupName", gid.getGroupName(), Field.Store.YES);
+		field = new FieldDTO("groupName", gid.getGroupName(), Field.Store.YES,
+				false);
 		fields.add(field);
+
 		ikUtil.addIndex(fields);
 
 		// ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
@@ -139,16 +141,44 @@ public class GovernmentInformationDisclosureService {
 		replyEntity.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
 				.toString());
 		gid.getReplies().add(replyEntity);
-		String content = "";
+		String replyContent = "";
 		for (Reply aReply : gid.getReplies()) {
 
-			content += aReply.getReply() + " ";
+			replyContent += aReply.getReply() + " ";
 
 		}
 
 		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
-		ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
-				gid.getApplicationName(), content);
+		// ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
+		// gid.getApplicationName(), content);
+
+		List<FieldDTO> fields = Lists.newArrayList();
+		FieldDTO field = new FieldDTO("id", gid.getId().toString(),
+				Field.Store.YES, true);
+		fields.add(field);
+		field = new FieldDTO("processInstanceId",
+				execution.getProcessInstanceId(), Field.Store.YES, true);
+		fields.add(field);
+		field = new FieldDTO("applicationName", gid.getApplicationName(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("description", gid.getDescription(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("citizenName", gid.getCitizenName(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("groupName", gid.getGroupName(), Field.Store.YES,
+				false);
+		fields.add(field);
+		if (gid.getReview() != null) {
+			field = new FieldDTO("review", gid.getReview(), Field.Store.YES,
+					false);
+			fields.add(field);
+		}
+		field = new FieldDTO("reply", replyContent, Field.Store.YES, false);
+		fields.add(field);
+		ikUtil.updateIndex(fields);
 		return gidDao.save(gid);
 
 	}
@@ -156,11 +186,41 @@ public class GovernmentInformationDisclosureService {
 	public GovernmentInformationDisclosure saveReview(
 			DelegateExecution execution, GovernmentInformationDisclosure gid,
 			String review) {
-		gid.setReview(review);
+		String replyContent = "";
+		for (Reply aReply : gid.getReplies()) {
+
+			replyContent += aReply.getReply() + " ";
+
+		}
+
+		List<FieldDTO> fields = Lists.newArrayList();
+		FieldDTO field = new FieldDTO("id", gid.getId().toString(),
+				Field.Store.YES, true);
+		fields.add(field);
+		field = new FieldDTO("processInstanceId",
+				execution.getProcessInstanceId(), Field.Store.YES, true);
+		fields.add(field);
+		field = new FieldDTO("applicationName", gid.getApplicationName(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("description", gid.getDescription(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("citizenName", gid.getCitizenName(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("groupName", gid.getGroupName(), Field.Store.YES,
+				false);
+		fields.add(field);
+		field = new FieldDTO("review", review, Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("reply", replyContent, Field.Store.YES, false);
+		fields.add(field);
+		ikUtil.updateIndex(fields);
 
 		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
-		ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
-				gid.getApplicationName(), review);
+		// ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
+		// gid.getApplicationName(), review);
 		return gidDao.save(gid);
 
 	}

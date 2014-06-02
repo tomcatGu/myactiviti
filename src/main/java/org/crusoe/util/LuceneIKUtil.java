@@ -40,6 +40,8 @@ public class LuceneIKUtil {
 	private Directory directory;
 	private Analyzer analyzer;
 	private String indexFilePath = "/IK";
+	IndexWriterConfig indexWriterConfig;
+	IndexWriter indexWriter;
 
 	public LuceneIKUtil() {
 
@@ -50,6 +52,13 @@ public class LuceneIKUtil {
 			e.printStackTrace();
 		}
 		analyzer = new IKAnalyzer();
+		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_47, analyzer);
+		try {
+			indexWriter = new IndexWriter(directory, indexWriterConfig);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public LuceneIKUtil(String indexFilePath) {
@@ -69,9 +78,7 @@ public class LuceneIKUtil {
 	}
 
 	public void createIndex() throws IOException {
-		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
-				Version.LUCENE_47, analyzer);
-		IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
+
 		indexWriter.deleteAll();
 
 	}
@@ -101,10 +108,7 @@ public class LuceneIKUtil {
 	public void updateIndex(String processInstanceId, Long id, String title,
 			String content) {
 		try {
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
-					Version.LUCENE_47, analyzer);
-			IndexWriter indexWriter = new IndexWriter(directory,
-					indexWriterConfig);
+
 			Document doc = addDocument(processInstanceId, id, title, content);
 			Term term = new Term("id", String.valueOf(id));
 			indexWriter.updateDocument(term, doc);
@@ -119,10 +123,7 @@ public class LuceneIKUtil {
 	public void addIndex(String processInstanceId, Long id, String title,
 			String content) {
 		try {
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
-					Version.LUCENE_47, analyzer);
-			IndexWriter indexWriter = new IndexWriter(directory,
-					indexWriterConfig);
+
 			Document doc = addDocument(processInstanceId, id, title, content);
 			// Term term = new Term("id", String.valueOf(id));
 			indexWriter.addDocument(doc);
@@ -136,20 +137,22 @@ public class LuceneIKUtil {
 
 	public void addIndex(List<FieldDTO> fieldDTOList) {
 		try {
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
-					Version.LUCENE_47, analyzer);
-			IndexWriter indexWriter = new IndexWriter(directory,
-					indexWriterConfig);
+
 			List<Field> fields = Lists.newArrayList();
 			for (FieldDTO fieldDTO : fieldDTOList) {
-				Field field = new TextField(fieldDTO.getFieldName(),
-						fieldDTO.getFieldContent(), fieldDTO.getStore());
+				Field field;
+				if (fieldDTO.isCompleteMatch())
+					field = new StringField(fieldDTO.getFieldName(),
+							fieldDTO.getFieldContent(), fieldDTO.getStore());
+				else
+					field = new TextField(fieldDTO.getFieldName(),
+							fieldDTO.getFieldContent(), fieldDTO.getStore());
 				fields.add(field);
 			}
 			Document doc = addDocument(fields);
 			indexWriter.addDocument(doc);
-
-			indexWriter.close();
+			indexWriter.commit();
+			// indexWriter.close();
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -159,23 +162,24 @@ public class LuceneIKUtil {
 
 	public void updateIndex(List<FieldDTO> fieldDTOList) {
 		try {
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(
-					Version.LUCENE_47, analyzer);
-			IndexWriter indexWriter = new IndexWriter(directory,
-					indexWriterConfig);
+
 			List<Field> fields = Lists.newArrayList();
 			String id = "";
 			for (FieldDTO fieldDTO : fieldDTOList) {
-				Field field = new TextField(fieldDTO.getFieldName(),
-						fieldDTO.getFieldContent(), fieldDTO.getStore());
-				fields.add(field);
+				Field field;
+				if (fieldDTO.isCompleteMatch())
+					field = new StringField(fieldDTO.getFieldName(),
+							fieldDTO.getFieldContent(), fieldDTO.getStore());
+				else
+					field = new TextField(fieldDTO.getFieldName(),
+							fieldDTO.getFieldContent(), fieldDTO.getStore());
 				if (fieldDTO.getFieldName() == "id")
 					id = fieldDTO.getFieldName();
 			}
 			Document doc = addDocument(fields);
 			Term term = new Term("id", String.valueOf(id));
 			indexWriter.updateDocument(term, doc);
-			indexWriter.close();
+			indexWriter.commit();
 		} catch (Exception e) {
 
 			e.printStackTrace();
