@@ -48,19 +48,18 @@
 </head>
 <body>
 	<div class="box">
-
 		<div>
 			<ul>
 				<li th:each="task:${tasks}"><a target="_blank"
 					th:href="@{/runtime/tasks/reviewHistoric/}+${task.id}+
 						'?processDefinitionId='+${task.processDefinitionId}+'&amp;taskDefinitionKey='+${task.taskDefinitionKey}"><span
 						th:text="${task.name}"></span><span
-						th:text="${#dates.format(task.endTime, 'yyyy/MM/dd HH:mm')}"
-						class="pull-right"></span><span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+						th:text="${#dates.format(task.startTime, 'yyyy/MM/dd HH:mm')}"
+						class="pull-right"></span><span class="pull-right">¿ªÊ¼ÓÚ£º</span><span
+						class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span><span
 						th:text="${task.assignee}" class="pull-right"></span></a></li>
 			</ul>
 		</div>
 	</div>
-
 </body>
 </html>

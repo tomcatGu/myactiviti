@@ -12,27 +12,23 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
-import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
-import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
-import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.util.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.crusoe.command.GenFlowImageCmd;
+
+import org.crusoe.dto.HistoricProcessInstanceDTO;
 import org.crusoe.dto.ProcessDefinitionDTO;
-import org.crusoe.dto.HistoriceProcessInstanceDTO;
 import org.crusoe.dto.ProcessInstanceDTO;
 import org.crusoe.dto.repository.ActivityDTO;
-import org.crusoe.dto.repository.DeploymentDTO;
 import org.crusoe.dto.task.TaskDTO;
 import org.crusoe.service.AccountService;
 import org.crusoe.service.BaseServiceImpl;
@@ -128,6 +124,7 @@ public class ProcessController extends BaseServiceImpl {
 
 		if (startFormKey != null) {
 			model.addAttribute("processDefinitionId", processDefinition.getId());
+			model.addAttribute("historicView", false);
 			return startFormKey;
 		} else {
 			Subject currentUser = SecurityUtils.getSubject();
@@ -179,7 +176,7 @@ public class ProcessController extends BaseServiceImpl {
 
 		}
 		for (HistoricProcessInstance historicProcessInstance : userAllProcessInstances) {
-			HistoriceProcessInstanceDTO piDTO = new HistoriceProcessInstanceDTO();
+			HistoricProcessInstanceDTO piDTO = new HistoricProcessInstanceDTO();
 			piDTO.setBusinessKey(historicProcessInstance.getBusinessKey());
 			piDTO.setId(historicProcessInstance.getId());
 			piDTO.setProcessDefinitionId(historicProcessInstance
@@ -212,6 +209,19 @@ public class ProcessController extends BaseServiceImpl {
 				.createHistoricTaskInstanceQuery()
 				.processInstanceId(processInstanceId).list();
 		List<TaskDTO> todoList = new ArrayList<TaskDTO>();
+		HistoricProcessInstance hpi = historyService
+				.createHistoricProcessInstanceQuery()
+				.processInstanceId(processInstanceId).singleResult();
+		HistoricProcessInstanceDTO hpiDTO = new HistoricProcessInstanceDTO();
+		hpiDTO.setId(hpi.getId());
+		hpiDTO.setBusinessKey(hpi.getBusinessKey());
+		hpiDTO.setProcessDefinitionId(hpi.getProcessDefinitionId());
+		hpiDTO.setStartTime(hpi.getStartTime());
+		hpiDTO.setEndTime(hpi.getEndTime());
+		hpiDTO.setStartUserId(hpi.getStartUserId());
+		// hpiDTO.setStatus()
+		model.addAttribute("processInstanceStart", hpiDTO);
+
 		for (HistoricTaskInstance hti : historicTaskInstances) {
 			TaskDTO taskDTO = new TaskDTO();
 			taskDTO.setId(hti.getId());
@@ -253,7 +263,7 @@ public class ProcessController extends BaseServiceImpl {
 
 		}
 		for (HistoricProcessInstance historicProcessInstance : finishedProcessInstances) {
-			HistoriceProcessInstanceDTO piDTO = new HistoriceProcessInstanceDTO();
+			HistoricProcessInstanceDTO piDTO = new HistoricProcessInstanceDTO();
 			BeanUtils.copyProperties(piDTO, historicProcessInstance);
 
 			objects.add(piDTO);
@@ -324,7 +334,7 @@ public class ProcessController extends BaseServiceImpl {
 		ProcessDefinition procDef = repositoryService
 				.createProcessDefinitionQuery()
 				.processDefinitionId(processDefinitionId).singleResult();
-		//String diagramResourceName = procDef.getDiagramResourceName();
+		// String diagramResourceName = procDef.getDiagramResourceName();
 
 		// InputStream imageStream = this.commandExecutor
 		// .execute(new GenFlowImageCmd(repositoryService,

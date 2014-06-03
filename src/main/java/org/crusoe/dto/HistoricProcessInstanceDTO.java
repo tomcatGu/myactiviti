@@ -2,7 +2,7 @@ package org.crusoe.dto;
 
 import java.util.Date;
 
-public class HistoriceProcessInstanceDTO {
+public class HistoricProcessInstanceDTO {
 	private String id;
 	private String processDefinitionId;
 	private String startUserId;
@@ -69,8 +69,8 @@ public class HistoriceProcessInstanceDTO {
 	@Override
 	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub
-		if (obj instanceof HistoriceProcessInstanceDTO) {
-			HistoriceProcessInstanceDTO temp = (HistoriceProcessInstanceDTO) obj;
+		if (obj instanceof HistoricProcessInstanceDTO) {
+			HistoricProcessInstanceDTO temp = (HistoricProcessInstanceDTO) obj;
 			if (temp.getId().equals(this.id))
 				return true;
 			else

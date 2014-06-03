@@ -18,7 +18,7 @@ import org.activiti.engine.task.Task;
 import org.apache.lucene.document.Field;
 import org.apache.shiro.SecurityUtils;
 import org.crusoe.dto.FieldDTO;
-import org.crusoe.dto.HistoriceProcessInstanceDTO;
+import org.crusoe.dto.HistoricProcessInstanceDTO;
 import org.crusoe.dto.fulltextSearch.SearchResultDTO;
 import org.crusoe.dto.task.TaskDTO;
 import org.crusoe.entity.User;
@@ -286,7 +286,7 @@ public class GovernmentInformationDisclosureService {
 					.processInstanceId(srDTO.getProcessInstanceId()).list();
 
 			for (HistoricProcessInstance instance : historicProcessInstanceList) {
-				HistoriceProcessInstanceDTO piDTO = new HistoriceProcessInstanceDTO();
+				HistoricProcessInstanceDTO piDTO = new HistoricProcessInstanceDTO();
 				piDTO.setBusinessKey(instance.getBusinessKey());
 				piDTO.setId(instance.getId());
 				piDTO.setProcessDefinitionId(instance.getProcessDefinitionId());

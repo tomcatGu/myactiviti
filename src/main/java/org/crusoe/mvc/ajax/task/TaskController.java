@@ -16,6 +16,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.form.StartFormData;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.Deployment;
@@ -81,6 +82,49 @@ public class TaskController {
 	@RequestMapping(value = "historicTasks")
 	public String getHistoricTaskForm() {
 		return "task/historicTask";
+	}
+
+	@RequestMapping(value = "reviewStartForm/{processInstanceId}")
+	public String reviewStartForm(
+			@PathVariable("processInstanceId") String processInstanceId,
+			Model model) throws IllegalAccessException,
+			InvocationTargetException {
+		HistoricProcessInstance hpi = historyService
+				.createHistoricProcessInstanceQuery()
+				.processInstanceId(processInstanceId).singleResult();
+
+		String formKey = formService.getStartFormKey(hpi
+				.getProcessDefinitionId());
+		if (formKey != null) {
+
+			List<HistoricVariableInstance> variables = historyService
+					.createHistoricVariableInstanceQuery()
+					.processInstanceId(processInstanceId).list();
+
+			// Map<String, Object> variables = taskService.getVariables(taskId);
+			List<Attachment> taskAttachments = taskService
+					.getProcessInstanceAttachments(processInstanceId);
+
+			for (HistoricVariableInstance hvi : variables) {
+
+				model.addAttribute(hvi.getVariableName(), hvi.getValue());
+			}
+			List<AttachmentDTO> attachments = Lists.newArrayList();
+			Iterator iter = taskAttachments.iterator();
+			while (iter.hasNext()) {
+				AttachmentDTO attachmentDTO = new AttachmentDTO();
+				Attachment attachment = (Attachment) iter.next();
+				BeanUtils.copyProperties(attachmentDTO, attachment);
+				attachments.add(attachmentDTO);
+			}
+			model.addAttribute("attachments", attachments);
+			model.addAttribute("historicView", true);
+			// model.addAllAttributes(attachments);
+			// model.addAllAttributes(variables);
+			// model.addAttribute("taskId", taskId);
+			return formKey;
+		} else
+			return "task/index";
 	}
 
 	@RequestMapping(value = "reviewHistoric/{taskId}")
