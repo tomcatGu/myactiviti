@@ -401,6 +401,16 @@
 			<artifactId>quartz-jobs</artifactId>
 			<version>2.2.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
 	</dependencies>
 
 	<modules>
@@ -409,7 +419,7 @@
 		<selenium.version>2.25.0</selenium.version>
 		<spring.version>4.0.0.RELEASE</spring.version>
 		<thymeleaf.version>2.1.2.RELEASE</thymeleaf.version>
-		<shiro.version>1.2.2</shiro.version>
+		<shiro.version>1.2.3</shiro.version>
 		<spring-data.version>1.2.0.RELEASE</spring-data.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<jetty.version>1</jetty.version>
@@ -417,5 +427,6 @@
 		<groovy.version>2.2.1</groovy.version>
 		<activiti.version>5.15</activiti.version>
 		<lucene.version>4.7.0</lucene.version>
+		<aspectj.version>1.7.4</aspectj.version>
 	</properties>
 </project>
