@@ -8,9 +8,12 @@
 
 	$(document).ready(
 			function() {
-				$('#addBtn').bind('click', function() {
-					create('#createUser', /*[[@{'/user/create'}]]*/'', successCallback);
-				});
+				$('#addBtn').bind(
+						'click',
+						function() {
+							create('#createUser', /*[[@{'/user/create'}]]*/'',
+									successCallback);
+						});
 				$('#checkAll').bind('click', function() {
 					checkAll("#checkAll");
 				});
@@ -29,8 +32,9 @@
 
 				});
 
-				$("#userList").simpleTable(/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/,
-						render, $("#paginator"), null);
+				$("#userList").simpleTable(/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/
+				+"&dateStamp=" + new Date().toString(), render,
+						$("#paginator"), null);
 
 			});
 	function successCallback() {
@@ -38,7 +42,9 @@
 		$("#createUser").modal("hide");
 		$("#userList tr").nextAll().remove();
 
-		$("#userList").simpleTable("user/listUsers?sort=id&order=desc", render,
+		$("#userList").simpleTable(
+				/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/""
+						+ "&dateStamp=" + new Date().toString(), render,
 				$("#paginator"), null);
 
 	}
@@ -55,7 +61,8 @@
 				+ data.email
 				+ "</td><td>"
 				+ data.stauts
-				+ "</td><td><a href=\"javascript:update('#createUser','"+/*[[@{'/user/update/'}]]*/''
+				+ "</td><td><a href=\"javascript:update('#createUser','"
+				+ /*[[@{'/user/update/'}]]*/''
 				+ data.id
 				+ "',successCallback);\"><i class='icon-edit'></i></a></td></tr>";
 		return newRow;

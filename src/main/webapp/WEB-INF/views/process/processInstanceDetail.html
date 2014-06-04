@@ -12,12 +12,13 @@
 
 	function loadProcessDiagram(processInstanceId, processDefinitionId) {
 		$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
-		+processDefinitionId);
+		+processDefinitionId+ "?timestamp=" + (new Date()).valueOf());
+		/*
 		$
 				.ajax({
 					type : 'GET',
-					url : /*[[@{'/runtime/process/activityCoordinate/'}]]*/''
-							+ processDefinitionId,
+					url : [[@{'/runtime/process/activityCoordinate/'}]]''
+							+ processDefinitionId+ "?timestamp=" + (new Date()).valueOf(),
 					async : false,
 					success : function(data) {
 						var coord = data.coordinates;
@@ -40,7 +41,8 @@
 					}
 
 				});
-		$("#viewDiagram").modal();
+		*/
+		
 	};
 
 	/*]]>*/

@@ -2,7 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:groovy="http://www.sillycat.com/schema/groovy"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:groovy="http://www.sillycat.com/schema/groovy"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd 
@@ -10,7 +11,8 @@
         http://www.springframework.org/schema/context/spring-context-4.0.xsd  
         http://www.sillycat.com/schema/groovy http://www.sillycat.com/schema/groovy/groovy.xsd 
 		http://www.springframework.org/schema/mvc 
-		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 
 
@@ -118,6 +120,12 @@
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<!-- 指定所上传文件的总大小不能超过200KB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
 		<property name="maxUploadSize" value="2000000" />
+	</bean>
+
+	
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
 	</bean>
 
 	<bean id="propertyConfigurer"
