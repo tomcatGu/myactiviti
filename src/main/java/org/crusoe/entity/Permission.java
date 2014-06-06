@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -62,7 +63,7 @@ public class Permission implements Serializable, AbstractSecureObject<Long> {
 		this.description = description;
 	}
 
-	@ManyToMany(cascade = CascadeType.REFRESH, mappedBy = "permissions")
+	@ManyToMany(cascade = CascadeType.REFRESH, mappedBy = "permissions", fetch = FetchType.EAGER)
 	public List<Role> getRoles() {
 		return roles;
 	}

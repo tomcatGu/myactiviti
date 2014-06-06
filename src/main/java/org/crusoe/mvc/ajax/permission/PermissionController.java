@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -24,6 +25,7 @@ import org.crusoe.entity.Role;
 import org.crusoe.service.PermissionService;
 import org.crusoe.service.ResourceService;
 import org.crusoe.service.RoleService;
+import org.crusoe.service.security.ShiroFilerChainManager;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,6 +51,9 @@ import com.google.common.collect.Lists;
 @Controller
 @RequestMapping(value = "/permission")
 public class PermissionController {
+
+	@Autowired
+	private ShiroFilerChainManager shiroFilerChainManager;
 	@Autowired
 	private PermissionService permissionService;
 
@@ -57,6 +62,11 @@ public class PermissionController {
 	@Autowired
 	public void setRoleService(RoleService roleService) {
 		this.roleService = roleService;
+	}
+
+	@PostConstruct
+	public void initFilterChain() {
+		shiroFilerChainManager.initFilterChains(findAll());
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.GET)
@@ -100,7 +110,7 @@ public class PermissionController {
 				roleService.update(role);
 			}
 		}
-
+		shiroFilerChainManager.initFilterChains(findAll());
 		redirectAttributes.addFlashAttribute("message", "创建资源成功");
 		return Collections.singletonMap("id", permission.getId());
 	}
@@ -141,6 +151,13 @@ public class PermissionController {
 			Permission permission = (Permission) iter.next();
 			PermissionDTO permissionDTO = new PermissionDTO();
 			BeanUtils.copyProperties(permission, permissionDTO);
+			permissionDTO.setRoles(new ArrayList<RoleDTO>());
+			for (Role role : permission.getRoles()) {
+				RoleDTO roleDTO = new RoleDTO();
+				roleDTO.setId(role.getId());
+				roleDTO.setName(role.getName());
+				permissionDTO.getRoles().add(roleDTO);
+			}
 			permissionDTOList.add(permissionDTO);
 		}
 
@@ -198,6 +215,30 @@ public class PermissionController {
 			e.printStackTrace();
 		}
 		return Collections.singletonMap("id", permission.getId());
+	}
+
+	private List<PermissionDTO> findAll() {
+		List<PermissionDTO> perms = Lists.newArrayList();
+		Iterable<Permission> allPerms = permissionService.findAll();
+		for (Permission perm : allPerms) {
+			PermissionDTO permissionDTO = new PermissionDTO();
+			permissionDTO.setId(perm.getId());
+			permissionDTO.setDescription(perm.getDescription());
+			permissionDTO.setUrl(perm.getUrl());
+			permissionDTO.setToken(perm.getToken());
+			permissionDTO.setRoles(new ArrayList<RoleDTO>());
+			for (Role role : perm.getRoles()) {
+				RoleDTO roleDTO = new RoleDTO();
+				roleDTO.setId(role.getId());
+				roleDTO.setName(role.getName());
+				permissionDTO.getRoles().add(roleDTO);
+			}
+			perms.add(permissionDTO);
+
+		}
+
+		return perms;
+
 	}
 
 }

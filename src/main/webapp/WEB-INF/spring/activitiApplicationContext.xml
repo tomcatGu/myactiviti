@@ -44,8 +44,15 @@
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-	<!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> 
-		<property name="dataSource" ref="dataSource" /> </bean> -->
+	<!-- 建立视图内拦截器来解决JPA中访问延迟加载属性时产生的无会话异常 -->
+	<!-- LazyInitializationException: could not initialize proxy no session -->
+	<!-- 此拦截器会注入到servlet配置中的DefaultAnnotationHandlerMapping中 -->
+	<bean name="openEntityManagerInViewInterceptor"
+		class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor">
+		<property name="entityManagerFactory">
+			<ref bean="entityManagerFactory" />
+		</property>
+	</bean>
 
 	<bean id="hibernateJpaVendorAdapter"
 		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
@@ -83,5 +90,14 @@
 		entity-manager-factory-ref="entityManagerFactory" />
 	<bean
 		class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="openEntityManagerInViewInterceptor" />
+			</list>
+		</property>
+	</bean>
 
 </beans>

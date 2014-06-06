@@ -61,9 +61,13 @@ public class PermissionService {
 	}
 
 	public void save(Permission permission) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stubs
 		permissionDao.save(permission);
 	}
 
+	public Iterable<Permission> findAll() {
+		return permissionDao.findAll();
+
+	}
 
 }
