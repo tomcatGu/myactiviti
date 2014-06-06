@@ -12,15 +12,19 @@
 				+ data.id + "')\">接受</a></td></tr>";
 		return newRow;
 	};
-	$(document).ready(
-			function() {
+	$(document)
+			.ready(
+					function() {
 
-				$("#taskList").simpleTable(
-				/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
-				+"&timestamp="+new Date().toString(),
-						render, $("#paginator"), null);
+						$("#taskList")
+								.simpleTable(
+										/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
+												+ "&timestamp="
+												+ new Date().toString(),
+										render, $("#paginatorForTaskList"),
+										null);
 
-			});
+					});
 	function loadView(url) {
 		$("#view")
 				.load(
@@ -38,7 +42,7 @@
 														.simpleTable(
 																/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/"",
 																render,
-																$("#paginator"),
+																$("#paginatorForTaskList"),
 																null);
 
 											});
@@ -78,7 +82,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<div id="paginator"></div>
+		<div id="paginatorForTaskList"></div>
 		<input type="button" id="deleteBtn" value="删除选中"
 			class="btn btn-danger" />
 	</div>

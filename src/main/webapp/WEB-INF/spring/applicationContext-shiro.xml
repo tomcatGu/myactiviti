@@ -82,7 +82,7 @@
 		<property name="arguments" ref="securityManager" />
 	</bean>
 
-	<!-- 基于Form表单的身份验证过滤器 -->
+	<!-- 基于Form表单的身份验证过滤器 
 	<bean id="formAuthenticationFilter"
 		class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
 		<property name="usernameParam" value="username" />
@@ -90,28 +90,29 @@
 		<property name="rememberMeParam" value="rememberMe" />
 		<property name="loginUrl" value="/login" />
 	</bean>
-
+-->
 	<bean id="sysUserFilter" class="org.crusoe.filter.SysUserFilter" />
 
 	<bean id="filterChainManager"
 		class="org.crusoe.service.security.CustomDefaultFilterChainManager">
 		<property name="loginUrl" value="/login" />
-		<property name="successUrl" value="/" />
-		<property name="unauthorizedUrl" value="/unauthorized" />
 
-		<property name="customFilters">
-			<util:map>
-				<entry key="authc" value-ref="formAuthenticationFilter" />
-				<entry key="sysUser" value-ref="sysUserFilter" />
-			</util:map>
-		</property>
+		<property name="unauthorizedUrl" value="/unauthorized" />
+		<!-- <property name="customFilters"> <util:map> <entry key="authc" value-ref="formAuthenticationFilter" 
+			/> <entry key="sysUser" value-ref="sysUserFilter" /> </util:map> </property> -->
 		<property name="defaultFilterChainDefinitions">
 			<value>
 			<![CDATA[
 				/login = authc
 				/logout = logout
 				/unauthorized.jsp = authc
-				/**=authc
+				
+				/bootstrap/**=anon
+				/css/**=anon
+				/images/**=anon
+				/scripts/**=anon
+				/*=authc
+				
 				]]>
 			</value>
 		</property>
