@@ -63,7 +63,7 @@ public class Permission implements Serializable, AbstractSecureObject<Long> {
 		this.description = description;
 	}
 
-	@ManyToMany(cascade = CascadeType.REFRESH, mappedBy = "permissions", fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.REFRESH, mappedBy = "permissions")
 	public List<Role> getRoles() {
 		return roles;
 	}

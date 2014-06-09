@@ -35,6 +35,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -86,6 +87,7 @@ public class PermissionController {
 
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
+	@Transactional
 	public @ResponseBody
 	Map<String, ? extends Object> create(
 			@Valid @RequestBody PermissionDTO newPermission,
@@ -108,7 +110,9 @@ public class PermissionController {
 				Role role = roleService.load(roleDTO.getId());
 				role.getPermissions().add(permission);
 				roleService.update(role);
+				permission.getRoles().add(role);
 			}
+			permissionService.save(permission);
 		}
 		shiroFilerChainManager.initFilterChains(findAll());
 		redirectAttributes.addFlashAttribute("message", "创建资源成功");
@@ -217,6 +221,7 @@ public class PermissionController {
 		return Collections.singletonMap("id", permission.getId());
 	}
 
+	@Transactional
 	private List<PermissionDTO> findAll() {
 		List<PermissionDTO> perms = Lists.newArrayList();
 		Iterable<Permission> allPerms = permissionService.findAll();
