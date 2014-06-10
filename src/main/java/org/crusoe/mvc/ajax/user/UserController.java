@@ -163,7 +163,6 @@ public class UserController {
 		user.setName(newUser.getName());
 		user.setEmail(newUser.getEmail());
 		user.setPassword(newUser.getPassword());
-		user.setMobile(newUser.getMobile());
 
 		// BeanUtils.copyProperties(newUser, user);
 		if (newUser.getRoles() != null) {

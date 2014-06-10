@@ -48,6 +48,9 @@
 															$(
 																	"#applicationName")
 																	.val());
+											$("#submitBtn").attr("disabled",
+													true).attr("value",
+													"正在提交...");
 											$("#myForm")
 													.ajaxForm(
 															{
@@ -67,6 +70,8 @@
 
 																},
 																beforeSubmit : function() {
+																	return !($("#myForm")
+																			.valid());
 																}
 
 															}).submit();

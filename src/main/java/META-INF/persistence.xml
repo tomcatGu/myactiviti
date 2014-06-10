@@ -17,7 +17,7 @@
 				value="jdbc:mysql://localhost:3306/activitidb?autoReconnect=true" />
 			<property name="hibernate.connection.username" value="root" />
 			<property name="hibernate.connection.password" value="tomtom1982" />
-			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 
 			<!-- you may want to change this provider in production -->
 			<property name="hibernate.cache.use_second_level_cache"
