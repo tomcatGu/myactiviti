@@ -25,6 +25,7 @@ import org.crusoe.entity.Role;
 import org.crusoe.service.PermissionService;
 import org.crusoe.service.ResourceService;
 import org.crusoe.service.RoleService;
+import org.crusoe.service.UrlFilterService;
 import org.crusoe.service.security.ShiroFilerChainManager;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,17 +58,14 @@ public class PermissionController {
 	private ShiroFilerChainManager shiroFilerChainManager;
 	@Autowired
 	private PermissionService permissionService;
-
-	private RoleService roleService;
-
 	@Autowired
-	public void setRoleService(RoleService roleService) {
-		this.roleService = roleService;
-	}
+	private RoleService roleService;
+	@Autowired
+	private UrlFilterService urlFilterService;
 
 	@PostConstruct
-	public void initFilterChain() {
-		shiroFilerChainManager.initFilterChains(findAll());
+	public void init() {
+		urlFilterService.init();
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.GET)
@@ -114,7 +112,7 @@ public class PermissionController {
 			}
 			permissionService.save(permission);
 		}
-		shiroFilerChainManager.initFilterChains(findAll());
+		urlFilterService.init();
 		redirectAttributes.addFlashAttribute("message", "创建资源成功");
 		return Collections.singletonMap("id", permission.getId());
 	}
@@ -199,7 +197,7 @@ public class PermissionController {
 	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable long id) {
-
+		urlFilterService.init();
 	}
 
 	// update a Resource when RequestMethod.PUT
@@ -218,32 +216,9 @@ public class PermissionController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		urlFilterService.init();
 		return Collections.singletonMap("id", permission.getId());
-	}
-
-	@Transactional
-	private List<PermissionDTO> findAll() {
-		List<PermissionDTO> perms = Lists.newArrayList();
-		Iterable<Permission> allPerms = permissionService.findAll();
-		for (Permission perm : allPerms) {
-			PermissionDTO permissionDTO = new PermissionDTO();
-			permissionDTO.setId(perm.getId());
-			permissionDTO.setDescription(perm.getDescription());
-			permissionDTO.setUrl(perm.getUrl());
-			permissionDTO.setToken(perm.getToken());
-			permissionDTO.setRoles(new ArrayList<RoleDTO>());
-			for (Role role : perm.getRoles()) {
-				RoleDTO roleDTO = new RoleDTO();
-				roleDTO.setId(role.getId());
-				roleDTO.setName(role.getName());
-				permissionDTO.getRoles().add(roleDTO);
-			}
-			perms.add(permissionDTO);
-
-		}
-
-		return perms;
-
 	}
 
 }
