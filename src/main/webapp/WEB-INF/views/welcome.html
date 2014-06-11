@@ -115,14 +115,14 @@
 							<li class="nav-header">政府信息公开</li>
 							<li><a href="#"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"
-								onClick="load('创建','runtime/process/governmentInformationDisclosure:5:176/start')">创建<i
+								onClick="load('创建','runtime/process/governmentInformationDisclosure:36:3308/start')">创建<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="active"><a id="tasks"
 								onclick="load('待办事项','runtime/tasks/index')">待办事项</a></li>
 							<li><a href="#"
 								onClick="load('已办事项','runtime/tasks/historicTasks')">已办事项</a></li>
 							<li><a href="#"
-								onClick="load('已办结','runtime/process/finishedProcessIndex/governmentInformationDisclosure:123:18208/')"
+								onClick="load('已办结','runtime/process/finishedProcessIndex/governmentInformationDisclosure:36:3308/')"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER')==true}">已办结</a></li>
 							<li><a href="#"
 								onClick="load('所有流程','runtime/process/userProcessIndex/admin')">所有流程</a></li>

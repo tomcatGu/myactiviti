@@ -7,7 +7,7 @@
 	/*<![CDATA[*/
 	function encodeUTF8(str) {
 		var temp = "", rs = "";
-		for ( var i = 0, len = str.length; i < len; i++) {
+		for (var i = 0, len = str.length; i < len; i++) {
 			temp = str.charCodeAt(i).toString(16);
 			rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
 		}
@@ -22,7 +22,21 @@
 			.ready(
 					function() {
 						$("#myForm").validate({
-							meta : "validate"
+							//meta : "validate"
+							rules : {
+								applicationName : {
+									required : true,
+									minLength : 5
+								}
+
+							},
+							messages : {
+								applicationName : {
+									required : "请输入事项名称",
+									minlength : "申请名称不能小于5个字符"
+								}
+
+							}
 						});
 						$("#clearButton").click(function() {
 							$('#selectedUser').text("");
@@ -48,9 +62,7 @@
 															$(
 																	"#applicationName")
 																	.val());
-											$("#submitBtn").attr("disabled",
-													true).attr("value",
-													"正在提交...");
+
 											$("#myForm")
 													.ajaxForm(
 															{
@@ -70,8 +82,21 @@
 
 																},
 																beforeSubmit : function() {
-																	return !($("#myForm")
-																			.valid());
+																	if ($(
+																			"#myForm")
+																			.valid()) {
+																		$(
+																				"#submitButton")
+																				.attr(
+																						"disabled",
+																						true)
+																				.attr(
+																						"value",
+																						"正在提交...");
+																	}
+																	return $(
+																			"#myForm")
+																			.valid();
 																}
 
 															}).submit();
@@ -97,7 +122,7 @@
 																						data) {
 
 																					str = "";
-																					for ( var i = 0; i < data.users.length; i++) {
+																					for (var i = 0; i < data.users.length; i++) {
 																						str += data.users[i]
 																								+ ",";
 																					}
@@ -176,7 +201,7 @@
 						<div class="controls">
 							<input id="businessKey" name="businessKey" type="hidden" /> <input
 								name="applicationName" id="applicationName"
-								class="span7 {validate:{required: true,maxlength:200,minlength: 2, messages:{required:'请输入...', maxlength:'请最多输入200个字符',minlength:'请至少输入两个字符'}}}" />
+								class="span7 required:true maxlength:200 minlength:2 messages:{required:'请输入...', maxlength:'请最多输入200个字符',minlength:'请至少输入两个字符'}" />
 						</div>
 					</div>
 				</div>
