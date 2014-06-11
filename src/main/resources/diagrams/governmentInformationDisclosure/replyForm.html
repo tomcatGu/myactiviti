@@ -39,7 +39,7 @@ form {
 	function deleteAttachment(deleteUrl, attachmentId) {
 		$.ajax({
 			type : "POST",
-			url : deleteUrl+attachmentId,
+			url : deleteUrl + attachmentId,
 			data : {
 				_method : 'DELETE',
 			//items : selctedItems
@@ -325,6 +325,15 @@ form {
 						class="checkbox inline"><input type="checkbox" value="2"
 						name="obtainMode"
 						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
+				</div>
+			</div>
+		</div>
+		<div class="box">
+			<legend>交办</legend>
+			<div class="span8">
+				<label class="control-label text-info">交办意见：</label>
+				<div class="controls">
+					<label th:text="${result.suggest}" class="span7" />
 				</div>
 			</div>
 		</div>

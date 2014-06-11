@@ -140,7 +140,7 @@ public class UserController {
 				&& accountService.isCorrectPassword(user, oldPassword)) {
 			user.setPassword(newPassword);
 			try {
-				accountService.saveUser(user);
+				accountService.changePassword(user);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

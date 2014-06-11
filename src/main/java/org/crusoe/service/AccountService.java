@@ -86,6 +86,18 @@ public class AccountService {
 	}
 
 	@Transactional(readOnly = false)
+	public void changePassword(User user) throws Exception {
+
+		// 设定安全的密码，生成随机的salt并经过1024次 sha-1 hash
+		if (StringUtils.isNotBlank(user.getPassword())) {
+			entryptPassword(user);
+		}
+
+		userDao.save(user);
+
+	}
+
+	@Transactional(readOnly = false)
 	public void deleteUser(User user) throws Exception {
 
 		if (isSupervisor(user)) {

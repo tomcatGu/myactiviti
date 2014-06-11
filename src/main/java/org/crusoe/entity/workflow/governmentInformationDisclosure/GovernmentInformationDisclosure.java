@@ -52,6 +52,7 @@ public class GovernmentInformationDisclosure implements Serializable,
 	private String obtainMode;
 	private List<Reply> replies = Lists.newArrayList();
 	private String review;
+	private String suggest;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -271,6 +272,14 @@ public class GovernmentInformationDisclosure implements Serializable,
 
 	public void setReview(String review) {
 		this.review = review;
+	}
+
+	public String getSuggest() {
+		return suggest;
+	}
+
+	public void setSuggest(String suggest) {
+		this.suggest = suggest;
 	}
 
 }

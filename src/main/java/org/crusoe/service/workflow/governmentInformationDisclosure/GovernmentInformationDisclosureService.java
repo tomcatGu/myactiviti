@@ -62,7 +62,7 @@ public class GovernmentInformationDisclosureService {
 			String groupDelegateFax, String groupDelegateAddress,
 			String groupDelegateEmail, String applicationTime,
 			String submitDepartment, String description, String purpose,
-			String mode, String obtainMode) {
+			String suggest, String mode, String obtainMode) {
 
 		GovernmentInformationDisclosure gid = new GovernmentInformationDisclosure();
 
@@ -96,6 +96,7 @@ public class GovernmentInformationDisclosureService {
 		gid.setSubmitDepartment(submitDepartment);
 		gid.setDescription(description);
 		gid.setPurpose(purpose);
+		gid.setSuggest(suggest);
 		gid.setMode(mode);
 		gid.setObtainMode(obtainMode);
 		gidDao.save(gid);

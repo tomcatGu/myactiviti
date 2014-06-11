@@ -5,17 +5,15 @@
 <title>申请人信息表单</title>
 <style type="text/css">
 #myForm label.error {
-	margin-left: 10px;
 	width: auto;
-	display: inline;
-	color:red;
+	color: red;
 }
 </style>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	function encodeUTF8(str) {
 		var temp = "", rs = "";
-		for (var i = 0, len = str.length; i < len; i++) {
+		for ( var i = 0, len = str.length; i < len; i++) {
 			temp = str.charCodeAt(i).toString(16);
 			rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
 		}
@@ -30,18 +28,32 @@
 			.ready(
 					function() {
 						$("#myForm").validate({
-							//meta : "validate"
+							ignore : [],
 							rules : {
 								applicationName : {
 									required : true,
-									minLength : 5
+									minlength : 5
+								},
+								applicationTime : {
+									required : true,
+									date : true
+								},
+								assigneeList : {
+									required : true
 								}
 
 							},
 							messages : {
 								applicationName : {
-									required : "请输入事项名称",
-									minlength : "申请名称不能小于5个字符"
+									required : "请输入标题",
+									minlength : "标题不能小于5个字符"
+								},
+								applicationTime : {
+									required : "请选择申请时间",
+									date : "请输入正确的时间"
+								},
+								assigneeList : {
+									required : "必须选择处理单位人员"
 								}
 
 							}
@@ -87,6 +99,14 @@
 																					{
 																						msg : "OK"
 																					});
+																	$(
+																			"#submitButton")
+																			.attr(
+																					"disabled",
+																					true)
+																			.attr(
+																					"value",
+																					"成功提交");
 
 																},
 																beforeSubmit : function() {
@@ -130,7 +150,7 @@
 																						data) {
 
 																					str = "";
-																					for (var i = 0; i < data.users.length; i++) {
+																					for ( var i = 0; i < data.users.length; i++) {
 																						str += data.users[i]
 																								+ ",";
 																					}
@@ -407,26 +427,34 @@
 					</div>
 				</div>
 				<div class="box">
-					<legend>处理人员</legend>
+					<legend>交办</legend>
 					<div class="row">
 						<div class="span3">
 							<label class="control-label text-info">已选择处理单位人员：</label>
 						</div>
 						<div class="span3">
-							<input type="button" id="clearButton" value="清除"
-								class="btn btn-danger btn-mini" />
+							<input type="button" id="selectBtn" value="选择用户"
+								class="btn btn-info btn-mini" /> <input type="button"
+								id="clearButton" value="清除" class="btn btn-danger btn-mini" />
 						</div>
 					</div>
-					<label id="selectedUser"></label>
+					<label id="selectedUser"></label> <input type="hidden"
+						name="assigneeList" id="assigneeList" value="" />
+					<div class="row">
+						<div class="span8">
+							<label class="control-label text-info">交办意见：</label>
+							<div class="controls">
+								<input name="suggest" class="span7" />
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</fieldset>
 		<div class="control-group">
 			<div class="controls">
-				<input type="button" id="selectBtn" value="选择用户"
-					class="btn btn-info" /> <input type="hidden" name="assigneeList"
-					id="assigneeList" value="" /> <input type="button"
-					id="submitButton" value="提交" class="btn btn-primary" />
+				<input type="button" id="submitButton" value="提交"
+					class="btn btn-primary" />
 			</div>
 		</div>
 	</form>

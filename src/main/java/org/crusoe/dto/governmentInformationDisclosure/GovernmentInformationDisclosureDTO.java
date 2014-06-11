@@ -28,5 +28,6 @@ public class GovernmentInformationDisclosureDTO {
 	private String purpose;
 	private String mode;
 	private String obtainMode;
+	private String suggest;
 
 }
