@@ -4,46 +4,46 @@
 <head thy:merge="/common::headerFragment">
 <title>finishedProcess</title>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	$(document)
-			.ready(
-					function() {
+    /*<![CDATA[*/
+    $(document)
+	    .ready(
+		    function() {
 
-						$('#checkAll').bind('click', function() {
-							checkAll("#checkAll");
-						});
+			$('#checkAll').bind('click', function() {
+			    checkAll("#checkAll");
+			});
 
-						$("#processList")
-								.simpleTable(
-										/*[[@{'/runtime/process/listActiveProcessInstances/'+${processDefinitionId}+'?sort=id&order=desc'}]]*/"",
-										render, $("#paginator"), null);
-					});
-	function successCallback() {
+			$("#processList")
+				.simpleTable(
+					/*[[@{'/runtime/process/listActiveProcessInstances/'+${processDefinitionId}+'?sort=id&order=desc'}]]*/"",
+					render, $("#paginator"), null);
+		    });
+    function successCallback() {
 
-		//$("#createUser").modal("hide");
-		$("#processList tr").nextAll().remove();
+	//$("#createUser").modal("hide");
+	$("#processList tr").nextAll().remove();
 
-		$("#processList").simpleTable("user/listUsers?sort=id&order=desc",
-				render, $("#paginator"), null);
+	$("#processList").simpleTable("user/listUsers?sort=id&order=desc",
+		render, $("#paginator"), null);
 
-	}
-	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
-				+ data.id
-				+ "</td><td>"
-				+ data.processDefinitionId
-				+ "</td><td>"
-				+ data.startUserId
-				+ "</td><td>"
-				+ new Date(data.startTime).ToString("yyyy-MM-dd HH:mm:ss")
-				+ "</td><td>"
-				+ new Date(data.endTime).ToString("yyyy-MM-dd HH:mm:ss")
-				+ "</td><td><a href=\"./"
+    }
+    function render(data) {
+	var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+		+ data.id
+		+ "</td><td>"
+		+ data.processDefinitionId
+		+ "</td><td>"
+		+ data.startUserId
+		+ "</td><td>"
+		+ new Date(data.startTime).ToString("yyyy-MM-dd HH:mm:ss")
+		+ "</td><td>"
+		+ new Date(data.endTime).ToString("yyyy-MM-dd HH:mm:ss")
+		+ "</td><td><a href=\"./"
 				+ data.id
 				+ "/start/\"><i class='icon-edit'></i></a></td></tr>";
-		return newRow;
-	};
-	/*]]>*/
+	return newRow;
+    };
+    /*]]>*/
 </script>
 </head>
 <body>

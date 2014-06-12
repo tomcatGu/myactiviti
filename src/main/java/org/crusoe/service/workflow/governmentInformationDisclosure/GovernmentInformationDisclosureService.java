@@ -193,6 +193,7 @@ public class GovernmentInformationDisclosureService {
 			replyContent += aReply.getReply() + " ";
 
 		}
+		gid.setReview(review);
 
 		List<FieldDTO> fields = Lists.newArrayList();
 		FieldDTO field = new FieldDTO("id", gid.getId().toString(),
@@ -219,9 +220,6 @@ public class GovernmentInformationDisclosureService {
 		fields.add(field);
 		ikUtil.updateIndex(fields);
 
-		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
-		// ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
-		// gid.getApplicationName(), review);
 		return gidDao.save(gid);
 
 	}

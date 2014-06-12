@@ -5,112 +5,112 @@
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <title>我发起的流程</title>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	$(document)
-			.ready(
+    /*<![CDATA[*/
+    $(document)
+	    .ready(
+		    function() {
+
+			$("#fulltextSearch")
+				.click(
 					function() {
 
-						$("#fulltextSearch")
-								.click(
-										function() {
+					    $("#searchForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/search/searchProcessInstance'}]]*/'',
+								dataType : "text",
+								data : "keyword="
+									+ $(
+										"#keyword")
+										.val(),
+								success : function(
+									data) {
+								    $(
+									    "#fulltextsearch")
+									    .trigger(
+										    "evtWFSuccess",
+										    {
+											msg : 'OK'
+										    });
+								    var obj = JSON
+									    .parse(data);
+								    $(
+									    "#processList")
+									    .simpleTableFromData(
+										    obj,
+										    render,
+										    $("#paginator"),
+										    null);
+								}
+							    }).submit();
 
-											$("#searchForm")
-													.ajaxForm(
-															{
-																url : /*[[@{'/runtime/search/searchProcessInstance'}]]*/'',
-																dataType : "text",
-																data : "keyword="
-																		+ $(
-																				"#keyword")
-																				.val(),
-																success : function(
-																		data) {
-																	$(
-																			"#fulltextsearch")
-																			.trigger(
-																					"evtWFSuccess",
-																					{
-																						msg : 'OK'
-																					});
-																	var obj = JSON
-																			.parse(data);
-																	$(
-																			"#processList")
-																			.simpleTableFromData(
-																					obj,
-																					render,
-																					$("#paginator"),
-																					null);
-																}
-															}).submit();
-
-										});
-
-						$('#checkAll').bind('click', function() {
-							checkAll("#checkAll");
-						});
-
-						$("#processList")
-								.simpleTable(
-										/*[[@{'/runtime/process/listUserProcessInstances/'+${username}+'?sort=id&order=desc'}]]*/"",
-										render, $("#paginator"), null);
-						$("body").on('hidden', '.model', function(e) {
-							alert("close");
-							$(this).removeData('modal');
-						});
 					});
-	function successCallback() {
 
-		//$("#createUser").modal("hide");
-		$("#processList tr").nextAll().remove();
+			$('#checkAll').bind('click', function() {
+			    checkAll("#checkAll");
+			});
 
-		$("#processList").simpleTable("user/listUsers?sort=id&order=desc",
-				render, $("#paginator"), null);
+			$("#processList")
+				.simpleTable(
+					/*[[@{'/runtime/process/listUserProcessInstances/'+${username}+'?sort=id&order=desc'}]]*/"",
+					render, $("#paginator"), null);
+			$("body").on('hidden', '.model', function(e) {
+			    alert("close");
+			    $(this).removeData('modal');
+			});
+		    });
+    function successCallback() {
 
-	};
-	function getProcessStatus(status) {
-		if (status == "activited")
-			return "运行中";
-		if (status == "finished")
-			return "已结束"
-		return status;
+	//$("#createUser").modal("hide");
+	$("#processList tr").nextAll().remove();
 
-	}
-	function loadProcessDetail(processInstanceId, processDefinitionId) {
-		$("#detailDiv").empty();
-		$("#detailDiv").load(/*[[@{'/runtime/process/processInstanceDetail/'}]]*/
-		+processInstanceId + "?timestamp=" + (new Date()).valueOf(),
-				function(data) {
-					//alert(data);
-				}
+	$("#processList").simpleTable("user/listUsers?sort=id&order=desc",
+		render, $("#paginator"), null);
 
-		);
+    };
+    function getProcessStatus(status) {
+	if (status == "activited")
+	    return "运行中";
+	if (status == "finished")
+	    return "已结束"
+	return status;
 
-		$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
-		+processDefinitionId + "?timestamp=" + (new Date()).valueOf());
-		$("#viewDiagram").modal("show");
-	};
-	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
-				+ data.id
-				+ "</td><td>"
-				+ data.businessKey
-				+ "</td><td>"
-				+ data.startUserId
-				+ "</td><td>"
-				+ new Date(data.startTime).ToString("yyyy-MM-dd HH:mm:ss")
-				+ "</td><td>"
-				+ new Date(data.endTime).ToString("yyyy-MM-dd HH:mm:ss")
-				+ "</td><td>"
-				+ getProcessStatus(data.status)
-				+ "</td><td><a href=\"javascript:loadProcessDetail('"
-				+ data.id
-				+ "','"
-				+ data.processDefinitionId
-				+ "');\"><i class='icon-edit'></i></a></td></tr>";
-		return newRow;
-	};
-	/*]]>*/
+    }
+    function loadProcessDetail(processInstanceId, processDefinitionId) {
+	$("#detailDiv").empty();
+	$("#detailDiv").load(/*[[@{'/runtime/process/processInstanceDetail/'}]]*/
+	+processInstanceId + "?timestamp=" + (new Date()).valueOf(),
+		function(data) {
+		    //alert(data);
+		}
+
+	);
+
+	$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
+	+processDefinitionId + "?timestamp=" + (new Date()).valueOf());
+	$("#viewDiagram").modal("show");
+    };
+    function render(data) {
+	var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+		+ data.id
+		+ "</td><td>"
+		+ data.businessKey
+		+ "</td><td>"
+		+ data.startUserId
+		+ "</td><td>"
+		+ new Date(data.startTime).ToString("yyyy-MM-dd HH:mm:ss")
+		+ "</td><td>"
+		+ new Date(data.endTime).ToString("yyyy-MM-dd HH:mm:ss")
+		+ "</td><td>"
+		+ getProcessStatus(data.status)
+		+ "</td><td><a href=\"javascript:loadProcessDetail('"
+		+ data.id
+		+ "','"
+		+ data.processDefinitionId
+		+ "');\"><i class='icon-edit'></i></a></td></tr>";
+	return newRow;
+    };
+    /*]]>*/
 </script>
 </head>
 <body>

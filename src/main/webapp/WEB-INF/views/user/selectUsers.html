@@ -4,63 +4,63 @@
 <title>用户列表</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
+    /*<![CDATA[*/
 
-	$(document)
-			.ready(
+    $(document)
+	    .ready(
+		    function() {
+
+			$('#checkAll').bind('click', function() {
+			    checkAll("#checkAll");
+			});
+			$('#select')
+				.bind(
+					'click',
 					function() {
-
-						$('#checkAll').bind('click', function() {
-							checkAll("#checkAll");
-						});
-						$('#select')
-								.bind(
-										'click',
-										function() {
-											var selectedItems = new Array();
-											$(
-													"input[name='selectFlag']:checkbox")
-													.each(
-															function() { // 遍历所有的name为selectFlag的
-																// checkbox
-																if ($(this)
-																		.prop(
-																				"checked") == true) {
-																	selectedItems
-																			.push($(
-																					this)
-																					.prop(
-																							"value"));
-																}
-															});
-											//alert(selectedItems);
-											$("#userList").trigger(
-													"evtSelectUser", {
-														users : selectedItems
-													});
-
-										});
-						$('#cancle').bind('click', function() {//if user click cancle button then trigger the evtCancled event.
-							$("#userList").trigger("evtCancled", {
-								msg : 'cancled'
-							});
-
-						});
-
-						$("#userList")
-								.simpleTable(
-										/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/"../../user/listUsers?sort=id&order=desc",
-										render, $("#paginator"), null);
+					    var selectedItems = new Array();
+					    $(
+						    "input[name='selectFlag']:checkbox")
+						    .each(
+							    function() { // 遍历所有的name为selectFlag的
+								// checkbox
+								if ($(this)
+									.prop(
+										"checked") == true) {
+								    selectedItems
+									    .push($(
+										    this)
+										    .prop(
+											    "value"));
+								}
+							    });
+					    //alert(selectedItems);
+					    $("#userList").trigger(
+						    "evtSelectUser", {
+							users : selectedItems
+						    });
 
 					});
+			$('#cancle').bind('click', function() {//if user click cancle button then trigger the evtCancled event.
+			    $("#userList").trigger("evtCancled", {
+				msg : 'cancled'
+			    });
 
-	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
-				+ data.id + "</td><td>" + data.name + "</td><td>";
-		return newRow;
-	};
+			});
 
-	/*]]>*/
+			$("#userList")
+				.simpleTable(
+					/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/"../../user/listUsers?sort=id&order=desc",
+					render, $("#paginator"), null);
+
+		    });
+
+    function render(data) {
+	var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+		+ data.id + "</td><td>" + data.name + "</td><td>";
+	return newRow;
+    };
+
+    /*]]>*/
 </script>
 </head>
 <body>

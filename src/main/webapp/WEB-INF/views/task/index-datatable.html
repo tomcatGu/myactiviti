@@ -36,211 +36,211 @@
 <script src="/scripts/json2.js" type="text/javascript"
 	th:src="@{/scripts/json2.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
+    /*<![CDATA[*/
 
-	function add() {
-		//alert("create user...");
-		$("#create").load('demolition/create', function(data) {
-			$("#create").bind("evtSuccess", function(evt, data) {
-				//alert($(this).attr("id"));
-				//alert(evt);
-				//alert(data.msg);
-				$("#create").dialog("close");
-				var iCurrentPage = oTable.fnSettings()._iDisplayStart;
-				var oSettings = oTable.fnSettings();
-				oSettings._iDisplayStart = iCurrentPage;
-				oTable.fnDraw(oSettings);
-			});
-			//alert(data);
-			//$('#createUser .modal-body').html(data);
-			//$("#createUser").modal();
-			/**/
-			$("#create").dialog({
-				width : 600,
-				show : 'blind',
-				modal : true
-			});
-
-		});
-	}
-	/* Table initialisation */
-	var oTable;
-	var aSelected = [];
-	$(document).ready(
-
-	function() {
+    function add() {
+	//alert("create user...");
+	$("#create").load('demolition/create', function(data) {
+	    $("#create").bind("evtSuccess", function(evt, data) {
+		//alert($(this).attr("id"));
+		//alert(evt);
+		//alert(data.msg);
+		$("#create").dialog("close");
+		var iCurrentPage = oTable.fnSettings()._iDisplayStart;
+		var oSettings = oTable.fnSettings();
+		oSettings._iDisplayStart = iCurrentPage;
+		oTable.fnDraw(oSettings);
+	    });
+	    //alert(data);
+	    //$('#createUser .modal-body').html(data);
+	    //$("#createUser").modal();
+	    /**/
+	    $("#create").dialog({
+		width : 600,
+		show : 'blind',
+		modal : true
+	    });
 
 	});
+    }
+    /* Table initialisation */
+    var oTable;
+    var aSelected = [];
+    $(document).ready(
 
-	$(document)
-			.ready(
-					function() {
-						if ($('#taskList').fnDraw != undefined) {
-							return;
-						}
-						oTable = $('#taskList')
-								.dataTable(
-										{
-											"bProcessing" : true,
-											"bServerSide" : true,
-											"bStateSave" : true,
-											"sAjaxSource" : "getTasks",
-											// /*
-											"aoColumns" : [
-													{
-														"bSortable" : false,
-														"sTitle" : "<input type='checkbox' id='selectAll' ></input>",
-														"mData" : "id"
-													},
-													{
-														"sTitle" : "编号",
-														"mData" : "id"
-													},
-													{
-														"sTitle" : "任务名称",
-														"mData" : "department"
-													},
-													{
-														"sTitle" : "项目名称",
-														"mData" : "subjectName"
-													},
-													{
-														"sTitle" : "资金概算总额",
-														"mData" : "capitalBudget"
-													} ],
+    function() {
 
-											// */
-											/*
-											 * "fnRowCallback": function( nRow,
-											 * aData, iDisplayIndex ) {
-											 * 
-											 * //if ( aData[4] == "A" ) //{
-											 * $('td:eq(4)', nRow).html( '<b>A</b>' );
-											 * //} },
-											 */
-											// /*
-											"aoColumnDefs" : [ {
-												"aTargets" : [ 0 ],
-												"mRender" : function(data,
-														type, row) {
-													// alert(data);
-													return '<input type="checkbox" name="check" value="'
+    });
+
+    $(document)
+	    .ready(
+		    function() {
+			if ($('#taskList').fnDraw != undefined) {
+			    return;
+			}
+			oTable = $('#taskList')
+				.dataTable(
+					{
+					    "bProcessing" : true,
+					    "bServerSide" : true,
+					    "bStateSave" : true,
+					    "sAjaxSource" : "getTasks",
+					    // /*
+					    "aoColumns" : [
+						    {
+							"bSortable" : false,
+							"sTitle" : "<input type='checkbox' id='selectAll' ></input>",
+							"mData" : "id"
+						    },
+						    {
+							"sTitle" : "编号",
+							"mData" : "id"
+						    },
+						    {
+							"sTitle" : "任务名称",
+							"mData" : "department"
+						    },
+						    {
+							"sTitle" : "项目名称",
+							"mData" : "subjectName"
+						    },
+						    {
+							"sTitle" : "资金概算总额",
+							"mData" : "capitalBudget"
+						    } ],
+
+					    // */
+					    /*
+					     * "fnRowCallback": function( nRow,
+					     * aData, iDisplayIndex ) {
+					     * 
+					     * //if ( aData[4] == "A" ) //{
+					     * $('td:eq(4)', nRow).html( '<b>A</b>' );
+					     * //} },
+					     */
+					    // /*
+					    "aoColumnDefs" : [ {
+						"aTargets" : [ 0 ],
+						"mRender" : function(data,
+							type, row) {
+						    // alert(data);
+						    return '<input type="checkbox" name="check" value="'
 															+ data + '"/>';
 
-												}
+						}
 
-											} ],
-											// */
-											"fnServerData" : retrieveData, // 获取数据的处理函数
-											"fnServerParams" : customParams,
-											"sDom" : "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-											"sPaginationType" : "bootstrap",
-											"oLanguage" : {
-												"sLengthMenu" : "_MENU_ records per page"
-											},
-											"fnRowCallback" : function(nRow,
-													aData, iDisplayIndex) {
-												if (jQuery.inArray(
-														aData.DT_RowId,
-														aSelected) !== -1) {
-													$(nRow).addClass(
-															'row_selected');
-												}
-											}
-										});
-
-						$("#selectAll").click(
-								function() {
-									// alert($("input[type='checkbox']"));
-									$("input[type='checkbox']").not(this).each(
-											function() {
-												this.checked = !this.checked;
-											});
-
-								});
-						/* add a click handler for the add row */
-						$('#addBtn').bind('click', add);
-						/* Add a click handler for the delete row */
-						$('#deleteBtn')
-								.click(
-										function() {
-											$("input[type='checkbox']")
-													.not($("#selectAll"))
-													.each(
-															function() {
-
-																if (this.checked == true) {
-																	$
-																			.ajax({
-																				type : "DELETE",
-																				url : "demolition/"
-																						+ this.value,
-																				success : function(
-																						msg) {
-																					var iCurrentPage = oTable
-																							.fnSettings()._iDisplayStart;
-																					var oSettings = oTable
-																							.fnSettings();
-																					oSettings._iDisplayStart = iCurrentPage;
-																					oTable
-																							.fnDraw(oSettings);
-																					alert("Data Deleted: "
-																							+ msg.msg);
-																				}
-																			});
-																}
-															});
-										});
-
+					    } ],
+					    // */
+					    "fnServerData" : retrieveData, // 获取数据的处理函数
+					    "fnServerParams" : customParams,
+					    "sDom" : "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+					    "sPaginationType" : "bootstrap",
+					    "oLanguage" : {
+						"sLengthMenu" : "_MENU_ records per page"
+					    },
+					    "fnRowCallback" : function(nRow,
+						    aData, iDisplayIndex) {
+						if (jQuery.inArray(
+							aData.DT_RowId,
+							aSelected) !== -1) {
+						    $(nRow).addClass(
+							    'row_selected');
+						}
+					    }
 					});
 
-	/*]]>*/
+			$("#selectAll").click(
+				function() {
+				    // alert($("input[type='checkbox']"));
+				    $("input[type='checkbox']").not(this).each(
+					    function() {
+						this.checked = !this.checked;
+					    });
 
-	function customParams(aoData) {
-		/*<![CDATA[*/
-		var username = /*[[${T(org.apache.shiro.SecurityUtils).subject.principal}]]*/'admin';
-		aoData.push({
-			"name" : "thePersonOfFillIn.name#EQ",
-			"value" : username.name
-		});
-		/*]]>*/
-	};
-
-	function retrieveData(sSource, aoData, fnCallback) {
-		// 将客户名称加入参数数组
-		// aoData.push( { "name": "customerName", "value": $("#customerName").val()
-		// } );
-
-		$.ajax({
-			"type" : "POST",
-			"contentType" : "application/json",
-			"url" : sSource,
-			"dataType" : "json",
-			"data" : JSON.stringify(aoData), // 以json格式传递
-			"success" : function(resp) {
-				fnCallback(resp); // 服务器端返回的对象的returnObject部分是要求的格式
-
-				/*
-				 * Add a click handler to the rows - this could be used as a
-				 * callback
-				 */
-				$('#userList tbody tr').on('click', function() {
-					// alert(this.classname);
-					$(this).toggleClass('row_selected');
-					var id = this.id;
-					var index = jQuery.inArray(id, aSelected);
-
-					if (index === -1) {
-						aSelected.push(id);
-					} else {
-						aSelected.splice(index, 1);
-					}
-
-					$(this).toggleClass('row_selected');
 				});
-			}
+			/* add a click handler for the add row */
+			$('#addBtn').bind('click', add);
+			/* Add a click handler for the delete row */
+			$('#deleteBtn')
+				.click(
+					function() {
+					    $("input[type='checkbox']")
+						    .not($("#selectAll"))
+						    .each(
+							    function() {
+
+								if (this.checked == true) {
+								    $
+									    .ajax({
+										type : "DELETE",
+										url : "demolition/"
+											+ this.value,
+										success : function(
+											msg) {
+										    var iCurrentPage = oTable
+											    .fnSettings()._iDisplayStart;
+										    var oSettings = oTable
+											    .fnSettings();
+										    oSettings._iDisplayStart = iCurrentPage;
+										    oTable
+											    .fnDraw(oSettings);
+										    alert("Data Deleted: "
+											    + msg.msg);
+										}
+									    });
+								}
+							    });
+					});
+
+		    });
+
+    /*]]>*/
+
+    function customParams(aoData) {
+	/*<![CDATA[*/
+	var username = /*[[${T(org.apache.shiro.SecurityUtils).subject.principal}]]*/'admin';
+	aoData.push({
+	    "name" : "thePersonOfFillIn.name#EQ",
+	    "value" : username.name
+	});
+	/*]]>*/
+    };
+
+    function retrieveData(sSource, aoData, fnCallback) {
+	// 将客户名称加入参数数组
+	// aoData.push( { "name": "customerName", "value": $("#customerName").val()
+	// } );
+
+	$.ajax({
+	    "type" : "POST",
+	    "contentType" : "application/json",
+	    "url" : sSource,
+	    "dataType" : "json",
+	    "data" : JSON.stringify(aoData), // 以json格式传递
+	    "success" : function(resp) {
+		fnCallback(resp); // 服务器端返回的对象的returnObject部分是要求的格式
+
+		/*
+		 * Add a click handler to the rows - this could be used as a
+		 * callback
+		 */
+		$('#userList tbody tr').on('click', function() {
+		    // alert(this.classname);
+		    $(this).toggleClass('row_selected');
+		    var id = this.id;
+		    var index = jQuery.inArray(id, aSelected);
+
+		    if (index === -1) {
+			aSelected.push(id);
+		    } else {
+			aSelected.splice(index, 1);
+		    }
+
+		    $(this).toggleClass('row_selected');
 		});
-	};
+	    }
+	});
+    };
 </script>
 </head>
 <body>

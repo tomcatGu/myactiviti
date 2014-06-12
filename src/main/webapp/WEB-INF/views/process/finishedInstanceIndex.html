@@ -5,116 +5,116 @@
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <title>已结束的流程</title>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	$(document)
-			.ready(
+    /*<![CDATA[*/
+    $(document)
+	    .ready(
+		    function() {
+
+			$("#fulltextSearch")
+				.click(
 					function() {
 
-						$("#fulltextSearch")
-								.click(
-										function() {
+					    $("#searchForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/search/searchHistoryTasks'}]]*/'',
+								dataType : "text",
+								data : "keyword="
+									+ $(
+										"#keyword")
+										.val(),
+								success : function(
+									data) {
+								    $(
+									    "#fulltextsearch")
+									    .trigger(
+										    "evtWFSuccess",
+										    {
+											msg : 'OK'
+										    });
+								    var obj = JSON
+									    .parse(data);
+								    $(
+									    "#taskList")
+									    .simpleTableFromData(
+										    obj,
+										    render,
+										    $("#paginator"),
+										    null);
+								}
+							    }).submit();
 
-											$("#searchForm")
-													.ajaxForm(
-															{
-																url : /*[[@{'/runtime/search/searchHistoryTasks'}]]*/'',
-																dataType : "text",
-																data : "keyword="
-																		+ $(
-																				"#keyword")
-																				.val(),
-																success : function(
-																		data) {
-																	$(
-																			"#fulltextsearch")
-																			.trigger(
-																					"evtWFSuccess",
-																					{
-																						msg : 'OK'
-																					});
-																	var obj = JSON
-																			.parse(data);
-																	$(
-																			"#taskList")
-																			.simpleTableFromData(
-																					obj,
-																					render,
-																					$("#paginator"),
-																					null);
-																}
-															}).submit();
-
-										});
-
-						$('#checkAll').bind('click', function() {
-							checkAll("#checkAll");
-						});
-
-						$("#processList")
-								.simpleTable(
-										/*[[@{'/runtime/process/listFinishedProcessInstances/'+${processDefinitionId}+'?sort=id&order=desc'}]]*/"",
-										render, $("#paginator"), null);
 					});
-	function successCallback() {
 
-		//$("#createUser").modal("hide");
-		$("#processList tr").nextAll().remove();
+			$('#checkAll').bind('click', function() {
+			    checkAll("#checkAll");
+			});
 
-		$("#processList").simpleTable("user/listUsers?sort=id&order=desc",
-				render, $("#paginator"), null);
+			$("#processList")
+				.simpleTable(
+					/*[[@{'/runtime/process/listFinishedProcessInstances/'+${processDefinitionId}+'?sort=id&order=desc'}]]*/"",
+					render, $("#paginator"), null);
+		    });
+    function successCallback() {
 
-	};
-	function loadProcessDiagram(processInstanceId, processDefinitionId) {
-		$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
-		+processDefinitionId);
-		$
-				.ajax({
-					type : 'GET',
-					url : /*[[@{'/runtime/process/activityCoordinate/'}]]*/''
-							+ processDefinitionId,
-					async : false,
-					success : function(data) {
-						var coord = data.coordinates;
-						var i = 0;
-						for (i = 0; i < coord.length; i++) {
-							var obj = coord[i];
-							//alert(obj.id);
-							//alert(obj.x);
-							//alert(obj.y);
+	//$("#createUser").modal("hide");
+	$("#processList tr").nextAll().remove();
 
-							var childdiv = $("<div style='position:absolute; border:2px solid red;'></div>"); //创建一个子div
-							childdiv.attr('left', obj.x);
-							childdiv.attr('top', obj.y);
-							childdiv.width(obj.width);
-							childdiv.height(obj.height);
-							childdiv.appendTo($("#parentDiv"));
+	$("#processList").simpleTable("user/listUsers?sort=id&order=desc",
+		render, $("#paginator"), null);
 
-						}
+    };
+    function loadProcessDiagram(processInstanceId, processDefinitionId) {
+	$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
+	+processDefinitionId);
+	$
+		.ajax({
+		    type : 'GET',
+		    url : /*[[@{'/runtime/process/activityCoordinate/'}]]*/''
+			    + processDefinitionId,
+		    async : false,
+		    success : function(data) {
+			var coord = data.coordinates;
+			var i = 0;
+			for (i = 0; i < coord.length; i++) {
+			    var obj = coord[i];
+			    //alert(obj.id);
+			    //alert(obj.x);
+			    //alert(obj.y);
 
-					}
+			    var childdiv = $("<div style='position:absolute; border:2px solid red;'></div>"); //创建一个子div
+			    childdiv.attr('left', obj.x);
+			    childdiv.attr('top', obj.y);
+			    childdiv.width(obj.width);
+			    childdiv.height(obj.height);
+			    childdiv.appendTo($("#parentDiv"));
 
-				});
-		$("#viewDiagram").modal();
-	};
-	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
-				+ data.id
-				+ "</td><td>"
-				+ data.businessKey
-				+ "</td><td>"
-				+ data.startUserId
-				+ "</td><td>"
-				+ new Date(data.startTime).ToString("yyyy-MM-dd HH:mm:ss")
-				+ "</td><td>"
-				+ new Date(data.endTime).ToString("yyyy-MM-dd HH:mm:ss")
-				+ "</td><td><a href=\"javascript:loadProcessDiagram('"
-				+ data.id
-				+ "','"
-				+ data.processDefinitionId
-				+ "');\"><i class='icon-edit'></i></a></td></tr>";
-		return newRow;
-	};
-	/*]]>*/
+			}
+
+		    }
+
+		});
+	$("#viewDiagram").modal();
+    };
+    function render(data) {
+	var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+		+ data.id
+		+ "</td><td>"
+		+ data.businessKey
+		+ "</td><td>"
+		+ data.startUserId
+		+ "</td><td>"
+		+ new Date(data.startTime).ToString("yyyy-MM-dd HH:mm:ss")
+		+ "</td><td>"
+		+ new Date(data.endTime).ToString("yyyy-MM-dd HH:mm:ss")
+		+ "</td><td><a href=\"javascript:loadProcessDiagram('"
+		+ data.id
+		+ "','"
+		+ data.processDefinitionId
+		+ "');\"><i class='icon-edit'></i></a></td></tr>";
+	return newRow;
+    };
+    /*]]>*/
 </script>
 </head>
 <body>

@@ -4,71 +4,64 @@
 <title>Government Infomation Disclosure</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function load(title, url) {
-		$("#content")
-				.load(
-						url + '?' + (new Date()).valueOf(),
-						function(event) {
-							$('#breadcrumb').empty();
-							$('#breadcrumb')
-									.append(
-											'<li><a href="#">首页</a> <span class="divider">/</span></li>');
-							$('#breadcrumb').append(
-									'<li class="active">' + title + '</li>');
-
-						});
-		$("#content").bind("evtWFSuccess", function(evt, data) {
-			load('所有流程', 'runtime/process/userProcessIndex/admin');
-		});
-
-	};
-	function changePassword() {
-		create('#changePasswordDialog', /*[[@{'/user/changePassword'}]]*/'',
-				successCallback);
-	};
-	function successCallback() {
-
-		$("#changePasswordDialog").modal("hide");
-
-	};
-	$(document).ready(function() {
-
-		//ajaxify menus
-		$('ul.nav a').click(function(e) {
-			/*
-			if($.browser.msie) e.which=1;
-			if(e.which!=1 || !$('#is-ajax').prop('checked') || $(this).parent().hasClass('active')) return;
-			e.preventDefault();
-			if($('.btn-navbar').is(':visible'))
-			{
-				$('.btn-navbar').click();
-			}
-			$('#loading').remove();
-			$('#content').fadeOut().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
-			 */
-			var $clink = $(this);
-			//History.pushState(null, null, $clink.attr('href'));
-			$('ul li.active').removeClass('active');
-			$clink.parent('li').addClass('active');
-
-		});
-		$('.dropdown-toggle').dropdown();
-		//animating menus on hover
-		$('ul.nav li:not(.nav-header)').hover(function() {
-			$(this).animate({
-				'margin-left' : '+=5'
-			}, 300);
-		}, function() {
-			$(this).animate({
-				'margin-left' : '-=5'
-			}, 300);
-		});
-
-		load('待办', 'runtime/tasks/index');
+    /*<![CDATA[*/
+    function load(title, url) {
+	$("#content").load(url + '?' + (new Date()).valueOf(), function(event) {
+	    $('#breadcrumb').empty();
+	    $('#breadcrumb').append('<li><a href="#">首页</a> <span class="divider">/</span></li>');
+	    $('#breadcrumb').append('<li class="active">' + title + '</li>');
 
 	});
-	/*]]>*/
+	$("#content").bind("evtWFSuccess", function(evt, data) {
+	    load('所有流程', 'runtime/process/userProcessIndex/admin');
+	});
+
+    };
+    function changePassword() {
+	create('#changePasswordDialog', /*[[@{'/user/changePassword'}]]*/'', successCallback);
+    };
+    function successCallback() {
+
+	$("#changePasswordDialog").modal("hide");
+
+    };
+    $(document).ready(function() {
+
+	//ajaxify menus
+	$('ul.nav a').click(function(e) {
+	    /*
+	    if($.browser.msie) e.which=1;
+	    if(e.which!=1 || !$('#is-ajax').prop('checked') || $(this).parent().hasClass('active')) return;
+	    e.preventDefault();
+	    if($('.btn-navbar').is(':visible'))
+	    {
+	    	$('.btn-navbar').click();
+	    }
+	    $('#loading').remove();
+	    $('#content').fadeOut().parent().append('<div id="loading" class="center">Loading...<div class="center"></div></div>');
+	     */
+	    var $clink = $(this);
+	    //History.pushState(null, null, $clink.attr('href'));
+	    $('ul li.active').removeClass('active');
+	    $clink.parent('li').addClass('active');
+
+	});
+	$('.dropdown-toggle').dropdown();
+	//animating menus on hover
+	$('ul.nav li:not(.nav-header)').hover(function() {
+	    $(this).animate({
+		'margin-left' : '+=5'
+	    }, 300);
+	}, function() {
+	    $(this).animate({
+		'margin-left' : '-=5'
+	    }, 300);
+	});
+
+	load('待办', 'runtime/tasks/index');
+
+    });
+    /*]]>*/
 </script>
 </head>
 <body>
@@ -115,14 +108,14 @@
 							<li class="nav-header">政府信息公开</li>
 							<li><a href="#"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"
-								onClick="load('创建','runtime/process/governmentInformationDisclosure:36:3308/start')">创建<i
+								onClick="load('创建','runtime/process/governmentInformationDisclosure:29:1823/start')">创建<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="active"><a id="tasks"
 								onclick="load('待办事项','runtime/tasks/index')">待办事项</a></li>
 							<li><a href="#"
 								onClick="load('已办事项','runtime/tasks/historicTasks')">已办事项</a></li>
 							<li><a href="#"
-								onClick="load('已办结','runtime/process/finishedProcessIndex/governmentInformationDisclosure:36:3308/')"
+								onClick="load('已办结','runtime/process/finishedProcessIndex/governmentInformationDisclosure:29:1823/')"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER')==true}">已办结</a></li>
 							<li><a href="#"
 								onClick="load('所有流程','runtime/process/userProcessIndex/admin')">所有流程</a></li>

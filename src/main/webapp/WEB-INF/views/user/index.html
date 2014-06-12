@@ -4,71 +4,71 @@
 <title>用户列表</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
+    /*<![CDATA[*/
 
-	$(document).ready(
+    $(document).ready(
+	    function() {
+		$('#addBtn').bind(
+			'click',
 			function() {
-				$('#addBtn').bind(
-						'click',
-						function() {
-							create('#createUser', /*[[@{'/user/create'}]]*/'',
-									successCallback);
-						});
-				$('#checkAll').bind('click', function() {
-					checkAll("#checkAll");
-				});
-
-				$('#deleteBtn').bind('click', function() {
-					$("#confirmDiv").confirm({
-						heading : '确认删除',
-						body : '你真的要删除吗?',
-						yesBtn : '是',
-						noBtn : '否',
-						callback : function() {
-							batchDelete("user", successCallback);
-
-						}
-					});
-
-				});
-
-				$("#userList").simpleTable(/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/
-				+"&dateStamp=" + new Date().toString(), render,
-						$("#paginator"), null);
-
+			    create('#createUser', /*[[@{'/user/create'}]]*/'',
+				    successCallback);
 			});
-	function successCallback() {
+		$('#checkAll').bind('click', function() {
+		    checkAll("#checkAll");
+		});
 
-		$("#createUser").modal("hide");
-		$("#userList tr").nextAll().remove();
+		$('#deleteBtn').bind('click', function() {
+		    $("#confirmDiv").confirm({
+			heading : '确认删除',
+			body : '你真的要删除吗?',
+			yesBtn : '是',
+			noBtn : '否',
+			callback : function() {
+			    batchDelete("user", successCallback);
 
-		$("#userList").simpleTable(
-				/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/""
-						+ "&dateStamp=" + new Date().toString(), render,
-				$("#paginator"), null);
+			}
+		    });
 
-	}
-	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
-				+ data.id
-				+ "</td><td>"
-				+ data.name
-				+ "</td><td>"
-				+ data.loginName
-				+ "</td><td>"
-				+ data.mobile
-				+ "</td><td>"
-				+ data.email
-				+ "</td><td>"
-				+ data.stauts
-				+ "</td><td><a href=\"javascript:update('#createUser','"
-				+ /*[[@{'/user/update/'}]]*/''
-				+ data.id
-				+ "',successCallback);\"><i class='icon-edit'></i></a></td></tr>";
-		return newRow;
-	};
+		});
 
-	/*]]>*/
+		$("#userList").simpleTable(/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/
+		+"&dateStamp=" + new Date().toString(), render,
+			$("#paginator"), null);
+
+	    });
+    function successCallback() {
+
+	$("#createUser").modal("hide");
+	$("#userList tr").nextAll().remove();
+
+	$("#userList").simpleTable(
+		/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/""
+			+ "&dateStamp=" + new Date().toString(), render,
+		$("#paginator"), null);
+
+    }
+    function render(data) {
+	var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+		+ data.id
+		+ "</td><td>"
+		+ data.name
+		+ "</td><td>"
+		+ data.loginName
+		+ "</td><td>"
+		+ data.mobile
+		+ "</td><td>"
+		+ data.email
+		+ "</td><td>"
+		+ data.stauts
+		+ "</td><td><a href=\"javascript:update('#createUser','"
+		+ /*[[@{'/user/update/'}]]*/''
+		+ data.id
+		+ "',successCallback);\"><i class='icon-edit'></i></a></td></tr>";
+	return newRow;
+    };
+
+    /*]]>*/
 </script>
 </head>
 <body>

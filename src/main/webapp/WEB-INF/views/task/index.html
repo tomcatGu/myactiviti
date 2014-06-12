@@ -3,55 +3,55 @@
 <head thy:merge="/common::headerFragment">
 <title>任务列表</title>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" /></td><td>" + data.id
-				+ "</td><td>" + data.name + "</td><td>" + data.assignee
-				+ "</td><td><a href=\"javascript:loadView('"
-				+ /*[[@{'/runtime/tasks/claim/'}]]*/"1234/" //url
-				+ data.id + "')\">接受</a></td></tr>";
-		return newRow;
-	};
-	$(document)
-			.ready(
-					function() {
+    /*<![CDATA[*/
+    function render(data) {
+	var newRow = "<tr><td><input type=\"checkbox\" /></td><td>" + data.id
+		+ "</td><td>" + data.name + "</td><td>" + data.assignee
+		+ "</td><td><a href=\"javascript:loadView('"
+		+ /*[[@{'/runtime/tasks/claim/'}]]*/"1234/" //url
+		+ data.id + "')\">接受</a></td></tr>";
+	return newRow;
+    };
+    $(document)
+	    .ready(
+		    function() {
 
+			$("#taskList")
+				.simpleTable(
+					/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
+						+ "&timestamp="
+						+ new Date().toString(),
+					render, $("#paginatorForTaskList"),
+					null);
+
+		    });
+    function loadView(url) {
+	$("#view")
+		.load(
+			url + '?' + (new Date()).valueOf(),
+			function(data) {
+			    $("#view")
+				    .bind(
+					    "evtWFSuccess",
+					    function(evt, data) {
+						$("#view").hide();
 						$("#taskList")
-								.simpleTable(
-										/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
-												+ "&timestamp="
-												+ new Date().toString(),
-										render, $("#paginatorForTaskList"),
-										null);
+							.clearSimpleTable();
+						$("#listView").show();
+						$("#taskList")
+							.simpleTable(
+								/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/"",
+								render,
+								$("#paginatorForTaskList"),
+								null);
 
-					});
-	function loadView(url) {
-		$("#view")
-				.load(
-						url + '?' + (new Date()).valueOf(),
-						function(data) {
-							$("#view")
-									.bind(
-											"evtWFSuccess",
-											function(evt, data) {
-												$("#view").hide();
-												$("#taskList")
-														.clearSimpleTable();
-												$("#listView").show();
-												$("#taskList")
-														.simpleTable(
-																/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/"",
-																render,
-																$("#paginatorForTaskList"),
-																null);
+					    });
+			    $("#view").show();
+			    $("#listView").hide();
 
-											});
-							$("#view").show();
-							$("#listView").hide();
-
-						});
-	};
-	/*]]>*/
+			});
+    };
+    /*]]>*/
 </script>
 <style>
 .hover {
