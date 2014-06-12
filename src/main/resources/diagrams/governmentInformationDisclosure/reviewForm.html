@@ -14,25 +14,52 @@
 	$(document)
 			.ready(
 					function() {
-						$("#myForm").validate({
-							ignore : [],
-							rules : {
-								assigneeList : {
-									required : true
-								}
+						$("#myForm")
+								.validate(
+										{
+											submitHandler : function(form) {
+												$("#backFlag").val("false");
+												$("#myForm")
+														.ajaxForm(
+																{
+																	url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
+																	dataType : "text",
+																	success : function(
+																			data) {
 
-							},
-							messages : {
+																		$(
+																				"#myForm")
+																				.trigger(
+																						"evtWFSuccess",
+																						{
+																							msg : 'OK'
+																						});
+																		var ret = JSON
+																				.parse(data);
+																		alert(ret.msg);
+																	},
 
-								assigneeList : {
-									required : "重新办理必须选择办理人员"
-								}
+																}).submit();
 
-							}
+											},
+											ignore : [],
+											rules : {
+												assigneeList : {
+													required : true
+												}
 
-						});
+											},
+											messages : {
 
-						$("#submitButton")
+												assigneeList : {
+													required : "重新办理必须选择办理人员"
+												}
+
+											}
+
+										});
+
+						$("#submitButton1")
 								.click(
 										function() {
 											$("#backFlag").val("false");
@@ -59,7 +86,7 @@
 
 										});
 
-						$("#backButton")
+						$("#backButton1")
 								.click(
 										function() {
 											$("#backFlag").val("true");
@@ -437,8 +464,8 @@
 			</div>
 			<div class="box">
 				<div class="row">
-					<input type="button" id="submitButton" value="审核"
-						class="btn btn-primary cancle" /> <input type="button"
+					<input type="submit" id="submitButton" value="审核"
+						class="btn btn-primary cancel" /> <input type="submit"
 						id="backButton" value="退回" class="btn btn-danger" />
 				</div>
 			</div>
