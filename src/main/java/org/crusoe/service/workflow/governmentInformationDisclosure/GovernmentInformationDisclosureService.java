@@ -121,6 +121,10 @@ public class GovernmentInformationDisclosureService {
 		field = new FieldDTO("groupName", gid.getGroupName(), Field.Store.YES,
 				false);
 		fields.add(field);
+		field = new FieldDTO("review", "", Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("reply", "", Field.Store.YES, false);
+		fields.add(field);
 
 		ikUtil.addIndex(fields);
 
