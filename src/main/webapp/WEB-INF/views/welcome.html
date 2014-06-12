@@ -126,10 +126,6 @@
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER')==true}">已办结</a></li>
 							<li><a href="#"
 								onClick="load('所有流程','runtime/process/userProcessIndex/admin')">所有流程</a></li>
-							<li class="nav-header">demo2</li>
-							<li><a href="#" class="animation-fadeIn"><i
-									class="icon-tasks"></i><span
-									class="badge badge-success pull-right">3</span></a></li>
 							<li class="nav-header"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">用户管理</li>
 							<li><a href="#" onClick="load('用户列表','user/index')"

@@ -33,6 +33,11 @@ form {
 	top: 3px;
 	left: 48%;
 }
+
+#myForm label.error {
+	width: auto;
+	color: red;
+}
 </style>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
@@ -57,6 +62,24 @@ form {
 	$(document)
 			.ready(
 					function() {
+
+						$("#myForm").validate({
+							rules : {
+								reply : {
+									required : true
+								}
+
+							},
+							messages : {
+
+								reply : {
+									required : "必须输入回复意见"
+								}
+
+							}
+
+						});
+
 						var options = {
 							beforeSend : function() {
 								$("#progress").show();
