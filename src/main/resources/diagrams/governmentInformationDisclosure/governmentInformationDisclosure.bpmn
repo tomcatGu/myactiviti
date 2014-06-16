@@ -10,7 +10,7 @@
     <serviceTask id="servicetask3" name="保存审核意见" activiti:expression="${governmentInformationDisclosureService.saveReview(execution,result,review)}" activiti:resultVariableName="result"></serviceTask>
     <sequenceFlow id="flow21" sourceRef="servicetask3" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow22" sourceRef="usertask3" targetRef="servicetask3"></sequenceFlow>
-    <sequenceFlow id="flow23" sourceRef="servicetask1" targetRef="subprocess1"></sequenceFlow>
+    <sequenceFlow id="flow23" sourceRef="servicetask1" targetRef="exclusivegateway2"></sequenceFlow>
     <scriptTask id="scripttask1" name="设置选择项默认值" scriptFormat="javascript" activiti:autoStoreVariables="false">
       <script>if(execution.getVariable("mode")==null){
 execution.setVariable("mode", "")
@@ -19,7 +19,6 @@ if(execution.getVariable("obtainMode")==null){
 execution.setVariable("obtainMode", "")
 }</script>
     </scriptTask>
-    <sequenceFlow id="flow26" sourceRef="startevent1" targetRef="scripttask1"></sequenceFlow>
     <sequenceFlow id="flow27" sourceRef="scripttask1" targetRef="servicetask1"></sequenceFlow>
     <subProcess id="subprocess1" name="单位回复意见">
       <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${accountService.resolveUsername(assigneeList,&quot;,&quot;)}" activiti:elementVariable="assignee">
@@ -41,6 +40,15 @@ execution.setVariable("obtainMode", "")
     <sequenceFlow id="flow33" name="正常结束" sourceRef="exclusivegateway1" targetRef="endevent1">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${backFlag==false}]]></conditionExpression>
     </sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow34" name="直接办结" sourceRef="exclusivegateway2" targetRef="endevent1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isComplete==true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow35" name="进行交办" sourceRef="exclusivegateway2" targetRef="subprocess1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isComplete==false
+}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow36" sourceRef="startevent1" targetRef="scripttask1"></sequenceFlow>
     <textAnnotation id="textannotation2">
       <text>审核办结</text>
     </textAnnotation>
@@ -57,7 +65,7 @@ execution.setVariable("obtainMode", "")
   <bpmndi:BPMNDiagram id="BPMNDiagram_governmentInformationDisclosure">
     <bpmndi:BPMNPlane bpmnElement="governmentInformationDisclosure" id="BPMNPlane_governmentInformationDisclosure">
       <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="56.0" y="223.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="20.0" y="223.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="usertask3" id="BPMNShape_usertask3">
         <omgdc:Bounds height="61.0" width="131.0" x="601.0" y="220.0"></omgdc:Bounds>
@@ -92,11 +100,14 @@ execution.setVariable("obtainMode", "")
       <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
         <omgdc:Bounds height="40.0" width="40.0" x="900.0" y="230.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="510.0" y="75.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation2" id="BPMNShape_textannotation2">
         <omgdc:Bounds height="50.0" width="100.0" x="670.0" y="140.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation3" id="BPMNShape_textannotation3">
-        <omgdc:Bounds height="50.0" width="100.0" x="115.0" y="140.0"></omgdc:Bounds>
+        <omgdc:Bounds height="50.0" width="100.0" x="26.0" y="274.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation4" id="BPMNShape_textannotation4">
         <omgdc:Bounds height="71.0" width="181.0" x="107.0" y="419.0"></omgdc:Bounds>
@@ -110,12 +121,9 @@ execution.setVariable("obtainMode", "")
         <omgdi:waypoint x="772.0" y="250.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow23" id="BPMNEdge_flow23">
-        <omgdi:waypoint x="261.0" y="278.0"></omgdi:waypoint>
-        <omgdi:waypoint x="530.0" y="299.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow26" id="BPMNEdge_flow26">
-        <omgdi:waypoint x="73.0" y="258.0"></omgdi:waypoint>
-        <omgdi:waypoint x="164.0" y="319.0"></omgdi:waypoint>
+        <omgdi:waypoint x="261.0" y="223.0"></omgdi:waypoint>
+        <omgdi:waypoint x="261.0" y="95.0"></omgdi:waypoint>
+        <omgdi:waypoint x="510.0" y="95.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
         <omgdi:waypoint x="164.0" y="319.0"></omgdi:waypoint>
@@ -152,13 +160,33 @@ execution.setVariable("obtainMode", "")
           <omgdc:Bounds height="14.0" width="48.0" x="939.0" y="252.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow34" id="BPMNEdge_flow34">
+        <omgdi:waypoint x="550.0" y="95.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1014.0" y="98.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1014.0" y="233.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="48.0" x="916.0" y="103.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow35" id="BPMNEdge_flow35">
+        <omgdi:waypoint x="530.0" y="115.0"></omgdi:waypoint>
+        <omgdi:waypoint x="530.0" y="299.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="48.0" x="473.0" y="188.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow36" id="BPMNEdge_flow36">
+        <omgdi:waypoint x="55.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="164.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="164.0" y="319.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association2" id="BPMNEdge_association2">
         <omgdi:waypoint x="720.0" y="190.0"></omgdi:waypoint>
         <omgdi:waypoint x="666.0" y="220.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association3" id="BPMNEdge_association3">
-        <omgdi:waypoint x="165.0" y="190.0"></omgdi:waypoint>
-        <omgdi:waypoint x="73.0" y="223.0"></omgdi:waypoint>
+        <omgdi:waypoint x="76.0" y="274.0"></omgdi:waypoint>
+        <omgdi:waypoint x="37.0" y="258.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association4" id="BPMNEdge_association4">
         <omgdi:waypoint x="197.0" y="419.0"></omgdi:waypoint>

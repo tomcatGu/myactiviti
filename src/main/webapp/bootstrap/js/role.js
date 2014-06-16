@@ -1,5 +1,5 @@
 function addRole() {
-	$("#createRole").load('create', function() {
+	$("#createRole").load('role/create', function() {
 		$("#createRole").bind("evtSuccess", function(evt, data) {
 
 			// alert(data.msg);
@@ -27,7 +27,7 @@ $(document)
 									{
 										"bProcessing" : true,
 										"bServerSide" : true,
-										"sAjaxSource" : "getRoles",
+										"sAjaxSource" : "role/getRoles",
 
 										"aoColumns" : [ {
 											"mData" : "id"
