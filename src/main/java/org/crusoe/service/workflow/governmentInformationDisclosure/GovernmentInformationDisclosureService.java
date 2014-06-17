@@ -62,7 +62,7 @@ public class GovernmentInformationDisclosureService {
 			String groupDelegateFax, String groupDelegateAddress,
 			String groupDelegateEmail, String applicationTime,
 			String submitDepartment, String description, String purpose,
-			String suggest, String mode, String obtainMode) {
+			String reply, String mode, String obtainMode) {
 
 		GovernmentInformationDisclosure gid = new GovernmentInformationDisclosure();
 
@@ -96,7 +96,16 @@ public class GovernmentInformationDisclosureService {
 		gid.setSubmitDepartment(submitDepartment);
 		gid.setDescription(description);
 		gid.setPurpose(purpose);
-		gid.setSuggest(suggest);
+
+		Reply replyEntity = new Reply();
+		replyEntity.setReply(reply);
+
+		replyEntity.setReplyTime(new Date());
+
+		replyEntity.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
+				.toString());
+		gid.getReplies().add(replyEntity);
+
 		gid.setMode(mode);
 		gid.setObtainMode(obtainMode);
 		gidDao.save(gid);
@@ -123,7 +132,7 @@ public class GovernmentInformationDisclosureService {
 		fields.add(field);
 		field = new FieldDTO("review", "", Field.Store.YES, false);
 		fields.add(field);
-		field = new FieldDTO("reply", "", Field.Store.YES, false);
+		field = new FieldDTO("reply", reply, Field.Store.YES, false);
 		fields.add(field);
 
 		ikUtil.addIndex(fields);
