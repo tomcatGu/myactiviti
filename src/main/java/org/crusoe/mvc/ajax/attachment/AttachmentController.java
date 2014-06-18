@@ -100,6 +100,7 @@ public class AttachmentController {
 					.taskId(taskId).singleResult().getProcessInstanceId();
 			Attachment attachment=taskService.createAttachment(FilenameUtils.getExtension(fileName),
 					taskId, processInstanceId, fileName, "description", bis);
+			
 			rets.put("msg", "OK");
 			rets.put("attachmentId", attachment.getId());
 			rets.put("filename", fileName);

@@ -6,7 +6,7 @@
     </startEvent>
     <userTask id="usertask3" name="【审核办结】${applicationName}" activiti:assignee="${startUserId}" activiti:formKey="governmentInformationDisclosure/reviewForm"></userTask>
     <endEvent id="endevent1" name="End"></endEvent>
-    <serviceTask id="servicetask1" name="创建申请单" activiti:expression="${governmentInformationDisclosureService.save(execution,applicationName,citizenName, citizenWorkunit,citizenCertificate, citizenCertificateID,citizenTelphone, citizenZipcode,citizenAddress, citizenFax, citizenEmail,groupName, groupID, groupDelegate,groupDelegateName, groupDelegateTelphone,groupDelegateFax, groupDelegateAddress,groupDelegateEmail, applicationTime,submitDepartment, description, purpose,suggest,mode, obtainMode)}" activiti:resultVariableName="result"></serviceTask>
+    <serviceTask id="servicetask1" name="创建申请单" activiti:expression="${governmentInformationDisclosureService.save(execution,applicationName,citizenName, citizenWorkunit,citizenCertificate, citizenCertificateID,citizenTelphone, citizenZipcode,citizenAddress, citizenFax, citizenEmail,groupName, groupID, groupDelegate,groupDelegateName, groupDelegateTelphone,groupDelegateFax, groupDelegateAddress,groupDelegateEmail, applicationTime,submitDepartment, description, purpose,reply,mode, obtainMode)}" activiti:resultVariableName="result"></serviceTask>
     <serviceTask id="servicetask3" name="保存审核意见" activiti:expression="${governmentInformationDisclosureService.saveReview(execution,result,review)}" activiti:resultVariableName="result"></serviceTask>
     <sequenceFlow id="flow21" sourceRef="servicetask3" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow22" sourceRef="usertask3" targetRef="servicetask3"></sequenceFlow>
@@ -162,7 +162,7 @@ execution.setVariable("obtainMode", "")
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow34" id="BPMNEdge_flow34">
         <omgdi:waypoint x="550.0" y="95.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1014.0" y="98.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1014.0" y="95.0"></omgdi:waypoint>
         <omgdi:waypoint x="1014.0" y="233.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="14.0" width="48.0" x="916.0" y="103.0"></omgdc:Bounds>

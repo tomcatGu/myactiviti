@@ -99,9 +99,7 @@ public class GovernmentInformationDisclosureService {
 
 		Reply replyEntity = new Reply();
 		replyEntity.setReply(reply);
-
 		replyEntity.setReplyTime(new Date());
-
 		replyEntity.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
 				.toString());
 		gid.getReplies().add(replyEntity);

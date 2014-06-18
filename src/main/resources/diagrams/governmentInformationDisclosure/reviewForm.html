@@ -381,15 +381,6 @@
 			</div>
 		</div>
 		<div class="box">
-			<legend>交办</legend>
-			<div class="span8">
-				<label class="control-label text-info">交办意见：</label>
-				<div class="controls">
-					<label th:text="${result.suggest}" class="span7" />
-				</div>
-			</div>
-		</div>
-		<div class="box">
 			<legend>附件</legend>
 			<div th:each="attachment:${attachments}">
 				<label class="checkbox inline"><a
@@ -398,12 +389,18 @@
 			</div>
 		</div>
 		<div class="box">
-			<legend>回复意见</legend>
+			<legend>处理意见</legend>
 			<div th:each="aReply:${result.replies}">
 				<blockquote>
 					<p th:text="${aReply.reply}" class="text-left" />
 					<small><span
 						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
+					<div th:each="attachment:${attachments}">
+						<label class="checkbox inline"
+							th:if="${aReply.userLoginName==attachment.userId}"><a
+							th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
+								th:text="${attachment.name}">file.ext</span></a></label>
+					</div>
 				</blockquote>
 			</div>
 		</div>
