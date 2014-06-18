@@ -40,120 +40,120 @@ form {
 }
 </style>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    function deleteAttachment(deleteUrl, attachmentId) {
-	$.ajax({
-	    type : "POST",
-	    url : deleteUrl + attachmentId,
-	    data : {
-		_method : 'DELETE',
-	    //items : selctedItems
-	    },
-	    // contentType : 'application/json',
-	    //dataType : 'json',
-	    success : function(data) {
+	/*<![CDATA[*/
+	function deleteAttachment(deleteUrl, attachmentId) {
+		$.ajax({
+			type : "POST",
+			url : deleteUrl + attachmentId,
+			data : {
+				_method : 'DELETE',
+			//items : selctedItems
+			},
+			// contentType : 'application/json',
+			//dataType : 'json',
+			success : function(data) {
 
-		$("#attachment" + attachmentId).remove();
+				$("#attachment" + attachmentId).remove();
 
-	    }
-	});
-    };
+			}
+		});
+	};
 
-    $(document)
-	    .ready(
-		    function() {
-
-			$("#myForm").validate({
-			    rules : {
-				reply : {
-				    required : true
-				}
-
-			    },
-			    messages : {
-
-				reply : {
-				    required : "必须输入回复意见"
-				}
-
-			    }
-
-			});
-
-			var options = {
-			    beforeSend : function() {
-				$("#progress").show();
-				//clear everything
-				$("#bar").width('0%');
-				$("#message").html("");
-				$("#percent").html("0%");
-			    },
-			    uploadProgress : function(event, position, total,
-				    percentComplete) {
-				$("#bar").width(percentComplete + '%');
-				$("#percent").html(percentComplete + '%');
-
-			    },
-			    success : function() {
-				$("#bar").width('100%');
-				$("#percent").html('100%');
-
-			    },
-			    complete : function(response) {
-				var ret = JSON.parse(response.responseText);
-				$("#message").html(
-					"<font color='green'>"
-						+ response.responseText
-						+ "</font>");
-				var li = $("<li></li>");
-
-				var a = $("<a>" + ret.filename + "</a>");
-				var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
-				a.attr("href", "javascript:deleteAttachment(\""
-					+ deleteUrl + "\"," + ret.attachmentId
-					+ ");");
-				var i = $("<i class=\"icon-remove\"></i>");
-				i.appendTo(a);
-				a.appendTo(li);
-				li.attr("id", "attachment" + ret.attachmentId);
-				li.appendTo($("#uploadedAttachment"));
-
-			    },
-			    error : function() {
-				$("#message")
-					.html(
-						"<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
-			    }
-			};
-			$("#uploadForm").ajaxForm(options);
-			$("#submitButton")
-				.click(
+	$(document)
+			.ready(
 					function() {
-					    $("#myForm")
-						    .ajaxForm(
-							    {
-								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
-								dataType : "text",
-								success : function(
-									data) {
 
-								    $("#myForm")
-									    .trigger(
-										    "evtWFSuccess",
-										    {
-											msg : 'OK'
-										    });
-								    //alert(data);
-								},
+						$("#myForm").validate({
+							rules : {
+								reply : {
+									required : true
+								}
 
-							    }).submit();
+							},
+							messages : {
 
+								reply : {
+									required : "必须输入回复意见"
+								}
+
+							}
+
+						});
+
+						var options = {
+							beforeSend : function() {
+								$("#progress").show();
+								//clear everything
+								$("#bar").width('0%');
+								$("#message").html("");
+								$("#percent").html("0%");
+							},
+							uploadProgress : function(event, position, total,
+									percentComplete) {
+								$("#bar").width(percentComplete + '%');
+								$("#percent").html(percentComplete + '%');
+
+							},
+							success : function() {
+								$("#bar").width('100%');
+								$("#percent").html('100%');
+
+							},
+							complete : function(response) {
+								var ret = JSON.parse(response.responseText);
+								$("#message").html(
+										"<font color='green'>"
+												+ response.responseText
+												+ "</font>");
+								var li = $("<li></li>");
+
+								var a = $("<a>" + ret.filename + "</a>");
+								var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+								a.attr("href", "javascript:deleteAttachment(\""
+										+ deleteUrl + "\"," + ret.attachmentId
+										+ ");");
+								var i = $("<i class=\"icon-remove\"></i>");
+								i.appendTo(a);
+								a.appendTo(li);
+								li.attr("id", "attachment" + ret.attachmentId);
+								li.appendTo($("#uploadedAttachment"));
+
+							},
+							error : function() {
+								$("#message")
+										.html(
+												"<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+							}
+						};
+						$("#uploadForm").ajaxForm(options);
+						$("#submitButton")
+								.click(
+										function() {
+											$("#myForm")
+													.ajaxForm(
+															{
+																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
+																dataType : "text",
+																success : function(
+																		data) {
+
+																	$("#myForm")
+																			.trigger(
+																					"evtWFSuccess",
+																					{
+																						msg : 'OK'
+																					});
+																	//alert(data);
+																},
+
+															}).submit();
+
+										});
 					});
-		    });
-    /*
+	/*
 
-     */
-    /*]]>*/
+	 */
+	/*]]>*/
 </script>
 </head>
 <body>
@@ -375,6 +375,13 @@ form {
 					<p th:text="${aReply.reply}" class="text-left" />
 					<small><span
 						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
+
+					<div th:each="attachment:${attachments}">
+						<label class="checkbox inline"
+							th:if="${aReply.userLoginName==attachment.userId}"><a
+							th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
+								th:text="${attachment.name}">file.ext</span></a></label>
+					</div>
 				</blockquote>
 			</div>
 		</div>
