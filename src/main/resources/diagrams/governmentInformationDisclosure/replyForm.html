@@ -52,6 +52,9 @@ form {
 	    // contentType : 'application/json',
 	    //dataType : 'json',
 	    success : function(data) {
+		var orignList = $("#attachmentList").val();
+		$("#attachmentList").val(
+			orginList.replace(attachmentId + ",", ""));
 
 		$("#attachment" + attachmentId).remove();
 
@@ -117,7 +120,9 @@ form {
 				a.appendTo(li);
 				li.attr("id", "attachment" + ret.attachmentId);
 				li.appendTo($("#uploadedAttachment"));
-
+				var orignList = $("#attachmentList").val();
+				$("#attachmentList").val(
+					orignList + "," + ret.attachmentId);
 			    },
 			    error : function() {
 				$("#message")
@@ -352,23 +357,14 @@ form {
 			</div>
 		</div>
 		<div class="box">
-			<legend>附件</legend>
-			<div th:each="attachment:${attachments}">
-				<label class="checkbox inline"><a
-					th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
-						th:text="${attachment.name}">file.ext</span></a></label>
-			</div>
-		</div>
-		<div class="box">
 			<legend>处理意见</legend>
 			<div th:each="aReply:${result.replies}">
 				<blockquote>
 					<p th:text="${aReply.reply}" class="text-left" />
 					<small><span
 						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
-					<div th:each="attachment:${attachments}">
-						<label class="checkbox inline"
-							th:if="${#strings.equals(aReply.userLoginNam,attachment.userId)}"><a
+					<div th:each="attachment:${aReply.attachments}">
+						<label class="checkbox inline"><a
 							th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
 								th:text="${attachment.name}">file.ext</span></a></label>
 					</div>
@@ -382,7 +378,8 @@ form {
 				method="post">
 				<textarea name="reply" rows="8" cols="20" class="span7"></textarea>
 				<input type="button" id="submitButton" value="回复"
-					class="btn btn-primary" />
+					class="btn btn-primary" /> <input type="hidden"
+					name="attachmentList" id="attachmentList" />
 			</form>
 		</div>
 		<div class="box" th:if="${not historicView}">

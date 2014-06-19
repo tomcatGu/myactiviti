@@ -179,7 +179,6 @@ public class TaskController {
 		taskService.claim(task.getId(), user.getLoginName());
 		String formKey = formService.getTaskFormData(task.getId()).getFormKey();
 		if (formKey != null) {
-
 			Map<String, Object> variables = taskService.getVariables(taskId);
 			List<Attachment> taskAttachments = taskService
 					.getProcessInstanceAttachments(task.getProcessInstanceId());

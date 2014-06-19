@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Iterator;
 
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
 import org.apache.lucene.document.Field;
 import org.apache.shiro.SecurityUtils;
@@ -22,6 +24,7 @@ import org.crusoe.dto.HistoricProcessInstanceDTO;
 import org.crusoe.dto.fulltextSearch.SearchResultDTO;
 import org.crusoe.dto.task.TaskDTO;
 import org.crusoe.entity.User;
+import org.crusoe.entity.workflow.governmentInformationDisclosure.AttachmentEntity;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInformationDisclosure;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.Reply;
 import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.GovernmentInformationDisclosureDao;
@@ -49,6 +52,8 @@ public class GovernmentInformationDisclosureService {
 	private AccountService accountService;
 	@Autowired
 	private HistoryService historyService;
+	@Autowired
+	private TaskService taskService;
 	@Autowired
 	private LuceneIKUtil ikUtil;
 
@@ -160,9 +165,67 @@ public class GovernmentInformationDisclosureService {
 
 		}
 
-		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
-		// ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
-		// gid.getApplicationName(), content);
+		List<FieldDTO> fields = Lists.newArrayList();
+		FieldDTO field = new FieldDTO("id", gid.getId().toString(),
+				Field.Store.YES, true);
+		fields.add(field);
+		field = new FieldDTO("processInstanceId",
+				execution.getProcessInstanceId(), Field.Store.YES, true);
+		fields.add(field);
+		field = new FieldDTO("applicationName", gid.getApplicationName(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("description", gid.getDescription(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("citizenName", gid.getCitizenName(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("groupName", gid.getGroupName(), Field.Store.YES,
+				false);
+		fields.add(field);
+		if (gid.getReview() != null) {
+			field = new FieldDTO("review", gid.getReview(), Field.Store.YES,
+					false);
+			fields.add(field);
+		}
+		field = new FieldDTO("reply", replyContent, Field.Store.YES, false);
+		fields.add(field);
+		ikUtil.updateIndex(fields);
+		return gidDao.save(gid);
+
+	}
+
+	public GovernmentInformationDisclosure addReply(
+			DelegateExecution execution, GovernmentInformationDisclosure gid,
+			String reply, String attachmentList) {
+		Reply replyEntity = new Reply();
+		replyEntity.setReply(reply);
+
+		replyEntity.setReplyTime(new Date());
+
+		replyEntity.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
+				.toString());
+
+		String[] attachmentIds = attachmentList.split(",");
+		for (String id : attachmentIds) {
+			Attachment attachment = taskService.getAttachment(id);
+			if (attachment != null) {
+				AttachmentEntity ae = new AttachmentEntity();
+				ae.setId(attachment.getId());
+				ae.setName(attachment.getName());
+				replyEntity.getAttachments().add(ae);
+			}
+
+		}
+
+		gid.getReplies().add(replyEntity);
+
+		String replyContent = "";
+		for (Reply aReply : gid.getReplies()) {
+
+			replyContent += aReply.getReply() + " ";
+		}
 
 		List<FieldDTO> fields = Lists.newArrayList();
 		FieldDTO field = new FieldDTO("id", gid.getId().toString(),

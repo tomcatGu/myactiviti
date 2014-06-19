@@ -1,7 +1,10 @@
 package org.crusoe.entity.workflow.governmentInformationDisclosure;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +13,8 @@ import javax.persistence.Table;
 
 import org.joda.time.DateTime;
 
+import com.google.common.collect.Lists;
+
 @Entity
 @Table(name = "workflow_reply")
 public class Reply {
@@ -17,6 +22,8 @@ public class Reply {
 	private String reply;
 	private String userLoginName;
 	private Date replyTime;
+
+	private List<AttachmentEntity> attachments = Lists.newArrayList();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +57,16 @@ public class Reply {
 
 	public void setReplyTime(Date replyTime) {
 		this.replyTime = replyTime;
+	}
+
+	@ElementCollection
+	@CollectionTable(name = "workflow_attachment")
+	public List<AttachmentEntity> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<AttachmentEntity> attachments) {
+		this.attachments = attachments;
 	}
 
 }

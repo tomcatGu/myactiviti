@@ -381,44 +381,29 @@
 			</div>
 		</div>
 		<div class="box">
-			<legend>附件</legend>
-			<div th:each="attachment:${attachments}">
-				<label class="checkbox inline"><a
-					th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
-						th:text="${attachment.name}">file.ext</span></a></label>
-			</div>
-		</div>
-		<div class="box">
 			<legend>处理意见</legend>
 			<div th:each="aReply:${result.replies}">
 				<blockquote>
 					<p th:text="${aReply.reply}" class="text-left" />
 					<small><span
 						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
-					<div th:each="attachment:${attachments}">
-						<label class="checkbox inline"
-							th:if="${aReply.userLoginName==attachment.userId}"><a
+					<div th:each="attachment:${aReply.attachments}">
+						<label class="checkbox inline"><a
 							th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
 								th:text="${attachment.name}">file.ext</span></a></label>
 					</div>
 				</blockquote>
 			</div>
 		</div>
-		<div class="box">
-			<legend>审核意见</legend>
-			<div>
-				<blockquote>
-					<p th:text="${result.review}" class="text-left" />
-				</blockquote>
-			</div>
-		</div>
 		<div class="box" th:if="${not historicView}">
-			<legend>审核意见</legend>
+			<legend>回复意见</legend>
 			<form id="myForm"
 				th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
 				method="post">
-				<div class="row">
-					<textarea name="review" rows="8" cols="20" class="span7"></textarea>
+				<div class="control-group">
+					<div class="controls">
+						<textarea name="reply" rows="8" cols="20" class="span7"></textarea>
+					</div>
 				</div>
 				<div class="box">
 					<legend>处理人员</legend>
@@ -437,7 +422,7 @@
 				</div>
 				<div class="box">
 					<div class="row">
-						<input type="submit" id="submitButton" value="审核"
+						<input type="submit" id="submitButton" value="办结"
 							class="btn btn-primary cancel" /> <input type="submit"
 							id="backButton" value="退回" class="btn btn-danger" />
 					</div>

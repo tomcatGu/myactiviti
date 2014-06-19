@@ -7,7 +7,7 @@
     <userTask id="usertask3" name="【审核办结】${applicationName}" activiti:assignee="${startUserId}" activiti:formKey="governmentInformationDisclosure/reviewForm"></userTask>
     <endEvent id="endevent1" name="End"></endEvent>
     <serviceTask id="servicetask1" name="创建申请单" activiti:expression="${governmentInformationDisclosureService.save(execution,applicationName,citizenName, citizenWorkunit,citizenCertificate, citizenCertificateID,citizenTelphone, citizenZipcode,citizenAddress, citizenFax, citizenEmail,groupName, groupID, groupDelegate,groupDelegateName, groupDelegateTelphone,groupDelegateFax, groupDelegateAddress,groupDelegateEmail, applicationTime,submitDepartment, description, purpose,reply,mode, obtainMode)}" activiti:resultVariableName="result"></serviceTask>
-    <serviceTask id="servicetask3" name="保存审核意见" activiti:expression="${governmentInformationDisclosureService.saveReview(execution,result,review)}" activiti:resultVariableName="result"></serviceTask>
+    <serviceTask id="servicetask3" name="保存审核意见" activiti:expression="${governmentInformationDisclosureService.addReply(execution,result,reply)}" activiti:resultVariableName="result"></serviceTask>
     <sequenceFlow id="flow21" sourceRef="servicetask3" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow22" sourceRef="usertask3" targetRef="servicetask3"></sequenceFlow>
     <sequenceFlow id="flow23" sourceRef="servicetask1" targetRef="exclusivegateway2"></sequenceFlow>
@@ -25,7 +25,7 @@ execution.setVariable("obtainMode", "")
         <completionCondition>${nrOfActiveInstances==0}</completionCondition>
       </multiInstanceLoopCharacteristics>
       <userTask id="usertask4" name="【单位回复意见】${applicationName}" activiti:assignee="${assignee}" activiti:formKey="governmentInformationDisclosure/replyForm"></userTask>
-      <serviceTask id="servicetask5" name="保存单位意见" activiti:expression="${governmentInformationDisclosureService.addReply(execution,result,reply)}" activiti:resultVariableName="result"></serviceTask>
+      <serviceTask id="servicetask5" name="保存单位意见" activiti:expression="${governmentInformationDisclosureService.addReply(execution,result,reply,attachmentList)}" activiti:resultVariableName="result"></serviceTask>
       <startEvent id="startevent2" name="Start"></startEvent>
       <endEvent id="endevent2" name="End"></endEvent>
       <sequenceFlow id="flow28" sourceRef="startevent2" targetRef="usertask4"></sequenceFlow>
