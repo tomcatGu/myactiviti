@@ -174,6 +174,8 @@ public class TaskController {
 	public String claimTask(@PathVariable("taskId") String taskId, Model model)
 			throws IllegalAccessException, InvocationTargetException {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		if (SecurityUtils.getSubject().getPrincipal() == null)
+			return "/login";// redirect to login page
 		User user = accountService.findUserByLoginName(SecurityUtils
 				.getSubject().getPrincipal().toString());
 		taskService.claim(task.getId(), user.getLoginName());
