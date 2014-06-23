@@ -52,6 +52,14 @@
 	<div class="box">
 		<div>
 			<ul>
+			
+			<li th:if="${hasStartForm==true}"><a target="_blank"
+					th:href="@{/runtime/tasks/reviewStartForm/}+${processInstanceStart.id}"><span
+						th:text="'【流程开始】'+${processInstanceStart.businessKey}"></span><span
+						th:text="${#dates.format(processInstanceStart.startTime, 'yyyy/MM/dd HH:mm')}"
+						class="pull-right"></span><span class="pull-right">开始于：</span><span
+						class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+						th:text="${processInstanceStart.startUserId}" class="pull-right"></span></a></li>
 				<li th:each="task:${tasks}"><a target="_blank"
 					th:href="@{/runtime/tasks/reviewHistoric/}+${task.id}+
 						'?processDefinitionId='+${task.processDefinitionId}+'&amp;taskDefinitionKey='+${task.taskDefinitionKey}"><span

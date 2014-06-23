@@ -10,406 +10,340 @@
 }
 </style>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    function encodeUTF8(str) {
-	var temp = "", rs = "";
-	for ( var i = 0, len = str.length; i < len; i++) {
-	    temp = str.charCodeAt(i).toString(16);
-	    rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
-	}
-	return rs;
-    };
+	/*<![CDATA[*/
+	function encodeUTF8(str) {
+		var temp = "", rs = "";
+		for (var i = 0, len = str.length; i < len; i++) {
+			temp = str.charCodeAt(i).toString(16);
+			rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
+		}
+		return rs;
+	};
 
-    function clearSelectedUser() {
-	$('#selectedUser').text("");
-	$('#assigneeList').val("");
-    };
+	function clearSelectedUser() {
+		$('#selectedUser').text("");
+		$('#assigneeList').val("");
+	};
 
-    $(document)
-	    .ready(
-		    function() {
-			$("#myForm").validate({
-			    ignore : [],
-			    rules : {
-				applicationName : {
-				    required : true,
-				    minlength : 5
-				},
-				applicationTime : {
-				    required : true,
-				    date : true
-				},
-				assigneeList : {
-				    required : true
-				}
-
-			    },
-			    messages : {
-				applicationName : {
-				    required : "请输入标题",
-				    minlength : "标题不能小于5个字符"
-				},
-				applicationTime : {
-				    required : "请选择申请时间",
-				    date : "请输入正确的时间"
-				},
-				assigneeList : {
-				    required : "必须选择处理单位人员"
-				}
-
-			    }
-			});
-			$("#clearButton").click(function() {
-			    $('#selectedUser').text("");
-			});
-
-			$('#myTab a:first').tab('show');
-
-			$("#datetimepicker1").datetimepicker({
-			    language : 'zh-CN',
-			    format : 'yyyy-MM-dd hh:mm:ss',
-			    pickDate : true,
-			    pickTime : true,
-			    hourStep : 1,
-			    minuteStep : 15,
-			    secondStep : 30,
-			    inputMask : true
-			});
-			$("#submitButton")
-				.click(
+	$(document)
+			.ready(
 					function() {
-					    $("#businessKey")
-						    .val(
-							    $(
-								    "#applicationName")
-								    .val());
-					    $("#isComplete").val("false");
-					    $("#myForm")
-						    .ajaxForm(
-							    {
-								url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
-								dataType : "text",
-								success : function(
-									data) {
-								    var ret = JSON
-									    .parse(data);
-								    alert(ret.msg);
-								    $("#myForm")
-									    .trigger(
-										    "evtWFSuccess",
-										    {
-											msg : "OK"
-										    });
-								    $(
-									    "#submitButton")
-									    .attr(
-										    "disabled",
-										    true)
-									    .attr(
-										    "value",
-										    "成功提交");
-
+						$("#myForm").validate({
+							ignore : [],
+							rules : {
+								applicationName : {
+									required : true,
+									minlength : 5
 								},
-								beforeSubmit : function() {
-								    if ($(
-									    "#myForm")
-									    .valid()) {
-									$(
-										"#submitButton")
-										.attr(
-											"disabled",
-											true)
-										.attr(
-											"value",
-											"正在提交...");
-								    }
-								    return $(
-									    "#myForm")
-									    .valid();
+								applicationTime : {
+									required : true,
+									date : true
+								},
+								assigneeList : {
+									required : true
 								}
 
-							    }).submit();
-					    return false;
-
-					});
-			$("#finishButton")
-				.click(
-					function() {
-					    $("#businessKey")
-						    .val(
-							    $(
-								    "#applicationName")
-								    .val());
-					    $("#isComplete").val("true");
-					    $('#assigneeList')
-						    .val(
-							    "cheat value to disable validation");
-					    $("#myForm")
-						    .ajaxForm(
-							    {
-								url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
-								dataType : "text",
-								success : function(
-									data) {
-								    var ret = JSON
-									    .parse(data);
-								    alert(ret.msg);
-								    $("#myForm")
-									    .trigger(
-										    "evtWFSuccess",
-										    {
-											msg : "OK"
-										    });
-								    $(
-									    "#finishButton")
-									    .attr(
-										    "disabled",
-										    true)
-									    .attr(
-										    "value",
-										    "成功提交");
-
+							},
+							messages : {
+								applicationName : {
+									required : "请输入标题",
+									minlength : "标题不能小于5个字符"
 								},
-								beforeSubmit : function() {
-								    if ($(
-									    "#myForm")
-									    .valid()) {
-									$(
-										"#finishButton")
-										.attr(
-											"disabled",
-											true)
-										.attr(
-											"value",
-											"正在提交...");
-								    }
-								    return $(
-									    "#myForm")
-									    .valid();
+								applicationTime : {
+									required : "请选择申请时间",
+									date : "请输入正确的时间"
+								},
+								assigneeList : {
+									required : "必须选择处理单位人员"
 								}
 
-							    }).submit();
-					    return false;
+							}
+						});
+						$("#clearButton").click(function() {
+							$('#selectedUser').text("");
+						});
 
-					});
-			$('#selectBtn')
-				.bind(
-					'click',
-					function() {
-					    $("#selectUsers")
-						    .load(
-							    /*[[@{'/user/select'}]]*/'../../user/select',
-							    function(data) {
-								$(
-									"#selectUsers")
-									.bind(
-										"evtSelectUser",
-										function(
-											evt,
-											data) {
+						$('#myTab a:first').tab('show');
 
-										    str = $(
-											    '#assigneeList')
-											    .val();
-										    for ( var i = 0; i < data.users.length; i++) {
-											str += data.users[i]
-												+ ",";
-										    }
-										    $(
-											    '#assigneeList')
-											    .val(
-												    str);
-										    var userids = str
-											    .split(',');
+						$("#datetimepicker1").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
+						$("#submitButton")
+								.click(
+										function() {
+											$("#businessKey")
+													.val(
+															$(
+																	"#applicationName")
+																	.val());
+											$("#isComplete").val("false");
+											$("#myForm")
+													.ajaxForm(
+															{
+																url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
+																dataType : "text",
+																success : function(
+																		data) {
+																	var ret = JSON
+																			.parse(data);
+																	alert(ret.msg);
+																	$("#myForm")
+																			.trigger(
+																					"evtWFSuccess",
+																					{
+																						msg : "OK"
+																					});
+																	$(
+																			"#submitButton")
+																			.attr(
+																					"disabled",
+																					true)
+																			.attr(
+																					"value",
+																					"成功提交");
 
-										    for (i = 0; i < userids.length; i++) {
-											var id = userids[i];
-											if (id == "")
-											    continue;
-											$
-												.ajax({
-												    type : 'GET',
-												    url : /*[[@{'/user/name/'}]]*/""
-													    + id,
-												    async : true,
-												    success : function(
-													    data) {
-													temp = $(
-														'#selectedUser')
-														.text();
-													temp += data
-														+ ';';
-													$(
-														'#selectedUser')
-														.text(
-															temp);
+																},
+																beforeSubmit : function() {
+																	if ($(
+																			"#myForm")
+																			.valid()) {
+																		$(
+																				"#submitButton")
+																				.attr(
+																						"disabled",
+																						true)
+																				.attr(
+																						"value",
+																						"正在提交...");
+																	}
+																	return $(
+																			"#myForm")
+																			.valid();
+																}
 
-												    }
+															}).submit();
+											return false;
 
-												});
-										    }
-
-										    $(
-											    '#selectUsers')
-											    .modal(
-												    "hide");
 										});
-								$(
-									"#selectUsers")
-									.bind(
-										"evtCancled",
-										function(
-											evt,
-											data) {
-										    console
-											    .log(data);
-										    $(
-											    '#selectUsers')
-											    .modal(
-												    "hide");
-										});
-								$(
-									'#selectUsers')
-									.modal();
+						$("#finishButton")
+								.click(
+										function() {
+											$("#businessKey")
+													.val(
+															$(
+																	"#applicationName")
+																	.val());
+											$("#isComplete").val("true");
+											$('#assigneeList')
+													.val(
+															"cheat value to disable validation");
+											$("#myForm")
+													.ajaxForm(
+															{
+																url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
+																dataType : "text",
+																success : function(
+																		data) {
+																	var ret = JSON
+																			.parse(data);
+																	alert(ret.msg);
+																	$("#myForm")
+																			.trigger(
+																					"evtWFSuccess",
+																					{
+																						msg : "OK"
+																					});
+																	$(
+																			"#finishButton")
+																			.attr(
+																					"disabled",
+																					true)
+																			.attr(
+																					"value",
+																					"成功提交");
 
-							    });
+																},
+																beforeSubmit : function() {
+																	if ($(
+																			"#myForm")
+																			.valid()) {
+																		$(
+																				"#finishButton")
+																				.attr(
+																						"disabled",
+																						true)
+																				.attr(
+																						"value",
+																						"正在提交...");
+																	}
+																	return $(
+																			"#myForm")
+																			.valid();
+																}
+
+															}).submit();
+											return false;
+
+										});
+						$('#selectBtn')
+								.bind(
+										'click',
+										function() {
+											$("#selectUsers")
+													.load(
+															/*[[@{'/user/select'}]]*/'../../user/select',
+															function(data) {
+																$(
+																		"#selectUsers")
+																		.bind(
+																				"evtSelectUser",
+																				function(
+																						evt,
+																						data) {
+
+																					str = $(
+																							'#assigneeList')
+																							.val();
+																					for (var i = 0; i < data.users.length; i++) {
+																						str += data.users[i]
+																								+ ",";
+																					}
+																					$(
+																							'#assigneeList')
+																							.val(
+																									str);
+																					var userids = str
+																							.split(',');
+
+																					for (i = 0; i < userids.length; i++) {
+																						var id = userids[i];
+																						if (id == "")
+																							continue;
+																						$
+																								.ajax({
+																									type : 'GET',
+																									url : /*[[@{'/user/name/'}]]*/""
+																											+ id,
+																									async : true,
+																									success : function(
+																											data) {
+																										temp = $(
+																												'#selectedUser')
+																												.text();
+																										temp += data
+																												+ ';';
+																										$(
+																												'#selectedUser')
+																												.text(
+																														temp);
+
+																									}
+
+																								});
+																					}
+
+																					$(
+																							'#selectUsers')
+																							.modal(
+																									"hide");
+																				});
+																$(
+																		"#selectUsers")
+																		.bind(
+																				"evtCancled",
+																				function(
+																						evt,
+																						data) {
+																					console
+																							.log(data);
+																					$(
+																							'#selectUsers')
+																							.modal(
+																									"hide");
+																				});
+																$(
+																		'#selectUsers')
+																		.modal();
+
+															});
+										});
 					});
-		    });
-    /*]]>*/
+	/*]]>*/
 </script>
 </head>
 <body>
-	<form id="myForm"
-		th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
-		method="POST">
-		<fieldset>
-			<div class="well">
-				<div class="box">
-					<div class="control-group">
-						<label class="control-label text-info">标题：</label>
-						<div class="controls">
-							<input id="businessKey" name="businessKey" type="hidden" /> <input
-								name="applicationName" id="applicationName"
-								class="span7 required:true maxlength:200 minlength:2 messages:{required:'请输入...', maxlength:'请最多输入200个字符',minlength:'请至少输入两个字符'}" />
+	<div th:if="${not historicView}">
+		<form id="myForm"
+			th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
+			method="POST">
+			<fieldset>
+				<div class="well">
+					<div class="box">
+						<div class="control-group">
+							<label class="control-label text-info">标题：</label>
+							<div class="controls">
+								<input id="businessKey" name="businessKey" type="hidden" /> <input
+									name="applicationName" id="applicationName"
+									class="span7 required:true maxlength:200 minlength:2 messages:{required:'请输入...', maxlength:'请最多输入200个字符',minlength:'请至少输入两个字符'}" />
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="box">
-					<legend>公民或者法人、其它组织</legend>
-					<ul class="nav nav-tabs" id="myTab">
-						<li class="active"><a href="#citizen" data-toggle="tab">公民</a></li>
-						<li><a href="#group" data-toggle="tab">法人、其它组织</a></li>
-					</ul>
-					<div class="tab-content">
-						<div class="box tab-pane active" id="citizen">
-							<div class="control-group">
-								<div class="row">
-									<div class="span4">
-										<label class="control-label text-info">姓名：</label>
-										<div class="controls">
-											<input name="citizenName" />
+					<div class="box">
+						<legend>公民或者法人、其它组织</legend>
+						<ul class="nav nav-tabs" id="myTab">
+							<li class="active"><a href="#citizen" data-toggle="tab">公民</a></li>
+							<li><a href="#group" data-toggle="tab">法人、其它组织</a></li>
+						</ul>
+						<div class="tab-content">
+							<div class="box tab-pane active" id="citizen">
+								<div class="control-group">
+									<div class="row">
+										<div class="span4">
+											<label class="control-label text-info">姓名：</label>
+											<div class="controls">
+												<input name="citizenName" />
+											</div>
 										</div>
-									</div>
-									<div class="span4">
-										<label class="control-label text-info">工作单位：</label>
-										<div class="controls">
-											<input name="citizenWorkunit" />
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="span4">
-									<label class="control-label text-info">证件名称：</label>
-									<div class="controls">
-										<input name="citizenCertificate" />
-									</div>
-								</div>
-								<div class="span4">
-									<label class="control-label text-info">证件号码：</label>
-									<div class="controls">
-										<input name="citizenCertificateID" />
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="span4">
-									<label class="control-label text-info">联系电话：</label>
-									<div class="controls">
-										<input name="citizenTelphone" />
-									</div>
-								</div>
-								<div class="span4">
-									<label class="control-label text-info">邮件编码：</label>
-									<div class="controls">
-										<input name="citizenZipcode" />
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="span4">
-									<label class="control-label text-info">联系地址：</label>
-									<div class="controls">
-										<input name="citizenAddress" />
-									</div>
-								</div>
-								<div class="span4">
-									<label class="control-label text-info">传真：</label>
-									<div class="controls">
-										<input name="citizenFax" />
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="span4">
-									<label class="control-label text-info">电子邮箱：</label>
-									<div class="controls">
-										<input name="citizenEmail" />
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="box box tab-pane" id="group">
-							<div class="control-group">
-								<div class="row">
-									<div class="span4">
-										<label class="control-label text-info">名称：</label>
-										<div class="controls">
-											<input name="groupName" />
-										</div>
-									</div>
-									<div class="span4">
-										<label class="control-label text-info">组织机构代码：</label>
-										<div class="controls">
-											<input name="groupID" />
+										<div class="span4">
+											<label class="control-label text-info">工作单位：</label>
+											<div class="controls">
+												<input name="citizenWorkunit" />
+											</div>
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="span4">
-										<label class="control-label text-info">法人代表：</label>
+										<label class="control-label text-info">证件名称：</label>
 										<div class="controls">
-											<input name="groupDelegate" />
+											<input name="citizenCertificate" />
 										</div>
 									</div>
 									<div class="span4">
-										<label class="control-label text-info">联系人名称：</label>
+										<label class="control-label text-info">证件号码：</label>
 										<div class="controls">
-											<input name="groupDelegateName" />
+											<input name="citizenCertificateID" />
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="span4">
-										<label class="control-label text-info">联系人电话：</label>
+										<label class="control-label text-info">联系电话：</label>
 										<div class="controls">
-											<input name="groupDelegateTelphone" />
+											<input name="citizenTelphone" />
 										</div>
 									</div>
 									<div class="span4">
-										<label class="control-label text-info">传真：</label>
+										<label class="control-label text-info">邮件编码：</label>
 										<div class="controls">
-											<input name="groupDelegateFax" />
+											<input name="citizenZipcode" />
 										</div>
 									</div>
 								</div>
@@ -417,111 +351,391 @@
 									<div class="span4">
 										<label class="control-label text-info">联系地址：</label>
 										<div class="controls">
-											<input name="groupDelegateAddress" />
+											<input name="citizenAddress" />
 										</div>
 									</div>
 									<div class="span4">
+										<label class="control-label text-info">传真：</label>
+										<div class="controls">
+											<input name="citizenFax" />
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="span4">
 										<label class="control-label text-info">电子邮箱：</label>
 										<div class="controls">
-											<input name="groupDelegateEmail" />
+											<input name="citizenEmail" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="box box tab-pane" id="group">
+								<div class="control-group">
+									<div class="row">
+										<div class="span4">
+											<label class="control-label text-info">名称：</label>
+											<div class="controls">
+												<input name="groupName" />
+											</div>
+										</div>
+										<div class="span4">
+											<label class="control-label text-info">组织机构代码：</label>
+											<div class="controls">
+												<input name="groupID" />
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="span4">
+											<label class="control-label text-info">法人代表：</label>
+											<div class="controls">
+												<input name="groupDelegate" />
+											</div>
+										</div>
+										<div class="span4">
+											<label class="control-label text-info">联系人名称：</label>
+											<div class="controls">
+												<input name="groupDelegateName" />
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="span4">
+											<label class="control-label text-info">联系人电话：</label>
+											<div class="controls">
+												<input name="groupDelegateTelphone" />
+											</div>
+										</div>
+										<div class="span4">
+											<label class="control-label text-info">传真：</label>
+											<div class="controls">
+												<input name="groupDelegateFax" />
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="span4">
+											<label class="control-label text-info">联系地址：</label>
+											<div class="controls">
+												<input name="groupDelegateAddress" />
+											</div>
+										</div>
+										<div class="span4">
+											<label class="control-label text-info">电子邮箱：</label>
+											<div class="controls">
+												<input name="groupDelegateEmail" />
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="box">
-					<legend>申请信息</legend>
-					<div class="control-group">
-						<div class="row">
-							<div class="span4">
-								<label class="control-label text-info">申请时间：</label>
-								<div class="controls">
-									<div id="datetimepicker1" class="input-append date">
-										<input name="applicationTime" class="datepicker"
-											data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
-											class="add-on"> <i data-time-icon="icon-time"
-											data-date-icon="icon-calendar"> </i>
-										</span>
+					<div class="box">
+						<legend>申请信息</legend>
+						<div class="control-group">
+							<div class="row">
+								<div class="span4">
+									<label class="control-label text-info">申请时间：</label>
+									<div class="controls">
+										<div id="datetimepicker1" class="input-append date">
+											<input name="applicationTime" class="datepicker"
+												data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
+												class="add-on"> <i data-time-icon="icon-time"
+												data-date-icon="icon-calendar"> </i>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="span4">
+									<label class="control-label text-info">提交部门：</label>
+									<div class="controls">
+										<input name="submitDepartment" />
 									</div>
 								</div>
 							</div>
-							<div class="span4">
-								<label class="control-label text-info">提交部门：</label>
-								<div class="controls">
-									<input name="submitDepartment" />
+							<div class="row">
+								<div class="span8">
+									<label class="control-label text-info">所需信息的内容描述：</label>
+									<div class="controls">
+										<textarea name="description" rows="8" cols="80" class="span7"></textarea>
+									</div>
 								</div>
 							</div>
+							<div class="row">
+								<div class="span8">
+									<label class="control-label text-info">所需信息的用途：</label>
+									<div class="controls">
+										<input name="purpose" class="span7" />
+									</div>
+								</div>
+							</div>
+							<label class="control-label text-info">所需信息的指定提供方式：</label>
+							<div class="controls">
+								<label class="checkbox inline"> <input type="checkbox"
+									value="0" name="mode" />纸面
+								</label><label class="checkbox inline"><input type="checkbox"
+									value="1" name="mode" />电子邮件</label>
+							</div>
+							<label class="control-label text-info">读取信息的方式：</label>
+							<div class="controls">
+								<label class="checkbox inline"><input type="checkbox"
+									value="0" name="obtainMode" />电子邮件</label><label
+									class="checkbox inline"><input type="checkbox"
+									value="1" name="obtainMode" />传真</label><label class="checkbox inline"><input
+									type="checkbox" value="2" name="obtainMode" />自行领取</label>
+							</div>
 						</div>
+					</div>
+					<div class="box">
+						<legend>交办</legend>
+						<div class="row">
+							<div class="span3">
+								<label class="control-label text-info">已选择处理单位人员：</label>
+							</div>
+							<div class="span3">
+								<input type="button" id="selectBtn" value="选择用户"
+									class="btn btn-info btn-mini" /> <input type="button"
+									id="clearButton" value="清除" class="btn btn-danger btn-mini" />
+							</div>
+						</div>
+						<label id="selectedUser"></label> <input type="hidden"
+							name="assigneeList" id="assigneeList" value="" />
 						<div class="row">
 							<div class="span8">
-								<label class="control-label text-info">所需信息的内容描述：</label>
+								<label class="control-label text-info">处理意见：</label>
 								<div class="controls">
-									<textarea name="description" rows="8" cols="80" class="span7"></textarea>
+									<textarea name="reply" rows="8" cols="20" class="span7"></textarea>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="span8">
-								<label class="control-label text-info">所需信息的用途：</label>
-								<div class="controls">
-									<input name="purpose" class="span7" />
-								</div>
-							</div>
-						</div>
-						<label class="control-label text-info">所需信息的指定提供方式：</label>
-						<div class="controls">
-							<label class="checkbox inline"> <input type="checkbox"
-								value="0" name="mode" />纸面
-							</label><label class="checkbox inline"><input type="checkbox"
-								value="1" name="mode" />电子邮件</label>
-						</div>
-						<label class="control-label text-info">读取信息的方式：</label>
-						<div class="controls">
-							<label class="checkbox inline"><input type="checkbox"
-								value="0" name="obtainMode" />电子邮件</label><label
-								class="checkbox inline"><input type="checkbox" value="1"
-								name="obtainMode" />传真</label><label class="checkbox inline"><input
-								type="checkbox" value="2" name="obtainMode" />自行领取</label>
 						</div>
 					</div>
 				</div>
-				<div class="box">
-					<legend>交办</legend>
-					<div class="row">
-						<div class="span3">
-							<label class="control-label text-info">已选择处理单位人员：</label>
-						</div>
-						<div class="span3">
-							<input type="button" id="selectBtn" value="选择用户"
-								class="btn btn-info btn-mini" /> <input type="button"
-								id="clearButton" value="清除" class="btn btn-danger btn-mini" />
-						</div>
-					</div>
-					<label id="selectedUser"></label> <input type="hidden"
-						name="assigneeList" id="assigneeList" value="" />
-					<div class="row">
-						<div class="span8">
-							<label class="control-label text-info">处理意见：</label>
-							<div class="controls">
-								<textarea name="reply" rows="8" cols="20" class="span7"></textarea>
-							</div>
-						</div>
-					</div>
+			</fieldset>
+			<div class="control-group">
+				<div class="controls">
+					<input type="button" id="submitButton" value="提交"
+						class="btn btn-primary" /> <input type="button" id="finishButton"
+						value="直接办结" class="btn btn-warning" />
 				</div>
 			</div>
-		</fieldset>
-		<div class="control-group">
-			<div class="controls">
-				<input type="button" id="submitButton" value="提交"
-					class="btn btn-primary" /> <input type="button" id="finishButton"
-					value="直接办结" class="btn btn-warning" />
+			<input type="hidden" name="isComplete" id="isComplete" value="" />
+		</form>
+		<div tabindex="-1" class="modal hide fade" id="selectUsers"
+			data-keyboard="false" data-backdrop="static"></div>
+	</div>
+	<div class="well" th:if="${historicView}">
+		<div class="box">
+			<div class="control-group">
+				<label class="control-label text-info">标题：</label>
+				<div class="controls">
+					<label th:text="${result.applicationName}" />
+				</div>
 			</div>
 		</div>
-		<input type="hidden" name="isComplete" id="isComplete" value="" />
-	</form>
-	<div tabindex="-1" class="modal hide fade" id="selectUsers"
-		data-keyboard="false" data-backdrop="static"></div>
+		<div class="box">
+			<legend>公民</legend>
+			<div class="control-group">
+				<div class="row">
+					<div class="span4">
+						<label class="control-label text-info">姓名：</label>
+						<div class="controls">
+							<label th:text="${result.citizenName}" />
+						</div>
+					</div>
+					<div class="span4">
+						<label class="control-label text-info">工作单位：</label>
+						<div class="controls">
+							<label th:text="${result.citizenWorkunit}" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span4">
+					<label class="control-label text-info">证件名称：</label>
+					<div class="controls">
+						<label th:text="${result.citizenCertificate}" />
+					</div>
+				</div>
+				<div class="span4">
+					<label class="control-label text-info">证件号码：</label>
+					<div class="controls">
+						<label th:text="${result.citizenCertificateID}" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span4">
+					<label class="control-label text-info">联系电话：</label>
+					<div class="controls">
+						<label th:text="${result.citizenTelphone}" />
+					</div>
+				</div>
+				<div class="span4">
+					<label class="control-label text-info">邮件编码：</label>
+					<div class="controls">
+						<label th:text="${result.citizenZipcode}" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span4">
+					<label class="control-label text-info">联系地址：</label>
+					<div class="controls">
+						<label th:text="${result.citizenAddress}" />
+					</div>
+				</div>
+				<div class="span4">
+					<label class="control-label text-info">传真：</label>
+					<div class="controls">
+						<label th:text="${result.citizenFax}" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span4">
+					<label class="control-label text-info">电子邮箱：</label>
+					<div class="controls">
+						<label th:text="${result.citizenEmail}" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="box">
+			<legend>法人/其它组织</legend>
+			<div class="control-group">
+				<div class="row">
+					<div class="span4">
+						<label class="control-label text-info">名称：</label>
+						<div class="controls">
+							<label th:text="${result.groupName}" />
+						</div>
+					</div>
+					<div class="span4">
+						<label class="control-label text-info">组织机构代码：</label>
+						<div class="controls">
+							<label th:text="${result.groupID}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span4">
+						<label class="control-label text-info">法人代表：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegate}" />
+						</div>
+					</div>
+					<div class="span4">
+						<label class="control-label text-info">联系人名称：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegateName}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span4">
+						<label class="control-label text-info">联系人电话：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegateTelphone}" />
+						</div>
+					</div>
+					<div class="span4">
+						<label class="control-label text-info">传真：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegateFax}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span4">
+						<label class="control-label text-info">联系地址：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegateAddress}" />
+						</div>
+					</div>
+					<div class="span4">
+						<label class="control-label text-info">电子邮箱：</label>
+						<div class="controls">
+							<label th:text="${result.groupDelegateEmail}" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="box">
+			<div class="control-group">
+				<div class="row">
+					<div class="span4">
+						<label class="control-label text-info">申请时间：</label>
+						<div class="controls">
+							<label th:text="${result.applicationTime}" />
+						</div>
+					</div>
+					<div class="span4">
+						<label class="control-label text-info">提交部门：</label>
+						<div class="controls">
+							<label th:text="${result.submitDepartment}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span8">
+						<label class="control-label text-info">所需信息的内容描述：</label>
+						<div class="controls">
+							<label th:text="${result.description}" class="span7" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span8">
+						<label class="control-label text-info">所需信息的用途：</label>
+						<div class="controls">
+							<label th:text="${result.purpose}" class="span7" />
+						</div>
+					</div>
+				</div>
+				<label class="control-label text-info">所需信息的指定提供方式：</label>
+				<div class="controls">
+					<label class="checkbox inline"><input type="checkbox"
+						value="0" name="mode"
+						th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'0'):false}" />纸面</label><label
+						class="checkbox inline"><input type="checkbox" value="1"
+						name="mode"
+						th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'1'):false}" />电子邮件</label>
+				</div>
+				<label class="control-label text-info">读取信息的方式：</label>
+				<div class="controls">
+					<label class="checkbox inline"><input type="checkbox"
+						value="0" name="obtainMode"
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'0'):false}" />电子邮件</label><label
+						class="checkbox inline"><input type="checkbox" value="1"
+						name="obtainMode"
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'1'):false}" />传真</label><label
+						class="checkbox inline"><input type="checkbox" value="2"
+						name="obtainMode"
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
+				</div>
+			</div>
+		</div>
+		<div class="box">
+			<legend>处理意见</legend>
+			<div th:each="aReply:${result.replies}">
+				<blockquote>
+					<p th:text="${aReply.reply}" class="text-left" />
+					<small><span
+						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
+					<div th:each="attachment:${aReply.attachments}">
+						<label class="checkbox inline"><a
+							th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
+								th:text="${attachment.name}">file.ext</span></a></label>
+					</div>
+				</blockquote>
+			</div>
+		</div>
+
+
+	</div>
 </body>
 </html>

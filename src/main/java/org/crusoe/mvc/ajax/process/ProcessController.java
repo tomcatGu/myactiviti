@@ -24,7 +24,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.util.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-
 import org.crusoe.dto.HistoricProcessInstanceDTO;
 import org.crusoe.dto.ProcessDefinitionDTO;
 import org.crusoe.dto.ProcessInstanceDTO;
@@ -268,6 +267,7 @@ public class ProcessController extends BaseServiceImpl {
 		HistoricProcessInstance hpi = historyService
 				.createHistoricProcessInstanceQuery()
 				.processInstanceId(processInstanceId).singleResult();
+
 		HistoricProcessInstanceDTO hpiDTO = new HistoricProcessInstanceDTO();
 		hpiDTO.setId(hpi.getId());
 		hpiDTO.setBusinessKey(hpi.getBusinessKey());
@@ -275,7 +275,16 @@ public class ProcessController extends BaseServiceImpl {
 		hpiDTO.setStartTime(hpi.getStartTime());
 		hpiDTO.setEndTime(hpi.getEndTime());
 		hpiDTO.setStartUserId(hpi.getStartUserId());
-		// hpiDTO.setStatus()
+
+		String formKey = formService.getStartFormKey(hpi
+				.getProcessDefinitionId());
+		if (formKey != null) {
+			model.addAttribute("hasStartForm", true);
+		} else {
+
+			model.addAttribute("hasStartForm", true);
+		}
+
 		model.addAttribute("processInstanceStart", hpiDTO);
 
 		for (HistoricTaskInstance hti : historicTaskInstances) {
