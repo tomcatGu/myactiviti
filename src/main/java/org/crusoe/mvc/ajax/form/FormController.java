@@ -21,6 +21,7 @@ import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.shiro.subject.Subject;
 import org.crusoe.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ public class FormController {
 	@Autowired
 	protected AccountService accountService;
 
+	@RequiresUser
 	@RequestMapping(value = "submitStartForm/{processDefinitionId}", method = RequestMethod.POST)
 	public @ResponseBody
 	HashMap<String, Object> submitStartForm(
@@ -104,6 +106,7 @@ public class FormController {
 		return rets;
 	}
 
+	@RequiresUser
 	@RequestMapping(value = "submitTaskForm/{taskId}", method = RequestMethod.POST)
 	public @ResponseBody
 	HashMap<String, Object> submitTaskForm(@PathVariable String taskId,

@@ -25,6 +25,7 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.crusoe.dto.AttachmentDTO;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.task.TaskDTO;
@@ -170,12 +171,12 @@ public class TaskController {
 			return "task/index";
 	}
 
+	@RequiresUser
 	@RequestMapping(value = "claim/{taskId}")
 	public String claimTask(@PathVariable("taskId") String taskId, Model model)
 			throws IllegalAccessException, InvocationTargetException {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		if (SecurityUtils.getSubject().getPrincipal() == null)
-			return "/login";// redirect to login page
+
 		User user = accountService.findUserByLoginName(SecurityUtils
 				.getSubject().getPrincipal().toString());
 		taskService.claim(task.getId(), user.getLoginName());
@@ -203,6 +204,7 @@ public class TaskController {
 			return "task/index";
 	}
 
+	@RequiresUser
 	@RequestMapping(value = "complete/{taskId}")
 	public String completeTask(@PathVariable("taskId") String taskId,
 			Model model) {
@@ -239,6 +241,7 @@ public class TaskController {
 
 	}
 
+	@RequiresUser
 	@RequestMapping(value = "listTasks", method = RequestMethod.GET)
 	public @ResponseBody
 	HashMap<String, Object> listTasks(@RequestParam("sort") String sort,
@@ -278,6 +281,7 @@ public class TaskController {
 
 	}
 
+	@RequiresUser
 	@RequestMapping(value = "listHistoryTasks", method = RequestMethod.GET)
 	public @ResponseBody
 	HashMap<String, Object> listHistoryTasks(@RequestParam("sort") String sort,

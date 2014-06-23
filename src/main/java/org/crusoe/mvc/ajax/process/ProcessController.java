@@ -151,6 +151,62 @@ public class ProcessController extends BaseServiceImpl {
 		return "process/userProcessInstanceIndex";
 	}
 
+	@RequestMapping(value = "allProcessIndex", method = RequestMethod.GET)
+	public String allProcessIndex(Model model) {
+
+		return "process/allProcessInstanceIndex";
+	}
+
+	@RequestMapping(value = "listAllProcessInstances", method = RequestMethod.GET)
+	public @ResponseBody
+	HashMap<String, Object> listAllProcessInstances(
+			@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			Model model) throws IllegalAccessException,
+			InvocationTargetException {
+
+		List<Object> objects = new ArrayList<Object>();
+		List<HistoricProcessInstance> userAllProcessInstances = historyService
+				.createHistoricProcessInstanceQuery().listPage(start, size);
+
+		List<HistoricActivityInstance> hainstances = historyService
+				.createHistoricActivityInstanceQuery()
+
+				.list();
+		for (HistoricActivityInstance hai : hainstances) {
+
+			// String activityName = hai.getActivityName();
+
+		}
+		for (HistoricProcessInstance historicProcessInstance : userAllProcessInstances) {
+			HistoricProcessInstanceDTO piDTO = new HistoricProcessInstanceDTO();
+			piDTO.setBusinessKey(historicProcessInstance.getBusinessKey());
+			piDTO.setId(historicProcessInstance.getId());
+			piDTO.setProcessDefinitionId(historicProcessInstance
+					.getProcessDefinitionId());
+			piDTO.setStartTime(historicProcessInstance.getStartTime());
+			piDTO.setEndTime(historicProcessInstance.getEndTime());
+			piDTO.setStartUserId(historicProcessInstance.getStartUserId());
+			if (piDTO.getEndTime() == null)
+				piDTO.setStatus("activited");
+			else
+				piDTO.setStatus("finished");
+
+			objects.add(piDTO);
+
+		}
+		long count = historyService.createHistoricProcessInstanceQuery()
+				.count();
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		rets.put("count", count);
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", objects);
+		return rets;
+	}
+
 	@RequestMapping(value = "listUserProcessInstances/{username}", method = RequestMethod.GET)
 	public @ResponseBody
 	HashMap<String, Object> listUserProcessInstances(
