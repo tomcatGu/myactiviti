@@ -411,6 +411,7 @@
 			<artifactId>aspectjweaver</artifactId>
 			<version>${aspectj.version}</version>
 		</dependency>
+
 	</dependencies>
 
 	<modules>
@@ -425,7 +426,7 @@
 		<jetty.version>1</jetty.version>
 		<junit.version>4.10</junit.version>
 		<groovy.version>2.2.1</groovy.version>
-		<activiti.version>5.15</activiti.version>
+		<activiti.version>5.15.1</activiti.version>
 		<lucene.version>4.7.0</lucene.version>
 		<aspectj.version>1.7.4</aspectj.version>
 	</properties>

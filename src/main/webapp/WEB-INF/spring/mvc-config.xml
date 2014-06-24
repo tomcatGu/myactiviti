@@ -6,12 +6,12 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd 
-        http://www.springframework.org/schema/context  
-        http://www.springframework.org/schema/context/spring-context-4.0.xsd  
-        http://www.sillycat.com/schema/groovy http://www.sillycat.com/schema/groovy/groovy.xsd 
-		http://www.springframework.org/schema/mvc 
-		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
-		">
+	http://www.springframework.org/schema/context  
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+	http://www.sillycat.com/schema/groovy http://www.sillycat.com/schema/groovy/groovy.xsd 
+	http://www.springframework.org/schema/mvc 
+	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+	">
 
 
 
@@ -54,6 +54,7 @@
 	<!-- Forwards requests to the "/" resource to the "welcome" view -->
 	<mvc:view-controller path="/" view-name="welcome" />
 
+	<mvc:resources location="/modeler/" mapping="/modeler/**" />  
 	<!-- Configures Handler Interceptors -->
 	<mvc:interceptors>
 		<!-- Changes the locale when a 'locale' request parameter is sent; e.g. 

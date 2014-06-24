@@ -120,9 +120,7 @@ public class TaskController {
 			}
 			model.addAttribute("attachments", attachments);
 			model.addAttribute("historicView", true);
-			// model.addAllAttributes(attachments);
-			// model.addAllAttributes(variables);
-			// model.addAttribute("taskId", taskId);
+
 			return formKey;
 		} else
 			return "task/index";
