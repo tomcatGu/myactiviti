@@ -22,6 +22,8 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,8 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+
 
 @Controller
 @RequestMapping(value = "/workflow")
@@ -98,7 +99,7 @@ public class ActivitiWorkflowController {
 
 			repositoryService.saveModel(modelData);
 			repositoryService.addModelEditorSource(modelData.getId(),
-					editorNode.toString().getBytes("utf-8"));
+					editorNode.toString().getBytes("UTF-8"));
 			response.setCharacterEncoding("UTF-8");
 			response.sendRedirect(request.getContextPath()
 					+ "/modeler/service/editor?id=" + modelData.getId());
