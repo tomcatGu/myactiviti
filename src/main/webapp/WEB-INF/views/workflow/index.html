@@ -7,9 +7,11 @@
 	function render(data) {
 		var newRow = "<tr><td><input type=\"checkbox\" /></td><td>" + data.id
 				+ "</td><td>" + data.name + "</td><td>" + data.version
-				+ "</td><td><a href=\"javascript:loadView('"
-				+ /*[[@{'/runtime/tasks/claim/'}]]*/"1234/" //url
-				+ data.id + "')\">接受</a></td></tr>";
+				+ "</td><td><a href=\""
+				+ /*[[@{'/workflow/deploy/'}]]*/"1234/" //url
+				+ data.id + "\">部署</a><a href=\""
+				+ /*[[@{'/modeler/service/editor?id='}]]*/"1234/" //url
+				+ data.id + "\">修改</a></td></tr>";
 		return newRow;
 	};
 	$(document)
