@@ -1,0 +1,86 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<title>模型列表</title>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	function render(data) {
+		var newRow = "<tr><td><input type=\"checkbox\" /></td><td>" + data.id
+				+ "</td><td>" + data.name + "</td><td>" + data.version
+				+ "</td><td><a href=\"javascript:loadView('"
+				+ /*[[@{'/runtime/tasks/claim/'}]]*/"1234/" //url
+				+ data.id + "')\">接受</a></td></tr>";
+		return newRow;
+	};
+	$(document)
+			.ready(
+					function() {
+
+						$("#modelList")
+								.simpleTable(
+										/*[[@{'/workflow/listModels?sort=name&order=desc'}]]*/""
+												+ "&timestamp="
+												+ new Date().toString(),
+										render, $("#paginatorForModeList"),
+										null);
+
+					});
+	function loadView(url) {
+		$("#view")
+				.load(
+						url + '?' + (new Date()).valueOf(),
+						function(data) {
+							$("#view")
+									.bind(
+											"evtWFSuccess",
+											function(evt, data) {
+												$("#view").hide();
+												$("#taskList")
+														.clearSimpleTable();
+												$("#listView").show();
+												$("#taskList")
+														.simpleTable(
+																/*[[@{'//workflow/listModels?sort=name&order=desc'}]]*/"",
+																render,
+																$("#paginatorForModeList"),
+																null);
+
+											});
+							$("#view").show();
+							$("#listView").hide();
+
+						});
+	};
+	/*]]>*/
+</script>
+<style>
+.hover {
+	background-color: #cccc00;
+}
+</style>
+</head>
+<body>
+	<div class="box" id="listView">
+		<table id="modelList" cellpadding="0" cellspacing="0" border="0"
+			class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th><input type="checkbox" name="check" value="" /></th>
+					<th>模型ID</th>
+					<th>模型名称</th>
+					<th>模型版本</th>
+					<th>动作</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<div id="paginatorForModeList"></div>
+		<input type="button" id="deleteBtn" value="删除选中"
+			class="btn btn-danger" />
+	</div>
+	<div id="view"></div>
+	<div tabindex="-1" class="modal hide fade" id="selectUsers"
+		data-keyboard="false" data-backdrop="static"></div>
+</body>
+</html>

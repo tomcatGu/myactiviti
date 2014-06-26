@@ -2,6 +2,7 @@ package org.crusoe.mvc.ajax.workflow;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,7 +13,10 @@ import java.util.zip.ZipInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.bpmn.converter.BpmnXMLConverter;
+import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.editor.constants.ModelDataJsonConstants;
+import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.ActivitiException;
@@ -20,20 +24,24 @@ import org.activiti.engine.FormService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
+import org.crusoe.dto.repository.ModelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(value = "/workflow")
@@ -50,7 +58,38 @@ public class ActivitiWorkflowController {
 	@RequestMapping(value = "index", method = RequestMethod.GET)
 	public String getIndexForm(Model model) {
 
-		return "/workflow/submitForm";
+
+		return "/workflow/index";
+	}
+
+	@RequiresUser
+	@RequestMapping(value = "listModels", method = RequestMethod.GET)
+	public @ResponseBody
+	HashMap<String, Object> listTasks(@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size)
+			throws IllegalAccessException, InvocationTargetException {
+
+		List<org.activiti.engine.repository.Model> list = repositoryService
+				.createModelQuery().orderByCreateTime().desc().listPage(start, size);
+		List<ModelDTO> todoList = new ArrayList<ModelDTO>();
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		for (org.activiti.engine.repository.Model model : list) {
+			ModelDTO modelDTO = new ModelDTO();
+			BeanUtils.copyProperties(modelDTO, model);
+			todoList.add(modelDTO);
+
+		}
+
+		long count = repositoryService.createModelQuery().count();
+		rets.put("count", count);
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", todoList);
+
+		return rets;
+
 	}
 
 	@RequestMapping(value = "deploy", method = RequestMethod.GET)
@@ -107,6 +146,36 @@ public class ActivitiWorkflowController {
 		} catch (Exception e) {
 
 		}
+	}
+
+	/**
+	 * 根据Model部署流程
+	 */
+	@RequestMapping(value = "deploy/{modelId}")
+	public String deploy(@PathVariable("modelId") String modelId,
+			RedirectAttributes redirectAttributes) {
+		try {
+			org.activiti.engine.repository.Model modelData = repositoryService
+					.getModel(modelId);
+			ObjectNode modelNode = (ObjectNode) new ObjectMapper()
+					.readTree(repositoryService.getModelEditorSource(modelData
+							.getId()));
+			byte[] bpmnBytes = null;
+
+			BpmnModel model = new BpmnJsonConverter()
+					.convertToBpmnModel(modelNode);
+			bpmnBytes = new BpmnXMLConverter().convertToXML(model);
+
+			String processName = modelData.getName() + ".bpmn20.xml";
+			Deployment deployment = repositoryService.createDeployment()
+					.name(modelData.getName())
+					.addString(processName, new String(bpmnBytes)).deploy();
+			redirectAttributes.addFlashAttribute("message", "部署成功，部署ID="
+					+ deployment.getId());
+		} catch (Exception e) {
+			// logger.error("根据模型部署流程失败：modelId={}", modelId, e);
+		}
+		return "redirect:/workflow/model/list";
 	}
 
 	@RequestMapping(value = "/deployments", method = RequestMethod.POST)
