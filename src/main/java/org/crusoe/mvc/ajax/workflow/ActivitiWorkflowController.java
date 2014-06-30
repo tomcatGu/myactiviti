@@ -175,7 +175,7 @@ public class ActivitiWorkflowController {
 		} catch (Exception e) {
 			// logger.error("根据模型部署流程失败：modelId={}", modelId, e);
 		}
-		return "redirect:/workflow/model/list";
+		return "redirect:/workflow/index";
 	}
 
 	@RequestMapping(value = "/deployments", method = RequestMethod.POST)

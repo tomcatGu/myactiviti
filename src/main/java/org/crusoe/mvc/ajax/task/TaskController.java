@@ -262,8 +262,8 @@ public class TaskController {
 			TaskDTO taskDTO = new TaskDTO();
 			taskDTO.setId(task.getId());
 			taskDTO.setName(task.getName());
-			taskDTO.setAssignee(task.getAssignee());
-			// BeanUtils.copyProperties(task, taskDTO);
+			//taskDTO.setAssignee(task.getAssignee());
+			taskDTO.setAssignee(accountService.findUserByLoginName(task.getAssignee()).getName());
 			todoList.add(taskDTO);
 
 		}
@@ -304,7 +304,8 @@ public class TaskController {
 			TaskDTO taskDTO = new TaskDTO();
 			taskDTO.setId(task.getId());
 			taskDTO.setName(task.getName());
-			taskDTO.setAssignee(task.getAssignee());
+
+			taskDTO.setAssignee(accountService.findUserByLoginName(task.getAssignee()).getName());
 			taskDTO.setEndTime(task.getEndTime());
 			taskDTO.setStartTime(task.getStartTime());
 			taskDTO.setTaskDefinitionKey(task.getTaskDefinitionKey());

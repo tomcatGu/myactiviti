@@ -127,7 +127,7 @@ public class ProcessController extends BaseServiceImpl {
 			return startFormKey;
 		} else {
 			Subject currentUser = SecurityUtils.getSubject();
-			if (currentUser != null)
+			if (currentUser.getPrincipal() != null)
 				identityService.setAuthenticatedUserId(currentUser
 						.getPrincipal().toString());
 			ProcessInstance processInstance = runtimeService
@@ -188,6 +188,8 @@ public class ProcessController extends BaseServiceImpl {
 			piDTO.setStartTime(historicProcessInstance.getStartTime());
 			piDTO.setEndTime(historicProcessInstance.getEndTime());
 			piDTO.setStartUserId(historicProcessInstance.getStartUserId());
+			piDTO.setUsername(accountService.findUserByLoginName(
+					piDTO.getStartUserId()).getName());
 			if (piDTO.getEndTime() == null)
 				piDTO.setStatus("activited");
 			else
@@ -239,6 +241,8 @@ public class ProcessController extends BaseServiceImpl {
 			piDTO.setStartTime(historicProcessInstance.getStartTime());
 			piDTO.setEndTime(historicProcessInstance.getEndTime());
 			piDTO.setStartUserId(historicProcessInstance.getStartUserId());
+			piDTO.setUsername(accountService.findUserByLoginName(
+					piDTO.getStartUserId()).getName());
 			if (piDTO.getEndTime() == null)
 				piDTO.setStatus("activited");
 			else
@@ -275,6 +279,8 @@ public class ProcessController extends BaseServiceImpl {
 		hpiDTO.setStartTime(hpi.getStartTime());
 		hpiDTO.setEndTime(hpi.getEndTime());
 		hpiDTO.setStartUserId(hpi.getStartUserId());
+		hpiDTO.setUsername(accountService.findUserByLoginName(
+				hpiDTO.getStartUserId()).getName());
 
 		String formKey = formService.getStartFormKey(hpi
 				.getProcessDefinitionId());
@@ -296,6 +302,8 @@ public class ProcessController extends BaseServiceImpl {
 			taskDTO.setEndTime(hti.getEndTime());
 			taskDTO.setName(hti.getName());
 			taskDTO.setAssignee(hti.getAssignee());
+			taskDTO.setAssignee(accountService.findUserByLoginName(
+					hti.getAssignee()).getName());
 			todoList.add(taskDTO);
 		}
 		model.addAttribute("tasks", todoList);

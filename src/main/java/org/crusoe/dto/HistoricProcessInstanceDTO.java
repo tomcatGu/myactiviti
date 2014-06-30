@@ -10,6 +10,7 @@ public class HistoricProcessInstanceDTO {
 	private Date endTime;
 	private String businessKey;
 	private String status;
+	private String username;
 
 	public String getId() {
 		return id;
@@ -66,6 +67,14 @@ public class HistoricProcessInstanceDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub

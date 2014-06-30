@@ -59,7 +59,7 @@
 						th:text="${#dates.format(processInstanceStart.startTime, 'yyyy/MM/dd HH:mm')}"
 						class="pull-right"></span><span class="pull-right">¿ªÊ¼ÓÚ£º</span><span
 						class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span><span
-						th:text="${processInstanceStart.startUserId}" class="pull-right"></span></a></li>
+						th:text="${processInstanceStart.username}" class="pull-right"></span></a></li>
 				<li th:each="task:${tasks}"><a target="_blank"
 					th:href="@{/runtime/tasks/reviewHistoric/}+${task.id}+
 						'?processDefinitionId='+${task.processDefinitionId}+'&amp;taskDefinitionKey='+${task.taskDefinitionKey}"><span

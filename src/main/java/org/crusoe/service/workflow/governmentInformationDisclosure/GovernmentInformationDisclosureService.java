@@ -107,6 +107,10 @@ public class GovernmentInformationDisclosureService {
 		replyEntity.setReplyTime(new Date());
 		replyEntity.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
 				.toString());
+		replyEntity
+				.setUsername(accountService.findUserByLoginName(
+						SecurityUtils.getSubject().getPrincipal().toString())
+						.getName());
 		gid.getReplies().add(replyEntity);
 
 		gid.setMode(mode);
@@ -157,6 +161,10 @@ public class GovernmentInformationDisclosureService {
 
 		replyEntity.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
 				.toString());
+		replyEntity
+				.setUsername(accountService.findUserByLoginName(
+						SecurityUtils.getSubject().getPrincipal().toString())
+						.getName());
 		gid.getReplies().add(replyEntity);
 		String replyContent = "";
 		for (Reply aReply : gid.getReplies()) {
@@ -206,6 +214,10 @@ public class GovernmentInformationDisclosureService {
 
 		replyEntity.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
 				.toString());
+		replyEntity
+				.setUsername(accountService.findUserByLoginName(
+						SecurityUtils.getSubject().getPrincipal().toString())
+						.getName());
 
 		String[] attachmentIds = attachmentList.split(",");
 		for (String id : attachmentIds) {

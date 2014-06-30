@@ -11,6 +11,7 @@ public class ReplyDTO {
 	private Long id;
 	private String reply;
 	private String userId;
+	private String username;
 	private Date replyTime;
 	private List<AttachmentDTO> attachments = Lists.newArrayList();
 

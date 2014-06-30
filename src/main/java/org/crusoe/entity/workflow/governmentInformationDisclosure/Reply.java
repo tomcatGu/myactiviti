@@ -21,6 +21,7 @@ public class Reply {
 	private Long id;
 	private String reply;
 	private String userLoginName;
+	private String username;
 	private Date replyTime;
 
 	private List<AttachmentEntity> attachments = Lists.newArrayList();
@@ -67,6 +68,14 @@ public class Reply {
 
 	public void setAttachments(List<AttachmentEntity> attachments) {
 		this.attachments = attachments;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

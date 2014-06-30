@@ -28,7 +28,7 @@
     
 	function loadOwner(title){
 	    
-	    load(title,'runtime/process/userProcessIndex/'+/*[[${T(org.apache.shiro.SecurityUtils).subject.principal.name}]]*/
+	    load(title,'runtime/process/userProcessIndex/'+/*[[${T(org.apache.shiro.SecurityUtils).subject.principal.loginName}]]*/
 		    );
 	};
     function changePassword() {

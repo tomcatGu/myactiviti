@@ -386,7 +386,7 @@
 				<blockquote>
 					<p th:text="${aReply.reply}" class="text-left" />
 					<small><span
-						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
+						th:text="${aReply.username}+'  '+${aReply.replyTime}"></span></small>
 					<div th:each="attachment:${aReply.attachments}">
 						<label class="checkbox inline"><a
 							th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
