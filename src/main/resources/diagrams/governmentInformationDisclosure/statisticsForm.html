@@ -1,0 +1,184 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>依申请公开办理情况统计表</title>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(document)
+	    .ready(
+		    function() {
+			$("#submitButton")
+				.click(
+					function() {
+					    $("#applictionStatisticsForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
+								dataType : "text",
+								success : function(
+									data) {
+								    var ret = JSON
+									    .parse(data);
+								    alert(ret.msg);
+								    $(
+									    "#applictionStatisticsForm")
+									    .trigger(
+										    "evtWFSuccess",
+										    {
+											msg : "OK"
+										    });
+								    $(
+									    "#submitButton")
+									    .attr(
+										    "disabled",
+										    true)
+									    .attr(
+										    "value",
+										    "成功提交");
+
+								},
+								beforeSubmit : function() {
+								    if ($(
+									    "#applictionStatisticsForm")
+									    .valid()) {
+									$(
+										"#submitButton")
+										.attr(
+											"disabled",
+											true)
+										.attr(
+											"value",
+											"正在提交...");
+								    }
+								    return $(
+									    "#applictionStatisticsForm")
+									    .valid();
+								}
+
+							    }).submit();
+					});
+		    });
+    /*]]>*/
+</script>
+</head>
+<body>
+	<form id="applictionStatisticsForm"
+		th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
+		method="POST">
+		<h1>依申请公开办理情况统计表</h1>
+		<fieldset>
+			<div class="well">
+				<div class="box">
+					<legend>申请信息公开情况</legend>
+					<div class="control-group">
+						<div class="row">
+							<div class="span4">
+								<label class="control-label text-info">1、当面申请数：</label>
+								<div class="controls">
+									<input name="numberOfApplicationOnTheSpot" />
+								</div>
+							</div>
+							<div class="span4">
+								<label class="control-label text-info">2、网上及电子邮件申请数：</label>
+								<div class="controls">
+									<input name="numberOfApplicationFromNetworkOrEmail" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span4">
+							<label class="control-label text-info">3、信函及传真申请数：</label>
+							<div class="controls">
+								<input name="numberOfApplicationFromMailOrFax" />
+							</div>
+						</div>
+						<div class="span4">
+							<label class="control-label text-info">4、其它形式申请数：</label>
+							<div class="controls">
+								<input name="numberOfApplicationFromOthers" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="box">
+					<legend>答复情况</legend>
+					<div class="control-group">
+						<div class="row">
+							<div class="span4">
+								<label class="control-label text-info">1、同意公开答复数：</label>
+								<div class="controls">
+									<input name="numberOfAgreedReply" />
+								</div>
+							</div>
+							<div class="span4">
+								<label class="control-label text-info">2、延期答复数：</label>
+								<div class="controls">
+									<input name="numberOfDelayedReply" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span4">
+								<label class="control-label text-info">3、同意部分公开答复数：</label>
+								<div class="controls">
+									<input name="numberOfPartOpenAgreedReply" />
+								</div>
+							</div>
+							<div class="span4">
+								<label class="control-label text-info">4、已公开并告知检索途径数：</label>
+								<div class="controls">
+									<input name="numberOfOpenedAndToldReply" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span4">
+								<label class="control-label text-info">5、不同意公开答复数：</label>
+								<div class="controls">
+									<input name="numberOfDisagreedReply" />
+								</div>
+							</div>
+							<div class="span4">
+								<label class="control-label text-info">6、不属于本机关公开范围数：</label>
+								<div class="controls">
+									<input name="numberOfNotBelongReply" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span4">
+								<label class="control-label text-info">7、信息不存在数：</label>
+								<div class="controls">
+									<input name="numberOfNonExistentReply" />
+								</div>
+							</div>
+							<div class="span4">
+								<label class="control-label text-info">8、申请内容不明确：</label>
+								<div class="controls">
+									<input name="numberOfVagueReply" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span4">
+								<label class="control-label text-info">9、其他答复情况数：</label>
+								<div class="controls">
+									<input name="numberOfOtherReply" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<div class="control-group">
+			<div class="controls">
+				<input type="button" id="submitButton" value="提交"
+					class="btn btn-primary" />
+			</div>
+		</div>
+	</form>
+</body>
+</html>

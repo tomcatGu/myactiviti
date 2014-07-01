@@ -24,9 +24,11 @@ import org.crusoe.dto.HistoricProcessInstanceDTO;
 import org.crusoe.dto.fulltextSearch.SearchResultDTO;
 import org.crusoe.dto.task.TaskDTO;
 import org.crusoe.entity.User;
+import org.crusoe.entity.workflow.governmentInformationDisclosure.Application;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.AttachmentEntity;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInformationDisclosure;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.Reply;
+import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.ApplicationDao;
 import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.GovernmentInformationDisclosureDao;
 import org.crusoe.service.AccountService;
 import org.crusoe.util.LuceneIKUtil;
@@ -49,6 +51,8 @@ public class GovernmentInformationDisclosureService {
 	@Autowired
 	private GovernmentInformationDisclosureDao gidDao;
 	@Autowired
+	private ApplicationDao applicationDao;
+	@Autowired
 	private AccountService accountService;
 	@Autowired
 	private HistoryService historyService;
@@ -56,6 +60,41 @@ public class GovernmentInformationDisclosureService {
 	private TaskService taskService;
 	@Autowired
 	private LuceneIKUtil ikUtil;
+
+	public Application saveApplication(
+			int numberOfApplicationOnTheSpot,
+			int numberOfApplicationFromNetworkOrEmail,
+			int numberOfApplicationFromMailOrFax,
+			int numberOfApplicationFromOthers, int numberOfAgreedReply,
+			int numberOfDelayedReply, int numberOfPartOpenAgreedReply,
+			int numberOfOpenedAndToldReply, int numberOfDisagreedReply,
+			int numberOfNotBelongReply, int numberOfNonExistentReply,
+			int numberOfVagueReply, int numberOfOtherReply) {
+		Application application = new Application();
+		application.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
+				.toString());
+		application
+				.setNumberOfApplicationOnTheSpot(numberOfApplicationOnTheSpot);
+		application
+				.setNumberOfApplicationFromNetworkOrEmail(numberOfApplicationFromNetworkOrEmail);
+		application
+				.setNumberOfApplicationFromMailOrFax(numberOfApplicationFromMailOrFax);
+		application
+				.setNumberOfApplicationFromOthers(numberOfApplicationFromOthers);
+		application.setNumberOfAgreedReply(numberOfAgreedReply);
+		application.setNumberOfDelayedReply(numberOfDelayedReply);
+		application.setNumberOfPartOpenAgreedReply(numberOfPartOpenAgreedReply);
+		application.setNumberOfOpenedAndToldReply(numberOfOpenedAndToldReply);
+		application.setNumberOfDisagreedReply(numberOfDisagreedReply);
+		application.setNumberOfNotBelongReply(numberOfNotBelongReply);
+		application.setNumberOfNonExistentReply(numberOfNonExistentReply);
+		application.setNumberOfVagueReply(numberOfVagueReply);
+		application.setNumberOfOtherReply(numberOfOtherReply);
+		application.setCreateTime(new Date());
+		applicationDao.save(application);
+		return application;
+
+	}
 
 	public GovernmentInformationDisclosure save(DelegateExecution execution,
 			String applicationName, String citizenName, String citizenWorkunit,
