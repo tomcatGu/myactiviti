@@ -40,125 +40,125 @@ form {
 }
 </style>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function deleteAttachment(deleteUrl, attachmentId) {
-		$.ajax({
-			type : "POST",
-			url : deleteUrl + attachmentId,
-			data : {
-				_method : 'DELETE',
-			//items : selctedItems
-			},
-			// contentType : 'application/json',
-			//dataType : 'json',
-			success : function(data) {
+    /*<![CDATA[*/
+    function deleteAttachment(deleteUrl, attachmentId) {
+	$.ajax({
+	    type : "POST",
+	    url : deleteUrl + attachmentId,
+	    data : {
+		_method : 'DELETE',
+	    //items : selctedItems
+	    },
+	    // contentType : 'application/json',
+	    //dataType : 'json',
+	    success : function(data) {
+		var orignList = $("#attachmentList").val();
+		$("#attachmentList").val(
+			orginList.replace(attachmentId + ",", ""));
+
+		$("#attachment" + attachmentId).remove();
+
+	    }
+	});
+    };
+
+    $(document)
+	    .ready(
+		    function() {
+
+			$("#myForm").validate({
+			    rules : {
+				reply : {
+				    required : true
+				}
+
+			    },
+			    messages : {
+
+				reply : {
+				    required : "必须输入回复意见"
+				}
+
+			    }
+
+			});
+
+			var options = {
+			    beforeSend : function() {
+				$("#progress").show();
+				//clear everything
+				$("#bar").width('0%');
+				$("#message").html("");
+				$("#percent").html("0%");
+			    },
+			    uploadProgress : function(event, position, total,
+				    percentComplete) {
+				$("#bar").width(percentComplete + '%');
+				$("#percent").html(percentComplete + '%');
+
+			    },
+			    success : function() {
+				$("#bar").width('100%');
+				$("#percent").html('100%');
+
+			    },
+			    complete : function(response) {
+				var ret = JSON.parse(response.responseText);
+				$("#message").html(
+					"<font color='green'>"
+						+ response.responseText
+						+ "</font>");
+				var li = $("<li></li>");
+
+				var a = $("<a>" + ret.filename + "</a>");
+				var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+				a.attr("href", "javascript:deleteAttachment(\""
+					+ deleteUrl + "\"," + ret.attachmentId
+					+ ");");
+				var i = $("<i class=\"icon-remove\"></i>");
+				i.appendTo(a);
+				a.appendTo(li);
+				li.attr("id", "attachment" + ret.attachmentId);
+				li.appendTo($("#uploadedAttachment"));
 				var orignList = $("#attachmentList").val();
 				$("#attachmentList").val(
-						orginList.replace(attachmentId + ",", ""));
-
-				$("#attachment" + attachmentId).remove();
-
-			}
-		});
-	};
-
-	$(document)
-			.ready(
+					orignList + "," + ret.attachmentId);
+			    },
+			    error : function() {
+				$("#message")
+					.html(
+						"<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+			    }
+			};
+			$("#uploadForm").ajaxForm(options);
+			$("#submitButton")
+				.click(
 					function() {
+					    $("#myForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
+								dataType : "text",
+								success : function(
+									data) {
 
-						$("#myForm").validate({
-							rules : {
-								reply : {
-									required : true
-								}
+								    $("#myForm")
+									    .trigger(
+										    "evtWFSuccess",
+										    {
+											msg : 'OK'
+										    });
+								    //alert(data);
+								},
 
-							},
-							messages : {
+							    }).submit();
 
-								reply : {
-									required : "必须输入回复意见"
-								}
-
-							}
-
-						});
-
-						var options = {
-							beforeSend : function() {
-								$("#progress").show();
-								//clear everything
-								$("#bar").width('0%');
-								$("#message").html("");
-								$("#percent").html("0%");
-							},
-							uploadProgress : function(event, position, total,
-									percentComplete) {
-								$("#bar").width(percentComplete + '%');
-								$("#percent").html(percentComplete + '%');
-
-							},
-							success : function() {
-								$("#bar").width('100%');
-								$("#percent").html('100%');
-
-							},
-							complete : function(response) {
-								var ret = JSON.parse(response.responseText);
-								$("#message").html(
-										"<font color='green'>"
-												+ response.responseText
-												+ "</font>");
-								var li = $("<li></li>");
-
-								var a = $("<a>" + ret.filename + "</a>");
-								var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
-								a.attr("href", "javascript:deleteAttachment(\""
-										+ deleteUrl + "\"," + ret.attachmentId
-										+ ");");
-								var i = $("<i class=\"icon-remove\"></i>");
-								i.appendTo(a);
-								a.appendTo(li);
-								li.attr("id", "attachment" + ret.attachmentId);
-								li.appendTo($("#uploadedAttachment"));
-								var orignList = $("#attachmentList").val();
-								$("#attachmentList").val(
-										orignList + "," + ret.attachmentId);
-							},
-							error : function() {
-								$("#message")
-										.html(
-												"<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
-							}
-						};
-						$("#uploadForm").ajaxForm(options);
-						$("#submitButton")
-								.click(
-										function() {
-											$("#myForm")
-													.ajaxForm(
-															{
-																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
-																dataType : "text",
-																success : function(
-																		data) {
-
-																	$("#myForm")
-																			.trigger(
-																					"evtWFSuccess",
-																					{
-																						msg : 'OK'
-																					});
-																	//alert(data);
-																},
-
-															}).submit();
-
-										});
 					});
-	/*
+		    });
+    /*
 
-	 */
-	/*]]>*/
+     */
+    /*]]>*/
 </script>
 </head>
 <body>
@@ -354,16 +354,16 @@ form {
 						name="obtainMode"
 						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
 				</div>
-
 				<label class="control-label text-info">申请信息公开形式：</label>
 				<div class="controls">
 					<label class="radio inline"> <input type="radio" value="0"
-						name="formOfDisclosure" />当面申请
+						name="formOfDisclosure" th:checked="${result.formOfDisclosure=='0'}" />当面申请
 					</label><label class="radio inline"><input type="radio" value="1"
-						name="formOfDisclosure" />网上及电子邮件申请</label><label class="radio inline"><input
-						type="radio" value="2" name="formOfDisclosure" />信函及传真申请</label> <label
-						class="radio inline"><input type="radio" value="3"
-						name="formOfDisclosure" />其它形式申请</label>
+						name="formOfDisclosure" th:checked="${result.formOfDisclosure=='1'}" />网上及电子邮件申请</label><label
+						class="radio inline"><input type="radio" value="2"
+						name="formOfDisclosure" th:checked="${result.formOfDisclosure=='2'}" />信函及传真申请</label>
+					<label class="radio inline"><input type="radio" value="3"
+						name="formOfDisclosure" th:checked="${result.formOfDisclosure=='3'}" />其它形式申请</label>
 				</div>
 			</div>
 		</div>

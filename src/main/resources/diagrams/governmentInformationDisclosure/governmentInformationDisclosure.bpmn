@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="governmentInformationDisclosure" name="政府信息公开new" isExecutable="true">
-    <startEvent id="startevent1" name="Start" activiti:initiator="startUserId" activiti:formKey="governmentInformationDisclosure/applicationForm">
+    <startEvent id="startevent1" name="Start" activiti:initiator="startUserId">
       <documentation>启动流程，显示申请人表单</documentation>
     </startEvent>
     <userTask id="usertask3" name="【审核办结】${applicationName}" activiti:assignee="${startUserId}" activiti:formKey="governmentInformationDisclosure/reviewForm"></userTask>
@@ -51,7 +51,9 @@ execution.setVariable("formOfDisclosure", "")
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isComplete==false
 }]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow36" sourceRef="startevent1" targetRef="scripttask1"></sequenceFlow>
+    <sequenceFlow id="flow36" sourceRef="startevent1" targetRef="usertask5"></sequenceFlow>
+    <userTask id="usertask5" name="填写申请单" activiti:assignee="startUserId" activiti:formKey="governmentInformationDisclosure/applicationForm"></userTask>
+    <sequenceFlow id="flow37" sourceRef="usertask5" targetRef="scripttask1"></sequenceFlow>
     <textAnnotation id="textannotation2">
       <text>审核办结</text>
     </textAnnotation>
@@ -77,13 +79,13 @@ execution.setVariable("formOfDisclosure", "")
         <omgdc:Bounds height="35.0" width="35.0" x="997.0" y="233.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
-        <omgdc:Bounds height="55.0" width="105.0" x="209.0" y="223.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="285.0" y="116.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask3" id="BPMNShape_servicetask3">
         <omgdc:Bounds height="55.0" width="105.0" x="772.0" y="223.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
-        <omgdc:Bounds height="55.0" width="115.0" x="107.0" y="319.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="115.0" x="280.0" y="213.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="subprocess1" id="BPMNShape_subprocess1">
         <omgdc:Bounds height="121.0" width="461.0" x="300.0" y="299.0"></omgdc:Bounds>
@@ -106,14 +108,17 @@ execution.setVariable("formOfDisclosure", "")
       <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
         <omgdc:Bounds height="40.0" width="40.0" x="510.0" y="75.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask5" id="BPMNShape_usertask5">
+        <omgdc:Bounds height="55.0" width="105.0" x="112.0" y="213.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation2" id="BPMNShape_textannotation2">
         <omgdc:Bounds height="50.0" width="100.0" x="670.0" y="140.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation3" id="BPMNShape_textannotation3">
-        <omgdc:Bounds height="50.0" width="100.0" x="26.0" y="274.0"></omgdc:Bounds>
+        <omgdc:Bounds height="50.0" width="100.0" x="148.0" y="299.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation4" id="BPMNShape_textannotation4">
-        <omgdc:Bounds height="71.0" width="181.0" x="107.0" y="419.0"></omgdc:Bounds>
+        <omgdc:Bounds height="71.0" width="181.0" x="66.0" y="108.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow21" id="BPMNEdge_flow21">
         <omgdi:waypoint x="877.0" y="250.0"></omgdi:waypoint>
@@ -124,13 +129,13 @@ execution.setVariable("formOfDisclosure", "")
         <omgdi:waypoint x="772.0" y="250.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow23" id="BPMNEdge_flow23">
-        <omgdi:waypoint x="261.0" y="223.0"></omgdi:waypoint>
-        <omgdi:waypoint x="261.0" y="95.0"></omgdi:waypoint>
+        <omgdi:waypoint x="337.0" y="116.0"></omgdi:waypoint>
+        <omgdi:waypoint x="336.0" y="95.0"></omgdi:waypoint>
         <omgdi:waypoint x="510.0" y="95.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
-        <omgdi:waypoint x="164.0" y="319.0"></omgdi:waypoint>
-        <omgdi:waypoint x="261.0" y="278.0"></omgdi:waypoint>
+        <omgdi:waypoint x="337.0" y="213.0"></omgdi:waypoint>
+        <omgdi:waypoint x="337.0" y="171.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow28" id="BPMNEdge_flow28">
         <omgdi:waypoint x="365.0" y="366.0"></omgdi:waypoint>
@@ -180,20 +185,23 @@ execution.setVariable("formOfDisclosure", "")
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow36" id="BPMNEdge_flow36">
         <omgdi:waypoint x="55.0" y="240.0"></omgdi:waypoint>
-        <omgdi:waypoint x="164.0" y="240.0"></omgdi:waypoint>
-        <omgdi:waypoint x="164.0" y="319.0"></omgdi:waypoint>
+        <omgdi:waypoint x="112.0" y="240.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow37" id="BPMNEdge_flow37">
+        <omgdi:waypoint x="217.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="280.0" y="240.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association2" id="BPMNEdge_association2">
         <omgdi:waypoint x="720.0" y="190.0"></omgdi:waypoint>
         <omgdi:waypoint x="666.0" y="220.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association3" id="BPMNEdge_association3">
-        <omgdi:waypoint x="76.0" y="274.0"></omgdi:waypoint>
+        <omgdi:waypoint x="198.0" y="299.0"></omgdi:waypoint>
         <omgdi:waypoint x="37.0" y="258.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association4" id="BPMNEdge_association4">
-        <omgdi:waypoint x="197.0" y="419.0"></omgdi:waypoint>
-        <omgdi:waypoint x="164.0" y="374.0"></omgdi:waypoint>
+        <omgdi:waypoint x="156.0" y="179.0"></omgdi:waypoint>
+        <omgdi:waypoint x="337.0" y="213.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
