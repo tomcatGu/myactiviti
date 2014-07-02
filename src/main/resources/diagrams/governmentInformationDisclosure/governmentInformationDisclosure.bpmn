@@ -52,7 +52,7 @@ execution.setVariable("formOfDisclosure", "")
 }]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow36" sourceRef="startevent1" targetRef="usertask5"></sequenceFlow>
-    <userTask id="usertask5" name="填写申请单" activiti:assignee="startUserId" activiti:formKey="governmentInformationDisclosure/applicationForm"></userTask>
+    <userTask id="usertask5" name="【开始】填写申请单" activiti:assignee="${startUserId}" activiti:formKey="governmentInformationDisclosure/applicationForm"></userTask>
     <sequenceFlow id="flow37" sourceRef="usertask5" targetRef="scripttask1"></sequenceFlow>
     <textAnnotation id="textannotation2">
       <text>审核办结</text>

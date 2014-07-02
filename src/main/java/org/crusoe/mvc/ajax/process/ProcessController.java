@@ -118,18 +118,20 @@ public class ProcessController extends BaseServiceImpl {
 
 		// runtimeService.addUserIdentityLink(
 		// processInstance.getProcessInstanceId(), "admin", "candidate");
+
+		Subject currentUser = SecurityUtils.getSubject();
+		if (currentUser.getPrincipal() != null)
+			identityService.setAuthenticatedUserId(currentUser.getPrincipal()
+					.toString());
 		String startFormKey = formService.getStartFormKey(processDefinition
 				.getId());
 
 		if (startFormKey != null) {
 			model.addAttribute("processDefinitionId", processDefinition.getId());
-			//model.addAttribute("historicView", false);
+			// model.addAttribute("historicView", false);
 			return startFormKey;
 		} else {
-			Subject currentUser = SecurityUtils.getSubject();
-			if (currentUser.getPrincipal() != null)
-				identityService.setAuthenticatedUserId(currentUser
-						.getPrincipal().toString());
+
 			ProcessInstance processInstance = runtimeService
 					.startProcessInstanceById(id);
 			return "redirect:/runtime/tasks/index";
