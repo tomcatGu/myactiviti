@@ -379,6 +379,36 @@
 					name="obtainMode"
 					th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
 			</div>
+
+			<label class="control-label text-info">申请信息公开形式：</label>
+			<div class="controls">
+				<label class="radio inline"> <input type="radio" value="0"
+					name="formOfDisclosure" />当面申请
+				</label><label class="radio inline"><input type="radio" value="1"
+					name="formOfDisclosure" />网上及电子邮件申请</label><label class="radio inline"><input
+					type="radio" value="2" name="formOfDisclosure" />信函及传真申请</label> <label
+					class="radio inline"><input type="radio" value="3"
+					name="formOfDisclosure" />其它形式申请</label>
+			</div>
+
+			<label class="control-label text-info">答复情况：</label>
+			<div class="controls">
+				<label class="radio inline"> <input type="radio" value="0"
+					name="formOfResponse" />同意公开
+				</label><label class="radio inline"><input type="radio" value="1"
+					name="formOfResponse" />延期答复</label> <label class="radio inline"><input
+					type="radio" value="2" name="formOfResponse" />同意部分公开答复</label> <label
+					class="radio inline"><input type="radio" value="3"
+					name="formOfResponse" />已公开并告知检索途径</label> <label class="radio inline"><input
+					type="radio" value="4" name="formOfResponse" />不同意公开答复</label> <label
+					class="radio inline"><input type="radio" value="5"
+					name="formOfResponse" />不属于本机关公开范围</label> <label class="radio inline"><input
+					type="radio" value="6" name="formOfResponse" />信息不存在</label> <label
+					class="radio inline"><input type="radio" value="7"
+					name="formOfResponse" />申请内容不明确</label> <label class="radio inline"><input
+					type="radio" value="8" name="formOfResponse" />其他答复情况</label>
+
+			</div>
 		</div>
 		<div class="box">
 			<legend>处理意见</legend>
@@ -395,67 +425,7 @@
 				</blockquote>
 			</div>
 		</div>
-		<div class="box">
-			<legend>回复意见</legend>
-			<form id="myForm"
-				th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
-				method="post">
-				<div class="control-group">
-					<div class="controls">
-						<textarea name="reply" rows="8" cols="20" class="span7"></textarea>
-					</div>
-				</div>
 
-
-				<label class="control-label text-info">答复情况：</label>
-				<div class="controls">
-					<label class="radio inline"> <input type="radio" value="0"
-						name="formOfResponse" />同意公开
-					</label><label class="radio inline"><input type="radio" value="1"
-						name="formOfResponse" />延期答复</label> <label class="radio inline"><input
-						type="radio" value="2" name="formOfResponse" />同意部分公开答复</label> <label
-						class="radio inline"><input type="radio" value="3"
-						name="formOfResponse" />已公开并告知检索途径</label> <label class="radio inline"><input
-						type="radio" value="4" name="formOfResponse" />不同意公开答复</label> <label
-						class="radio inline"><input type="radio" value="5"
-						name="formOfResponse" />不属于本机关公开范围</label> <label class="radio inline"><input
-						type="radio" value="6" name="formOfResponse" />信息不存在</label> <label
-						class="radio inline"><input type="radio" value="7"
-						name="formOfResponse" />申请内容不明确</label> <label class="radio inline"><input
-						type="radio" value="8" name="formOfResponse" />其他答复情况</label>
-
-				</div>
-				<div class="box">
-					<legend>处理人员</legend>
-					<div class="row">
-						<div class="span3">
-							<label class="control-label text-info">已选择处理单位人员：</label>
-						</div>
-						<div class="span3">
-							<input type="button" id="selectBtn" value="选择用户重新办理"
-								class="btn btn-info btn-mini" /> <input type="button"
-								id="clearButton" value="清除" class="btn btn-danger btn-mini" />
-						</div>
-					</div>
-					<label id="selectedUser"></label> <input type="hidden"
-						name="assigneeList" id="assigneeList" value="" />
-				</div>
-				<div class="box">
-					<div class="control-group">
-						<div class="controls">
-							<input type="submit" id="submitButton" value="办结"
-								class="btn btn-primary cancel" /> <input type="submit"
-								id="backButton" value="退回" class="btn btn-danger" />
-						</div>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="controls">
-						<input type="hidden" name="backFlag" id="backFlag" value="" />
-					</div>
-				</div>
-			</form>
-		</div>
 	</div>
 </body>
 </html>

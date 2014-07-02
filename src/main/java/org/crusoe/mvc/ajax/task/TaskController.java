@@ -119,15 +119,15 @@ public class TaskController {
 				attachments.add(attachmentDTO);
 			}
 			model.addAttribute("attachments", attachments);
-			model.addAttribute("historicView", true);
+			// model.addAttribute("historicView", true);
 
-			return formKey;
+			return formKey + ".readonly";
 		} else
 			return "task/index";
 	}
 
-	@RequestMapping(value = "reviewHistoric/{taskId}")
-	public String reviewTask(@PathVariable("taskId") String taskId,
+	@RequestMapping(value = "reviewTaskForm/{taskId}")
+	public String reviewTaskForm(@PathVariable("taskId") String taskId,
 			@RequestParam("processDefinitionId") String processDefinitionId,
 			@RequestParam("taskDefinitionKey") String taskDefinitionKey,
 			Model model) throws IllegalAccessException,
@@ -160,11 +160,11 @@ public class TaskController {
 				attachments.add(attachmentDTO);
 			}
 			model.addAttribute("attachments", attachments);
-			model.addAttribute("historicView", true);
+			// model.addAttribute("historicView", true);
 			// model.addAllAttributes(attachments);
 			// model.addAllAttributes(variables);
 			// model.addAttribute("taskId", taskId);
-			return formKey;
+			return formKey + ".readonly";
 		} else
 			return "task/index";
 	}
@@ -262,8 +262,9 @@ public class TaskController {
 			TaskDTO taskDTO = new TaskDTO();
 			taskDTO.setId(task.getId());
 			taskDTO.setName(task.getName());
-			//taskDTO.setAssignee(task.getAssignee());
-			taskDTO.setAssignee(accountService.findUserByLoginName(task.getAssignee()).getName());
+			// taskDTO.setAssignee(task.getAssignee());
+			taskDTO.setAssignee(accountService.findUserByLoginName(
+					task.getAssignee()).getName());
 			todoList.add(taskDTO);
 
 		}
@@ -305,7 +306,8 @@ public class TaskController {
 			taskDTO.setId(task.getId());
 			taskDTO.setName(task.getName());
 
-			taskDTO.setAssignee(accountService.findUserByLoginName(task.getAssignee()).getName());
+			taskDTO.setAssignee(accountService.findUserByLoginName(
+					task.getAssignee()).getName());
 			taskDTO.setEndTime(task.getEndTime());
 			taskDTO.setStartTime(task.getStartTime());
 			taskDTO.setTaskDefinitionKey(task.getTaskDefinitionKey());

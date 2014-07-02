@@ -354,7 +354,6 @@ form {
 						name="obtainMode"
 						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
 				</div>
-
 				<label class="control-label text-info">申请信息公开形式：</label>
 				<div class="controls">
 					<label class="radio inline"> <input type="radio" value="0"
@@ -381,42 +380,6 @@ form {
 					</div>
 				</blockquote>
 			</div>
-		</div>
-		<div class="box">
-			<label>回复意见：</label>
-			<form id="myForm"
-				th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
-				method="post">
-				<textarea name="reply" rows="8" cols="20" class="span7"></textarea>
-				<input type="button" id="submitButton" value="回复"
-					class="btn btn-primary" /> <input type="hidden"
-					name="attachmentList" id="attachmentList" />
-			</form>
-		</div>
-		<div class="box">
-			<label>上传附件：</label>
-			<div>
-				<ul id="uploadedAttachment"></ul>
-			</div>
-			<form id="uploadForm"
-				th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
-				method="post" enctype="multipart/form-data">
-				<div class="row">
-					<div class="span3">
-						<input type="file" name="file" />
-					</div>
-					<div class="span1">
-						<input type="submit" value="上传" class="btn btn-info" />
-					</div>
-					<div class="span3">
-						<div id="progress">
-							<div id="bar"></div>
-							<div id="percent">0%</div>
-						</div>
-						<div id="message"></div>
-					</div>
-				</div>
-			</form>
 		</div>
 	</div>
 </body>

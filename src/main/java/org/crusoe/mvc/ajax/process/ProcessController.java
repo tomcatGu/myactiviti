@@ -123,7 +123,7 @@ public class ProcessController extends BaseServiceImpl {
 
 		if (startFormKey != null) {
 			model.addAttribute("processDefinitionId", processDefinition.getId());
-			model.addAttribute("historicView", false);
+			//model.addAttribute("historicView", false);
 			return startFormKey;
 		} else {
 			Subject currentUser = SecurityUtils.getSubject();
@@ -288,7 +288,7 @@ public class ProcessController extends BaseServiceImpl {
 			model.addAttribute("hasStartForm", true);
 		} else {
 
-			model.addAttribute("hasStartForm", true);
+			model.addAttribute("hasStartForm", false);
 		}
 
 		model.addAttribute("processInstanceStart", hpiDTO);

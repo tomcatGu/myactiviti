@@ -279,7 +279,7 @@
 </script>
 </head>
 <body>
-	<div th:if="${not historicView}">
+	<div>
 		<form id="myForm"
 			th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
 			method="POST">
@@ -486,6 +486,17 @@
 									value="1" name="obtainMode" />传真</label><label class="checkbox inline"><input
 									type="checkbox" value="2" name="obtainMode" />自行领取</label>
 							</div>
+
+							<label class="control-label text-info">申请信息公开形式：</label>
+							<div class="controls">
+								<label class="radio inline"> <input type="radio"
+									value="0" name="formOfDisclosure" />当面申请
+								</label><label class="radio inline"><input type="radio"
+									value="1" name="formOfDisclosure" />网上及电子邮件申请</label><label
+									class="radio inline"><input type="radio" value="2"
+									name="formOfDisclosure" />信函及传真申请</label> <label class="radio inline"><input
+									type="radio" value="3" name="formOfDisclosure" />其它形式申请</label>
+							</div>
 						</div>
 					</div>
 					<div class="box">
@@ -524,218 +535,6 @@
 		</form>
 		<div tabindex="-1" class="modal hide fade" id="selectUsers"
 			data-keyboard="false" data-backdrop="static"></div>
-	</div>
-	<div class="well" th:if="${historicView}">
-		<div class="box">
-			<div class="control-group">
-				<label class="control-label text-info">标题：</label>
-				<div class="controls">
-					<label th:text="${result.applicationName}" />
-				</div>
-			</div>
-		</div>
-		<div class="box">
-			<legend>公民</legend>
-			<div class="control-group">
-				<div class="row">
-					<div class="span4">
-						<label class="control-label text-info">姓名：</label>
-						<div class="controls">
-							<label th:text="${result.citizenName}" />
-						</div>
-					</div>
-					<div class="span4">
-						<label class="control-label text-info">工作单位：</label>
-						<div class="controls">
-							<label th:text="${result.citizenWorkunit}" />
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="span4">
-					<label class="control-label text-info">证件名称：</label>
-					<div class="controls">
-						<label th:text="${result.citizenCertificate}" />
-					</div>
-				</div>
-				<div class="span4">
-					<label class="control-label text-info">证件号码：</label>
-					<div class="controls">
-						<label th:text="${result.citizenCertificateID}" />
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="span4">
-					<label class="control-label text-info">联系电话：</label>
-					<div class="controls">
-						<label th:text="${result.citizenTelphone}" />
-					</div>
-				</div>
-				<div class="span4">
-					<label class="control-label text-info">邮件编码：</label>
-					<div class="controls">
-						<label th:text="${result.citizenZipcode}" />
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="span4">
-					<label class="control-label text-info">联系地址：</label>
-					<div class="controls">
-						<label th:text="${result.citizenAddress}" />
-					</div>
-				</div>
-				<div class="span4">
-					<label class="control-label text-info">传真：</label>
-					<div class="controls">
-						<label th:text="${result.citizenFax}" />
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="span4">
-					<label class="control-label text-info">电子邮箱：</label>
-					<div class="controls">
-						<label th:text="${result.citizenEmail}" />
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="box">
-			<legend>法人/其它组织</legend>
-			<div class="control-group">
-				<div class="row">
-					<div class="span4">
-						<label class="control-label text-info">名称：</label>
-						<div class="controls">
-							<label th:text="${result.groupName}" />
-						</div>
-					</div>
-					<div class="span4">
-						<label class="control-label text-info">组织机构代码：</label>
-						<div class="controls">
-							<label th:text="${result.groupID}" />
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="span4">
-						<label class="control-label text-info">法人代表：</label>
-						<div class="controls">
-							<label th:text="${result.groupDelegate}" />
-						</div>
-					</div>
-					<div class="span4">
-						<label class="control-label text-info">联系人名称：</label>
-						<div class="controls">
-							<label th:text="${result.groupDelegateName}" />
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="span4">
-						<label class="control-label text-info">联系人电话：</label>
-						<div class="controls">
-							<label th:text="${result.groupDelegateTelphone}" />
-						</div>
-					</div>
-					<div class="span4">
-						<label class="control-label text-info">传真：</label>
-						<div class="controls">
-							<label th:text="${result.groupDelegateFax}" />
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="span4">
-						<label class="control-label text-info">联系地址：</label>
-						<div class="controls">
-							<label th:text="${result.groupDelegateAddress}" />
-						</div>
-					</div>
-					<div class="span4">
-						<label class="control-label text-info">电子邮箱：</label>
-						<div class="controls">
-							<label th:text="${result.groupDelegateEmail}" />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="box">
-			<div class="control-group">
-				<div class="row">
-					<div class="span4">
-						<label class="control-label text-info">申请时间：</label>
-						<div class="controls">
-							<label th:text="${result.applicationTime}" />
-						</div>
-					</div>
-					<div class="span4">
-						<label class="control-label text-info">提交部门：</label>
-						<div class="controls">
-							<label th:text="${result.submitDepartment}" />
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="span8">
-						<label class="control-label text-info">所需信息的内容描述：</label>
-						<div class="controls">
-							<label th:text="${result.description}" class="span7" />
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="span8">
-						<label class="control-label text-info">所需信息的用途：</label>
-						<div class="controls">
-							<label th:text="${result.purpose}" class="span7" />
-						</div>
-					</div>
-				</div>
-				<label class="control-label text-info">所需信息的指定提供方式：</label>
-				<div class="controls">
-					<label class="checkbox inline"><input type="checkbox"
-						value="0" name="mode"
-						th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'0'):false}" />纸面</label><label
-						class="checkbox inline"><input type="checkbox" value="1"
-						name="mode"
-						th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'1'):false}" />电子邮件</label>
-				</div>
-				<label class="control-label text-info">读取信息的方式：</label>
-				<div class="controls">
-					<label class="checkbox inline"><input type="checkbox"
-						value="0" name="obtainMode"
-						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'0'):false}" />电子邮件</label><label
-						class="checkbox inline"><input type="checkbox" value="1"
-						name="obtainMode"
-						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'1'):false}" />传真</label><label
-						class="checkbox inline"><input type="checkbox" value="2"
-						name="obtainMode"
-						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
-				</div>
-			</div>
-		</div>
-		<div class="box">
-			<legend>处理意见</legend>
-			<div th:each="aReply:${result.replies}">
-				<blockquote>
-					<p th:text="${aReply.reply}" class="text-left" />
-					<small><span
-						th:text="${aReply.username}+'  '+${aReply.replyTime}"></span></small>
-					<div th:each="attachment:${aReply.attachments}">
-						<label class="checkbox inline"><a
-							th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
-								th:text="${attachment.name}">file.ext</span></a></label>
-					</div>
-				</blockquote>
-			</div>
-		</div>
-
-
 	</div>
 </body>
 </html>

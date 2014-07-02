@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
-<title>审核意见</title>
+<title>申请人信息表单</title>
 <style type="text/css">
 #myForm label.error {
 	width: auto;
@@ -11,106 +11,195 @@
 </style>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
+	function encodeUTF8(str) {
+		var temp = "", rs = "";
+		for (var i = 0, len = str.length; i < len; i++) {
+			temp = str.charCodeAt(i).toString(16);
+			rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
+		}
+		return rs;
+	};
+
+	function clearSelectedUser() {
+		$('#selectedUser').text("");
+		$('#assigneeList').val("");
+	};
+
 	$(document)
 			.ready(
 					function() {
 						$("#myForm").validate({
 							ignore : [],
 							rules : {
+								applicationName : {
+									required : true,
+									minlength : 5
+								},
+								applicationTime : {
+									required : true,
+									date : true
+								},
 								assigneeList : {
 									required : true
 								}
 
 							},
 							messages : {
-
+								applicationName : {
+									required : "请输入标题",
+									minlength : "标题不能小于5个字符"
+								},
+								applicationTime : {
+									required : "请选择申请时间",
+									date : "请输入正确的时间"
+								},
 								assigneeList : {
-									required : "重新办理必须选择办理人员"
+									required : "必须选择处理单位人员"
 								}
 
 							}
-
+						});
+						$("#clearButton").click(function() {
+							$('#selectedUser').text("");
 						});
 
+						$('#myTab a:first').tab('show');
+
+						$("#datetimepicker1").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
 						$("#submitButton")
 								.click(
 										function() {
-											$("#backFlag").val("false");
-											$('#assigneeList')
+											$("#businessKey")
 													.val(
-															"cheat the form validator!hahahaaaa");
+															$(
+																	"#applicationName")
+																	.val());
+											$("#isComplete").val("false");
 											$("#myForm")
 													.ajaxForm(
 															{
-																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
+																url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
 																dataType : "text",
 																success : function(
 																		data) {
-
+																	var ret = JSON
+																			.parse(data);
+																	alert(ret.msg);
 																	$("#myForm")
 																			.trigger(
 																					"evtWFSuccess",
 																					{
-																						msg : 'OK'
+																						msg : "OK"
 																					});
-																	var ret = JSON
-																			.parse(data);
-																	alert(ret.msg);
-																},
+																	$(
+																			"#submitButton")
+																			.attr(
+																					"disabled",
+																					true)
+																			.attr(
+																					"value",
+																					"成功提交");
 
-															}).submit();
-
-										});
-
-						$("#backButton")
-								.click(
-										function() {
-											$("#backFlag").val("true");
-
-											$("#myForm")
-													.ajaxForm(
-															{
-																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
-																dataType : "text",
-																success : function(
-																		data) {
-
-																	$("#myForm")
-																			.trigger(
-																					"evtWFSuccess",
-																					{
-																						msg : 'OK'
-																					});
-																	var ret = JSON
-																			.parse(data);
-																	alert(ret.msg);
 																},
 																beforeSubmit : function() {
+																	if ($(
+																			"#myForm")
+																			.valid()) {
+																		$(
+																				"#submitButton")
+																				.attr(
+																						"disabled",
+																						true)
+																				.attr(
+																						"value",
+																						"正在提交...");
+																	}
 																	return $(
 																			"#myForm")
 																			.valid();
 																}
 
-															}
-
-													).submit();
+															}).submit();
+											return false;
 
 										});
-						$("#clearButton").click(function() {
-							$('#selectedUser').text("");
-						});
+						$("#finishButton")
+								.click(
+										function() {
+											$("#businessKey")
+													.val(
+															$(
+																	"#applicationName")
+																	.val());
+											$("#isComplete").val("true");
+											$('#assigneeList')
+													.val(
+															"cheat value to disable validation");
+											$("#myForm")
+													.ajaxForm(
+															{
+																url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
+																dataType : "text",
+																success : function(
+																		data) {
+																	var ret = JSON
+																			.parse(data);
+																	alert(ret.msg);
+																	$("#myForm")
+																			.trigger(
+																					"evtWFSuccess",
+																					{
+																						msg : "OK"
+																					});
+																	$(
+																			"#finishButton")
+																			.attr(
+																					"disabled",
+																					true)
+																			.attr(
+																					"value",
+																					"成功提交");
+
+																},
+																beforeSubmit : function() {
+																	if ($(
+																			"#myForm")
+																			.valid()) {
+																		$(
+																				"#finishButton")
+																				.attr(
+																						"disabled",
+																						true)
+																				.attr(
+																						"value",
+																						"正在提交...");
+																	}
+																	return $(
+																			"#myForm")
+																			.valid();
+																}
+
+															}).submit();
+											return false;
+
+										});
 						$('#selectBtn')
 								.bind(
 										'click',
 										function() {
 											$("#selectUsers")
 													.load(
-															/*[[@{'/user/select'}]]*/'../../user/select'
-																	+ "?timestamp="
-																	+ (new Date())
-																			.valueOf(),
+															/*[[@{'/user/select'}]]*/'../../user/select',
 															function(data) {
-
 																$(
 																		"#selectUsers")
 																		.bind(
@@ -119,7 +208,9 @@
 																						evt,
 																						data) {
 
-																					str = "";
+																					str = $(
+																							'#assigneeList')
+																							.val();
 																					for (var i = 0; i < data.users.length; i++) {
 																						str += data.users[i]
 																								+ ",";
@@ -138,7 +229,7 @@
 																						$
 																								.ajax({
 																									type : 'GET',
-																									url : /*[[@{'/user/name/'}]]*/"" //获取用户名称
+																									url : /*[[@{'/user/name/'}]]*/""
 																											+ id,
 																									async : true,
 																									success : function(
@@ -343,41 +434,54 @@
 						</div>
 					</div>
 				</div>
-				<div class="span7">
-					<label class="control-label text-info">所需信息的内容描述：</label>
-					<div class="controls">
-						<label th:text="${result.description}" />
+				<div class="row">
+					<div class="span8">
+						<label class="control-label text-info">所需信息的内容描述：</label>
+						<div class="controls">
+							<label th:text="${result.description}" class="span7" />
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="span7">
-					<label class="control-label text-info">所需信息的用途：</label>
-					<div class="controls">
-						<label th:text="${result.purpose}" />
+				<div class="row">
+					<div class="span8">
+						<label class="control-label text-info">所需信息的用途：</label>
+						<div class="controls">
+							<label th:text="${result.purpose}" class="span7" />
+						</div>
 					</div>
 				</div>
-			</div>
-			<label class="control-label text-info">所需信息的指定提供方式：</label>
-			<div class="controls">
-				<label class="checkbox inline"><input type="checkbox"
-					value="0" name="mode"
-					th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'0'):false}" />纸面</label><label
-					class="checkbox inline"><input type="checkbox" value="1"
-					name="mode"
-					th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'1'):false}" />电子邮件</label>
-			</div>
-			<label class="control-label text-info">读取信息的方式：</label>
-			<div class="controls">
-				<label class="checkbox inline"><input type="checkbox"
-					value="0" name="obtainMode"
-					th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'0'):false}" />电子邮件</label><label
-					class="checkbox inline"><input type="checkbox" value="1"
-					name="obtainMode"
-					th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'1'):false}" />传真</label><label
-					class="checkbox inline"><input type="checkbox" value="2"
-					name="obtainMode"
-					th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
+				<label class="control-label text-info">所需信息的指定提供方式：</label>
+				<div class="controls">
+					<label class="checkbox inline"><input type="checkbox"
+						value="0" name="mode"
+						th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'0'):false}" />纸面</label><label
+						class="checkbox inline"><input type="checkbox" value="1"
+						name="mode"
+						th:checked="${result.mode!=null?#lists.contains(#strings.listSplit(result.mode,','),'1'):false}" />电子邮件</label>
+				</div>
+				<label class="control-label text-info">读取信息的方式：</label>
+				<div class="controls">
+					<label class="checkbox inline"><input type="checkbox"
+						value="0" name="obtainMode"
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'0'):false}" />电子邮件</label><label
+						class="checkbox inline"><input type="checkbox" value="1"
+						name="obtainMode"
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'1'):false}" />传真</label><label
+						class="checkbox inline"><input type="checkbox" value="2"
+						name="obtainMode"
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
+				</div>
+
+				<label class="control-label text-info">申请信息公开形式：</label>
+				<div class="controls">
+					<label class="radio inline"> <input type="radio" value="0"
+						name="formOfDisclosure" />当面申请
+					</label><label class="radio inline"><input type="radio" value="1"
+						name="formOfDisclosure" />网上及电子邮件申请</label><label class="radio inline"><input
+						type="radio" value="2" name="formOfDisclosure" />信函及传真申请</label> <label
+						class="radio inline"><input type="radio" value="3"
+						name="formOfDisclosure" />其它形式申请</label>
+				</div>
 			</div>
 		</div>
 		<div class="box">
@@ -395,67 +499,8 @@
 				</blockquote>
 			</div>
 		</div>
-		<div class="box">
-			<legend>回复意见</legend>
-			<form id="myForm"
-				th:action="@{'/runtime/form/submitTaskForm/'+${taskId}}"
-				method="post">
-				<div class="control-group">
-					<div class="controls">
-						<textarea name="reply" rows="8" cols="20" class="span7"></textarea>
-					</div>
-				</div>
 
 
-				<label class="control-label text-info">答复情况：</label>
-				<div class="controls">
-					<label class="radio inline"> <input type="radio" value="0"
-						name="formOfResponse" />同意公开
-					</label><label class="radio inline"><input type="radio" value="1"
-						name="formOfResponse" />延期答复</label> <label class="radio inline"><input
-						type="radio" value="2" name="formOfResponse" />同意部分公开答复</label> <label
-						class="radio inline"><input type="radio" value="3"
-						name="formOfResponse" />已公开并告知检索途径</label> <label class="radio inline"><input
-						type="radio" value="4" name="formOfResponse" />不同意公开答复</label> <label
-						class="radio inline"><input type="radio" value="5"
-						name="formOfResponse" />不属于本机关公开范围</label> <label class="radio inline"><input
-						type="radio" value="6" name="formOfResponse" />信息不存在</label> <label
-						class="radio inline"><input type="radio" value="7"
-						name="formOfResponse" />申请内容不明确</label> <label class="radio inline"><input
-						type="radio" value="8" name="formOfResponse" />其他答复情况</label>
-
-				</div>
-				<div class="box">
-					<legend>处理人员</legend>
-					<div class="row">
-						<div class="span3">
-							<label class="control-label text-info">已选择处理单位人员：</label>
-						</div>
-						<div class="span3">
-							<input type="button" id="selectBtn" value="选择用户重新办理"
-								class="btn btn-info btn-mini" /> <input type="button"
-								id="clearButton" value="清除" class="btn btn-danger btn-mini" />
-						</div>
-					</div>
-					<label id="selectedUser"></label> <input type="hidden"
-						name="assigneeList" id="assigneeList" value="" />
-				</div>
-				<div class="box">
-					<div class="control-group">
-						<div class="controls">
-							<input type="submit" id="submitButton" value="办结"
-								class="btn btn-primary cancel" /> <input type="submit"
-								id="backButton" value="退回" class="btn btn-danger" />
-						</div>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="controls">
-						<input type="hidden" name="backFlag" id="backFlag" value="" />
-					</div>
-				</div>
-			</form>
-		</div>
 	</div>
 </body>
 </html>

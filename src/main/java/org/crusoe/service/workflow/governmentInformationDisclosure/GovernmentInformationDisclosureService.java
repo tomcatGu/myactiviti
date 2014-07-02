@@ -61,41 +61,6 @@ public class GovernmentInformationDisclosureService {
 	@Autowired
 	private LuceneIKUtil ikUtil;
 
-	public Application saveApplication(
-			int numberOfApplicationOnTheSpot,
-			int numberOfApplicationFromNetworkOrEmail,
-			int numberOfApplicationFromMailOrFax,
-			int numberOfApplicationFromOthers, int numberOfAgreedReply,
-			int numberOfDelayedReply, int numberOfPartOpenAgreedReply,
-			int numberOfOpenedAndToldReply, int numberOfDisagreedReply,
-			int numberOfNotBelongReply, int numberOfNonExistentReply,
-			int numberOfVagueReply, int numberOfOtherReply) {
-		Application application = new Application();
-		application.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
-				.toString());
-		application
-				.setNumberOfApplicationOnTheSpot(numberOfApplicationOnTheSpot);
-		application
-				.setNumberOfApplicationFromNetworkOrEmail(numberOfApplicationFromNetworkOrEmail);
-		application
-				.setNumberOfApplicationFromMailOrFax(numberOfApplicationFromMailOrFax);
-		application
-				.setNumberOfApplicationFromOthers(numberOfApplicationFromOthers);
-		application.setNumberOfAgreedReply(numberOfAgreedReply);
-		application.setNumberOfDelayedReply(numberOfDelayedReply);
-		application.setNumberOfPartOpenAgreedReply(numberOfPartOpenAgreedReply);
-		application.setNumberOfOpenedAndToldReply(numberOfOpenedAndToldReply);
-		application.setNumberOfDisagreedReply(numberOfDisagreedReply);
-		application.setNumberOfNotBelongReply(numberOfNotBelongReply);
-		application.setNumberOfNonExistentReply(numberOfNonExistentReply);
-		application.setNumberOfVagueReply(numberOfVagueReply);
-		application.setNumberOfOtherReply(numberOfOtherReply);
-		application.setCreateTime(new Date());
-		applicationDao.save(application);
-		return application;
-
-	}
-
 	public GovernmentInformationDisclosure save(DelegateExecution execution,
 			String applicationName, String citizenName, String citizenWorkunit,
 			String citizenCertificate, String citizenCertificateID,
@@ -106,7 +71,8 @@ public class GovernmentInformationDisclosureService {
 			String groupDelegateFax, String groupDelegateAddress,
 			String groupDelegateEmail, String applicationTime,
 			String submitDepartment, String description, String purpose,
-			String reply, String mode, String obtainMode) {
+			String reply, String mode, String obtainMode,
+			String formOfDisclosure) {
 
 		GovernmentInformationDisclosure gid = new GovernmentInformationDisclosure();
 
@@ -129,6 +95,7 @@ public class GovernmentInformationDisclosureService {
 		gid.setGroupDelegateFax(groupDelegateFax);
 		gid.setGroupDelegateAddress(groupDelegateAddress);
 		gid.setGroupDelegateEmail(groupDelegateEmail);
+		gid.setFormOfDisclosure(formOfDisclosure);
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		try {
@@ -190,9 +157,9 @@ public class GovernmentInformationDisclosureService {
 
 	}
 
-	public GovernmentInformationDisclosure addReply(
+	public GovernmentInformationDisclosure addReplyAsReview(
 			DelegateExecution execution, GovernmentInformationDisclosure gid,
-			String reply) {
+			String reply, String formOfResponse) {
 		Reply replyEntity = new Reply();
 		replyEntity.setReply(reply);
 
@@ -205,6 +172,7 @@ public class GovernmentInformationDisclosureService {
 						SecurityUtils.getSubject().getPrincipal().toString())
 						.getName());
 		gid.getReplies().add(replyEntity);
+		gid.setFormOfResponse(formOfResponse);
 		String replyContent = "";
 		for (Reply aReply : gid.getReplies()) {
 

@@ -6,8 +6,8 @@
     </startEvent>
     <userTask id="usertask3" name="【审核办结】${applicationName}" activiti:assignee="${startUserId}" activiti:formKey="governmentInformationDisclosure/reviewForm"></userTask>
     <endEvent id="endevent1" name="End"></endEvent>
-    <serviceTask id="servicetask1" name="创建申请单" activiti:expression="${governmentInformationDisclosureService.save(execution,applicationName,citizenName, citizenWorkunit,citizenCertificate, citizenCertificateID,citizenTelphone, citizenZipcode,citizenAddress, citizenFax, citizenEmail,groupName, groupID, groupDelegate,groupDelegateName, groupDelegateTelphone,groupDelegateFax, groupDelegateAddress,groupDelegateEmail, applicationTime,submitDepartment, description, purpose,reply,mode, obtainMode)}" activiti:resultVariableName="result"></serviceTask>
-    <serviceTask id="servicetask3" name="保存审核意见" activiti:expression="${governmentInformationDisclosureService.addReply(execution,result,reply)}" activiti:resultVariableName="result"></serviceTask>
+    <serviceTask id="servicetask1" name="创建申请单" activiti:expression="${governmentInformationDisclosureService.save(execution,applicationName,citizenName, citizenWorkunit,citizenCertificate, citizenCertificateID,citizenTelphone, citizenZipcode,citizenAddress, citizenFax, citizenEmail,groupName, groupID, groupDelegate,groupDelegateName, groupDelegateTelphone,groupDelegateFax, groupDelegateAddress,groupDelegateEmail, applicationTime,submitDepartment, description, purpose,reply,mode, obtainMode,formOfDisclosure)}" activiti:resultVariableName="result"></serviceTask>
+    <serviceTask id="servicetask3" name="保存审核意见" activiti:expression="${governmentInformationDisclosureService.addReplyAsReview(execution,result,reply,formOfResponse)}" activiti:resultVariableName="result"></serviceTask>
     <sequenceFlow id="flow21" sourceRef="servicetask3" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow22" sourceRef="usertask3" targetRef="servicetask3"></sequenceFlow>
     <sequenceFlow id="flow23" sourceRef="servicetask1" targetRef="exclusivegateway2"></sequenceFlow>
@@ -17,6 +17,9 @@ execution.setVariable("mode", "")
 }
 if(execution.getVariable("obtainMode")==null){
 execution.setVariable("obtainMode", "")
+}
+if(execution.getVariable("formOfDisclosure")==null){
+execution.setVariable("formOfDisclosure", "")
 }</script>
     </scriptTask>
     <sequenceFlow id="flow27" sourceRef="scripttask1" targetRef="servicetask1"></sequenceFlow>

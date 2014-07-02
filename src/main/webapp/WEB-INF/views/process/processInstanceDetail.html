@@ -61,7 +61,7 @@
 						class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span><span
 						th:text="${processInstanceStart.username}" class="pull-right"></span></a></li>
 				<li th:each="task:${tasks}"><a target="_blank"
-					th:href="@{/runtime/tasks/reviewHistoric/}+${task.id}+
+					th:href="@{/runtime/tasks/reviewTaskForm/}+${task.id}+
 						'?processDefinitionId='+${task.processDefinitionId}+'&amp;taskDefinitionKey='+${task.taskDefinitionKey}"><span
 						th:text="${task.name}"></span><span
 						th:text="${#dates.format(task.startTime, 'yyyy/MM/dd HH:mm')}"

@@ -53,6 +53,9 @@ public class GovernmentInformationDisclosure implements Serializable,
 	private List<Reply> replies = Lists.newArrayList();
 	private String review;
 
+	private String formOfDisclosure;
+	private String formOfResponse;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
@@ -271,6 +274,22 @@ public class GovernmentInformationDisclosure implements Serializable,
 
 	public void setReview(String review) {
 		this.review = review;
+	}
+
+	public String getFormOfDisclosure() {
+		return formOfDisclosure;
+	}
+
+	public void setFormOfDisclosure(String formOfDisclosure) {
+		this.formOfDisclosure = formOfDisclosure;
+	}
+
+	public String getFormOfResponse() {
+		return formOfResponse;
+	}
+
+	public void setFormOfResponse(String formOfResponse) {
+		this.formOfResponse = formOfResponse;
 	}
 
 }
