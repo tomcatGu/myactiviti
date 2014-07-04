@@ -121,7 +121,7 @@ public class TaskController {
 			model.addAttribute("attachments", attachments);
 			// model.addAttribute("historicView", true);
 
-			return formKey + ".readonly";
+			return formKey + ".readonly";//for review the completed form page
 		} else
 			return "task/index";
 	}
@@ -196,7 +196,7 @@ public class TaskController {
 			// model.addAllAttributes(attachments);
 			model.addAllAttributes(variables);
 			model.addAttribute("taskId", taskId);
-			model.addAttribute("historicView", false);
+			
 			return formKey;
 		} else
 			return "task/index";

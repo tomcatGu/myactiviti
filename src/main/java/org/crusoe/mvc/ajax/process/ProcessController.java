@@ -12,6 +12,7 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -20,6 +21,7 @@ import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.util.IOUtils;
 import org.apache.shiro.SecurityUtils;
@@ -66,6 +68,8 @@ public class ProcessController extends BaseServiceImpl {
 	private FormService formService;
 	@Autowired
 	private HistoryService historyService;
+	@Autowired
+	private TaskService taskService;
 
 	@Autowired
 	private IdentityService identityService;
@@ -137,6 +141,41 @@ public class ProcessController extends BaseServiceImpl {
 			return "redirect:/runtime/tasks/index";
 
 		}
+	}
+
+	@RequestMapping(value = "{id}/startAndRedirectToTaskForm", method = RequestMethod.GET)
+	public String startAndRedirectToTaskForm(@PathVariable String id,
+			Model model) {
+		RuntimeService runtimeService = processEngine.getRuntimeService();
+		ProcessDefinition processDefinition = repositoryService
+				.getProcessDefinition(id);
+
+		// runtimeService.addUserIdentityLink(
+		// processInstance.getProcessInstanceId(), "admin", "candidate");
+
+		Subject currentUser = SecurityUtils.getSubject();
+		if (currentUser.getPrincipal() != null)
+			identityService.setAuthenticatedUserId(currentUser.getPrincipal()
+					.toString());
+
+
+		ProcessInstance processInstance = runtimeService
+				.startProcessInstanceById(id);
+		runtimeService.updateBusinessKey(processInstance.getId(), "草稿");
+		Task task = taskService.createTaskQuery()
+				.processInstanceId(processInstance.getId())
+				.taskAssignee(currentUser.getPrincipal().toString())
+				.singleResult();
+		if (task != null) {
+			String formKey = formService.getTaskFormData(
+					task.getId()).getFormKey();
+			model.addAttribute("taskId", task.getId());
+			return formKey;
+
+		} else
+			return "redirect:/runtime/tasks/index";
+
+		// }
 	}
 
 	@RequestMapping(value = "finishedProcessIndex/{processDefinitionId}", method = RequestMethod.GET)

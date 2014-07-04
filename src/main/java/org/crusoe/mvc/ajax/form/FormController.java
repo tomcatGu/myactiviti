@@ -140,12 +140,16 @@ public class FormController {
 			returnMap.put(name, value);
 		}
 
-		// formService.submitTaskFormData(taskId, returnMap);
-
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		User user = accountService.findUserByLoginName(SecurityUtils
 				.getSubject().getPrincipal().toString());
-		// taskService.setVariablesLocal(taskId, returnMap);
+
+		String businessKey = (String) returnMap.get("businessKey");
+		if (businessKey != null) {
+			runtimeService.updateBusinessKey(task.getProcessInstanceId(),
+					businessKey);
+
+		}
 
 		taskService.complete(taskId, returnMap);
 		HashMap<String, Object> rets = new HashMap<String, Object>();
