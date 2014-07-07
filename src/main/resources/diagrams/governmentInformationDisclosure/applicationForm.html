@@ -11,6 +11,69 @@
 </style>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
+	function deleteAttachment(deleteUrl, attachmentId) {
+		$.ajax({
+			type : "POST",
+			url : deleteUrl + attachmentId,
+			data : {
+				_method : 'DELETE',
+			//items : selctedItems
+			},
+			// contentType : 'application/json',
+			//dataType : 'json',
+			success : function(data) {
+				var orignList = $("#attachmentList").val();
+				$("#attachmentList").val(
+						orginList.replace(attachmentId + ",", ""));
+
+				$("#attachment" + attachmentId).remove();
+
+			}
+		});
+	};
+
+	var options = {
+		beforeSend : function() {
+			$("#progress").show();
+			//clear everything
+			$("#bar").width('0%');
+			$("#message").html("");
+			$("#percent").html("0%");
+		},
+		uploadProgress : function(event, position, total, percentComplete) {
+			$("#bar").width(percentComplete + '%');
+			$("#percent").html(percentComplete + '%');
+
+		},
+		success : function() {
+			$("#bar").width('100%');
+			$("#percent").html('100%');
+
+		},
+		complete : function(response) {
+			var ret = JSON.parse(response.responseText);
+			$("#message").html(
+					"<font color='green'>" + response.responseText + "</font>");
+			var li = $("<li></li>");
+
+			var a = $("<a>" + ret.filename + "</a>");
+			var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+			a.attr("href", "javascript:deleteAttachment(\"" + deleteUrl + "\","
+					+ ret.attachmentId + ");");
+			var i = $("<i class=\"icon-remove\"></i>");
+			i.appendTo(a);
+			a.appendTo(li);
+			li.attr("id", "attachment" + ret.attachmentId);
+			li.appendTo($("#uploadedAttachment"));
+			var orignList = $("#attachmentList").val();
+			$("#attachmentList").val(orignList + "," + ret.attachmentId);
+		},
+		error : function() {
+			$("#message").html("<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+		}
+	};
+	$("#uploadForm").ajaxForm(options);
+
 	function encodeUTF8(str) {
 		var temp = "", rs = "";
 		for (var i = 0, len = str.length; i < len; i++) {
@@ -61,6 +124,8 @@
 						});
 						$("#clearButton").click(function() {
 							$('#selectedUser').text("");
+							$('#assigneeList').text("");
+
 						});
 
 						$('#myTab a:first').tab('show');
@@ -460,6 +525,9 @@
 									<label class="control-label text-info">所需信息的内容描述：</label>
 									<div class="controls">
 										<textarea name="description" rows="8" cols="80" class="span7"></textarea>
+										<div>
+											<ul id="uploadedAttachment"></ul>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -512,7 +580,8 @@
 							</div>
 						</div>
 						<label id="selectedUser"></label> <input type="hidden"
-							name="assigneeList" id="assigneeList" value="" />
+							name="assigneeList" id="assigneeList" value="" /><input
+							type="hidden" name="attachmentList" id="attachmentList" />
 						<div class="row">
 							<div class="span8">
 								<label class="control-label text-info">处理意见：</label>
@@ -535,6 +604,30 @@
 		</form>
 		<div tabindex="-1" class="modal hide fade" id="selectUsers"
 			data-keyboard="false" data-backdrop="static"></div>
+	</div>
+
+	<div class="box">
+		<label>上传附件：</label>
+
+		<form id="uploadForm"
+			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
+			method="post" enctype="multipart/form-data">
+			<div class="row">
+				<div class="span3">
+					<input type="file" name="file" />
+				</div>
+				<div class="span1">
+					<input type="submit" value="上传" class="btn btn-info" />
+				</div>
+				<div class="span3">
+					<div id="progress">
+						<div id="bar"></div>
+						<div id="percent">0%</div>
+					</div>
+					<div id="message"></div>
+				</div>
+			</div>
+		</form>
 	</div>
 </body>
 </html>
