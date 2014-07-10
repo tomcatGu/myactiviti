@@ -1,10 +1,12 @@
 package org.crusoe.mvc.ajax.statistical;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +51,7 @@ public class StatisticalController {
 	private TaskService taskService;
 	@Autowired
 	private HistoryService historyService;
-	
+
 	@Autowired
 	private GovernmentInformationDisclosureDao gidDao;
 
@@ -93,62 +95,58 @@ public class StatisticalController {
 		return rets;
 	}
 
-	@RequestMapping(value = "counterGID", method = RequestMethod.GET)
+	@RequestMapping(value = "countergid", method = RequestMethod.GET)
 	public @ResponseBody
 	HashMap<String, Object> counterGovernmentInformationDisclosure(
-			@RequestParam("startTime") String startTime,
-			@RequestParam("endTime") String endTime,
+			@RequestParam("startTime") final Date startTime,
+			@RequestParam("endTime") final Date endTime,
 			HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 
 		HashMap<String, Integer> statisticalResult = new HashMap<String, Integer>();
-		gidDao.findAll(new Specification<GovernmentInformationDisclosure>(){
+		List<GovernmentInformationDisclosure> gids = gidDao
+				.findAll(new Specification<GovernmentInformationDisclosure>() {
 
-			@Override
-			public Predicate toPredicate(
-					Root<GovernmentInformationDisclosure> root,
-					CriteriaQuery<?> query, CriteriaBuilder builder) {
-				// TODO Auto-generated method stub
-				return null;
-			}});
+					@Override
+					public Predicate toPredicate(
+							Root<GovernmentInformationDisclosure> root,
+							CriteriaQuery<?> query, CriteriaBuilder builder) {
+						// TODO Auto-generated method stub
 
-		/*
-		 * 
-		 @Override
-        public Predicate toPredicate(Root<Question> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-            Predicate predicate = cb.conjunction();
-            List<Expression<Boolean>> expressions = predicate.getExpressions();
-            if (StringUtils.isNotBlank(keyword)) {
-                expressions.add(cb.like(root.<String>get("keyword"), "%"+keyword+"%"));           //关键字
-            }
-            if (StringUtils.isNotBlank(knowledge)) {
-                expressions.add(cb.like(root.<String>get("knowledge"), "%"+knowledge +"%"));      //知识点
-            }
-            if (NumberUtils.isDigits(type)) {
-                expressions.add(cb.equal(root.<String>get("type"), type));    //l类型
-            }
-            if(StringUtils.isNotBlank(itemBankId)) {
-                expressions.add(cb.equal(root.<String>get("puuid"), itemBankId));         //父节点
-            }
-            if(NumberUtils.isDigits(gradeId)) {
-                expressions.add(cb.equal(root.<Grade>get("grade").<Long>get("id"), NumberUtils.toLong(gradeId)));           //年级
-            }
-            if(NumberUtils.isDigits(subjectId)) {
-                expressions.add(cb.equal(root.<Subject>get("subject").<Long>get("id"), NumberUtils.toLong(subjectId)));     //学科
-            }
-            expressions.add(cb.equal(root.<Long>get("deleteBy"), 0));
-            return predicate;
-        }
+						Predicate predicate = builder.conjunction();
+						List<Expression<Boolean>> expressions = predicate
+								.getExpressions();
+						expressions.add(builder.between(
+								root.<Date> get("createTime"), startTime,
+								endTime));
+						return predicate;
+					}
+				});
+		for (GovernmentInformationDisclosure gid : gids) {
+			String fod = gid.getFormOfDisclosure();
+			if (statisticalResult.containsKey(fod)) {
+				statisticalResult.put(fod, statisticalResult.get(fod) + 1);
+			} else {
+				statisticalResult.put(fod, 1);
 
-		 
-		 * **
-		 */
-		
-		
+			}
+
+			String formOfResponse = gid.getFormOfResponse();
+			if (statisticalResult.containsKey(formOfResponse)) {
+				statisticalResult.put(formOfResponse,
+						statisticalResult.get(formOfResponse) + 1);
+			} else {
+				statisticalResult.put(formOfResponse, 1);
+
+			}
+
+		}
+
 		rets.put("err", false);
 		rets.put("statisticalResult", statisticalResult);
 		return rets;
 	}
+
 	@RequestMapping(value = "index")
 	public String getIndexForm() {
 		return "statistical/index";
