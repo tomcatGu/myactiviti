@@ -3,6 +3,10 @@ package org.crusoe.mvc.ajax.statistical;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,8 +20,11 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.apache.commons.lang.StringUtils;
+import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInformationDisclosure;
+import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.GovernmentInformationDisclosureDao;
 import org.crusoe.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +49,9 @@ public class StatisticalController {
 	private TaskService taskService;
 	@Autowired
 	private HistoryService historyService;
+	
+	@Autowired
+	private GovernmentInformationDisclosureDao gidDao;
 
 	@Autowired
 	protected AccountService accountService;
@@ -83,6 +93,62 @@ public class StatisticalController {
 		return rets;
 	}
 
+	@RequestMapping(value = "counterGID", method = RequestMethod.GET)
+	public @ResponseBody
+	HashMap<String, Object> counterGovernmentInformationDisclosure(
+			@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime,
+			HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+
+		HashMap<String, Integer> statisticalResult = new HashMap<String, Integer>();
+		gidDao.findAll(new Specification<GovernmentInformationDisclosure>(){
+
+			@Override
+			public Predicate toPredicate(
+					Root<GovernmentInformationDisclosure> root,
+					CriteriaQuery<?> query, CriteriaBuilder builder) {
+				// TODO Auto-generated method stub
+				return null;
+			}});
+
+		/*
+		 * 
+		 @Override
+        public Predicate toPredicate(Root<Question> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            Predicate predicate = cb.conjunction();
+            List<Expression<Boolean>> expressions = predicate.getExpressions();
+            if (StringUtils.isNotBlank(keyword)) {
+                expressions.add(cb.like(root.<String>get("keyword"), "%"+keyword+"%"));           //关键字
+            }
+            if (StringUtils.isNotBlank(knowledge)) {
+                expressions.add(cb.like(root.<String>get("knowledge"), "%"+knowledge +"%"));      //知识点
+            }
+            if (NumberUtils.isDigits(type)) {
+                expressions.add(cb.equal(root.<String>get("type"), type));    //l类型
+            }
+            if(StringUtils.isNotBlank(itemBankId)) {
+                expressions.add(cb.equal(root.<String>get("puuid"), itemBankId));         //父节点
+            }
+            if(NumberUtils.isDigits(gradeId)) {
+                expressions.add(cb.equal(root.<Grade>get("grade").<Long>get("id"), NumberUtils.toLong(gradeId)));           //年级
+            }
+            if(NumberUtils.isDigits(subjectId)) {
+                expressions.add(cb.equal(root.<Subject>get("subject").<Long>get("id"), NumberUtils.toLong(subjectId)));     //学科
+            }
+            expressions.add(cb.equal(root.<Long>get("deleteBy"), 0));
+            return predicate;
+        }
+
+		 
+		 * **
+		 */
+		
+		
+		rets.put("err", false);
+		rets.put("statisticalResult", statisticalResult);
+		return rets;
+	}
 	@RequestMapping(value = "index")
 	public String getIndexForm() {
 		return "statistical/index";
