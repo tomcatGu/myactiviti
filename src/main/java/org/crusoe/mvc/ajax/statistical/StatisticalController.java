@@ -1,5 +1,7 @@
 package org.crusoe.mvc.ajax.statistical;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -98,27 +100,37 @@ public class StatisticalController {
 	@RequestMapping(value = "countergid", method = RequestMethod.GET)
 	public @ResponseBody
 	HashMap<String, Object> counterGovernmentInformationDisclosure(
-			@RequestParam("startTime") final Date startTime,
-			@RequestParam("endTime") final Date endTime,
+			@RequestParam("startTime") final String startTime,
+			@RequestParam("endTime") final String endTime,
 			HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 
 		HashMap<String, Integer> statisticalResult = new HashMap<String, Integer>();
 		List<GovernmentInformationDisclosure> gids = gidDao
 				.findAll(new Specification<GovernmentInformationDisclosure>() {
+					// Date startTime;
+					// Date endTime;
 
 					@Override
 					public Predicate toPredicate(
 							Root<GovernmentInformationDisclosure> root,
 							CriteriaQuery<?> query, CriteriaBuilder builder) {
 						// TODO Auto-generated method stub
-
+						SimpleDateFormat dateformat1 = new SimpleDateFormat(
+								"yyyy-MM-dd HH:mm:ss");
 						Predicate predicate = builder.conjunction();
 						List<Expression<Boolean>> expressions = predicate
 								.getExpressions();
-						expressions.add(builder.between(
-								root.<Date> get("createTime"), startTime,
-								endTime));
+
+						try {
+							expressions.add(builder.between(
+									root.<Date> get("createTime"),
+									dateformat1.parse(startTime),
+									dateformat1.parse(endTime)));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						return predicate;
 					}
 				});
