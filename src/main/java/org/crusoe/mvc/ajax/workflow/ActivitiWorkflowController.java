@@ -58,7 +58,6 @@ public class ActivitiWorkflowController {
 	@RequestMapping(value = "index", method = RequestMethod.GET)
 	public String getIndexForm(Model model) {
 
-
 		return "/workflow/index";
 	}
 
@@ -72,7 +71,8 @@ public class ActivitiWorkflowController {
 			throws IllegalAccessException, InvocationTargetException {
 
 		List<org.activiti.engine.repository.Model> list = repositoryService
-				.createModelQuery().orderByCreateTime().desc().listPage(start, size);
+				.createModelQuery().orderByCreateTime().desc()
+				.listPage(start, size);
 		List<ModelDTO> todoList = new ArrayList<ModelDTO>();
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		for (org.activiti.engine.repository.Model model : list) {
@@ -105,6 +105,14 @@ public class ActivitiWorkflowController {
 		runtimeService.startProcessInstanceByKey(processKey);
 
 		return "/task/index";
+
+	}
+
+	@RequestMapping(value = "resource/{packageName}/{resourceName}", method = RequestMethod.GET)
+	public String getResource(@PathVariable("packageName") String packageName,
+			@PathVariable("resourceName") String resourceName) {
+
+		return packageName + "/" + resourceName;
 
 	}
 
