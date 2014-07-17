@@ -105,7 +105,6 @@ public class StatisticalController {
 			HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 
-		HashMap<String, Integer> statisticalResult = new HashMap<String, Integer>();
 		List<GovernmentInformationDisclosure> gids = gidDao
 				.findAll(new Specification<GovernmentInformationDisclosure>() {
 					// Date startTime;
@@ -134,7 +133,17 @@ public class StatisticalController {
 						return predicate;
 					}
 				});
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		HashMap<String, Integer> statisticalResult;
 		for (GovernmentInformationDisclosure gid : gids) {
+			String username = gid.getCreateUser();
+			if (result.containsKey(username)) {
+				statisticalResult = (HashMap<String, Integer>) result
+						.get(username);
+			} else {
+				statisticalResult = new HashMap<String, Integer>();
+				result.put(username, statisticalResult);
+			}
 			String fod = gid.getFormOfDisclosure();
 			if (statisticalResult.containsKey(fod)) {
 				statisticalResult.put(fod, statisticalResult.get(fod) + 1);
@@ -155,7 +164,7 @@ public class StatisticalController {
 		}
 
 		rets.put("err", false);
-		rets.put("statisticalResult", statisticalResult);
+		rets.put("statisticalResult", result);
 		return rets;
 	}
 

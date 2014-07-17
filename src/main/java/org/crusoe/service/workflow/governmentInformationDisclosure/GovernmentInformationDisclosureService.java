@@ -193,6 +193,7 @@ public class GovernmentInformationDisclosureService {
 		gid.setGroupDelegateEmail(groupDelegateEmail);
 		gid.setFormOfDisclosure(formOfDisclosure);
 		gid.setCreateTime(new Date());
+		gid.setCreateUser(SecurityUtils.getSubject().getPrincipal().toString());
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		try {

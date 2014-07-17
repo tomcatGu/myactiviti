@@ -55,8 +55,9 @@ public class GovernmentInformationDisclosure implements Serializable,
 
 	private String formOfDisclosure;
 	private String formOfResponse;
-	
+
 	private Date createTime;
+	private String createUser;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -300,6 +301,14 @@ public class GovernmentInformationDisclosure implements Serializable,
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
 	}
 
 }
