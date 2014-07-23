@@ -1,0 +1,215 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<title>统计列表</title>
+<script src="/bootstrap/js/plugins/jqplot.json2.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.json2.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.barRenderer.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.barRenderer.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.categoryAxisRenderer.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.categoryAxisRenderer.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.pointLabels.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.pointLabels.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.dateAxisRenderer.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.dateAxisRenderer.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.canvasTextRenderer.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.canvasTextRenderer.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.canvasAxisTickRenderer.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.canvasAxisTickRenderer.min.js}"></script>
+<script type="text/javascript" src="../excanvas.compiled.js"
+	th:src="@{/bootstrap/js/excanvas.compiled.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	function render(data) {
+		var newRow = "<tr>";
+		for (i = 0; i < 14; i++) {
+			newRow += "<td>" + data[i] + "</td>";
+		}
+		newRow += "</tr>";
+		return newRow;
+	};
+	$(document)
+			.ready(
+					function() {
+						$("#submitButton")
+								.click(
+										function() {
+											alert($("#startTimePicker").data(
+													'datetimepicker')
+													.getLocalDate());
+											$
+													.ajax({
+														type : "GET", //提交的类型
+														dataType : "json",
+														data : {
+															'startTime' : new Date(
+																	$(
+																			"#startTimePicker")
+																			.data(
+																					'datetimepicker')
+																			.getLocalDate())
+																	.ToString(),
+															'endTime' : new Date(
+																	$(
+																			"#endTimePicker")
+																			.data(
+																					'datetimepicker')
+																			.getLocalDate())
+																	.ToString()
+														},
+														url : /*[[@{'/statistical/countergid'}]]*/"", //提交地址
+														success : function(data) {
+															var dataValue = new Array(); //数据
+															var ticks = new Array(); //横坐标值
+															if (ticks.length == 0) {
+																ticks = [
+																		"当面申请",
+																		"网上及电子邮件申请",
+																		"信函及传真申请",
+																		"其它形式申请",
+																		"同意公开",
+																		"延期答复",
+																		"同意部分公开答复",
+																		"已公开并告知检索途径",
+																		"不同意公开答复",
+																		"不属于本机关公开范围",
+																		"信息不存在",
+																		"申请内容不明确",
+																		"其他答复情况" ];
+																dataValue = [
+																		"admin",
+																		0, 0,
+																		0, 0,
+																		0, 0,
+																		0, 0,
+																		0, 0,
+																		0, 0, 0 ];
+
+															}
+															for (someUser in data.statisticalResult) {
+																dataValue[0] = someUser;
+																for (aData in data.statisticalResult[someUser]) {
+
+																	var i = 0;
+																	for (i = 0; i < ticks.length; i++) {
+																		if (ticks[i] == aData)
+																			break;
+
+																	}
+																	dataValue[i + 1] = data.statisticalResult[someUser][aData];
+
+																}
+																var newRow = render(dataValue);
+																$(
+																		"#statisticalTable")
+																		.find(
+																				"tr:last")
+																		.after(
+																				newRow);
+
+															}
+
+														}
+													});
+										});
+
+						$("#startTimePicker").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
+						$("#endTimePicker").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
+
+					});
+	/*]]>*/
+</script>
+<style>
+.hover {
+	background-color: #cccc00;
+}
+</style>
+</head>
+<body>
+	<form>
+		<div class="control-group">
+			<div class="row">
+				<div class="span4">
+					<label class="control-label text-info">开始时间：</label>
+					<div class="controls">
+						<div id="startTimePicker" class="input-append date">
+							<input name="startTime" class="datepicker"
+								data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+								<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+							</i>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="span4">
+					<label class="control-label text-info">结束时间：</label>
+					<div class="controls">
+						<div id="endTimePicker" class="input-append date">
+							<input name="endTime" class="datepicker"
+								data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+								<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+							</i>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<input type="button" id="submitButton" value="提交"
+					class="btn btn-primary" />
+			</div>
+		</div>
+	</form>
+	<div class="box">
+		<h1>统计</h1>
+		<div id="chart" style="height: 300px; width: 90%"></div>
+		<table id="statisticalTable">
+			<tr>
+				<th>名称</th>
+				<th>当面申请</th>
+				<th>网上及电子邮件申请</th>
+				<th>信函及传真申请</th>
+				<th>其它形式申请</th>
+				<th>同意公开</th>
+				<th>延期答复</th>
+				<th>同意部分公开答复</th>
+				<th>已公开并告知检索途径</th>
+				<th>不同意公开答复</th>
+				<th>不属于本机关公开范围</th>
+				<th>信息不存在</th>
+				<th>申请内容不明确</th>
+				<th>其他答复情况</th>
+			</tr>
+
+		</table>
+
+	</div>
+</body>
+</html>
