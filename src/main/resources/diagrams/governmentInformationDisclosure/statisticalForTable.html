@@ -151,46 +151,43 @@
 </style>
 </head>
 <body>
-	<form>
-		<div class="control-group">
-			<div class="row">
-				<div class="span4">
-					<label class="control-label text-info">开始时间：</label>
-					<div class="controls">
-						<div id="startTimePicker" class="input-append date">
-							<input name="startTime" class="datepicker"
-								data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-								<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-							</i>
-							</span>
+
+	<div class="span9">
+		<form class="form-inline">
+			<div class="control-group">
+				<div class="row">
+					<div class="span9">
+
+						<div class="controls">
+							<label class="control-label text-info">开始时间：</label>
+							<div id="startTimePicker" class="input-append date">
+								<input name="startTime" class="datepicker"
+									data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+									<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+								</i>
+								</span>
+							</div>
+							<label class="control-label text-info">结束时间：</label>
+							<div id="endTimePicker" class="input-append date">
+								<input name="endTime" class="datepicker"
+									data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+									<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+								</i>
+								</span>
+							</div>
+							<input type="button" id="submitButton" value="提交"
+								class="btn btn-primary" />
 						</div>
 					</div>
+
 				</div>
-				<div class="span4">
-					<label class="control-label text-info">结束时间：</label>
-					<div class="controls">
-						<div id="endTimePicker" class="input-append date">
-							<input name="endTime" class="datepicker"
-								data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-								<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-							</i>
-							</span>
-						</div>
-					</div>
-				</div>
+
 			</div>
-		</div>
-		<div class="control-group">
-			<div class="controls">
-				<input type="button" id="submitButton" value="提交"
-					class="btn btn-primary" />
-			</div>
-		</div>
-	</form>
-	<div class="box">
-		<h1>统计</h1>
-		<div id="chart" style="height: 300px; width: 90%"></div>
-		<table id="statisticalTable">
+
+		</form>
+
+		<table id="statisticalTable"
+			class="table table-bordered table-striped table-condensed">
 			<tr>
 				<th>名称</th>
 				<th>当面申请</th>
