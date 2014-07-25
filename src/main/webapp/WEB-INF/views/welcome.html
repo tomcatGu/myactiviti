@@ -140,6 +140,14 @@
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
 								href="#" onClick="load('角色列表','role/index')">角色列表<i
 									class="icon-chevron-right"></i></a></li>
+
+							<li class="nav-header"
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">统计</li>
+							<li
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
+								href="#"
+								onClick="load('统计信息','workflow/resource/governmentInformationDisclosure/statisticalForTable')">统计信息<i
+									class="icon-chevron-right"></i></a></li>
 						</ul>
 					</div>
 					<!--/.well -->

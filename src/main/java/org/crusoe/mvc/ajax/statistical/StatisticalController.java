@@ -137,6 +137,7 @@ public class StatisticalController {
 		HashMap<String, Integer> statisticalResult;
 		for (GovernmentInformationDisclosure gid : gids) {
 			String username = gid.getCreateUser();
+			username = accountService.findUserByLoginName(username).getName();
 			if (result.containsKey(username)) {
 				statisticalResult = (HashMap<String, Integer>) result
 						.get(username);

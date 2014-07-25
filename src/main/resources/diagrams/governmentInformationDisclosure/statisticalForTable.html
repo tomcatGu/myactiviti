@@ -41,9 +41,7 @@
 						$("#submitButton")
 								.click(
 										function() {
-											alert($("#startTimePicker").data(
-													'datetimepicker')
-													.getLocalDate());
+
 											$
 													.ajax({
 														type : "GET", //提交的类型
@@ -68,6 +66,11 @@
 														success : function(data) {
 															var dataValue = new Array(); //数据
 															var ticks = new Array(); //横坐标值
+															var total = [
+																	"total", 0,
+																	0, 0, 0, 0,
+																	0, 0, 0, 0,
+																	0, 0, 0, 0 ];
 															if (ticks.length == 0) {
 																ticks = [
 																		"当面申请",
@@ -95,6 +98,7 @@
 															}
 															for (someUser in data.statisticalResult) {
 																dataValue[0] = someUser;
+																total[0] = "总计";
 																for (aData in data.statisticalResult[someUser]) {
 
 																	var i = 0;
@@ -104,6 +108,7 @@
 
 																	}
 																	dataValue[i + 1] = data.statisticalResult[someUser][aData];
+																	total[i + 1] += dataValue[i + 1];
 
 																}
 																var newRow = render(dataValue);
@@ -115,6 +120,13 @@
 																				newRow);
 
 															}
+															var newRow = render(total);
+															$(
+																	"#statisticalTable")
+																	.find(
+																			"tr:last")
+																	.after(
+																			newRow);
 
 														}
 													});
@@ -152,7 +164,7 @@
 </head>
 <body>
 
-	<div class="span9">
+	<div>
 		<form class="form-inline">
 			<div class="control-group">
 				<div class="row">
