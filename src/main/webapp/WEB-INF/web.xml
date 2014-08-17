@@ -158,6 +158,12 @@
 	</filter-mapping>
 
 	<session-config> 
-		<session-timeout>20</session-timeout> 
+		<session-timeout>30</session-timeout> 
 	</session-config> 
+	
+	<error-page>
+		<exception-type>org.apache.shiro.session.InvalidSessionException</exception-type>
+		<location>/login</location>
+	</error-page>
+
 </web-app>
