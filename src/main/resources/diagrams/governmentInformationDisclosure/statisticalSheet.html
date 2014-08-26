@@ -1,0 +1,75 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<title>统计列表</title>
+<link href="/jQuery.sheet-3.1/jquery.sheet.css" rel="stylesheet"
+	type="text/css" th:href="@{/jQuery.sheet-3.1/jquery.sheet.css}" />
+<link href="/jQuery.sheet-3.1/jquery-ui/theme/jquery-ui.min.css"
+	rel="stylesheet" type="text/css"
+	th:href="@{/jQuery.sheet-3.1/jquery-ui/theme/jquery-ui.min.css}" />
+<script src="/jQuery.sheet-3.1/jquery.sheet.js" type="text/javascript"
+	th:src="@{/jQuery.sheet-3.1/jquery.sheet.js}"></script>
+<script src="/jQuery.sheet-3.1/jquery-ui/ui/jquery-ui.min.js"
+	type="text/javascript"
+	th:src="@{/jQuery.sheet-3.1/jquery-ui/ui/jquery-ui.min.js}"></script>
+<script src="/jQuery.sheet-3.1/plugins/globalize.js"
+	type="text/javascript"
+	th:src="@{/jQuery.sheet-3.1/plugins/globalize.js}"></script>
+<script src="/jQuery.sheet-3.1/parser/formula/formula.js"
+	type="text/javascript"
+	th:src="@{/jQuery.sheet-3.1/parser/formula/formula.js}"></script>
+<script src="/jQuery.sheet-3.1/parser/tsv/tsv.js" type="text/javascript"
+	th:src="@{/jQuery.sheet-3.1/parser/tsv/tsv.js}"></script>
+<script src="/jQuery.sheet-3.1/plugins/jquery.nearest.min.js"
+	type="text/javascript"
+	th:src="@{/jQuery.sheet-3.1/plugins/jquery.nearest.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    // $('#sheetParent').sheet.preLoad('../../../../jQuery.sheet-3.1/');
+    $(function() {
+
+	$('#sheetParent').sheet();
+
+    });
+
+    //$dtsValue.val(JSON.stringify(json));
+    //$('#sheetFromDts').html(tables).height($('#sheet').height()).sheet();
+
+    $(document).ready(function() {
+	$('#submitBtn').click(function() {
+
+	    var jS = $('#sheetParent').getSheet();
+	    json = $('#sheetParent').dts.fromTables.json(jS, true);
+	    tables = $('#sheetParent').dts.toTables.json(json);
+
+	    $("#myForm").ajaxForm({
+		url : /*[[@{'/workflow/submit/'}]]*/"",
+		dataType : "text",
+		data : json,
+		success : function(data) {
+
+		},
+		beforeSubmit : function() {
+
+		}
+
+	    }).submit();
+
+	});
+
+    });
+    /*]]>*/
+</script>
+<style>
+.hover {
+	background-color: #cccc00;
+}
+</style>
+</head>
+<body>
+	<form id="myForm">
+		<div id="sheetParent"></div>
+		<buton id="submitBtn" value="保存" class="btn btn-info" />
+	</form>
+</body>
+</html>

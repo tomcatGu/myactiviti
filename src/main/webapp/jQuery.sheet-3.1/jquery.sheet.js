@@ -1080,6 +1080,7 @@ jQuery = jQuery || window.jQuery;
          */
         preLoad:function (path, settings) {
             path = path || '';
+            alert(path);
             settings = $.extend({
                 skip: ['globalizeCultures']
             },settings);
