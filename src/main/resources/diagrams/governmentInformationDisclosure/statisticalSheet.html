@@ -23,6 +23,9 @@
 <script src="/jQuery.sheet-3.1/plugins/jquery.nearest.min.js"
 	type="text/javascript"
 	th:src="@{/jQuery.sheet-3.1/plugins/jquery.nearest.min.js}"></script>
+<script src="/jQuery.sheet-3.1/plugins/jquery.sheet.dts.js"
+	type="text/javascript"
+	th:src="@{/jQuery.sheet-3.1/plugins/jquery.sheet.dts.js}"></script>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
     // $('#sheetParent').sheet.preLoad('../../../../jQuery.sheet-3.1/');
@@ -39,13 +42,16 @@
 	$('#submitBtn').click(function() {
 
 	    var jS = $('#sheetParent').getSheet();
-	    json = $('#sheetParent').dts.fromTables.json(jS, true);
-	    tables = $('#sheetParent').dts.toTables.json(json);
+	    json = $.sheet.dts.fromTables.xml(jS, true);
+	    tables = $.sheet.dts.toTables.xml(json);
 
 	    $("#myForm").ajaxForm({
 		url : /*[[@{'/workflow/submit/'}]]*/"",
 		dataType : "text",
-		data : json,
+		data : {
+		    value : json
+		},
+		type : "POST",
 		success : function(data) {
 
 		},
@@ -69,7 +75,7 @@
 <body>
 	<form id="myForm">
 		<div id="sheetParent"></div>
-		<buton id="submitBtn" value="±£´æ" class="btn btn-info" />
+		<buton id="submitBtn" value="±£´æ" />
 	</form>
 </body>
 </html>
