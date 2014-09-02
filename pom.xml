@@ -423,7 +423,7 @@
 		<spring.version>4.0.0.RELEASE</spring.version>
 		<thymeleaf.version>2.1.2.RELEASE</thymeleaf.version>
 		<shiro.version>1.2.3</shiro.version>
-		<spring-data.version>1.2.0.RELEASE</spring-data.version>
+		<spring-data.version>1.6.4.RELEASE</spring-data.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<jetty.version>1</jetty.version>
 		<junit.version>4.10</junit.version>
