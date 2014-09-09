@@ -129,6 +129,9 @@
 							<li><a href="#" onClick="loadOwner('我发起的流程')">我发起的流程</a></li>
 							<li><a href="#"
 								onClick="load('所有流程','runtime/process/allProcessIndex/')">所有流程</a></li>
+							<li><a href="#"
+								onClick="load('填报年度统计表','runtime/process/annualStatistics:4:4618/startAndRedirectToTaskForm')">填报年度统计表<i
+									class="icon-chevron-right"></i></a></li>
 							<li class="nav-header"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">用户管理</li>
 							<li><a href="#" onClick="load('用户列表','user/index')"
@@ -140,7 +143,6 @@
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
 								href="#" onClick="load('角色列表','role/index')">角色列表<i
 									class="icon-chevron-right"></i></a></li>
-
 							<li class="nav-header"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">统计</li>
 							<li
