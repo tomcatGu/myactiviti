@@ -28,8 +28,9 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresUser;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
+
+//import org.codehaus.jackson.map.ObjectMapper;
+//import org.codehaus.jackson.node.ObjectNode;
 import org.crusoe.dto.repository.ModelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Controller
 @RequestMapping(value = "/workflow")
@@ -165,9 +170,10 @@ public class ActivitiWorkflowController {
 		try {
 			org.activiti.engine.repository.Model modelData = repositoryService
 					.getModel(modelId);
-			ObjectNode modelNode = (ObjectNode) new ObjectMapper()
+			JsonNode modelNode = (JsonNode) new ObjectMapper()
 					.readTree(repositoryService.getModelEditorSource(modelData
 							.getId()));
+			
 			byte[] bpmnBytes = null;
 
 			BpmnModel model = new BpmnJsonConverter()

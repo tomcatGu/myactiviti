@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.RepositoryService;
-import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
+import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.interceptor.CommandContext;
 
@@ -25,11 +25,11 @@ public class GenFlowImageCmd implements Command<InputStream> {
 		// AppUtil.getBean("repositoryService");
 
 		BpmnModel bpmnModel = repositoryService.getBpmnModel(bpmnDefId);
-		//bpmnModel.
+		// bpmnModel.
 
-		InputStream inputStream = ProcessDiagramGenerator
+		InputStream inputStream = new DefaultProcessDiagramGenerator()
 				.generatePngDiagram(bpmnModel);
-		//ProcessDiagramGenerator.g
+		// ProcessDiagramGenerator.g
 		return inputStream;
 	}
 
