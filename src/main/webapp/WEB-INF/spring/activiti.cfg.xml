@@ -6,7 +6,7 @@
 	   http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
-		<property name="history" value="full" />
+		<property name="history" value="audit" />
 		<property name="databaseType" value="mysql" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="transactionManager" ref="transactionManager" />
