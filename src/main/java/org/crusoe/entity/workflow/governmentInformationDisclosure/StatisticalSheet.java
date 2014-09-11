@@ -6,16 +6,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "workflow_statisticalSheet")
 public class StatisticalSheet {
-	Long id;
-	String annual;
-	String loginName;
-	String statisticalData;
-	Date fillingDate;
+	private Long id;
+	private String annual;
+	private String loginName;
+
+	private String statisticalData;
+	private Date fillingDate;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +53,7 @@ public class StatisticalSheet {
 		this.fillingDate = fillingDate;
 	}
 
+	@Lob
 	public String getStatisticalData() {
 		return statisticalData;
 	}

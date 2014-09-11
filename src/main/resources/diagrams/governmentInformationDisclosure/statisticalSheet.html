@@ -51,11 +51,13 @@
 		url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
 		dataType : "text",
 		data : {
-		    statisticalData : json
+		    statisticalData : json,
+		    annual : $("#annual").val()
 		},
 		type : "POST",
 		success : function(data) {
-
+		    var ret = JSON.parse(data);
+		    alert(ret.msg);
 		},
 		beforeSubmit : function() {
 
@@ -76,6 +78,8 @@
 </head>
 <body>
 	<form id="myForm">
+		<label class="control-label text-info">Äê¶È£º</label> <input type="text"
+			name="annual" id="annual" />
 		<div id="sheetParent">
 			<table>
 				<colgroup>

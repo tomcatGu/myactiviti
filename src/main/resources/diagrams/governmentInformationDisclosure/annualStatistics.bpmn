@@ -5,7 +5,7 @@
     <userTask id="usertask1" name="填写年度统计表" activiti:assignee="${startUserId}" activiti:formKey="governmentInformationDisclosure/statisticalSheet"></userTask>
     <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
-    <serviceTask id="servicetask1" name="保存统计数据" activiti:expression="statisticalSheetService.save(startUserId,annual,statisticalData)"></serviceTask>
+    <serviceTask id="servicetask1" name="保存统计数据" activiti:expression="${statisticalSheetService.save(startUserId,annual,statisticalData)}"></serviceTask>
     <sequenceFlow id="flow2" sourceRef="usertask1" targetRef="servicetask1"></sequenceFlow>
     <sequenceFlow id="flow3" sourceRef="servicetask1" targetRef="endevent1"></sequenceFlow>
   </process>
