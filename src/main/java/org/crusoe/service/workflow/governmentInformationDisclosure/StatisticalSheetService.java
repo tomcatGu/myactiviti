@@ -23,13 +23,13 @@ public class StatisticalSheetService {
 	@Autowired
 	private StatisticalSheetDao statisticalSheetDao;
 
-	public void save(String createUserName, String annual,
+	public StatisticalSheet save(String createUserName, String annual,
 			String statisticalData) {
 		StatisticalSheet sheet = new StatisticalSheet();
 		sheet.setLoginName(createUserName);
 		sheet.setAnnual(annual);
 		sheet.setFillingDate(new Date());
 		sheet.setStatisticalData(statisticalData);
-		statisticalSheetDao.save(sheet);
+		return statisticalSheetDao.save(sheet);
 	}
 }

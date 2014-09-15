@@ -31,28 +31,57 @@
     // $('#sheetParent').sheet.preLoad('../../../../jQuery.sheet-3.1/');
     $(function() {
 
-	$('#sheetParent').bind('sheetCellEdit', function() {
-	    //alert('A cell was edited!')
-	}).sheet();
 
-    });
 
     //$dtsValue.val(JSON.stringify(json));
     //$('#sheetFromDts').html(tables).height($('#sheet').height()).sheet();
+    var sheetData = /*[[${result==null?'':result.statisticalData}]]*/"";
+    if (sheetData =='') {
+	$('#sheetParent').sheet();
+    } else {
+	tables = $.sheet.dts.toTables.xml(sheetData);
+	$('#sheetParent').html(tables).sheet();
+    }
 
     $(document).ready(function() {
 	$('#submitBtn').click(function() {
 
 	    var jS = $('#sheetParent').getSheet();
 	    json = $.sheet.dts.fromTables.xml(jS, true);
-	    tables = $.sheet.dts.toTables.xml(json);
 
 	    $("#myForm").ajaxForm({
 		url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
 		dataType : "text",
 		data : {
 		    statisticalData : json,
-		    annual : $("#annual").val()
+		    annual : $("#annual").val(),
+		    isCompleted:true
+		},
+		type : "POST",
+		success : function(data) {
+		    var ret = JSON.parse(data);
+		    alert(ret.msg);
+		},
+		beforeSubmit : function() {
+
+		}
+
+	    }).submit();
+
+	});
+	
+	$('#saveBtn').click(function() {
+
+	    var jS = $('#sheetParent').getSheet();
+	    json = $.sheet.dts.fromTables.xml(jS, true);
+
+	    $("#myForm").ajaxForm({
+		url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+		dataType : "text",
+		data : {
+		    statisticalData : json,
+		    annual : $("#annual").val(),
+		    isCompleted:false
 		},
 		type : "POST",
 		success : function(data) {
@@ -417,7 +446,8 @@
 				</tr>
 			</table>
 		</div>
-		<input id="submitBtn" type="button" class="btn btn-info" value="±£´æ" />
+		<input id="submitBtn" type="button" class="btn btn-info" value="Ìá½»" />
+		<input id="saveBtn" type="button" class="btn btn-info" value="ÔÝ´æ" />
 	</form>
 </body>
 </html>
