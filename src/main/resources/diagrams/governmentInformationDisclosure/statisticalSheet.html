@@ -31,31 +31,36 @@
     // $('#sheetParent').sheet.preLoad('../../../../jQuery.sheet-3.1/');
     $(function() {
 
+	//$dtsValue.val(JSON.stringify(json));
+	//$('#sheetFromDts').html(tables).height($('#sheet').height()).sheet();
+	var sheetData = /*[[${result==null?'':result.statisticalData}]]*/"";
+	if (sheetData == '') {
+	    $('#sheetParent').sheet();
+	} else {
+	    tables = $.sheet.dts.toTables.xml(sheetData);
+	    tables.find("td").each(function(i) {
+		var td = $(this);
+		if (td.attr("data-celltype") != "number") {
+		    td.attr("data-uneditable", true);
 
-
-    //$dtsValue.val(JSON.stringify(json));
-    //$('#sheetFromDts').html(tables).height($('#sheet').height()).sheet();
-    var sheetData = /*[[${result==null?'':result.statisticalData}]]*/"";
-    if (sheetData =='') {
-	$('#sheetParent').sheet();
-    } else {
-	tables = $.sheet.dts.toTables.xml(sheetData);
-	$('#sheetParent').html(tables).sheet();
-    }
-
+		}
+	    });
+	    $('#sheetParent').html(tables).sheet();
+	}
+    });
     $(document).ready(function() {
 	$('#submitBtn').click(function() {
 
 	    var jS = $('#sheetParent').getSheet();
-	    json = $.sheet.dts.fromTables.xml(jS, true);
+	    xml = $.sheet.dts.fromTables.xml(jS, true);
 
 	    $("#myForm").ajaxForm({
 		url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
 		dataType : "text",
 		data : {
-		    statisticalData : json,
-		    annual : $("#annual").val(),
-		    isCompleted:true
+		    statisticalData : xml,
+		    isCompleted : "true",
+		    isSubmited : "true"
 		},
 		type : "POST",
 		success : function(data) {
@@ -69,19 +74,19 @@
 	    }).submit();
 
 	});
-	
+
 	$('#saveBtn').click(function() {
 
 	    var jS = $('#sheetParent').getSheet();
-	    json = $.sheet.dts.fromTables.xml(jS, true);
+	    xml = $.sheet.dts.fromTables.xml(jS, true);
 
 	    $("#myForm").ajaxForm({
 		url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
 		dataType : "text",
 		data : {
-		    statisticalData : json,
-		    annual : $("#annual").val(),
-		    isCompleted:false
+		    statisticalData : xml,
+		    isCompleted : "false",
+		    isSubmited : "false"
 		},
 		type : "POST",
 		success : function(data) {
