@@ -36,6 +36,7 @@ import org.crusoe.util.JSONUtil;
 import org.crusoe.web.datatables.DataTableReturnObject;
 import org.crusoe.web.datatables.JSONParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -121,7 +122,7 @@ public class TaskController {
 			model.addAttribute("attachments", attachments);
 			// model.addAttribute("historicView", true);
 
-			return formKey + ".readonly";//for review the completed form page
+			return formKey + ".readonly";// for review the completed form page
 		} else
 			return "task/index";
 	}
@@ -196,7 +197,7 @@ public class TaskController {
 			// model.addAllAttributes(attachments);
 			model.addAllAttributes(variables);
 			model.addAttribute("taskId", taskId);
-			
+
 			return formKey;
 		} else
 			return "task/index";
@@ -353,5 +354,24 @@ public class TaskController {
 
 		return rets;
 
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE)
+	public @ResponseBody
+	Map<String, ? extends Object> batchDelete(
+			@RequestParam(value = "items[]", required = false) String[] items)
+			throws Exception {
+
+		for (int i = 0; i < items.length; i++) {
+			String processInstanceId = taskService.createTaskQuery()
+					.taskId(items[i]).singleResult().getProcessInstanceId();
+			runtimeService.deleteProcessInstance(processInstanceId, "");
+			taskService.deleteTask(items[i]);
+
+		}
+		Map<String, String> msgs = new HashMap<String, String>();
+
+		msgs.put("msg", "删除成功");
+		return msgs;
 	}
 }
