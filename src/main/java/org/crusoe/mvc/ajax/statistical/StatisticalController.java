@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInformationDisclosure;
 import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.GovernmentInformationDisclosureDao;
 import org.crusoe.service.AccountService;
+import org.crusoe.service.workflow.governmentInformationDisclosure.StatisticalSheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
@@ -59,6 +60,8 @@ public class StatisticalController {
 
 	@Autowired
 	protected AccountService accountService;
+	@Autowired
+	protected StatisticalSheetService statisticalSheetService;
 
 	@RequestMapping(value = "counter/{processDefinitionId}", method = RequestMethod.GET)
 	public @ResponseBody
@@ -171,6 +174,13 @@ public class StatisticalController {
 
 	@RequestMapping(value = "index")
 	public String getIndexForm() {
+		return "statistical/index";
+	}
+
+	@RequestMapping(value = "annual")
+	public String countAnnualStatistical() {
+
+		statisticalSheetService.total("2014");// for test
 		return "statistical/index";
 	}
 }
