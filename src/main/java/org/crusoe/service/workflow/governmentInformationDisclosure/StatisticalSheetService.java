@@ -11,6 +11,11 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.TaskService;
@@ -70,12 +75,26 @@ public class StatisticalSheetService {
 				Document document = db.parse(new InputSource(
 						new ByteArrayInputStream(sheet.getStatisticalData()
 								.getBytes("utf-8"))));
-				NodeList sheetNode = document.getChildNodes();
+				XPathFactory xFactory = XPathFactory.newInstance();
+				XPath xpath = xFactory.newXPath();
+				XPathExpression expr = xpath
+						.compile("/spreadsheets/spreadsheet/rows/row[1]/columns/column/value/text()");
+
+				Object result = expr.evaluate(document, XPathConstants.NODESET);
+				NodeList nodes = (NodeList) result;
+				System.out.println(nodes.getLength());
+				for (int i = 0; i < nodes.getLength(); i++) {
+					System.out.println(nodes.item(i).getNodeValue());
+				}
+				//NodeList sheetNode = document.getChildNodes();
 
 			} catch (SAXException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (XPathExpressionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
