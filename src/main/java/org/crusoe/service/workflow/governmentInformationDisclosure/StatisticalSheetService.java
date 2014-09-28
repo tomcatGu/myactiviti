@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -117,31 +118,41 @@ public class StatisticalSheetService {
 						xpath.reset();
 						XPathExpression exprColNode = xpath
 								.compile("//spreadsheets/spreadsheet/rows/row["
-										+ i + 1 + "]/columns/column[3]");
+										+ (i + 1)
+										+ "]/columns/column[3]/cellType");
+						XPathExpression exprColNodeParent = xpath
+								.compile("//spreadsheets/spreadsheet/rows/row["
+										+ (i + 1) + "]/columns/column[3]");
 						Object srcResult = exprColNode.evaluate(srcDocument,
 								XPathConstants.NODESET);
 						NodeList srcNodes = (NodeList) srcResult;
+						NodeList srcParentNodes = (NodeList) exprColNodeParent
+								.evaluate(srcDocument, XPathConstants.NODESET);
 						System.out.println("srcnode=" + srcNodes.getLength());
-						if (srcNodes.item(1).hasAttributes()) {// there was not
-																// a celltype
+						if (srcNodes.getLength() == 0) {// there was not
+														// a celltype
 							// node if only 3 elements
 							Element cellTypeNode = srcDocument
 									.createElement("cellType");
 							cellTypeNode.setNodeValue("number");
-							srcNodes.item(1).appendChild(cellTypeNode);
+							srcParentNodes.item(1).appendChild(cellTypeNode);
 
 						}
 						xpath.reset();
 						exprColNode = xpath
 								.compile("//spreadsheets/spreadsheet/rows/row["
-										+ i + 1 + "]/columns/column[3]/value");
+										+ (i + 1) + "]/columns/column[3]/value");
 						srcResult = exprColNode.evaluate(srcDocument,
 								XPathConstants.NODESET);
 						srcNodes = (NodeList) srcResult;
+						// srcNodes.item(arg0)
 						System.out.println("srcnode=" + srcNodes.getLength());
-						srcNodes.item(1).setNodeValue(
-								String.valueOf(dstVal.intValue()
-										+ srcVal.intValue()));
+						if (dstVal == -1)
+							dstVal = 0;
+						if (srcVal == -1)
+							srcVal = 0;
+						srcNodes.item(0).setNodeValue(String.valueOf(dstVal.intValue()
+								+ srcVal.intValue()));
 					}
 
 				}
