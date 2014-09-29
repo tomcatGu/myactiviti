@@ -3,6 +3,7 @@ package org.crusoe.service.workflow.governmentInformationDisclosure;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -86,6 +87,20 @@ public class StatisticalSheetService {
 			StatisticalSheet dstSheet = (StatisticalSheet) iter.next();
 			if (srcSheet == null) {
 				srcSheet = dstSheet;
+				try {
+					srcDocument = db.parse(new InputSource(
+							new ByteArrayInputStream(srcSheet
+									.getStatisticalData().getBytes("utf-8"))));
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				continue;
 			}
 			try {
@@ -93,9 +108,7 @@ public class StatisticalSheetService {
 				Document dstDocument = db.parse(new InputSource(
 						new ByteArrayInputStream(dstSheet.getStatisticalData()
 								.getBytes("utf-8"))));
-				srcDocument = db.parse(new InputSource(
-						new ByteArrayInputStream(srcSheet.getStatisticalData()
-								.getBytes("utf-8"))));
+
 				XPathFactory xFactory = XPathFactory.newInstance();
 				XPath xpath = xFactory.newXPath();
 				XPathExpression expr = xpath
@@ -169,11 +182,11 @@ public class StatisticalSheetService {
 							srcParentNodes = (NodeList) exprColNodeParent
 									.evaluate(srcDocument,
 											XPathConstants.NODESET);
-							Element cellTypeNode = srcDocument
+							Element valueNode = srcDocument
 									.createElement("value");
-							cellTypeNode.setNodeValue(String.valueOf(dstVal
+							valueNode.setNodeValue(String.valueOf(dstVal
 									.intValue() + srcVal.intValue()));
-							srcParentNodes.item(0).appendChild(cellTypeNode);
+							srcParentNodes.item(0).appendChild(valueNode);
 
 						} else {
 							srcNodes.item(0).setNodeValue(
@@ -216,8 +229,9 @@ public class StatisticalSheetService {
 			e.printStackTrace();
 		}
 		String s = buffer.toString();
-		srcSheet.setStatisticalData(s);
-		return srcSheet;
+		StatisticalSheet totalSheet = new StatisticalSheet();
+		totalSheet.setStatisticalData(s);
+		return totalSheet;
 
 	}
 }
