@@ -38,7 +38,7 @@ import com.google.common.collect.Lists;
 public class Organization implements Serializable, AbstractSecureObject<Long> {
 	private String name;
 	private Long id;
-	private Organization parents;
+	private Organization parent;
 
 	private List<User> users = Lists.newArrayList(); // 有序的关联对象集合
 
@@ -82,12 +82,12 @@ public class Organization implements Serializable, AbstractSecureObject<Long> {
 	}
 
 	@OneToOne
-	public Organization getParents() {
-		return parents;
+	public Organization getParent() {
+		return parent;
 	}
 
-	public void setParents(Organization parents) {
-		this.parents = parents;
+	public void setParent(Organization parent) {
+		this.parent = parent;
 	}
 
 }

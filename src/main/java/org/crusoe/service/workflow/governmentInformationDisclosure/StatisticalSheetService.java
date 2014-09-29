@@ -2,6 +2,7 @@ package org.crusoe.service.workflow.governmentInformationDisclosure;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -11,6 +12,13 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -72,6 +80,8 @@ public class StatisticalSheetService {
 			e1.printStackTrace();
 		}
 		StatisticalSheet srcSheet = null;
+		Document srcDocument = null;
+
 		while (iter.hasNext()) {
 			StatisticalSheet dstSheet = (StatisticalSheet) iter.next();
 			if (srcSheet == null) {
@@ -83,7 +93,7 @@ public class StatisticalSheetService {
 				Document dstDocument = db.parse(new InputSource(
 						new ByteArrayInputStream(dstSheet.getStatisticalData()
 								.getBytes("utf-8"))));
-				Document srcDocument = db.parse(new InputSource(
+				srcDocument = db.parse(new InputSource(
 						new ByteArrayInputStream(srcSheet.getStatisticalData()
 								.getBytes("utf-8"))));
 				XPathFactory xFactory = XPathFactory.newInstance();
@@ -135,7 +145,7 @@ public class StatisticalSheetService {
 							Element cellTypeNode = srcDocument
 									.createElement("cellType");
 							cellTypeNode.setNodeValue("number");
-							srcParentNodes.item(1).appendChild(cellTypeNode);
+							srcParentNodes.item(0).appendChild(cellTypeNode);
 
 						}
 						xpath.reset();
@@ -145,14 +155,31 @@ public class StatisticalSheetService {
 						srcResult = exprColNode.evaluate(srcDocument,
 								XPathConstants.NODESET);
 						srcNodes = (NodeList) srcResult;
+
 						// srcNodes.item(arg0)
 						System.out.println("srcnode=" + srcNodes.getLength());
 						if (dstVal == -1)
 							dstVal = 0;
 						if (srcVal == -1)
 							srcVal = 0;
-						srcNodes.item(0).setNodeValue(String.valueOf(dstVal.intValue()
-								+ srcVal.intValue()));
+						if (srcNodes.getLength() == 0) {
+							exprColNodeParent = xpath
+									.compile("//spreadsheets/spreadsheet/rows/row["
+											+ (i + 1) + "]/columns/column[3]");
+							srcParentNodes = (NodeList) exprColNodeParent
+									.evaluate(srcDocument,
+											XPathConstants.NODESET);
+							Element cellTypeNode = srcDocument
+									.createElement("value");
+							cellTypeNode.setNodeValue(String.valueOf(dstVal
+									.intValue() + srcVal.intValue()));
+							srcParentNodes.item(0).appendChild(cellTypeNode);
+
+						} else {
+							srcNodes.item(0).setNodeValue(
+									String.valueOf(dstVal.intValue()
+											+ srcVal.intValue()));
+						}
 					}
 
 				}
@@ -170,6 +197,26 @@ public class StatisticalSheetService {
 			}
 
 		}
+
+		TransformerFactory tFactory = TransformerFactory.newInstance();
+		Transformer transformer = null;
+		try {
+			transformer = tFactory.newTransformer();
+
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		StringWriter buffer = new StringWriter();
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		try {
+			transformer.transform(new DOMSource(srcDocument), new StreamResult(
+					buffer));
+		} catch (TransformerException e) {
+			e.printStackTrace();
+		}
+		String s = buffer.toString();
+		srcSheet.setStatisticalData(s);
 		return srcSheet;
 
 	}

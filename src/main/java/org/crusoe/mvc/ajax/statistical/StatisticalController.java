@@ -25,12 +25,14 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.apache.commons.lang.StringUtils;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInformationDisclosure;
+import org.crusoe.entity.workflow.governmentInformationDisclosure.StatisticalSheet;
 import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.GovernmentInformationDisclosureDao;
 import org.crusoe.service.AccountService;
 import org.crusoe.service.workflow.governmentInformationDisclosure.StatisticalSheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -178,9 +180,10 @@ public class StatisticalController {
 	}
 
 	@RequestMapping(value = "annual")
-	public String countAnnualStatistical() {
+	public String countAnnualStatistical(Model model) {
+		model.addAttribute("totalResult", statisticalSheetService.total("2014"));
+		
 
-		statisticalSheetService.total("2014");// for test
-		return "statistical/index";
+		return "governmentInformationDisclosure/statisticalSheet.readonly";
 	}
 }
