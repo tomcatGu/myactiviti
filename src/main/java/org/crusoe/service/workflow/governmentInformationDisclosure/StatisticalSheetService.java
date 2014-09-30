@@ -38,6 +38,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -184,14 +185,22 @@ public class StatisticalSheetService {
 											XPathConstants.NODESET);
 							Element valueNode = srcDocument
 									.createElement("value");
-							valueNode.setNodeValue(String.valueOf(dstVal
-									.intValue() + srcVal.intValue()));
+							Text text = srcDocument.createTextNode(String
+									.valueOf(dstVal.intValue()
+											+ srcVal.intValue()));
+
+							valueNode.appendChild(text);
 							srcParentNodes.item(0).appendChild(valueNode);
 
 						} else {
-							srcNodes.item(0).setNodeValue(
-									String.valueOf(dstVal.intValue()
-											+ srcVal.intValue()));
+							Node node = srcNodes.item(0);
+							int total = dstVal.intValue() + srcVal.intValue();
+							node.getFirstChild().setNodeValue(
+									String.valueOf(total));
+
+							System.out.println(node.getNodeName()
+									+ node.getNodeValue());
+
 						}
 					}
 
