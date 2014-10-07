@@ -179,10 +179,11 @@ public class StatisticalController {
 		return "statistical/index";
 	}
 
-	@RequestMapping(value = "annual")
-	public String countAnnualStatistical(Model model) {
-		model.addAttribute("totalResult", statisticalSheetService.total("2014"));
-		
+	@RequestMapping(value = "total/{annual}/{status}")
+	public String countAnnualStatistical(@PathVariable("annual") String annual,
+			@PathVariable("status") String status, Model model) {
+		model.addAttribute("totalResult",
+				statisticalSheetService.total(annual, status));
 
 		return "governmentInformationDisclosure/statisticalSheet.readonly";
 	}

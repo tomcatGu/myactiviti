@@ -60,18 +60,31 @@ public class StatisticalSheetService {
 	private StatisticalSheetDao statisticalSheetDao;
 
 	public StatisticalSheet save(String createUserName, String annual,
-			String statisticalData) {
+			String statisticalData, String status) {
 		StatisticalSheet sheet = new StatisticalSheet();
 		sheet.setLoginName(createUserName);
 		sheet.setAnnual(annual);
+		sheet.setStatus(status);
 		sheet.setFillingDate(new Date());
 		sheet.setStatisticalData(statisticalData);
 		return statisticalSheetDao.save(sheet);
 	}
 
-	public StatisticalSheet total(String annual) {
+	public StatisticalSheet update(StatisticalSheet ss, String createUserName,
+			String annual, String statisticalData, String status) {
+		StatisticalSheet sheet = new StatisticalSheet();
+		sheet.setId(ss.getId());
+		sheet.setLoginName(createUserName);
+		sheet.setAnnual(annual);
+		sheet.setStatus(status);
+		sheet.setFillingDate(new Date());
+		sheet.setStatisticalData(statisticalData);
+		return statisticalSheetDao.save(sheet);
+	}
+
+	public StatisticalSheet total(String annual, String status) {
 		List<StatisticalSheet> sheets = statisticalSheetDao
-				.findByAnnual(annual);
+				.findByAnnualAndStatus(annual, status);
 		Iterator iter = sheets.iterator();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
@@ -240,6 +253,8 @@ public class StatisticalSheetService {
 		String s = buffer.toString();
 		StatisticalSheet totalSheet = new StatisticalSheet();
 		totalSheet.setStatisticalData(s);
+		totalSheet.setAnnual(annual);
+		totalSheet.setStatus(status);
 		return totalSheet;
 
 	}

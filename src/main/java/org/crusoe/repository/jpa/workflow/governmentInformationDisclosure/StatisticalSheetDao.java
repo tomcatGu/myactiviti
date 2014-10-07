@@ -10,4 +10,6 @@ public interface StatisticalSheetDao extends
 		PagingAndSortingRepository<StatisticalSheet, Long>,
 		JpaSpecificationExecutor<StatisticalSheet> {
 	List<StatisticalSheet> findByAnnual(String annual);
+
+	List<StatisticalSheet> findByAnnualAndStatus(String annual, String status);
 }

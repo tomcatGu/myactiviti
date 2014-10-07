@@ -17,6 +17,7 @@ public class StatisticalSheet {
 	private String loginName;
 
 	private String statisticalData;
+	private String status;
 	private Date fillingDate;
 
 	@Id
@@ -60,6 +61,14 @@ public class StatisticalSheet {
 
 	public void setStatisticalData(String statisticalData) {
 		this.statisticalData = statisticalData;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

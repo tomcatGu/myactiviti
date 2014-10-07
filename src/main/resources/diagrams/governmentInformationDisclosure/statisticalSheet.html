@@ -60,7 +60,8 @@
 		data : {
 		    statisticalData : xml,
 		    isCompleted : "true",
-		    isSubmited : "true"
+		    isSubmitted : "true",
+		    status : "commited"
 		},
 		type : "POST",
 		success : function(data) {
@@ -86,7 +87,8 @@
 		data : {
 		    statisticalData : xml,
 		    isCompleted : "false",
-		    isSubmited : "false"
+		    isSubmitted : "false",
+		    status : "uncommited"
 		},
 		type : "POST",
 		success : function(data) {
@@ -112,8 +114,14 @@
 </head>
 <body>
 	<form id="myForm">
-		<label class="control-label text-info">年度：</label> <input type="text"
-			name="annual" id="annual" />
+		<label class="control-label text-info">年度：</label> <select
+			name="annual" id="annual">
+			<option value="2014" selected="selected">2014</option>
+			<option value="2015">2015</option>
+			<option value="2016">2016</option>
+			<option value="2017">2017</option>
+			<option value="2018">2018</option>
+		</select>
 		<div id="sheetParent">
 			<table>
 				<colgroup>

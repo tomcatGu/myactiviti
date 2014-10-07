@@ -50,8 +50,6 @@
     });
     $(document).ready(function() {
 
-
-
     });
     /*]]>*/
 </script>
@@ -63,8 +61,8 @@
 </head>
 <body>
 	<form id="myForm">
-		<label class="control-label text-info">年度：</label> <input type="text"
-			name="annual" id="annual" />
+		<label class="control-label text-info">年度：</label> <label
+			th:text="${totalResult.annual}"></label>
 		<div id="sheetParent">
 			<table>
 				<colgroup>
