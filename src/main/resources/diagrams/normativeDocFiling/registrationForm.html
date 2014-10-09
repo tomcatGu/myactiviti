@@ -1,0 +1,47 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head thy:merge="/common::headerFragment">
+<title>规范性文件备案登记表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    /*]]>*/
+</script>
+</head>
+<body>
+	<form>
+		<div>
+			<input type="text" name="fileName" />
+		</div>
+		<div>
+			<input type="text" name="departmentName" />
+		</div>
+		<div>
+			<input type="text" name="messageNumber" />
+		</div>
+		<div>
+			<select id="fileProperty"><option>党内规范性文件</option></select>
+		</div>
+		<div>
+			<select id="contentClassification"><option>党内</option></select>
+		</div>
+		<div id="datetimepicker1" class="input-append date">
+			<input name="releaseDate" class="datepicker"
+				data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+				<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+			</span>
+		</div>
+		<div id="datetimepicker1" class="input-append date">
+			<input name="implementationDate" class="datepicker"
+				data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+				<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+			</span>
+		</div>
+		<div>
+			<label><input name="open" type="radio" value="1">是</label> <label><input
+				name="open" type="radio" value="0">否</label>
+		</div>
+	</form>
+</body>
+</html>
