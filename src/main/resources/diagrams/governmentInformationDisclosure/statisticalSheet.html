@@ -35,7 +35,12 @@
 	//$('#sheetFromDts').html(tables).height($('#sheet').height()).sheet();
 	var sheetData = /*[[${result==null?'':result.statisticalData}]]*/"";
 	if (sheetData == '') {
-	    $('#sheetParent').sheet();
+	    $('#sheetParent').sheet({
+		barMenus : false,
+		contextmenuTop : {},
+		contextmenuLeft : {},
+		contextmenuCell : {}
+	    });
 	} else {
 	    tables = $.sheet.dts.toTables.xml(sheetData);
 	    tables.find("td").each(function(i) {
@@ -45,13 +50,27 @@
 
 		}
 	    });
-	    $('#sheetParent').html(tables).sheet();
+	    $('#sheetParent').html(tables).sheet({
+		barMenus : false,
+		contextmenuTop : {},
+		contextmenuLeft : {},
+		contextmenuCell : {}
+	    });
 	}
     });
     $(document).ready(function() {
 	$('#submitBtn').click(function() {
 
 	    var jS = $('#sheetParent').getSheet();
+
+	    for (i = 2; i <= 65; i++) {
+		var v = $('#sheetParent').getCellValue(i, 3, 0)
+		if (isNaN(v)) {
+		    alert("第" + i + "行的第3列输入的内容无法转换成数值，请更正");
+		    return;
+		}
+	    }
+
 	    xml = $.sheet.dts.fromTables.xml(jS, true);
 
 	    $("#myForm").ajaxForm({
@@ -77,7 +96,13 @@
 	});
 
 	$('#saveBtn').click(function() {
-
+	    for (i = 2; i <= 65; i++) {
+		var v = $('#sheetParent').getCellValue(i, 3, 0)
+		if (isNaN(v)) {
+		    alert("第" + i + "行的第3列输入的内容无法转换成数值，请更正");
+		    return;
+		}
+	    }
 	    var jS = $('#sheetParent').getSheet();
 	    xml = $.sheet.dts.fromTables.xml(jS, true);
 
@@ -122,7 +147,7 @@
 			<option value="2017">2017</option>
 			<option value="2018">2018</option>
 		</select>
-		<div id="sheetParent">
+		<div id="sheetParent" style="height: 450px;">
 			<table>
 				<colgroup>
 					<col style="width: 380px;" />

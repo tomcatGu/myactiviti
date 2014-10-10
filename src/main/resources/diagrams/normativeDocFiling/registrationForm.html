@@ -5,7 +5,28 @@
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-
+    $(document).ready(function() {
+	$("#datetimepicker1").datetimepicker({
+	    language : 'zh-CN',
+	    format : 'yyyy-MM-dd hh:mm:ss',
+	    pickDate : true,
+	    pickTime : true,
+	    hourStep : 1,
+	    minuteStep : 15,
+	    secondStep : 30,
+	    inputMask : true
+	});
+	$("#datetimepicker2").datetimepicker({
+	    language : 'zh-CN',
+	    format : 'yyyy-MM-dd hh:mm:ss',
+	    pickDate : true,
+	    pickTime : true,
+	    hourStep : 1,
+	    minuteStep : 15,
+	    secondStep : 30,
+	    inputMask : true
+	});
+    });
     /*]]>*/
 </script>
 </head>
@@ -32,16 +53,44 @@
 				<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 			</span>
 		</div>
-		<div id="datetimepicker1" class="input-append date">
+		<div id="datetimepicker2" class="input-append date">
 			<input name="implementationDate" class="datepicker"
 				data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
 				<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 			</span>
 		</div>
 		<div>
-			<label><input name="open" type="radio" value="1">是</label> <label><input
-				name="open" type="radio" value="0">否</label>
+			<label><input name="isOpen" type="radio" value="1">是</label>
+			<label><input name="open" type="radio" value="0">否</label>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<input type="button" id="submitButton" value="提交"
+					class="btn btn-primary" />
+			</div>
 		</div>
 	</form>
+	<div class="box">
+		<label>上传附件：</label>
+		<form id="uploadForm"
+			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
+			method="post" enctype="multipart/form-data">
+			<div class="row">
+				<div class="span3">
+					<input type="file" name="file" />
+				</div>
+				<div class="span1">
+					<input type="submit" value="上传" class="btn btn-info" />
+				</div>
+				<div class="span3">
+					<div id="progress">
+						<div id="bar"></div>
+						<div id="percent">0%</div>
+					</div>
+					<div id="message"></div>
+				</div>
+			</div>
+		</form>
+	</div>
 </body>
 </html>
