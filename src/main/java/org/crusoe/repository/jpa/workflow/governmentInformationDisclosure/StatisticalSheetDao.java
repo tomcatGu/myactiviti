@@ -12,4 +12,7 @@ public interface StatisticalSheetDao extends
 	List<StatisticalSheet> findByAnnual(String annual);
 
 	List<StatisticalSheet> findByAnnualAndStatus(String annual, String status);
+
+	List<StatisticalSheet> findByAnnualAndLoginName(String annual,
+			String createUserName);
 }

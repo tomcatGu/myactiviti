@@ -70,6 +70,12 @@ public class StatisticalSheetService {
 		return statisticalSheetDao.save(sheet);
 	}
 
+	public boolean isExists(String annual, String createUserName) {
+		return !statisticalSheetDao.findByAnnualAndLoginName(annual,
+				createUserName).isEmpty();
+
+	}
+
 	public StatisticalSheet update(StatisticalSheet ss, String createUserName,
 			String annual, String statisticalData, String status) {
 		StatisticalSheet sheet = new StatisticalSheet();

@@ -179,6 +179,14 @@ public class StatisticalController {
 		return "statistical/index";
 	}
 
+	@RequestMapping(value = "isExists/{annual}/{username}")
+	public @ResponseBody
+	boolean isExists(@PathVariable("annual") String annual,
+			@PathVariable("username") String username) {
+		return statisticalSheetService.isExists(annual, username);
+
+	}
+
 	@RequestMapping(value = "total/{annual}/{status}")
 	public String countAnnualStatistical(@PathVariable("annual") String annual,
 			@PathVariable("status") String status, Model model) {

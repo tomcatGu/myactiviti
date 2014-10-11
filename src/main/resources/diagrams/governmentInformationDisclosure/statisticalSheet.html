@@ -27,109 +27,147 @@
 	type="text/javascript"
 	th:src="@{/jQuery.sheet-3.1/plugins/jquery.sheet.dts.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    // $('#sheetParent').sheet.preLoad('../../../../jQuery.sheet-3.1/');
-    $(function() {
+	/*<![CDATA[*/
+	// $('#sheetParent').sheet.preLoad('../../../../jQuery.sheet-3.1/');
+	$(function() {
 
-	//$dtsValue.val(JSON.stringify(json));
-	//$('#sheetFromDts').html(tables).height($('#sheet').height()).sheet();
-	var sheetData = /*[[${result==null?'':result.statisticalData}]]*/"";
-	if (sheetData == '') {
-	    $('#sheetParent').sheet({
-		barMenus : false,
-		contextmenuTop : {},
-		contextmenuLeft : {},
-		contextmenuCell : {}
-	    });
-	} else {
-	    tables = $.sheet.dts.toTables.xml(sheetData);
-	    tables.find("td").each(function(i) {
-		var td = $(this);
-		if (td.attr("data-celltype") != "number") {
-		    td.attr("data-uneditable", true);
+		//$dtsValue.val(JSON.stringify(json));
+		//$('#sheetFromDts').html(tables).height($('#sheet').height()).sheet();
+		var sheetData = /*[[${result==null?'':result.statisticalData}]]*/"";
+		if (sheetData == '') {
+			$('#sheetParent').sheet({
+				barMenus : false,
+				contextmenuTop : {},
+				contextmenuLeft : {},
+				contextmenuCell : {}
+			});
+		} else {
+			tables = $.sheet.dts.toTables.xml(sheetData);
+			tables.find("td").each(function(i) {
+				var td = $(this);
+				if (td.attr("data-celltype") != "number") {
+					td.attr("data-uneditable", true);
 
+				}
+			});
+			$('#sheetParent').html(tables).sheet({
+				barMenus : false,
+				contextmenuTop : {},
+				contextmenuLeft : {},
+				contextmenuCell : {}
+			});
 		}
-	    });
-	    $('#sheetParent').html(tables).sheet({
-		barMenus : false,
-		contextmenuTop : {},
-		contextmenuLeft : {},
-		contextmenuCell : {}
-	    });
-	}
-    });
-    $(document).ready(function() {
-	$('#submitBtn').click(function() {
+	});
+	$(document).ready(function() {
+		$('#submitBtn').click(function() {
+ var isExists=false;
+			$.ajax({
+				type : 'GET',
+				url : /*[[@{'/statistical/isExists/'}]]*/"" //
+						+ $('#annual').val()+"/"
+						+/*[[${T(org.apache.shiro.SecurityUtils).subject.principal.loginName}]]*/,
+				async : false,
+				success : function(data) {
+					if(data==true) {
+						
+						alert( $('#annual').val()+"年度统计已存在。");
+						isExists=true;
+					}
 
-	    var jS = $('#sheetParent').getSheet();
+				}
 
-	    for (i = 2; i <= 65; i++) {
-		var v = $('#sheetParent').getCellValue(i, 3, 0)
-		if (isNaN(v)) {
-		    alert("第" + i + "行的第3列输入的内容无法转换成数值，请更正");
-		    return;
-		}
-	    }
+			});
+if(isExists) return;
+			var jS = $('#sheetParent').getSheet();
 
-	    xml = $.sheet.dts.fromTables.xml(jS, true);
+			for (i = 2; i <= 65; i++) {
+				var v = $('#sheetParent').getCellValue(i, 3, 0)
+				if (isNaN(v)) {
+					alert("第" + i + "行的第3列输入的内容无法转换成数值，请更正");
+					return;
+				}
+			}
 
-	    $("#myForm").ajaxForm({
-		url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-		dataType : "text",
-		data : {
-		    statisticalData : xml,
-		    isCompleted : "true",
-		    isSubmitted : "true",
-		    status : "commited"
-		},
-		type : "POST",
-		success : function(data) {
-		    var ret = JSON.parse(data);
-		    alert(ret.msg);
-		},
-		beforeSubmit : function() {
+			xml = $.sheet.dts.fromTables.xml(jS, true);
 
-		}
+			$("#myForm").ajaxForm({
+				url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+				dataType : "text",
+				data : {
+					statisticalData : xml,
+					isCompleted : "true",
+					isSubmitted : "true",
+					status : "commited"
+				},
+				type : "POST",
+				success : function(data) {
+					var ret = JSON.parse(data);
+					alert(ret.msg);
+				},
+				beforeSubmit : function() {
 
-	    }).submit();
+				}
+
+			}).submit();
+
+		});
+
+		$('#saveBtn').click(function() {
+			
+			 var isExists=false;
+				$.ajax({
+					type : 'GET',
+					url : /*[[@{'/statistical/isExists/'}]]*/"" //
+							+ $('#annual').val()+"/"
+							+/*[[${T(org.apache.shiro.SecurityUtils).subject.principal.loginName}]]*/,
+					async : false,
+					success : function(data) {
+						if(data==true) {
+							
+							alert( $('#annual').val()+"年度统计已存在。");
+							isExists=true;
+						}
+
+					}
+
+				});
+	if(isExists) return;
+			
+			
+			for (i = 2; i <= 65; i++) {
+				var v = $('#sheetParent').getCellValue(i, 3, 0)
+				if (isNaN(v)) {
+					alert("第" + i + "行的第3列输入的内容无法转换成数值，请更正");
+					return;
+				}
+			}
+			var jS = $('#sheetParent').getSheet();
+			xml = $.sheet.dts.fromTables.xml(jS, true);
+
+			$("#myForm").ajaxForm({
+				url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+				dataType : "text",
+				data : {
+					statisticalData : xml,
+					isCompleted : "false",
+					isSubmitted : "false",
+					status : "uncommited"
+				},
+				type : "POST",
+				success : function(data) {
+					var ret = JSON.parse(data);
+					alert(ret.msg);
+				},
+				beforeSubmit : function() {
+
+				}
+
+			}).submit();
+
+		});
 
 	});
-
-	$('#saveBtn').click(function() {
-	    for (i = 2; i <= 65; i++) {
-		var v = $('#sheetParent').getCellValue(i, 3, 0)
-		if (isNaN(v)) {
-		    alert("第" + i + "行的第3列输入的内容无法转换成数值，请更正");
-		    return;
-		}
-	    }
-	    var jS = $('#sheetParent').getSheet();
-	    xml = $.sheet.dts.fromTables.xml(jS, true);
-
-	    $("#myForm").ajaxForm({
-		url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-		dataType : "text",
-		data : {
-		    statisticalData : xml,
-		    isCompleted : "false",
-		    isSubmitted : "false",
-		    status : "uncommited"
-		},
-		type : "POST",
-		success : function(data) {
-		    var ret = JSON.parse(data);
-		    alert(ret.msg);
-		},
-		beforeSubmit : function() {
-
-		}
-
-	    }).submit();
-
-	});
-
-    });
-    /*]]>*/
+	/*]]>*/
 </script>
 <style>
 .hover {
