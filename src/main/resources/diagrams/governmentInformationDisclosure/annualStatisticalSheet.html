@@ -1,0 +1,46 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(document)
+	    .ready(
+		    function() {
+			$('#submitBtn')
+				.click(
+					function() {
+					    $("#totalPanel")
+						    .load(
+							    /*[[@{'/statistical/total/'}]]*/"statistical/total/"
+								    + $(
+									    "#annual")
+									    .val()
+								    + '/commited?'
+								    + (new Date())
+									    .valueOf(),
+							    function(event) {
+
+							    });
+
+					});
+
+		    });
+    /*]]>*/
+</script>
+</head>
+<body>
+	<form>
+		<div>
+			<label class="control-label text-info">年度：</label> <select
+				name="annual" id="annual">
+				<option value="2014" selected="selected">2014</option>
+				<option value="2015">2015</option>
+				<option value="2016">2016</option>
+				<option value="2017">2017</option>
+				<option value="2018">2018</option>
+			</select><input id="submitBtn" type="button" class="btn btn-info" value="统计" />
+		</div>
+	</form>
+	<div id="totalPanel"></div>
+</body>
+</html>

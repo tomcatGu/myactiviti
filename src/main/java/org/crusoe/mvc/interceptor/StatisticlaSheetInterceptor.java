@@ -1,30 +1,45 @@
 package org.crusoe.mvc.interceptor;
 
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.crusoe.entity.workflow.governmentInformationDisclosure.StatisticalSheet;
+import org.crusoe.service.workflow.governmentInformationDisclosure.StatisticalSheetService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
 public class StatisticlaSheetInterceptor {
-	@Pointcut("execution(* org.crusoe.mvc.ajax.task.TaskController.*(..))")
-	public void StatisticalSheetInterceptor() {
+
+	@Autowired
+	private RuntimeService runtimeService;
+
+	@Autowired
+	private TaskService taskService;
+
+	@Autowired
+	protected StatisticalSheetService statisticalSheetService;
+
+	@Pointcut("execution(* org.crusoe.mvc.ajax.task.TaskController.batchDelete*(..))")
+	private void StatisticalSheetInterceptor() {
 	}
 
 	@Before("StatisticalSheetInterceptor() && args(items)")
 	public void batchDelete(String[] items) throws Exception {
-		System.out.print("before delete.....");
-		/*
-		 * for (int i = 0; i < items.length; i++) { String processInstanceId =
-		 * taskService.createTaskQuery()
-		 * .taskId(items[i]).singleResult().getProcessInstanceId(); //
-		 * runtimeService.deleteProcessInstance(processInstanceId, "");
-		 * StatisticalSheet ss = (StatisticalSheet) taskService.getVariable(
-		 * processInstanceId, "result"); if (ss.getId() != null)
-		 * statisticalSheetService.delete(ss.getId());
-		 * 
-		 * }
-		 */
+		//System.out.println("before delete.....");
+
+		for (int i = 0; i < items.length; i++) {
+			Object obj = taskService.getVariable(items[i], "result");
+			if (obj instanceof StatisticalSheet) {
+				StatisticalSheet ss = (StatisticalSheet) obj;
+				if (ss.getId() != null)
+					statisticalSheetService.delete(ss.getId());
+			}
+
+		}
 	}
 }

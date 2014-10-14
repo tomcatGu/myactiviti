@@ -43,7 +43,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 @Controller
 @RequestMapping(value = "/statistical")
 public class StatisticalController {
@@ -69,7 +68,6 @@ public class StatisticalController {
 	protected AccountService accountService;
 	@Autowired
 	protected StatisticalSheetService statisticalSheetService;
-
 
 	@RequestMapping(value = "counter/{processDefinitionId}", method = RequestMethod.GET)
 	public @ResponseBody
@@ -196,26 +194,10 @@ public class StatisticalController {
 	@RequestMapping(value = "total/{annual}/{status}")
 	public String countAnnualStatistical(@PathVariable("annual") String annual,
 			@PathVariable("status") String status, Model model) {
-		model.addAttribute("totalResult",
+		model.addAttribute("result",
 				statisticalSheetService.total(annual, status));
 
 		return "governmentInformationDisclosure/statisticalSheet.readonly";
 	}
 
-
-	public void batchDelete(String[] items) throws Exception {
-		System.out.print("before delete.....");
-/*
-		for (int i = 0; i < items.length; i++) {
-			String processInstanceId = taskService.createTaskQuery()
-					.taskId(items[i]).singleResult().getProcessInstanceId();
-			// runtimeService.deleteProcessInstance(processInstanceId, "");
-			StatisticalSheet ss = (StatisticalSheet) taskService.getVariable(
-					processInstanceId, "result");
-			if (ss.getId() != null)
-				statisticalSheetService.delete(ss.getId());
-
-		}
-		*/
-	}
 }
