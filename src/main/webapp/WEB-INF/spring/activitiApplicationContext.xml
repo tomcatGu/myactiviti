@@ -20,6 +20,7 @@
           http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
 	<!-- 使用缓存annotation 配置 -->
+
 	<cache:annotation-driven cache-manager="ehCacheManager" />
 	<tx:annotation-driven transaction-manager="transactionManager"
 		proxy-target-class="true" />

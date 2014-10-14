@@ -24,26 +24,28 @@
 							checkAll("#checkAll");
 						});
 
-						$('#deleteTaskBtn').bind(
-								'click',
-								function() {
+						$('#deleteTaskBtn')
+								.bind(
+										'click',
+										function() {
 
-									//alert("delete.....");
-									$("#confirmDiv").confirm(
-											{
-												heading : '确认删除',
-												body : '你真的要删除吗?',
-												yesBtn : '是',
-												noBtn : '否',
-												callback : function() {
-													batchDelete(
-															/*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
-															successCallback);
+											//alert("delete.....");
+											$("#confirmDiv")
+													.confirm(
+															{
+																heading : '确认删除',
+																body : '你真的要删除吗?',
+																yesBtn : '是',
+																noBtn : '否',
+																callback : function() {
+																	batchDelete(
+																			/*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
+																			successCallback);
 
-												}
-											});
+																}
+															});
 
-								});
+										});
 
 						$("#taskList")
 								.simpleTable(

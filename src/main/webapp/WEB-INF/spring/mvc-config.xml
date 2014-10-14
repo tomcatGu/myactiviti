@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:groovy="http://www.sillycat.com/schema/groovy"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/aop 
+          http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd 
 	http://www.springframework.org/schema/context  
 	http://www.springframework.org/schema/context/spring-context-4.0.xsd  
@@ -20,6 +22,7 @@
 
 	<context:component-scan
 		base-package="org.crusoe.mvc.*,org.crusoe.mvc.ajax.*,org.crusoe.myauth.vo.*" />
+	<aop:aspectj-autoproxy proxy-target-class="true" />
 
 	<!-- Application Message Bundle -->
 	<bean id="messageSource"
@@ -54,7 +57,7 @@
 	<!-- Forwards requests to the "/" resource to the "welcome" view -->
 	<mvc:view-controller path="/" view-name="welcome" />
 
-	<mvc:resources location="/modeler/" mapping="/modeler/**" />  
+	<mvc:resources location="/modeler/" mapping="/modeler/**" />
 	<!-- Configures Handler Interceptors -->
 	<mvc:interceptors>
 		<!-- Changes the locale when a 'locale' request parameter is sent; e.g. 

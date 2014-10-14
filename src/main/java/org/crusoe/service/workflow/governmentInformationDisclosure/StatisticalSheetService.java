@@ -264,4 +264,9 @@ public class StatisticalSheetService {
 		return totalSheet;
 
 	}
+
+	public void delete(Long id) {
+		// TODO Auto-generated method stub
+		statisticalSheetDao.delete(id);
+	}
 }
