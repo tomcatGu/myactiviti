@@ -55,6 +55,13 @@
 									}
 
 									paginator.bootstrapPaginator(options);
+								},
+								error : function(XMLHttpRequest, textStatus,
+										errorThrown) {
+									if (XMLHttpRequest.status == 413) {
+										alert("需要登陆。");
+										window.location="login";
+									}
 								}
 							});
 					// if (data == undefined)
