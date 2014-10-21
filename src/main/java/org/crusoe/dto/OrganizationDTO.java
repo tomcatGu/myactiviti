@@ -26,23 +26,21 @@ import org.hibernate.validator.constraints.Email;
 
 import com.google.common.collect.Lists;
 
-
-public class OrganizationDTO implements Serializable{
-	private String name;
-	private Long id;
-	private OrganizationDTO parent;
+public class OrganizationDTO implements Serializable {
+	private String text;
+	private String id;
+	private String parent;
 
 	private List<UserDTO> users = Lists.newArrayList(); // 有序的关联对象集合
 
 	// @NotBlank
-	public String getName() {
-		return name;
+	public String getText() {
+		return text;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setText(String text) {
+		this.text = text;
 	}
-
 
 	public List<UserDTO> getUsers() {
 		return users;
@@ -52,24 +50,22 @@ public class OrganizationDTO implements Serializable{
 		this.users = users;
 	}
 
-
-	public Long getId() {
+	public String getId() {
 		// TODO Auto-generated method stub
 		return this.id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		// TODO Auto-generated method stub
 		this.id = id;
 
 	}
 
-
-	public OrganizationDTO getParent() {
+	public String getParent() {
 		return parent;
 	}
 
-	public void setParent(OrganizationDTO parent) {
+	public void setParent(String parent) {
 		this.parent = parent;
 	}
 

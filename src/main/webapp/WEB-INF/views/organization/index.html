@@ -1,0 +1,58 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<title>×éÖ¯¼Ü¹¹e</title>
+<link href="/jstree/themes/default/style.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/jstree/themes/default/style.min.css}" />
+<script src="/jstree/jstree.min.js" type="text/javascript"
+	th:src="@{/jstree/jstree.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    $(document)
+	    .ready(
+		    function() {
+
+			$("#organization")
+				.jstree(
+					{
+					    "core" : {
+						"animation" : 0,
+						"check_callback" : true,
+						"themes" : {
+						    "stripes" : true
+						},
+						'data' : {
+						    'url' : function(node) {
+							return node.id === '#' ? 'ajaxRoots'
+								: 'ajaxChildren';
+						    },
+						    'data' : function(node) {
+							return {
+							    'id' : node.id
+							};
+						    }
+						}
+					    },
+					    "plugins" : [ "contextmenu", "dnd",
+						    "search", "state", "types",
+						    "wholerow" ]
+					});
+
+		    });
+    /*]]>*/
+</script>
+</head>
+<body>
+	<div id="organization">
+		<ul>
+			<li>Root node 1
+				<ul>
+					<li>Child node 1</li>
+					<li><a href="#">Child node 2</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</body>
+</html>
