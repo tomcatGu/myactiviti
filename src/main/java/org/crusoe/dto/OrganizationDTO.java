@@ -28,10 +28,12 @@ import com.google.common.collect.Lists;
 
 public class OrganizationDTO implements Serializable {
 	private String text;
-	private String id;
+	private Long id;
 	private String parent;
+	private boolean children;
 
 	private List<UserDTO> users = Lists.newArrayList(); // 有序的关联对象集合
+	private List<OrganizationDTO> organizations = Lists.newArrayList();
 
 	// @NotBlank
 	public String getText() {
@@ -50,12 +52,12 @@ public class OrganizationDTO implements Serializable {
 		this.users = users;
 	}
 
-	public String getId() {
+	public Long getId() {
 		// TODO Auto-generated method stub
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		// TODO Auto-generated method stub
 		this.id = id;
 
@@ -67,6 +69,22 @@ public class OrganizationDTO implements Serializable {
 
 	public void setParent(String parent) {
 		this.parent = parent;
+	}
+
+	public List<OrganizationDTO> getOrganizations() {
+		return organizations;
+	}
+
+	public void setOrganizations(List<OrganizationDTO> organizations) {
+		this.organizations = organizations;
+	}
+
+	public boolean isChildren() {
+		return children;
+	}
+
+	public void setChildren(boolean children) {
+		this.children = children;
 	}
 
 }
