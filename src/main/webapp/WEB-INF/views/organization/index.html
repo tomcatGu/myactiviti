@@ -1,18 +1,16 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
-<title>组织架构e</title>
+<title>组织架构</title>
 <link href="/jstree/themes/default/style.min.css" rel="stylesheet"
 	type="text/css" th:href="@{/jstree/themes/default/style.min.css}" />
 <script src="/jstree/jstree.min.js" type="text/javascript"
 	th:src="@{/jstree/jstree.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-
     $(document)
 	    .ready(
 		    function() {
-
 			$("#organization")
 				.jstree(
 					{
@@ -34,10 +32,100 @@
 						    }
 						}
 					    },
+					    contextmenu : {
+						"items" : function(node) {
+						    return {
+							"view" : {
+							    label : "查看",
+							    action : function(
+								    obj) {
+								window
+									.open("/"
+										+ node.id);
+							    }
+							},
+							"rename" : {
+							    label : "重命名",
+							    action : function(
+								    obj) {
+								$(
+									"#organization")
+									.jstree(
+										true)
+									.edit(
+										node)
+							    }
+							},
+							"create" : {
+							    label : "创建",
+							    action : function() {
+								var newNode = {
+								    id : 12,
+								    text : "name"
+								};
+								var n = $(
+									"#organization")
+									.jstree(
+										true)
+									.create_node(
+										node,
+										newNode,
+										"last",
+										null,
+										true);
+								$(
+									"#organization")
+									.jstree(
+										true)
+									.edit(n);
+							    }
+
+							},
+							"delete" : {
+							    label : "删除",
+							    action : function() {
+								if (confirm("真的要删除 "
+									+ node.text
+									+ "?")) {
+
+								    $(
+									    "#organization")
+									    .jstree(
+										    "delete_node",
+										    node);
+								}
+							    },
+							    separator_before : true
+							}
+						    }
+						}
+					    },
 					    "plugins" : [ "contextmenu", "dnd",
 						    "search", "state", "types",
 						    "wholerow" ]
-					});
+					})
+				.on('create_node.jstree', function(e, data) {
+				    // alert(data.node.parent);
+
+				    $.get('?operation=create_node', {
+					'type' : data.node.type,
+					'id' : data.node.parent,
+					'text' : data.node.text
+				    }).done(function(d) {
+					data.instance.set_id(data.node, d.id);
+				    }).fail(function() {
+					data.instance.refresh();
+				    });
+				}).on('delete_node.jstree', function(e, data) {
+				    alert("delete");
+				    //$("#organization").jstree.rollback(data.rlbk);
+				    return true;
+				    $.get('?operation=delete_node', {
+					'id' : data.node.id
+				    }).fail(function() {
+					data.instance.refresh();
+				    });
+				});
 
 		    });
     /*]]>*/
