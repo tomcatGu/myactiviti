@@ -28,4 +28,9 @@ public class OrganizationService {
 		// TODO Auto-generated method stub
 		return organizationDao.save(o);
 	}
+
+	public Organization findById(Long id) {
+		// TODO Auto-generated method stub
+		return organizationDao.findOne(id);
+	}
 }

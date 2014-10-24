@@ -7,175 +7,143 @@
 <script src="/jstree/jstree.min.js" type="text/javascript"
 	th:src="@{/jstree/jstree.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	$(document)
-			.ready(
-					function() {
-						$("#organization")
-								.jstree(
-										{
-											"core" : {
-												"animation" : 0,
-												"check_callback" : true,
-												"themes" : {
-													"stripes" : true
-												},
-												'data' : {
-													'url' : function(node) {
-														return node.id === '#' ? 'ajaxRoots'
-																: 'ajaxChildren';
-													},
-													'data' : function(node) {
-														return {
-															'id' : node.id
-														};
-													}
-												}
-											},
-											contextmenu : {
-												"items" : function(node) {
-													return {
-														"view" : {
-															label : "查看",
-															action : function(
-																	obj) {
-																window
-																		.open("/"
-																				+ node.id);
-															}
-														},
-														"rename" : {
-															label : "重命名",
-															action : function(
-																	obj) {
-																$(
-																		"#organization")
-																		.jstree(
-																				true)
-																		.edit(
-																				node)
-															}
-														},
-														"create" : {
-															label : "创建",
-															action : function() {
-																var newNode = {
-																	id : 12,
-																	text : "name"
-																};
-
-																$
-																		.postJSON(
-																				/*[[@{'/organization/create'}]]*/'',
-																				"{text:'node'}",
-																				true,
-																				function(
-																						data) {
-																					if (data.err == "true") {
-																						var errors = {};
-																						for ( var obj in data) {
-																							if (obj != "err")
-																								errors[obj] = data[obj];
-
-																						}
-																						validator
-																								.showErrors(errors);
-																					} else {
-																						newNode = data;
-																					}
-
-																				});
-																var n = $(
-																		"#organization")
-																		.jstree(
-																				true)
-																		.create_node(
-																				node,
-																				newNode,
-																				"last",
-																				null,
-																				true);
-																$(
-																		"#organization")
-																		.jstree(
-																				true)
-																		.edit(n);
-															}
-
-														},
-														"delete" : {
-															label : "删除",
-															action : function() {
-																if (confirm("真的要删除 "
-																		+ node.text
-																		+ "?")) {
-
-																	$(
-																			"#organization")
-																			.jstree(
-																					"delete_node",
-																					node);
-																}
-															},
-															separator_before : true
-														}
-													}
-												}
-											},
-											"plugins" : [ "contextmenu", "dnd",
-													"search", "state", "types",
-													"wholerow" ]
-										})
-								.on('create_node.jstree', function(e, data) {
-									// alert(data.node.parent);
-
-									$.get('?operation=create_node', {
-										'type' : data.node.type,
-										'id' : data.node.parent,
-										'text' : data.node.text
-									}).done(function(d) {
-										data.instance.set_id(data.node, d.id);
-									}).fail(function() {
-										data.instance.refresh();
-									});
-								}).on('delete_node.jstree', function(e, data) {
-									alert("delete");
-									//$("#organization").jstree.rollback(data.rlbk);
-									return true;
-									$.get('?operation=delete_node', {
-										'id' : data.node.id
-									}).fail(function() {
-										data.instance.refresh();
-									});
-								});
-
-					});
-	function create() {
-		var newNode = {
-			text : "name",
-		};
-
-		$.postJSON(/*[[@{'/organization/create'}]]*/'',JSON.stringify(newNode), false,
-				function(data) {
-					if (data.err == "true") {
-						var errors = {};
-						for ( var obj in data) {
-							if (obj != "err")
-								errors[obj] = data[obj];
-
+    /*<![CDATA[*/
+    $(document)
+	    .ready(
+		    function() {
+			$("#organization")
+				.jstree(
+					{
+					    "core" : {
+						"animation" : 0,
+						"check_callback" : true,
+						"themes" : {
+						    "stripes" : true
+						},
+						'data' : {
+						    'url' : function(node) {
+							return node.id === '#' ? 'ajaxRoots'
+								: 'ajaxChildren';
+						    },
+						    'data' : function(node) {
+							return {
+							    'id' : node.id
+							};
+						    }
 						}
-						validator.showErrors(errors);
-					} else {
-						newNode = data;
-					}
+					    },
+					    contextmenu : {
+						"items" : function(node) {
+						    return {
+							"view" : {
+							    label : "查看",
+							    action : function(
+								    obj) {
+								window
+									.open("/"
+										+ node.id);
+							    }
+							},
+							"rename" : {
+							    label : "重命名",
+							    action : function(
+								    obj) {
+								$(
+									"#organization")
+									.jstree(
+										true)
+									.edit(
+										node)
+							    }
+							},
+							"create" : {
+							    label : "创建",
+							    action : function() {
+								create(node);
+							    }
 
+							},
+							"delete" : {
+							    label : "删除",
+							    action : function() {
+								if (confirm("真的要删除 "
+									+ node.text
+									+ "?")) {
+
+								    $(
+									    "#organization")
+									    .jstree(
+										    "delete_node",
+										    node);
+								}
+							    },
+							    separator_before : true
+							}
+						    }
+						}
+					    },
+					    "plugins" : [ "contextmenu", "dnd",
+						    "search", "state", "types",
+						    "wholerow" ]
+					})
+				.on('create_node.jstree', function(e, data) {
+				    // alert(data.node.parent);
+
+				    $.get('?operation=create_node', {
+					'type' : data.node.type,
+					'id' : data.node.parent,
+					'text' : data.node.text
+				    }).done(function(d) {
+					data.instance.set_id(data.node, d.id);
+				    }).fail(function() {
+					data.instance.refresh();
+				    });
+				}).on('delete_node.jstree', function(e, data) {
+				    alert("delete");
+				    //$("#organization").jstree.rollback(data.rlbk);
+				    return true;
+				    $.get('?operation=delete_node', {
+					'id' : data.node.id
+				    }).fail(function() {
+					data.instance.refresh();
+				    });
 				});
-		var n = $("#organization").jstree(true).create_node(null, newNode,
-				"last", null, true);
-		$("#organization").jstree(true).edit(n);
 
-	}
-	/*]]>*/
+		    });
+    function create(parent) {
+
+	var ref = $('#organization').jstree(true), sel = ref.get_selected();
+	if (!sel.length) {
+	    sel = null
+	} else
+	    sel = sel[0];
+	var newNode = {
+	    text : "name",
+	    parent : sel
+	};
+
+	$.postJSON(/*[[@{'/organization/create'}]]*/'', JSON
+		.stringify(newNode), false, function(data) {
+	    if (data.err == "true") {
+		var errors = {};
+		for ( var obj in data) {
+		    if (obj != "err")
+			errors[obj] = data[obj];
+
+		}
+		validator.showErrors(errors);
+	    } else {
+		newNode = data;
+		newNode.id = "\"" + newNode.id + "\"";
+	    }
+
+	});
+	var n = $("#organization").jstree(true).create_node(sel, newNode,
+		"last", null, true);
+	$("#organization").jstree(true).edit(n);
+
+    }
+    /*]]>*/
 </script>
 </head>
 <body>

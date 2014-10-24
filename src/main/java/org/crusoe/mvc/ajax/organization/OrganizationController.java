@@ -35,6 +35,9 @@ public class OrganizationController {
 
 		Organization o = new Organization();
 		o.setName(oDTO.getText());
+		Organization parent = organizationService.findById(Long.parseLong(oDTO
+				.getParent()));
+		o.setParent(parent);
 		o = organizationService.create(o);
 		oDTO.setId(o.getId());
 		return oDTO;
