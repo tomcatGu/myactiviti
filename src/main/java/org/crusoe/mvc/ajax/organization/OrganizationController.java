@@ -11,7 +11,9 @@ import org.crusoe.entity.Organization;
 import org.crusoe.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -25,6 +27,17 @@ public class OrganizationController {
 	public String index(ServletRequest request) {
 
 		return "organization/index";
+	}
+
+	@RequestMapping(value = "create", method = RequestMethod.POST)
+	public @ResponseBody
+	OrganizationDTO create(@RequestBody OrganizationDTO oDTO) {
+
+		Organization o = new Organization();
+		o.setName(oDTO.getText());
+		o = organizationService.create(o);
+		oDTO.setId(o.getId());
+		return oDTO;
 	}
 
 	@RequestMapping(value = "ajaxRoots")

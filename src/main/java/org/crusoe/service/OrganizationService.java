@@ -23,4 +23,9 @@ public class OrganizationService {
 		return organizationDao.findRoot();
 
 	}
+
+	public Organization create(Organization o) {
+		// TODO Auto-generated method stub
+		return organizationDao.save(o);
+	}
 }
