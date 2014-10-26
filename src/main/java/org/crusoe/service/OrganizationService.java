@@ -33,4 +33,14 @@ public class OrganizationService {
 		// TODO Auto-generated method stub
 		return organizationDao.findOne(id);
 	}
+
+	public Organization update(Organization o) {
+		// TODO Auto-generated method stub
+		return organizationDao.save(o);
+	}
+
+	public void deleteById(Long i) {
+		// TODO Auto-generated method stub
+		organizationDao.delete(i);
+	}
 }

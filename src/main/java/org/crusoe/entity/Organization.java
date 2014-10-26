@@ -3,6 +3,7 @@ package org.crusoe.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -78,10 +79,11 @@ public class Organization implements Serializable, AbstractSecureObject<Long> {
 	public void setId(Long id) {
 		// TODO Auto-generated method stub
 		this.id = id;
+		
 
 	}
 
-	@OneToOne
+	@OneToOne(orphanRemoval=true)
 	public Organization getParent() {
 		return parent;
 	}

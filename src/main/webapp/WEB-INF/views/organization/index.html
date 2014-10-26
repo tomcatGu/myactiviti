@@ -75,6 +75,7 @@
 									    .jstree(
 										    "delete_node",
 										    node);
+
 								}
 							    },
 							    separator_before : true
@@ -86,28 +87,61 @@
 						    "search", "state", "types",
 						    "wholerow" ]
 					})
-				.on('create_node.jstree', function(e, data) {
-				    // alert(data.node.parent);
+				.on(
+					'rename_node.jstree',
+					function(e, data) {
 
-				    $.get('?operation=create_node', {
-					'type' : data.node.type,
-					'id' : data.node.parent,
-					'text' : data.node.text
-				    }).done(function(d) {
-					data.instance.set_id(data.node, d.id);
-				    }).fail(function() {
-					data.instance.refresh();
-				    });
-				}).on('delete_node.jstree', function(e, data) {
-				    alert("delete");
-				    //$("#organization").jstree.rollback(data.rlbk);
-				    return true;
-				    $.get('?operation=delete_node', {
-					'id' : data.node.id
-				    }).fail(function() {
-					data.instance.refresh();
-				    });
-				});
+					    var node = {
+						id : data.node.id,
+						text : data.node.text,
+						parent : data.node.parent
+					    };
+					    $
+						    .postJSON(
+							    /*[[@{'/organization/update'}]]*/'',
+							    JSON
+								    .stringify(node),
+							    false,
+							    function(data) {
+								if (data.err == "true") {
+								    var errors = {};
+
+								    validator
+									    .showErrors(errors);
+								} else {
+								    //newNode = data;
+								    //newNode.id = newNode.id + "";
+								}
+
+							    })
+
+					})
+				.on('create_node.jstree', function(e, data) {
+
+				})
+				.on(
+					'delete_node.jstree',
+					function(e, data) {
+					    var ref = $('#organization')
+						    .jstree(true);
+					    var selected=[data.node.id];
+					    $
+						    .ajax({
+							type : "POST",
+							url : /*[[@{'/organization/'}]]*/'',
+							data : {
+							    _method : 'DELETE',
+							    items : selected
+							},
+							// contentType : 'application/json',
+							dataType : 'json',
+							success : function(data) {
+
+							    //successCallback();
+
+							}
+						    });
+					});
 
 		    });
     function create(parent) {
@@ -134,13 +168,14 @@
 		validator.showErrors(errors);
 	    } else {
 		newNode = data;
-		newNode.id = "\"" + newNode.id + "\"";
+		//newNode.id = newNode.id + "";
 	    }
 
 	});
-	var n = $("#organization").jstree(true).create_node(sel, newNode,
-		"last", null, true);
-	$("#organization").jstree(true).edit(n);
+	var n = ref.create_node(sel, newNode, "last", null, true);
+	//var node=ref.get_node(n);
+	//ref.set_id(ref.get_node(n), n);
+	ref.edit(n);
 
     }
     /*]]>*/

@@ -1,15 +1,19 @@
 package org.crusoe.mvc.ajax.organization;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
 import org.crusoe.dto.OrganizationDTO;
 import org.crusoe.entity.Organization;
+import org.crusoe.entity.User;
 import org.crusoe.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,12 +39,47 @@ public class OrganizationController {
 
 		Organization o = new Organization();
 		o.setName(oDTO.getText());
-		Organization parent = organizationService.findById(Long.parseLong(oDTO
-				.getParent()));
-		o.setParent(parent);
+		if (oDTO.getParent() != null && !oDTO.getParent().equals("#")) {
+			Organization parent = organizationService.findById(Long
+					.parseLong(oDTO.getParent()));
+			o.setParent(parent);
+		}
 		o = organizationService.create(o);
 		oDTO.setId(o.getId());
 		return oDTO;
+	}
+
+	@RequestMapping(value = "update", method = RequestMethod.POST)
+	public @ResponseBody
+	OrganizationDTO update(@RequestBody OrganizationDTO oDTO) {
+
+		Organization o = new Organization();
+		o.setId(oDTO.getId());
+		o.setName(oDTO.getText());
+		if (oDTO.getParent() != null && !oDTO.getParent().equals("#")) {
+			Organization parent = organizationService.findById(Long
+					.parseLong(oDTO.getParent()));
+			o.setParent(parent);
+		}
+		o = organizationService.update(o);
+		// oDTO.setId(o.getId());
+		return oDTO;
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE)
+	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
+	public @ResponseBody
+	Map<String, ? extends Object> batchDelete(
+			@RequestParam(value = "items[]", required = false) Long[] items)
+			throws Exception {
+		for (int i = 0; i < items.length; i++) {
+			organizationService.deleteById(items[i]);
+
+		}
+		Map<String, String> msgs = new HashMap<String, String>();
+
+		msgs.put("msg", "删除组织成功");
+		return msgs;
 	}
 
 	@RequestMapping(value = "ajaxRoots")
