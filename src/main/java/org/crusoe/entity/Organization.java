@@ -40,6 +40,7 @@ public class Organization implements Serializable, AbstractSecureObject<Long> {
 	private String name;
 	private Long id;
 	private Organization parent;
+	private Long sequence;
 
 	private List<User> users = Lists.newArrayList(); // 有序的关联对象集合
 
@@ -79,17 +80,24 @@ public class Organization implements Serializable, AbstractSecureObject<Long> {
 	public void setId(Long id) {
 		// TODO Auto-generated method stub
 		this.id = id;
-		
 
 	}
 
-	@OneToOne(orphanRemoval=true)
+	@ManyToOne
 	public Organization getParent() {
 		return parent;
 	}
 
 	public void setParent(Organization parent) {
 		this.parent = parent;
+	}
+
+	public Long getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Long sequence) {
+		this.sequence = sequence;
 	}
 
 }

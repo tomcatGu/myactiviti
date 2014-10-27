@@ -31,6 +31,7 @@ public class OrganizationDTO implements Serializable {
 	private Long id;
 	private String parent;
 	private boolean children;
+	private Long sequence;
 
 	private List<UserDTO> users = Lists.newArrayList(); // 有序的关联对象集合
 	private List<OrganizationDTO> organizations = Lists.newArrayList();
@@ -85,6 +86,14 @@ public class OrganizationDTO implements Serializable {
 
 	public void setChildren(boolean children) {
 		this.children = children;
+	}
+
+	public Long getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Long sequence) {
+		this.sequence = sequence;
 	}
 
 }

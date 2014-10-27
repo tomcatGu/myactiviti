@@ -1,5 +1,6 @@
 package org.crusoe.service;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.crusoe.entity.Organization;
@@ -41,6 +42,19 @@ public class OrganizationService {
 
 	public void deleteById(Long i) {
 		// TODO Auto-generated method stub
-		organizationDao.delete(i);
+		deleteAllChildren(i);
+	}
+
+	private void deleteAllChildren(Long parentId) {
+
+		List<Organization> children = organizationDao
+				.findChildrenByParent(parentId);
+		Iterator<Organization> iter = children.iterator();
+		while (iter.hasNext()) {
+			Organization o = iter.next();
+			deleteAllChildren(o.getId());
+		}
+		organizationDao.delete(parentId);
+
 	}
 }

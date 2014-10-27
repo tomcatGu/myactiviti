@@ -14,10 +14,10 @@ public interface OrganizationDao extends
 
 	Organization findByName(String name);
 
-	@Query("select o from Organization o where o.parent.id=?1")
+	@Query("select o from Organization o where o.parent.id=?1 order by o.sequence")
 	List<Organization> findChildrenByParent(Long id);
 
-	@Query("select o from Organization o where o.parent is null")
+	@Query("select o from Organization o where o.parent is null order by o.sequence")
 	List<Organization> findRoot();
 
 }
