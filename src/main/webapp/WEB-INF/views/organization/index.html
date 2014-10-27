@@ -120,28 +120,56 @@
 
 				})
 				.on(
-					'delete_node.jstree',
+					'move_node.jstree',
 					function(e, data) {
-					    var ref = $('#organization')
-						    .jstree(true);
-					    var selected=[data.node.id];
+					    var pos = data.position;
+					    var parent = data.parent;
+
+					    var node = {
+						id : data.node.id,
+						text : data.node.text,
+						parent : parent,
+						sequence : pos
+					    };
 					    $
-						    .ajax({
-							type : "POST",
-							url : /*[[@{'/organization/'}]]*/'',
-							data : {
-							    _method : 'DELETE',
-							    items : selected
-							},
-							// contentType : 'application/json',
-							dataType : 'json',
-							success : function(data) {
+						    .postJSON(
+							    /*[[@{'/organization/update'}]]*/'',
+							    JSON
+								    .stringify(node),
+							    false,
+							    function(data) {
+								if (data.err == "true") {
+								    var errors = {};
 
-							    //successCallback();
+								    validator
+									    .showErrors(errors);
+								} else {
+								    //newNode = data;
+								    //newNode.id = newNode.id + "";
+								}
 
-							}
-						    });
-					});
+							    });
+
+					})
+				.on('delete_node.jstree', function(e, data) {
+				    var ref = $('#organization').jstree(true);
+				    var selected = [ data.node.id ];
+				    $.ajax({
+					type : "POST",
+					url : /*[[@{'/organization/'}]]*/'',
+					data : {
+					    _method : 'DELETE',
+					    items : selected
+					},
+					// contentType : 'application/json',
+					dataType : 'json',
+					success : function(data) {
+
+					    //successCallback();
+
+					}
+				    });
+				});
 
 		    });
     function create(parent) {
@@ -173,7 +201,7 @@
 
 	});
 	var n = ref.create_node(sel, newNode, "last", null, true);
-	//var node=ref.get_node(n);
+	var node=ref.get_node(n);
 	//ref.set_id(ref.get_node(n), n);
 	ref.edit(n);
 

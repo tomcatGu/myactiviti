@@ -56,13 +56,13 @@ public class OrganizationController {
 		Organization o = new Organization();
 		o.setId(oDTO.getId());
 		o.setName(oDTO.getText());
+		o.setSequence(oDTO.getSequence());
 		if (oDTO.getParent() != null && !oDTO.getParent().equals("#")) {
 			Organization parent = organizationService.findById(Long
 					.parseLong(oDTO.getParent()));
 			o.setParent(parent);
 		}
 		o = organizationService.update(o);
-		// oDTO.setId(o.getId());
 		return oDTO;
 	}
 
