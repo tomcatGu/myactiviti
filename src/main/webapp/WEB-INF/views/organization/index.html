@@ -90,12 +90,24 @@
 				.on(
 					'rename_node.jstree',
 					function(e, data) {
+					    var pos;
+					    var sibling = $('#organization')
+						    .jstree(true).get_node(
+							    data.node.parent).children;
+					    for (i = 0; i < sibling.length; i++) {
+						if (sibling[i] == data.node.id) {
+						    pos = i;
+						    break;
+						}
 
+					    }
 					    var node = {
 						id : data.node.id,
 						text : data.node.text,
-						parent : data.node.parent
+						parent : data.node.parent,
+						sequence : pos
 					    };
+
 					    $
 						    .postJSON(
 							    /*[[@{'/organization/update'}]]*/'',
@@ -125,30 +137,37 @@
 					    var pos = data.position;
 					    var parent = data.parent;
 
-					    var node = {
-						id : data.node.id,
-						text : data.node.text,
-						parent : parent,
-						sequence : pos
-					    };
-					    $
-						    .postJSON(
-							    /*[[@{'/organization/update'}]]*/'',
-							    JSON
-								    .stringify(node),
-							    false,
-							    function(data) {
-								if (data.err == "true") {
-								    var errors = {};
+					    var sibling = $('#organization')
+						    .jstree(true).get_node(
+							    data.node.parent).children;
+					    for (i = 0; i < sibling.length; i++) {
+							var n=$('#organization')
+							    .jstree(true).get_node(sibling[i]);
+						var node = {
+						    id : n.id,
+						    text : n.text,
+						    parent : parent,
+						    sequence : i
+						};
+						$
+							.postJSON(
+								/*[[@{'/organization/update'}]]*/'',
+								JSON
+									.stringify(node),
+								false,
+								function(data) {
+								    if (data.err == "true") {
+									var errors = {};
 
-								    validator
-									    .showErrors(errors);
-								} else {
-								    //newNode = data;
-								    //newNode.id = newNode.id + "";
-								}
+									validator
+										.showErrors(errors);
+								    } else {
+									//newNode = data;
+									//newNode.id = newNode.id + "";
+								    }
 
-							    });
+								});
+					    }
 
 					})
 				.on('delete_node.jstree', function(e, data) {
@@ -201,7 +220,7 @@
 
 	});
 	var n = ref.create_node(sel, newNode, "last", null, true);
-	var node=ref.get_node(n);
+	var node = ref.get_node(n);
 	//ref.set_id(ref.get_node(n), n);
 	ref.edit(n);
 
