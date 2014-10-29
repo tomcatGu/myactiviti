@@ -110,7 +110,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.GET)
-	public String createForm(Model model) {
+	public String createForm(
+			@RequestParam("organizationId") String organizationId, Model model) {
 		UserDTO userDTO = new UserDTO();
 		// userDTO.setRoles(new HashSet());
 		List<Role> roles = roleService.getAllRoles();
@@ -123,6 +124,7 @@ public class UserController {
 		}
 
 		model.addAttribute("user", userDTO);
+		model.addAttribute("organizationId", organizationId);
 		// model.addAttribute("allRoles",))
 		model.addAttribute("action", "create");
 		return "user/createForm";

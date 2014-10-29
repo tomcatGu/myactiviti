@@ -3,115 +3,164 @@
 <head thy:merge="/common::headerFragment">
 <title>用户列表</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link href="/jstree/themes/default/style.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/jstree/themes/default/style.min.css}" />
+<script src="/jstree/jstree.min.js" type="text/javascript"
+	th:src="@{/jstree/jstree.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
+	/*<![CDATA[*/
 
-    $(document).ready(
-	    function() {
-		$('#addBtn').bind(
-			'click',
-			function() {
-			    create('#createUser', /*[[@{'/user/create'}]]*/'',
-				    successCallback);
-			});
-		$('#checkAll').bind('click', function() {
-		    checkAll("#checkAll");
-		});
+	$(document)
+			.ready(
+					function() {
+						$("#organization")
+								.jstree(
+										{
+											"core" : {
+												"animation" : 0,
+												"check_callback" : true,
+												"themes" : {
+													"stripes" : true
+												},
+												'data' : {
+													'url' : function(node) {
+														return node.id === '#' ? /*[[@{'/organization/ajaxRoots'}]]*/'organization/ajaxRoots'
+																: /*[[@{'/organization/ajaxChildren'}]]*/'organization/ajaxChildren';
+													},
+													'data' : function(node) {
+														return {
+															'id' : node.id
+														};
+													}
+												}
+											},
+											"plugins" : [ "state", "types",
+													"wholerow" ]
+										});
 
-		$('#deleteBtn').bind('click', function() {
-		    $("#confirmDiv").confirm({
-			heading : '确认删除',
-			body : '你真的要删除吗?',
-			yesBtn : '是',
-			noBtn : '否',
-			callback : function() {
-			    batchDelete("user", successCallback);
+						$('#addBtn')
+								.bind(
+										'click',
+										function() {
 
-			}
-		    });
+											var ref = $('#organization')
+													.jstree(true), sel = ref
+													.get_selected();
+											create('#createUser', /*[[@{'/user/create'}]]*/''
+													+"organizationId="+sel, successCallback);
+										});
+						$('#checkAll').bind('click', function() {
+							checkAll("#checkAll");
+						});
 
-		});
+						$('#deleteBtn').bind('click', function() {
+							$("#confirmDiv").confirm({
+								heading : '确认删除',
+								body : '你真的要删除吗?',
+								yesBtn : '是',
+								noBtn : '否',
+								callback : function() {
+									batchDelete("user", successCallback);
 
-		$("#userList").simpleTable(/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/
-		+"&dateStamp=" + new Date().toString(), render,
-			$("#paginator"), null);
+								}
+							});
 
-	    });
-    function successCallback() {
+						});
 
-	$("#createUser").modal("hide");
-	$("#userList tr").nextAll().remove();
+						$("#userList").simpleTable(/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/
+						+"&dateStamp=" + new Date().toString(), render,
+								$("#paginator"), null);
 
-	$("#userList").simpleTable(
-		/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/""
-			+ "&dateStamp=" + new Date().toString(), render,
-		$("#paginator"), null);
+					});
 
-    }
-    function render(data) {
-	var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
-		+ data.id
-		+ "</td><td>"
-		+ data.name
-		+ "</td><td>"
-		+ data.loginName
-		+ "</td><td>"
-		+ data.mobile
-		+ "</td><td>"
-		+ data.email
-		+ "</td><td>"
-		+ data.stauts
-		+ "</td><td><a href=\"javascript:update('#createUser','"
-		+ /*[[@{'/user/update/'}]]*/''
-		+ data.id
-		+ "',successCallback);\"><i class='icon-edit'></i></a></td></tr>";
-	return newRow;
-    };
+	function successCallback() {
 
-    /*]]>*/
+		$("#createUser").modal("hide");
+		$("#userList tr").nextAll().remove();
+
+		$("#userList").simpleTable(
+				/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/""
+						+ "&dateStamp=" + new Date().toString(), render,
+				$("#paginator"), null);
+
+	};
+	function render(data) {
+		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+				+ data.id
+				+ "</td><td>"
+				+ data.name
+				+ "</td><td>"
+				+ data.loginName
+				+ "</td><td>"
+				+ data.mobile
+				+ "</td><td>"
+				+ data.email
+				+ "</td><td>"
+				+ data.stauts
+				+ "</td><td><a href=\"javascript:update('#createUser','"
+				+ /*[[@{'/user/update/'}]]*/''
+				+ data.id
+				+ "',successCallback);\"><i class='icon-edit'></i></a></td></tr>";
+		return newRow;
+	};
+
+	/*]]>*/
 </script>
 </head>
 <body>
 	<!--  -->
 	<div class="box">
 		<h1>用户列表</h1>
-		<table id="userList" cellpadding="0" cellspacing="0" border="0"
-			class="table table-striped table-bordered">
-			<thead>
-				<tr>
-					<th><input type="checkbox" id="checkAll" /></th>
-					<th>Id</th>
-					<th>姓名</th>
-					<th>登陆名</th>
-					<th>手机号码</th>
-					<th>电子邮件</th>
-					<th>状态</th>
-					<th>操作</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:remove="all">
-					<td>Student01</td>
-					<td>Languages</td>
-					<td>male</td>
-					<td>80</td>
-					<td>70</td>
-					<td>75</td>
-				</tr>
-				<tr th:remove="all">
-					<td>Student02</td>
-					<td>Languagesee</td>
-					<td>female</td>
-					<td>802</td>
-					<td>703</td>
-					<td>75e</td>
-				</tr>
-			</tbody>
-		</table>
-		<div id="paginator"></div>
-		<input type="button" id="addBtn" value="增加" class="btn btn-primary" />
-		<input type="button" id="deleteBtn" value="删除选中"
-			class="btn btn-danger" />
+		<div id="organization" class="span3">
+			<ul>
+				<li>Root node 1
+					<ul>
+						<li>Child node 1</li>
+						<li><a href="#">Child node 2</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="span6">
+			<table id="userList" cellpadding="0" cellspacing="0" border="0"
+				class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th><input type="checkbox" id="checkAll" /></th>
+						<th>Id</th>
+						<th>姓名</th>
+						<th>登陆名</th>
+						<th>手机号码</th>
+						<th>电子邮件</th>
+						<th>状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:remove="all">
+						<td>Student01</td>
+						<td>Languages</td>
+						<td>male</td>
+						<td>80</td>
+						<td>70</td>
+						<td>75</td>
+					</tr>
+					<tr th:remove="all">
+						<td>Student02</td>
+						<td>Languagesee</td>
+						<td>female</td>
+						<td>802</td>
+						<td>703</td>
+						<td>75e</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div id="paginator"></div>
+			<input type="button" id="addBtn" value="增加" class="btn btn-primary" />
+			<input type="button" id="deleteBtn" value="删除选中"
+				class="btn btn-danger" />
+		</div>
 	</div>
 	<div tabindex="-1" class="modal hide fade" id="createUser"
 		data-keyboard="false" data-backdrop="static"></div>
