@@ -47,7 +47,7 @@
 													.jstree(true), sel = ref
 													.get_selected();
 											create('#createUser', /*[[@{'/user/create'}]]*/''
-													+"organizationId="+sel, successCallback);
+													+"/"+sel, successCallback);
 										});
 						$('#checkAll').bind('click', function() {
 							checkAll("#checkAll");

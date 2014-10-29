@@ -109,9 +109,9 @@ public class UserController {
 		return "user/selectUsers";
 	}
 
-	@RequestMapping(value = "create", method = RequestMethod.GET)
+	@RequestMapping(value = "create/{organizationId}", method = RequestMethod.GET)
 	public String createForm(
-			@RequestParam("organizationId") String organizationId, Model model) {
+			@PathVariable("organizationId") String organizationId, Model model) {
 		UserDTO userDTO = new UserDTO();
 		// userDTO.setRoles(new HashSet());
 		List<Role> roles = roleService.getAllRoles();
