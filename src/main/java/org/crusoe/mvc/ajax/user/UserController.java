@@ -19,10 +19,12 @@ import org.apache.shiro.SecurityUtils;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.RoleDTO;
 import org.crusoe.dto.UserDTO;
+import org.crusoe.entity.Organization;
 import org.crusoe.entity.Resource;
 import org.crusoe.entity.Role;
 import org.crusoe.entity.User;
 import org.crusoe.service.AccountService;
+import org.crusoe.service.OrganizationService;
 import org.crusoe.service.RoleService;
 import org.crusoe.util.JSONUtil;
 import org.crusoe.util.persisterce.SearchFilter;
@@ -70,6 +72,8 @@ public class UserController {
 	protected AccountService accountService;
 	@Autowired
 	protected RoleService roleService;
+	@Autowired
+	protected OrganizationService organizationService;
 
 	@RequestMapping(value = "index")
 	public String list(
@@ -122,9 +126,10 @@ public class UserController {
 			userDTO.getRoles().add(roleDTO);
 
 		}
-
+		if (!organizationId.equals("#"))
+			userDTO.setOrganizationId(Long.parseLong(organizationId));
 		model.addAttribute("user", userDTO);
-		model.addAttribute("organizationId", organizationId);
+		// model.addAttribute("organizationId", organizationId);
 		// model.addAttribute("allRoles",))
 		model.addAttribute("action", "create");
 		return "user/createForm";
@@ -180,12 +185,20 @@ public class UserController {
 		}
 
 		user.setStatus("enabled");
+		Organization o = organizationService.findById(newUser
+				.getOrganizationId());
+		if (o != null) {
+			o.getUsers().add(user);
+			user.setOrganization(o);
+		}
 		try {
 			accountService.saveUser(user);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		organizationService.update(o);
 		redirectAttributes.addFlashAttribute("message", "创建任务成功");
 		return Collections.singletonMap("id", user.getId());
 	}
@@ -348,6 +361,54 @@ public class UserController {
 		PageRequest pageRequest = new PageRequest(start / size, size,
 				sortRequest);
 		Page<User> users = accountService.searchUser(pageRequest);
+
+		// 将查询结果转换为一维数组
+		List<UserDTO> userDTOList = new ArrayList<UserDTO>();
+		Iterator iter = users.iterator();
+		int i = 0;
+		while (iter.hasNext()) {
+			User user = (User) iter.next();
+			UserDTO userDTO = new UserDTO();
+			BeanUtils.copyProperties(user, userDTO);
+			userDTO.setRoles(new ArrayList<RoleDTO>());
+			Iterator roleIter = user.getRoles().iterator();
+			while (roleIter.hasNext()) {
+				RoleDTO roleDTO = new RoleDTO();
+				Role role = (Role) roleIter.next();
+				BeanUtils.copyProperties(role, roleDTO);
+				userDTO.setPassword("");
+				userDTO.getRoles().add(roleDTO);
+
+			}
+
+			// userDTO.getRoles().clear();
+			userDTOList.add(userDTO);
+
+		}
+
+		Map<String, Object> rets = new ConcurrentHashMap<String, Object>();
+		rets.put("count", users.getTotalElements());
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", userDTOList);
+		return rets;
+	}
+
+	@RequestMapping(value = "listUsersOfOrganization", method = RequestMethod.GET)
+	public @ResponseBody
+	Map<String, Object> listUsersOfOrganization(
+			@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			@RequestParam(value = "organizationId") Long organizationId) {
+
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
+				Direction.DESC, new String[] { sort }) : new Sort(
+				Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size,
+				sortRequest);
+		Page<User> users = accountService.findByOrganization(organizationId,pageRequest);
 
 		// 将查询结果转换为一维数组
 		List<UserDTO> userDTOList = new ArrayList<UserDTO>();

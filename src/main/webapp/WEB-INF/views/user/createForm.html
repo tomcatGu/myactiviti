@@ -3,11 +3,11 @@
 <head thy:merge="/common::headerFragment">
 <title>创建用户</title>
 <script type="text/javascript">
-	var validator;
-	$(document).ready(function() {
-		validator = $("#userForm").validate();
-		$("#submitButton").bind("click", submitForm);
-	});
+    var validator;
+    $(document).ready(function() {
+	validator = $("#userForm").validate();
+	$("#submitButton").bind("click", submitForm);
+    });
 </script>
 </head>
 <body>
@@ -44,35 +44,36 @@
 				</div>
 			</fieldset>
 			<script type="text/javascript" th:inline="javascript">
-				/*<![CDATA[*/
-				function submitForm() {
+		/*<![CDATA[*/
+		function submitForm() {
 
-					var user = $("#userForm").serializeObject();
-					//alert(JSON.stringify(user));
-					$.postJSON(/*[[@{'/user/create'}]]*/'', JSON
-							.stringify(user), false, function(data) {
-						if (data.err == "true") {
-							var errors = {};
-							for ( var obj in data) {
-								if (obj != "err")
-									errors[obj] = data[obj];
+		    var user = $("#userForm").serializeObject();
+		    user.organizationId = /*[[@{${user.organizationId}}]]*/"12";
+		    //alert(JSON.stringify(user));
+		    $.postJSON(/*[[@{'/user/create'}]]*/'', JSON
+			    .stringify(user), false, function(data) {
+			if (data.err == "true") {
+			    var errors = {};
+			    for ( var obj in data) {
+				if (obj != "err")
+				    errors[obj] = data[obj];
 
-							}
-							validator.showErrors(errors);
-						} else {
-							$("#dialog-message .modal-body").html(
-									"数据已经保存!其ID号为:" + data.id);
-							$("#userForm").trigger("evtSuccess", {
-								msg : "OK"
-							});
-							$("#dialog-message").modal();
-						}
+			    }
+			    validator.showErrors(errors);
+			} else {
+			    $("#dialog-message .modal-body").html(
+				    "数据已经保存!其ID号为:" + data.id);
+			    $("#userForm").trigger("evtSuccess", {
+				msg : "OK"
+			    });
+			    $("#dialog-message").modal();
+			}
 
-					});
-					return false;
-				}
-				/*]]>*/
-			</script>
+		    });
+		    return false;
+		}
+		/*]]>*/
+	    </script>
 		</form>
 		<div class="modal-footer">
 			<button type="button" id="submitButton" class="btn btn-primary">创建用户</button>

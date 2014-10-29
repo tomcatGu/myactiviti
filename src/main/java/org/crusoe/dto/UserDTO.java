@@ -29,6 +29,7 @@ public class UserDTO implements Serializable {
 	private String mobile = "";
 	private String email = "";
 	private String status = "";
+	private Long organizationId;
 	private List<RoleDTO> roles = new ArrayList<RoleDTO>();
 
 	private String _roles;
@@ -60,7 +61,7 @@ public class UserDTO implements Serializable {
 		this.loginName = loginName;
 	}
 
-	//@NotEmpty
+	// @NotEmpty
 	public String getPassword() {
 		return password;
 	}
@@ -78,7 +79,7 @@ public class UserDTO implements Serializable {
 	}
 
 	@Email
-	//@NotEmpty
+	// @NotEmpty
 	public String getEmail() {
 		return email;
 	}
@@ -125,4 +126,13 @@ public class UserDTO implements Serializable {
 		// TODO Auto-generated method stub
 		return roles.toString();
 	}
+
+	public Long getOrganizationId() {
+		return organizationId;
+	}
+
+	public void setOrganizationId(Long organizationId) {
+		this.organizationId = organizationId;
+	}
+
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -54,10 +56,12 @@ public class Organization implements Serializable, AbstractSecureObject<Long> {
 	}
 
 	// 多对多定义
-	@ManyToMany
-	@JoinTable(name = "ss_organization_user", joinColumns = { @JoinColumn(name = "organization_id") }, inverseJoinColumns = { @JoinColumn(name = "user_id") })
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "organization")
+	// @JoinTable(name = "ss_organization_user", joinColumns = {
+	// @JoinColumn(name = "organization_id") }, inverseJoinColumns = {
+	// @JoinColumn(name = "user_id") })
 	// Fecth策略定义
-	@Fetch(FetchMode.SUBSELECT)
+	// @Fetch(FetchMode.SUBSELECT)
 	// 集合按id排序
 	@OrderBy("id ASC")
 	// 缓存策略

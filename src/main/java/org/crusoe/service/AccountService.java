@@ -255,4 +255,10 @@ public class AccountService {
 		return usernames;
 	}
 
+	public Page<User> findByOrganization(Long organizationId,
+			PageRequest pageRequest) {
+		// TODO Auto-generated method stub
+		return userDao.findByOrganization(organizationId, pageRequest);
+	}
+
 }

@@ -15,7 +15,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Cache;
@@ -35,7 +34,7 @@ import com.google.common.collect.Lists;
 @Table(name = "ss_user")
 // 默认的缓存策略.
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class User implements Serializable, AbstractSecureObject<Long>{
+public class User implements Serializable, AbstractSecureObject<Long> {
 	private String loginName;
 
 	private String password;
@@ -45,10 +44,11 @@ public class User implements Serializable, AbstractSecureObject<Long>{
 	private String email;
 	private String status;
 	private Long id;
+	private Organization organization;
 
 	private List<Role> roles = Lists.newArrayList(); // 有序的关联对象集合
 
-	//@NotBlank
+	// @NotBlank
 	public String getLoginName() {
 		return loginName;
 	}
@@ -56,7 +56,6 @@ public class User implements Serializable, AbstractSecureObject<Long>{
 	public void setLoginName(String loginName) {
 		this.loginName = loginName;
 	}
-
 
 	public String getPassword() {
 		return password;
@@ -74,7 +73,7 @@ public class User implements Serializable, AbstractSecureObject<Long>{
 		this.passwordSalt = passwordSalt;
 	}
 
-	//@NotBlank
+	// @NotBlank
 	public String getName() {
 		return name;
 	}
@@ -117,19 +116,18 @@ public class User implements Serializable, AbstractSecureObject<Long>{
 		this.roles = roles;
 	}
 
-
-
 	@Transient
 	@JsonIgnore
 	public String getRoleNames() {
 		return roles.toString();
-		//return Collections3.extractToString(roleList, "name", ", ");
+		// return Collections3.extractToString(roleList, "name", ", ");
 	}
 
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
@@ -139,8 +137,8 @@ public class User implements Serializable, AbstractSecureObject<Long>{
 
 	public void setId(Long id) {
 		// TODO Auto-generated method stub
-		this.id=id;
-		
+		this.id = id;
+
 	}
 
 	public String getMobile() {
@@ -151,5 +149,13 @@ public class User implements Serializable, AbstractSecureObject<Long>{
 		this.mobile = mobile;
 	}
 
+	@ManyToOne()
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
 
 }
