@@ -5,79 +5,154 @@
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-    $(document).ready(function() {
-	$("#datetimepicker1").datetimepicker({
-	    language : 'zh-CN',
-	    format : 'yyyy-MM-dd hh:mm:ss',
-	    pickDate : true,
-	    pickTime : true,
-	    hourStep : 1,
-	    minuteStep : 15,
-	    secondStep : 30,
-	    inputMask : true
+    function deleteAttachment(deleteUrl, attachmentId) {
+	$.ajax({
+	    type : "POST",
+	    url : deleteUrl + attachmentId,
+	    data : {
+		_method : 'DELETE',
+	    },
+	    success : function(data) {
+		var orignList = $("#attachmentList").val();
+		orignList = orignList.replace(attachmentId + ",", "");
+		$("#attachmentList").val(orignList);
+		$("#attachment" + attachmentId).remove();
+	    }
 	});
-	$("#datetimepicker2").datetimepicker({
-	    language : 'zh-CN',
-	    format : 'yyyy-MM-dd hh:mm:ss',
-	    pickDate : true,
-	    pickTime : true,
-	    hourStep : 1,
-	    minuteStep : 15,
-	    secondStep : 30,
-	    inputMask : true
-	});
-    });
+    };
+    $(document).ready(
+	    function() {
+		$("#datetimepicker1").datetimepicker({
+		    language : 'zh-CN',
+		    format : 'yyyy-MM-dd hh:mm:ss',
+		    pickDate : true,
+		    pickTime : true,
+		    hourStep : 1,
+		    minuteStep : 15,
+		    secondStep : 30,
+		    inputMask : true
+		});
+		$("#datetimepicker2").datetimepicker({
+		    language : 'zh-CN',
+		    format : 'yyyy-MM-dd hh:mm:ss',
+		    pickDate : true,
+		    pickTime : true,
+		    hourStep : 1,
+		    minuteStep : 15,
+		    secondStep : 30,
+		    inputMask : true
+		});
+
+		var options = {
+		    beforeSend : function() {
+			$("#progress").show();
+			//clear everything
+			$("#bar").width('0%').height('1px').css({
+			    background : "green"
+			}).fadeIn("fast");
+			;
+			$("#message").html("").fadeIn("fast");
+			$("#percent").html("0%").fadeIn("fast");
+		    },
+		    uploadProgress : function(event, position, total,
+			    percentComplete) {
+			$("#bar").width(percentComplete + '%');
+			$("#percent").html(percentComplete + '%');
+
+		    },
+		    success : function() {
+			$("#bar").width('100%').fadeOut("slow");
+
+			$("#percent").html('100%').fadeOut("slow");
+
+		    },
+		    complete : function(response) {
+			var ret = JSON.parse(response.responseText);
+			$("#message").html(
+				"<font color='green'>" + response.responseText
+					+ "</font>").fadeIn("fast").fadeOut(
+				"slow");
+			var li = $("<li></li>");
+
+			var a = $("<a>" + ret.filename + "</a>");
+			var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+			a.attr("href", "javascript:deleteAttachment(\""
+				+ deleteUrl + "\"," + ret.attachmentId + ");");
+			var i = $("<i class=\"icon-remove\"></i>");
+			i.appendTo(a);
+			a.appendTo(li);
+			li.attr("id", "attachment" + ret.attachmentId);
+			li.appendTo($("#uploadedAttachment"));
+			var orignList = $("#attachmentList").val();
+			$("#attachmentList").val(
+				orignList + "," + ret.attachmentId);
+		    },
+		    error : function() {
+			$("#message").html(
+				"<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+		    }
+		};
+		$("#uploadForm").ajaxForm(options);
+	    });
     /*]]>*/
 </script>
 </head>
 <body>
 	<form>
 		<div>
-			<input type="text" name="fileName" />
+			<label>文件名称：<input type="text" name="fileName" /></label>
 		</div>
 		<div>
-			<input type="text" name="departmentName" />
+			<label>单位名称：<input type="text" name="departmentName" /></label>
 		</div>
 		<div>
-			<input type="text" name="messageNumber" />
+			<label>发文字号：<input type="text" name="messageNumber" /></label>
 		</div>
 		<div>
-			<select id="fileProperty"><option>党内规范性文件</option></select>
+			<label>文件性质：<select id="fileProperty"><option>党内规范性文件</option></select></label>
 		</div>
 		<div>
-			<select id="contentClassification"><option>党内</option></select>
+			<label>内容分类：<select id="contentClassification"><option>党内</option></select></label>
 		</div>
 		<div id="datetimepicker1" class="input-append date">
-			<input name="releaseDate" class="datepicker"
+			<label>发布时间： <input name="releaseDate" class="datepicker"
 				data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-				<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
-			</span>
+					<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+			</span></label>
 		</div>
 		<div id="datetimepicker2" class="input-append date">
-			<input name="implementationDate" class="datepicker"
-				data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-				<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
-			</span>
+			<label>实施时间：<input name="implementationDate"
+				class="datepicker" data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
+				class="add-on"> <i data-time-icon="icon-time"
+					data-date-icon="icon-calendar"> </i>
+			</span></label>
 		</div>
 		<div>
-			<label><input name="isOpen" type="radio" value="1">是</label>
-			<label><input name="open" type="radio" value="0">否</label>
+			<label>是否公开：</label> <label><input name="isOpen" type="radio"
+				value="1" />是</label> <label><input name="isOpen" type="radio"
+				value="0" />否</label>
 		</div>
 		<div class="control-group">
 			<div class="controls">
 				<input type="button" id="submitButton" value="提交"
-					class="btn btn-primary" />
+					class="btn btn-primary" /> <input type="hidden"
+					name="attachmentList" id="attachmentList" />
 			</div>
 		</div>
 	</form>
 	<div class="box">
 		<label>上传附件：</label>
+		<div>
+			<ul id="uploadedAttachment"></ul>
+		</div>
 		<form id="uploadForm"
 			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
 			method="post" enctype="multipart/form-data">
 			<div class="row">
-				<div class="span3">
-					<input type="file" name="file" />
+				<div>
+					<div class="span3">
+						<input type="file" name="file" />
+					</div>
 				</div>
 				<div class="span1">
 					<input type="submit" value="上传" class="btn btn-info" />
