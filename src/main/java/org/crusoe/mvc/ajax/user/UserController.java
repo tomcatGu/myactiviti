@@ -170,6 +170,7 @@ public class UserController {
 		user.setName(newUser.getName());
 		user.setEmail(newUser.getEmail());
 		user.setPassword(newUser.getPassword());
+		user.setMobile(newUser.getMobile());
 
 		// BeanUtils.copyProperties(newUser, user);
 		if (newUser.getRoles() != null) {
@@ -408,7 +409,8 @@ public class UserController {
 				Direction.ASC, new String[] { sort });
 		PageRequest pageRequest = new PageRequest(start / size, size,
 				sortRequest);
-		Page<User> users = accountService.findByOrganization(organizationId,pageRequest);
+		Page<User> users = accountService.findByOrganization(organizationId,
+				pageRequest);
 
 		// 将查询结果转换为一维数组
 		List<UserDTO> userDTOList = new ArrayList<UserDTO>();

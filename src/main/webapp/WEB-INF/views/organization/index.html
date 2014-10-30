@@ -22,8 +22,8 @@
 						},
 						'data' : {
 						    'url' : function(node) {
-							return node.id === '#' ? 'ajaxRoots'
-								: 'ajaxChildren';
+							return node.id === '#' ? /*[[@{'/organization/ajaxRoots'}]]*/'ajaxRoots'
+								:  /*[[@{'/organization/ajaxChildren'}]]*/'ajaxChildren';
 						    },
 						    'data' : function(node) {
 							return {
