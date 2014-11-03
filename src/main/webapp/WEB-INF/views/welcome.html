@@ -121,6 +121,8 @@
 									class="icon-chevron-right"></i></a></li>
 							<li class="active"><a id="tasks"
 								onclick="load('待办事项','runtime/tasks/index')">待办事项</a></li>
+							<li><a id="candidateTasks"
+								onclick="load('待接收事项','runtime/tasks/candidateTaskIndex')">待接收事项</a></li>
 							<li><a href="#"
 								onClick="load('已办事项','runtime/tasks/historicTasks')">已办事项</a></li>
 							<li><a href="#"
@@ -143,7 +145,6 @@
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
 								href="#" onClick="load('角色列表','role/index')">角色列表<i
 									class="icon-chevron-right"></i></a></li>
-
 							<li class="nav-header"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">部门管理</li>
 							<li

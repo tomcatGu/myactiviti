@@ -62,7 +62,8 @@ public class ActivitiUserManager extends UserEntityManager {
 			GroupEntity group = new GroupEntity();
 			group.setId(role.getId().toString());
 			group.setName(role.getName());
-			// group.setType(role.)
+			group.setRevision(1);
+			group.setType("assignment");
 			groups.add(group);
 
 		}
