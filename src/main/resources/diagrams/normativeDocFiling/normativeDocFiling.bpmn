@@ -17,7 +17,7 @@
         <flowNodeRef>usertask1</flowNodeRef>
       </lane>
     </laneSet>
-    <userTask id="usertask2" name="审核备案信息"></userTask>
+    <userTask id="usertask2" name="审核备案信息" activiti:candidateGroups="ROLE_USER"></userTask>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow3" sourceRef="usertask2" targetRef="exclusivegateway1"></sequenceFlow>
     <userTask id="usertask3" name="发送确认函"></userTask>
