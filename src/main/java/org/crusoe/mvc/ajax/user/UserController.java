@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.shiro.SecurityUtils;
+import org.crusoe.dto.OrganizationDTO;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.RoleDTO;
 import org.crusoe.dto.UserDTO;
@@ -455,5 +456,19 @@ public class UserController {
 			// return taskService.getTask(id);
 		}
 		return null;
+	}
+
+	@RequestMapping(value = "getOrganization/{loginName}")
+	public @ResponseBody
+	OrganizationDTO getorganization(@PathVariable("loginName") String loginName) {
+
+		User user = accountService.findUserByLoginName(loginName);
+		Organization o = user.getOrganization();
+		OrganizationDTO oDTO = new OrganizationDTO();
+		oDTO.setId(o.getId());
+		oDTO.setText(o.getName());
+		oDTO.setSequence(o.getSequence());
+		return oDTO;
+
 	}
 }
