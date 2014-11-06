@@ -19,6 +19,8 @@ import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.identity.Group;
+import org.activiti.engine.impl.persistence.entity.GroupEntity;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
@@ -29,6 +31,7 @@ import org.apache.shiro.authz.annotation.RequiresUser;
 import org.crusoe.dto.AttachmentDTO;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.task.TaskDTO;
+import org.crusoe.entity.Role;
 import org.crusoe.entity.User;
 import org.crusoe.service.AccountService;
 import org.crusoe.util.DataTablesUtil;
@@ -79,6 +82,11 @@ public class TaskController {
 	@RequestMapping(value = "index")
 	public String getIndexForm() {
 		return "task/index";
+	}
+
+	@RequestMapping(value = "candidateTaskIndex")
+	public String getCandidateTaskIndexForm() {
+		return "task/candidateTaskIndex";
 	}
 
 	@RequestMapping(value = "historicTasks")
@@ -282,6 +290,56 @@ public class TaskController {
 	}
 
 	@RequiresUser
+	@RequestMapping(value = "listCandidateTasks", method = RequestMethod.GET)
+	public @ResponseBody
+	HashMap<String, Object> listCandidateTasks(
+			@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size)
+			throws IllegalAccessException, InvocationTargetException {
+
+		// convertToMap定义于父类，将参数数组中的所有元素加入一个HashMap
+
+		User user = accountService.findUserByLoginName(SecurityUtils
+				.getSubject().getPrincipal().toString());
+		List<String> groups = Lists.newArrayList();
+		Iterator iter = user.getRoles().iterator();
+		while (iter.hasNext()) {
+
+			Role r = (Role) iter.next();
+			groups.add(r.getName());
+
+		}
+
+		List<Task> taskList = taskService.createTaskQuery()
+				.taskCandidateGroupIn(groups).orderByTaskCreateTime().desc()
+				.listPage(start, size);
+		List<TaskDTO> todoList = new ArrayList();
+		int i = 0;
+		for (Task task : taskList) {
+			TaskDTO taskDTO = new TaskDTO();
+			taskDTO.setId(task.getId());
+			taskDTO.setName(task.getName());
+			// taskDTO.setAssignee(task.getAssignee());
+			taskDTO.setAssignee(accountService.findUserByLoginName(
+					task.getAssignee()).getName());
+			todoList.add(taskDTO);
+
+		}
+		long count = taskService.createTaskQuery()
+				.taskAssignee(user.getLoginName()).count();
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		rets.put("count", count);
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", todoList);
+
+		return rets;
+
+	}
+
+	@RequiresUser
 	@RequestMapping(value = "listHistoryTasks", method = RequestMethod.GET)
 	public @ResponseBody
 	HashMap<String, Object> listHistoryTasks(@RequestParam("sort") String sort,
@@ -351,7 +409,7 @@ public class TaskController {
 		} catch (Exception e) {
 			rets.put("msg", "upload failed.");
 		}
-		
+
 		return rets;
 
 	}

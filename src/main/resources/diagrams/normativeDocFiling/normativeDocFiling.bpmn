@@ -33,7 +33,11 @@
     <sequenceFlow id="flow7" sourceRef="usertask4" targetRef="usertask2"></sequenceFlow>
     <startEvent id="startevent1" name="Start" activiti:initiator="startUserId"></startEvent>
     <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
-    <userTask id="usertask1" name="填写备案信息" activiti:assignee="${startUserId}" activiti:formKey="normativeDocFiling/registrationForm"></userTask>
+    <userTask id="usertask1" name="填写备案信息" activiti:exclusive="false" activiti:assignee="${startUserId}" activiti:formKey="normativeDocFiling/registrationForm">
+      <extensionElements>
+        <activiti:taskListener event="complete" expression="${normativeDocFilingService.save(execution,fileName,organizationId,messageNumber,fileProperty,contentClassification,releaseDate,implementationDate,isOpen,attachmentList)}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow2" sourceRef="usertask1" targetRef="usertask2"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_Collaboration">

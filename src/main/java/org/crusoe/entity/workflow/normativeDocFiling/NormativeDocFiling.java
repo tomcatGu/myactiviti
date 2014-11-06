@@ -22,7 +22,7 @@ public class NormativeDocFiling {
 
 	private Long id;
 	private String fileName;
-	private Organization organization;
+	private Long organizationId;
 	private String messageNumber;
 	private String fileProperty;
 	private String contentClassification;
@@ -53,12 +53,12 @@ public class NormativeDocFiling {
 		this.fileName = fileName;
 	}
 
-	public Organization getOrganization() {
-		return organization;
+	public Long getOrganizationId() {
+		return organizationId;
 	}
 
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
+	public void setOrganizationId(Long organizationId) {
+		this.organizationId = organizationId;
 	}
 
 	public String getMessageNumber() {

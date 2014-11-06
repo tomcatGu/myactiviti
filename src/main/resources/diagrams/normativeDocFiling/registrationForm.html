@@ -4,133 +4,133 @@
 <title>规范性文件备案登记表</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    function deleteAttachment(deleteUrl, attachmentId) {
-	$.ajax({
-	    type : "POST",
-	    url : deleteUrl + attachmentId,
-	    data : {
-		_method : 'DELETE',
-	    },
-	    success : function(data) {
-		var orignList = $("#attachmentList").val();
-		orignList = orignList.replace(attachmentId + ",", "");
-		$("#attachmentList").val(orignList);
-		$("#attachment" + attachmentId).remove();
-	    }
-	});
-    };
-    $(document)
-	    .ready(
-		    function() {
-			$("#datetimepicker1").datetimepicker({
-			    language : 'zh-CN',
-			    format : 'yyyy-MM-dd hh:mm:ss',
-			    pickDate : true,
-			    pickTime : true,
-			    hourStep : 1,
-			    minuteStep : 15,
-			    secondStep : 30,
-			    inputMask : true
-			});
-			$("#datetimepicker2").datetimepicker({
-			    language : 'zh-CN',
-			    format : 'yyyy-MM-dd hh:mm:ss',
-			    pickDate : true,
-			    pickTime : true,
-			    hourStep : 1,
-			    minuteStep : 15,
-			    secondStep : 30,
-			    inputMask : true
-			});
-
-			$
-				.ajax({
-				    type : 'GET',
-				    url : /*[[@{'/user/getOrganization/'}+${T(org.apache.shiro.SecurityUtils).subject.principal.loginName}]]*/'',
-				    async : true,
-				    success : function(data) {
-					//temp = $('#selectedUser').text();
-					//temp += data + ';';
-					$('#departmentName').text(data.text);
-					$('#departmentId').val(data.id);
-
-				    }
-
-				});
-			$("#submitButton")
-				.click(
-					function() {
-					    $("#myForm")
-						    .ajaxForm(
-							    {
-								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-								dataType : "text",
-								success : function(
-									data) {
-								    var ret = JSON
-									    .parse(data);
-								    alert(ret.msg);
-								}
-
-							    }).submit();
-
-					});
-			var options = {
-			    beforeSend : function() {
-				$("#progress").show();
-				//clear everything
-				$("#bar").width('0%').height('1px').css({
-				    background : "green"
-				}).fadeIn("fast");
-				;
-				$("#message").html("").fadeIn("fast");
-				$("#percent").html("0%").fadeIn("fast");
-			    },
-			    uploadProgress : function(event, position, total,
-				    percentComplete) {
-				$("#bar").width(percentComplete + '%');
-				$("#percent").html(percentComplete + '%');
-
-			    },
-			    success : function() {
-				$("#bar").width('100%').fadeOut("slow");
-
-				$("#percent").html('100%').fadeOut("slow");
-
-			    },
-			    complete : function(response) {
-				var ret = JSON.parse(response.responseText);
-				$("#message").html(
-					"<font color='green'>"
-						+ response.responseText
-						+ "</font>").fadeIn("fast")
-					.fadeOut("slow");
-				var li = $("<li></li>");
-
-				var a = $("<a>" + ret.filename + "</a>");
-				var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
-				a.attr("href", "javascript:deleteAttachment(\""
-					+ deleteUrl + "\"," + ret.attachmentId
-					+ ");");
-				var i = $("<i class=\"icon-remove\"></i>");
-				i.appendTo(a);
-				a.appendTo(li);
-				li.attr("id", "attachment" + ret.attachmentId);
-				li.appendTo($("#uploadedAttachment"));
+	/*<![CDATA[*/
+	function deleteAttachment(deleteUrl, attachmentId) {
+		$.ajax({
+			type : "POST",
+			url : deleteUrl + attachmentId,
+			data : {
+				_method : 'DELETE',
+			},
+			success : function(data) {
 				var orignList = $("#attachmentList").val();
-				$("#attachmentList").val(
-					orignList + "," + ret.attachmentId);
-			    },
-			    error : function() {
-				$("#message")
-					.html(
-						"<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
-			    }
-			};
-			$("#uploadForm").ajaxForm(options);
-		    });
-    /*]]>*/
+				orignList = orignList.replace(attachmentId + ",", "");
+				$("#attachmentList").val(orignList);
+				$("#attachment" + attachmentId).remove();
+			}
+		});
+	};
+	$(document)
+			.ready(
+					function() {
+						$("#datetimepicker1").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
+						$("#datetimepicker2").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
+
+						$
+								.ajax({
+									type : 'GET',
+									url : /*[[@{'/user/getOrganization/'}+${T(org.apache.shiro.SecurityUtils).subject.principal.loginName}]]*/'',
+									async : true,
+									success : function(data) {
+										//temp = $('#selectedUser').text();
+										//temp += data + ';';
+										$('#organizationName').text(data.text);
+										$('#organizationId').val(data.id);
+
+									}
+
+								});
+						$("#submitButton")
+								.click(
+										function() {
+											$("#myForm")
+													.ajaxForm(
+															{
+																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+																dataType : "text",
+																success : function(
+																		data) {
+																	var ret = JSON
+																			.parse(data);
+																	alert(ret.msg);
+																}
+
+															}).submit();
+
+										});
+						var options = {
+							beforeSend : function() {
+								$("#progress").show();
+								//clear everything
+								$("#bar").width('0%').height('1px').css({
+									background : "green"
+								}).fadeIn("fast");
+								;
+								$("#message").html("").fadeIn("fast");
+								$("#percent").html("0%").fadeIn("fast");
+							},
+							uploadProgress : function(event, position, total,
+									percentComplete) {
+								$("#bar").width(percentComplete + '%');
+								$("#percent").html(percentComplete + '%');
+
+							},
+							success : function() {
+								$("#bar").width('100%').fadeOut("slow");
+
+								$("#percent").html('100%').fadeOut("slow");
+
+							},
+							complete : function(response) {
+								var ret = JSON.parse(response.responseText);
+								$("#message").html(
+										"<font color='green'>"
+												+ response.responseText
+												+ "</font>").fadeIn("fast")
+										.fadeOut("slow");
+								var li = $("<li></li>");
+
+								var a = $("<a>" + ret.filename + "</a>");
+								var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+								a.attr("href", "javascript:deleteAttachment(\""
+										+ deleteUrl + "\"," + ret.attachmentId
+										+ ");");
+								var i = $("<i class=\"icon-remove\"></i>");
+								i.appendTo(a);
+								a.appendTo(li);
+								li.attr("id", "attachment" + ret.attachmentId);
+								li.appendTo($("#uploadedAttachment"));
+								var orignList = $("#attachmentList").val();
+								$("#attachmentList").val(
+										orignList + "," + ret.attachmentId);
+							},
+							error : function() {
+								$("#message")
+										.html(
+												"<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+							}
+						};
+						$("#uploadForm").ajaxForm(options);
+					});
+	/*]]>*/
 </script>
 </head>
 <body>
@@ -139,18 +139,19 @@
 			<label>文件名称：<input type="text" name="fileName" /></label>
 		</div>
 		<div>
-			<label>单位名称： <span id="departmentName" class="label"></span>
-				<input type="hidden" id="departmentId" name="departmentId" />
+			<label>单位名称： <span id="organizationName" class="label"></span>
+				<input type="hidden" id="organizationId" name="organizationId" />
 			</label>
 		</div>
 		<div>
 			<label>发文字号：<input type="text" name="messageNumber" /></label>
 		</div>
 		<div>
-			<label>文件性质：<select id="fileProperty"><option>党内规范性文件</option></select></label>
+			<label>文件性质：<select id="fileProperty" name="fileProperty"><option>党内规范性文件</option></select></label>
 		</div>
 		<div>
-			<label>内容分类：<select id="contentClassification"><option>党内</option></select></label>
+			<label>内容分类：<select id="contentClassification"
+				name="contentClassification"><option>党内</option></select></label>
 		</div>
 		<div id="datetimepicker1" class="input-append date">
 			<label>发布时间： <input name="releaseDate" class="datepicker"
