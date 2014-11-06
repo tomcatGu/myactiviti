@@ -15,6 +15,7 @@ import org.crusoe.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -64,6 +65,24 @@ public class OrganizationController {
 		}
 		o = organizationService.update(o);
 		return oDTO;
+	}
+
+	@RequestMapping(value = "{id}")
+	public @ResponseBody
+	OrganizationDTO getOrganization(@PathVariable("id") Long id) {
+
+		Organization o = organizationService.findById(id);
+		OrganizationDTO oDTO = new OrganizationDTO();
+		oDTO.setId(o.getId());
+		oDTO.setText(o.getName());
+		oDTO.setSequence(o.getSequence());
+		if (organizationService.findChildrenByParent(o.getId()).isEmpty()) {
+
+			oDTO.setChildren(false);
+		} else
+			oDTO.setChildren(true);
+		return oDTO;
+
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE)
