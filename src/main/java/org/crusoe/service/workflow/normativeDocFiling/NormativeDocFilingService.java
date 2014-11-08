@@ -5,8 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.activiti.engine.delegate.DelegateExecution;
+import org.apache.shiro.SecurityUtils;
 import org.crusoe.entity.Organization;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFiling;
+import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingReply;
 import org.crusoe.repository.jpa.OrganizationDao;
 import org.crusoe.repository.jpa.workflow.normativeDocFiling.NormativeDocFilingDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +52,25 @@ public class NormativeDocFilingService {
 		ndf.setIsOpen(isOpen);
 
 		ndf.setOrganizationId(organizationId);
+		ndf.setStatus("待审核");
 		ndfDao.save(ndf);
 
+		return ndf;
+	}
+
+	public NormativeDocFiling saveReply(DelegateExecution execution,
+			NormativeDocFiling ndf, String reply, boolean isPassed) {
+		NormativeDocFilingReply ndfReply = new NormativeDocFilingReply();
+		ndfReply.setReply(reply);
+		ndfReply.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
+				.toString());
+		ndfReply.setReplyTime(new Date());
+		ndf.getReplies().add(ndfReply);
+		if (isPassed)
+			ndf.setStatus("已备案");
+		else
+			ndf.setStatus("待完善");
+		ndfDao.save(ndf);
 		return ndf;
 	}
 

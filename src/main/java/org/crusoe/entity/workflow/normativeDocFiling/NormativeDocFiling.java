@@ -3,16 +3,20 @@ package org.crusoe.entity.workflow.normativeDocFiling;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.crusoe.entity.Organization;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.AttachmentEntity;
+
 
 import com.google.common.collect.Lists;
 
@@ -31,6 +35,8 @@ public class NormativeDocFiling {
 	private String isOpen;
 	private String status;
 	private Date createOn;
+	
+	private List<NormativeDocFilingReply> replies = Lists.newArrayList();
 
 	private List<NormativeDocFilingAttachmentEntity> attachments = Lists
 			.newArrayList();
@@ -134,6 +140,15 @@ public class NormativeDocFiling {
 	public void setAttachments(
 			List<NormativeDocFilingAttachmentEntity> attachments) {
 		this.attachments = attachments;
+	}
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "normativeDocFiling_id", referencedColumnName = "id")
+	public List<NormativeDocFilingReply> getReplies() {
+		return replies;
+	}
+
+	public void setReplies(List<NormativeDocFilingReply> replies) {
+		this.replies = replies;
 	}
 
 }

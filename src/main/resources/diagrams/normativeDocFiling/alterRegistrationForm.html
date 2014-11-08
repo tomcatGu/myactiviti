@@ -1,0 +1,216 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head thy:merge="/common::headerFragment">
+<title>规范性文件备案登记表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    function deleteAttachment(deleteUrl, attachmentId) {
+	$.ajax({
+	    type : "POST",
+	    url : deleteUrl + attachmentId,
+	    data : {
+		_method : 'DELETE',
+	    },
+	    success : function(data) {
+		var orignList = $("#attachmentList").val();
+		orignList = orignList.replace(attachmentId + ",", "");
+		$("#attachmentList").val(orignList);
+		$("#attachment" + attachmentId).remove();
+	    }
+	});
+    };
+    $(document)
+	    .ready(
+		    function() {
+			$("#datetimepicker1").datetimepicker({
+			    language : 'zh-CN',
+			    format : 'yyyy-MM-dd hh:mm:ss',
+			    pickDate : true,
+			    pickTime : true,
+			    hourStep : 1,
+			    minuteStep : 15,
+			    secondStep : 30,
+			    inputMask : true
+			});
+			$("#datetimepicker2").datetimepicker({
+			    language : 'zh-CN',
+			    format : 'yyyy-MM-dd hh:mm:ss',
+			    pickDate : true,
+			    pickTime : true,
+			    hourStep : 1,
+			    minuteStep : 15,
+			    secondStep : 30,
+			    inputMask : true
+			});
+
+			$
+				.ajax({
+				    type : 'GET',
+				    url : /*[[@{'/organization/'}+${result.organizationId}]]*/'',
+				    async : true,
+				    success : function(data) {
+					//temp = $('#selectedUser').text();
+					//temp += data + ';';
+					$('#organizationName').text(data.text);
+					$('#organizationid')
+						.val(
+							/*[[${result.organizationId}]]*/''
+							);
+				    }
+
+				});
+			$("#submitButton")
+				.click(
+					function() {
+					    $("#myForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+								dataType : "text",
+								success : function(
+									data) {
+								    var ret = JSON
+									    .parse(data);
+								    alert(ret.msg);
+								}
+
+							    }).submit();
+
+					});
+			var options = {
+			    beforeSend : function() {
+				$("#progress").show();
+				//clear everything
+				$("#bar").width('0%').height('1px').css({
+				    background : "green"
+				}).fadeIn("fast");
+				;
+				$("#message").html("").fadeIn("fast");
+				$("#percent").html("0%").fadeIn("fast");
+			    },
+			    uploadProgress : function(event, position, total,
+				    percentComplete) {
+				$("#bar").width(percentComplete + '%');
+				$("#percent").html(percentComplete + '%');
+
+			    },
+			    success : function() {
+				$("#bar").width('100%').fadeOut("slow");
+
+				$("#percent").html('100%').fadeOut("slow");
+
+			    },
+			    complete : function(response) {
+				var ret = JSON.parse(response.responseText);
+				$("#message").html(
+					"<font color='green'>"
+						+ response.responseText
+						+ "</font>").fadeIn("fast")
+					.fadeOut("slow");
+				var li = $("<li></li>");
+
+				var a = $("<a>" + ret.filename + "</a>");
+				var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+				a.attr("href", "javascript:deleteAttachment(\""
+					+ deleteUrl + "\"," + ret.attachmentId
+					+ ");");
+				var i = $("<i class=\"icon-remove\"></i>");
+				i.appendTo(a);
+				a.appendTo(li);
+				li.attr("id", "attachment" + ret.attachmentId);
+				li.appendTo($("#uploadedAttachment"));
+				var orignList = $("#attachmentList").val();
+				$("#attachmentList").val(
+					orignList + "," + ret.attachmentId);
+			    },
+			    error : function() {
+				$("#message")
+					.html(
+						"<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+			    }
+			};
+			$("#uploadForm").ajaxForm(options);
+		    });
+    /*]]>*/
+</script>
+</head>
+<body>
+	<form id="myForm" method="POST">
+		<div>
+			<label>文件名称：<input type="text" name="fileName"
+				th:value="${result.fileName}" /></label>
+		</div>
+		<div>
+			<label>单位名称： <span id="organizationName" class="label"></span>
+				<input type="hidden" id="organizationId" name="organizationId" />
+			</label>
+		</div>
+		<div>
+			<label>发文字号：<input type="text" name="messageNumber"
+				th:value="${result.messageNumber}" /></label>
+		</div>
+		<div>
+			<label>文件性质：<select id="fileProperty" name="fileProperty"><option
+						value="党内规范性文件">党内规范性文件</option></select></label>
+		</div>
+		<div>
+			<label>内容分类：<select id="contentClassification"
+				name="contentClassification" selected="${result.contentClassification}"><option value="党内">党内</option></select></label>
+		</div>
+		<div id="datetimepicker1" class="input-append date">
+			<label>发布时间： <input name="releaseDate" class="datepicker" th:value="${result.releaseDate}"
+				data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+					<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+			</span></label>
+		</div>
+		<div id="datetimepicker2" class="input-append date">
+			<label>实施时间：<input name="implementationDate" th:value="${implementationDate}"
+				class="datepicker" data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
+				class="add-on"> <i data-time-icon="icon-time"
+					data-date-icon="icon-calendar"> </i>
+			</span></label>
+		</div>
+		<div>
+			<label>是否公开：</label> <label class="radio inline"><input
+				name="isOpen" type="radio" value="是" />是</label> <label
+				class="radio inline"><input name="isOpen" type="radio"
+				value="否" />否</label>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<input type="button" id="submitButton" value="提交"
+					class="btn btn-primary" /> <input type="hidden"
+					name="attachmentList" id="attachmentList" />
+			</div>
+		</div>
+	</form>
+	<div class="box">
+		<label>上传附件：</label>
+		<div>
+			<ul id="uploadedAttachment"></ul>
+		</div>
+		<form id="uploadForm"
+			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
+			method="post" enctype="multipart/form-data">
+			<div class="row">
+				<div>
+					<div class="span3">
+						<input type="file" name="file" />
+					</div>
+				</div>
+				<div class="span1">
+					<input type="submit" value="上传" class="btn btn-info" />
+				</div>
+				<div class="span3">
+					<div id="progress">
+						<div id="bar"></div>
+						<div id="percent">0%</div>
+					</div>
+					<div id="message"></div>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
