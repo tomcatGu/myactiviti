@@ -17,7 +17,6 @@ import javax.persistence.Table;
 import org.crusoe.entity.Organization;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.AttachmentEntity;
 
-
 import com.google.common.collect.Lists;
 
 @Entity
@@ -35,7 +34,8 @@ public class NormativeDocFiling {
 	private String isOpen;
 	private String status;
 	private Date createOn;
-	
+	private String username;
+
 	private List<NormativeDocFilingReply> replies = Lists.newArrayList();
 
 	private List<NormativeDocFilingAttachmentEntity> attachments = Lists
@@ -141,6 +141,7 @@ public class NormativeDocFiling {
 			List<NormativeDocFilingAttachmentEntity> attachments) {
 		this.attachments = attachments;
 	}
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "normativeDocFiling_id", referencedColumnName = "id")
 	public List<NormativeDocFilingReply> getReplies() {
@@ -149,6 +150,14 @@ public class NormativeDocFiling {
 
 	public void setReplies(List<NormativeDocFilingReply> replies) {
 		this.replies = replies;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

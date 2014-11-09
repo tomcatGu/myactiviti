@@ -53,10 +53,9 @@
 					//temp = $('#selectedUser').text();
 					//temp += data + ';';
 					$('#organizationName').text(data.text);
-					$('#organizationid')
-						.val(
-							/*[[${result.organizationId}]]*/''
-							);
+					$('#organizationid').val(
+					/*[[${result.organizationId}]]*/''//set organizationId to hidden field
+					);
 				    }
 
 				});
@@ -137,45 +136,71 @@
 </head>
 <body>
 	<form id="myForm" method="POST">
-		<div>
-			<label>文件名称：<input type="text" name="fileName"
-				th:value="${result.fileName}" /></label>
+		<div class="box">
+			<legend>基本信息</legend>
+			<div>
+				<label>文件名称：<input type="text" name="fileName"
+					th:value="${result.fileName}" /></label>
+			</div>
+			<div>
+				<label>单位名称： <span id="organizationName" class="label"></span>
+					<input type="hidden" id="organizationId" name="organizationId" />
+				</label>
+			</div>
+			<div>
+				<label>发文字号：<input type="text" name="messageNumber"
+					th:value="${result.messageNumber}" /></label>
+			</div>
+			<div>
+				<label>文件性质：<select id="fileProperty" name="fileProperty"><option
+							value="党内规范性文件">党内规范性文件</option></select></label>
+			</div>
+			<div>
+				<label>内容分类：<select id="contentClassification"
+					name="contentClassification"
+					selected="${result.contentClassification}"><option
+							value="党内">党内</option></select></label>
+			</div>
+			<div id="datetimepicker1" class="input-append date">
+				<label>发布时间： <input name="releaseDate" class="datepicker"
+					th:value="${result.releaseDate}"
+					data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+						<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+					</i>
+				</span></label>
+			</div>
+			<div id="datetimepicker2" class="input-append date">
+				<label>实施时间：<input name="implementationDate"
+					th:value="${implementationDate}" class="datepicker"
+					data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+						<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+					</i>
+				</span></label>
+			</div>
+			<div>
+				<label>是否公开：</label> <label class="radio inline"><input
+					name="isOpen" type="radio" value="是" />是</label> <label
+					class="radio inline"><input name="isOpen" type="radio"
+					value="否" />否</label>
+			</div>
+			<div class="box">
+				<legend>附件</legend>
+				<div th:each="attachment:${result.attachments}">
+					<label class="checkbox inline"><a
+						th:href="@{'/runtime/attachment/'+${attachment.taskId}}"><span
+							th:text="${attachment.name}">file.ext</span></a></label>
+				</div>
+			</div>
 		</div>
-		<div>
-			<label>单位名称： <span id="organizationName" class="label"></span>
-				<input type="hidden" id="organizationId" name="organizationId" />
-			</label>
-		</div>
-		<div>
-			<label>发文字号：<input type="text" name="messageNumber"
-				th:value="${result.messageNumber}" /></label>
-		</div>
-		<div>
-			<label>文件性质：<select id="fileProperty" name="fileProperty"><option
-						value="党内规范性文件">党内规范性文件</option></select></label>
-		</div>
-		<div>
-			<label>内容分类：<select id="contentClassification"
-				name="contentClassification" selected="${result.contentClassification}"><option value="党内">党内</option></select></label>
-		</div>
-		<div id="datetimepicker1" class="input-append date">
-			<label>发布时间： <input name="releaseDate" class="datepicker" th:value="${result.releaseDate}"
-				data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-					<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
-			</span></label>
-		</div>
-		<div id="datetimepicker2" class="input-append date">
-			<label>实施时间：<input name="implementationDate" th:value="${implementationDate}"
-				class="datepicker" data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
-				class="add-on"> <i data-time-icon="icon-time"
-					data-date-icon="icon-calendar"> </i>
-			</span></label>
-		</div>
-		<div>
-			<label>是否公开：</label> <label class="radio inline"><input
-				name="isOpen" type="radio" value="是" />是</label> <label
-				class="radio inline"><input name="isOpen" type="radio"
-				value="否" />否</label>
+		<div class="box">
+			<legend>审核意见</legend>
+			<div th:each="aReply:${result.replies}">
+				<blockquote>
+					<p th:text="${aReply.reply}" class="text-left" />
+					<small><span
+						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
+				</blockquote>
+			</div>
 		</div>
 		<div class="control-group">
 			<div class="controls">

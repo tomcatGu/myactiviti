@@ -4,10 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.task.Attachment;
 import org.apache.shiro.SecurityUtils;
 import org.crusoe.entity.Organization;
+import org.crusoe.entity.workflow.governmentInformationDisclosure.AttachmentEntity;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFiling;
+import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingAttachmentEntity;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingReply;
 import org.crusoe.repository.jpa.OrganizationDao;
 import org.crusoe.repository.jpa.workflow.normativeDocFiling.NormativeDocFilingDao;
@@ -22,6 +26,8 @@ public class NormativeDocFilingService {
 	private NormativeDocFilingDao ndfDao;
 	@Autowired
 	private OrganizationDao oDao;
+	@Autowired
+	private TaskService taskService;
 
 	public NormativeDocFiling save(DelegateExecution execution,
 			String fileName, Long organizationId, String messageNumber,
@@ -33,7 +39,7 @@ public class NormativeDocFilingService {
 		ndf.setMessageNumber(messageNumber);
 		ndf.setFileProperty(fileProperty);
 		ndf.setContentClassification(contentClassification);
-
+		ndf.setUsername(SecurityUtils.getSubject().getPrincipal().toString());
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		try {
 			ndf.setReleaseDate(formatter.parse(releaseDate));
@@ -50,6 +56,18 @@ public class NormativeDocFilingService {
 		}
 
 		ndf.setIsOpen(isOpen);
+
+		String[] attachmentIds = attachmentList.split(",");
+		for (String id : attachmentIds) {
+			Attachment attachment = taskService.getAttachment(id);
+			if (attachment != null) {
+				NormativeDocFilingAttachmentEntity ae = new NormativeDocFilingAttachmentEntity();
+				ae.setTaskId(attachment.getId());
+				ae.setName(attachment.getName());
+				ndf.getAttachments().add(ae);
+			}
+
+		}
 
 		ndf.setOrganizationId(organizationId);
 		ndf.setStatus("待审核");
