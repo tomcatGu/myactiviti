@@ -1,12 +1,25 @@
 package org.crusoe.service.workflow.normativeDocFiling;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.task.Attachment;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.shiro.SecurityUtils;
 import org.crusoe.entity.Organization;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.AttachmentEntity;
@@ -76,6 +89,53 @@ public class NormativeDocFilingService {
 		return ndf;
 	}
 
+	public NormativeDocFiling update(DelegateExecution execution,
+			NormativeDocFiling orign, String fileName, Long organizationId,
+			String messageNumber, String fileProperty,
+			String contentClassification, String releaseDate,
+			String implementationDate, String isOpen, String attachmentList) {
+		NormativeDocFiling ndf = orign;
+		ndf.setFileName(fileName);
+		ndf.setMessageNumber(messageNumber);
+		ndf.setFileProperty(fileProperty);
+		ndf.setContentClassification(contentClassification);
+		ndf.setUsername(SecurityUtils.getSubject().getPrincipal().toString());
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		try {
+			ndf.setReleaseDate(formatter.parse(releaseDate));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			ndf.setImplementationDate(formatter.parse(implementationDate));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		ndf.setIsOpen(isOpen);
+
+		String[] attachmentIds = attachmentList.split(",");
+		for (String id : attachmentIds) {
+			Attachment attachment = taskService.getAttachment(id);
+			if (attachment != null) {
+				NormativeDocFilingAttachmentEntity ae = new NormativeDocFilingAttachmentEntity();
+				ae.setTaskId(attachment.getId());
+				ae.setName(attachment.getName());
+				ndf.getAttachments().add(ae);
+			}
+
+		}
+
+		ndf.setOrganizationId(organizationId);
+		ndf.setStatus("待审核");
+		ndfDao.save(ndf);
+
+		return ndf;
+	}
+
 	public NormativeDocFiling saveReply(DelegateExecution execution,
 			NormativeDocFiling ndf, String reply, boolean isPassed) {
 		NormativeDocFilingReply ndfReply = new NormativeDocFilingReply();
@@ -84,12 +144,53 @@ public class NormativeDocFilingService {
 				.toString());
 		ndfReply.setReplyTime(new Date());
 		ndf.getReplies().add(ndfReply);
-		if (isPassed)
+		if (isPassed) {
 			ndf.setStatus("已备案");
-		else
+			PipedOutputStream out = new PipedOutputStream();
+			PipedInputStream in = null;
+			try {
+				in = new PipedInputStream(out);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			HashMap hm = new HashMap();
+			try {
+				replaceDoc(hm, "").write(out);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			taskService.createAttachment("确认函", taskService.createTaskQuery()
+					.executionId(execution.getId()).singleResult().getId(),
+					execution.getProcessInstanceId(), "确认函.doc", "", in);
+		} else
 			ndf.setStatus("待完善");
 		ndfDao.save(ndf);
+		// execution
 		return ndf;
 	}
 
+	private HWPFDocument replaceDoc(Map<String, String> map, String srcPath) {
+
+		// BufferedInputStream bis = new BufferedInputStream(ostream);
+		try {
+			// 读取word模板
+			FileInputStream fis = new FileInputStream(new File(srcPath));
+			HWPFDocument doc = new HWPFDocument(fis);
+			// 读取word文本内容
+			Range bodyRange = doc.getRange();
+			// 替换文本内容
+			for (Map.Entry<String, String> entry : map.entrySet()) {
+				bodyRange.replaceText("${" + entry.getKey() + "}",
+						entry.getValue());
+			}
+
+			return doc;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
 }

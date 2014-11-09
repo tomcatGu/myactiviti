@@ -53,8 +53,8 @@
 					//temp = $('#selectedUser').text();
 					//temp += data + ';';
 					$('#organizationName').text(data.text);
-					$('#organizationid').val(
-					/*[[${result.organizationId}]]*/''//set organizationId to hidden field
+					$('#organizationId').val(
+					/*[[${result.organizationId}]]*/''
 					);
 				    }
 
@@ -153,15 +153,19 @@
 			</div>
 			<div>
 				<label>文件性质：<select id="fileProperty" name="fileProperty"><option
-							value="党内规范性文件">党内规范性文件</option></select></label>
+							value="党内规范性文件" th:selected="${result.fileProperty=='党内规范性文件'}">党内规范性文件</option></select></label>
 			</div>
 			<div>
-				<label>内容分类：<select id="contentClassification"
+				<label>内容分类：<select id="
+							contentClassification"
 					name="contentClassification"
-					selected="${result.contentClassification}"><option
-							value="党内">党内</option></select></label>
+					selected="${result.contentClassification}">
+						<option value="党内"
+							th:selected="${result.contentClassification=='党内'}">党内</option>
+				</select></label>
 			</div>
-			<div id="datetimepicker1" class="input-append date">
+			<div id="
+							datetimepicker1" class="input-append date">
 				<label>发布时间： <input name="releaseDate" class="datepicker"
 					th:value="${result.releaseDate}"
 					data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
@@ -179,8 +183,9 @@
 			</div>
 			<div>
 				<label>是否公开：</label> <label class="radio inline"><input
-					name="isOpen" type="radio" value="是" />是</label> <label
-					class="radio inline"><input name="isOpen" type="radio"
+					name="isOpen" type="radio" value="是"
+					th:checked="${result.isOpen=='是'}"/>是</label> <label class="radio inline"><input
+					name="isOpen" type="radio" th:checked="${result.isOpen=='否'}"
 					value="否" />否</label>
 			</div>
 			<div class="box">
