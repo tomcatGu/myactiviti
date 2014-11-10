@@ -59,12 +59,13 @@ public class AttachmentController {
 		InputStream is = taskService.getAttachmentContent(attachmentId);
 		byte[] bb = IOUtils.toByteArray(is);
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentDispositionFormData("attachment",
-				attachment.getName());
+		headers.setContentDispositionFormData("attachment", new String(
+				attachment.getName().getBytes("UTF-8"), "ISO8859-1"));
 		headers.setContentLength(bb.length);
 
 		headers.setCacheControl("no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
 		headers.setPragma("no-cache");
+		headers.set("Accept-Charset", "utf-8");
 		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 
 		// response.setContentType("application/octet-stream;charset=UTF-8");
@@ -75,8 +76,7 @@ public class AttachmentController {
 	public @ResponseBody
 	Map<String, ? extends Object> deleteAttachment(
 			@PathVariable String attachmentId) {
-		
-		
+
 		taskService.deleteAttachment(attachmentId);
 
 		Map<String, String> msg = new HashMap<String, String>();
@@ -84,7 +84,7 @@ public class AttachmentController {
 		return msg;
 
 	}
-	
+
 	@RequestMapping(value = "uploadAttachment/{taskId}", method = RequestMethod.POST)
 	public @ResponseBody
 	HashMap<String, Object> uploadAttachment(
@@ -98,9 +98,10 @@ public class AttachmentController {
 			BufferedInputStream bis = new BufferedInputStream(fileInputStream);
 			String processInstanceId = taskService.createTaskQuery()
 					.taskId(taskId).singleResult().getProcessInstanceId();
-			Attachment attachment=taskService.createAttachment(FilenameUtils.getExtension(fileName),
-					taskId, processInstanceId, fileName, "description", bis);
-			
+			Attachment attachment = taskService.createAttachment(
+					FilenameUtils.getExtension(fileName), taskId,
+					processInstanceId, fileName, "description", bis);
+
 			rets.put("msg", "OK");
 			rets.put("attachmentId", attachment.getId());
 			rets.put("filename", fileName);

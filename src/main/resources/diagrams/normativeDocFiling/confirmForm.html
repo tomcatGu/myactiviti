@@ -1,0 +1,106 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head thy:merge="/common::headerFragment">
+<title>规范性文件备案登记表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    $(document).ready(function() {
+	$("#submitButton").click(function() {
+	    $("#myForm").ajaxForm({
+		url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+		dataType : "text",
+		success : function(data) {
+		    var ret = JSON.parse(data);
+		    alert(ret.msg);
+		}
+
+	    }).submit();
+
+	});
+	$.ajax({
+	    type : 'GET',
+	    url : /*[[@{'/organization/'}+${result.organizationId}]]*/'',
+	    async : true,
+	    success : function(data) {
+		//temp = $('#selectedUser').text();
+		//temp += data + ';';
+		$('#organizationName').text(data.text);
+
+	    }
+
+	});
+    });
+
+    /*]]>*/
+</script>
+</head>
+<body>
+	<div>
+		<div class="box">
+			<legend>基本信息</legend>
+			<div>
+				<label>文件名称：<span th:text="${result.fileName}" class="label"></span></label>
+			</div>
+			<div>
+				<label>单位名称： <span id="organizationName" class="label"></span>
+				</label>
+			</div>
+			<div>
+				<label>发文字号：<span th:text="${result.messageNumber}"
+					class="label" /></label>
+			</div>
+			<div>
+				<label>文件性质：<span th:text="${result.fileProperty}"
+					class="label"></span></label>
+			</div>
+			<div>
+				<label>内容分类：<span th:text="${result.contentClassification}"
+					class="label"></span></label>
+			</div>
+			<div id="datetimepicker1" class="input-append date">
+				<label>发布时间： <span th:text="${result.releaseDate}"
+					class="label"></span></label>
+			</div>
+			<div id="datetimepicker2" class="input-append date">
+				<label>实施时间：<span th:text="${result.implementationDate}"
+					class="label" />
+				</label>
+			</div>
+			<div>
+				<label>是否公开：</label> <span th:text="${result.isOpen}" class="label"></span>
+			</div>
+		</div>
+		<div class="box" th:if="${not #lists.isEmpty(result.replies)}">
+			<legend>审核意见</legend>
+			<div th:each="aReply:${result.replies}">
+				<blockquote>
+					<p th:text="${aReply.reply}" class="text-left" />
+					<small><span
+						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
+				</blockquote>
+			</div>
+		</div>
+		<div class="box">
+			<legend>附件</legend>
+			<div th:each="attachment:${result.attachments}">
+				<label class="checkbox inline"><a
+					th:href="@{'/runtime/attachment/'+${attachment.taskId}}"><span
+						th:text="${attachment.name}">file.ext</span></a></label>
+			</div>
+		</div>
+		<form id="myForm" method="POST">
+			<div class="box">
+				<div class="control-group">
+					<div class="controls">
+						<input type="button" id="submitButton" value="确认"
+							class="btn btn-primary" /> <input type="hidden"
+							name="attachmentList" id="attachmentList" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

@@ -162,7 +162,7 @@ public class NormativeDocFilingService {
 			}
 
 			in = new ByteArrayInputStream(out.toByteArray());
-			Attachment attachment = taskService.createAttachment("确认函",
+			Attachment attachment = taskService.createAttachment("doc",
 					taskService.createTaskQuery()
 							.executionId(execution.getId()).singleResult()
 							.getId(), execution.getProcessInstanceId(),

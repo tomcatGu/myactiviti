@@ -1,5 +1,6 @@
 package org.crusoe.mvc.ajax.statistical;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,10 +25,12 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.crusoe.dto.governmentInformationDisclosure.GovernmentInformationDisclosureDTO;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInformationDisclosure;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.StatisticalSheet;
 import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.GovernmentInformationDisclosureDao;
@@ -42,6 +45,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.common.collect.Lists;
 
 @Controller
 @RequestMapping(value = "/statistical")
@@ -175,6 +180,68 @@ public class StatisticalController {
 
 		rets.put("err", false);
 		rets.put("statisticalResult", result);
+		return rets;
+	}
+
+	@RequestMapping(value = "analyseByApplicant", method = RequestMethod.GET)
+	public @ResponseBody
+	HashMap<String, Object> analyseByApplicant(
+			@RequestParam("applicantName") final String applicantName,
+			@RequestParam("startTime") final String startTime,
+			@RequestParam("endTime") final String endTime,
+			HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+
+		List<GovernmentInformationDisclosure> gids = gidDao
+				.findAll(new Specification<GovernmentInformationDisclosure>() {
+					// Date startTime;
+					// Date endTime;
+
+					@Override
+					public Predicate toPredicate(
+							Root<GovernmentInformationDisclosure> root,
+							CriteriaQuery<?> query, CriteriaBuilder builder) {
+						// TODO Auto-generated method stub
+						SimpleDateFormat dateformat1 = new SimpleDateFormat(
+								"yyyy-MM-dd HH:mm:ss");
+						Predicate predicate = builder.conjunction();
+						List<Expression<Boolean>> expressions = predicate
+								.getExpressions();
+
+						try {
+							expressions.add(builder.between(
+									root.<Date> get("createTime"),
+									dateformat1.parse(startTime),
+									dateformat1.parse(endTime)));
+							expressions.add(builder.equal(
+									root.<String> get("citizenName"),
+									applicantName));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return predicate;
+					}
+				});
+		List<GovernmentInformationDisclosureDTO> result = Lists.newArrayList();
+
+		for (GovernmentInformationDisclosure gid : gids) {
+			GovernmentInformationDisclosureDTO gidDTO = new GovernmentInformationDisclosureDTO();
+			try {
+				BeanUtils.copyProperties(gidDTO, gid);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			result.add(gidDTO);
+
+		}
+
+		rets.put("err", false);
+		rets.put("records", result);
 		return rets;
 	}
 

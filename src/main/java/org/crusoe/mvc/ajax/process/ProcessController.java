@@ -261,7 +261,7 @@ public class ProcessController extends BaseServiceImpl {
 
 		List<Object> objects = new ArrayList<Object>();
 		List<HistoricProcessInstance> userAllProcessInstances = historyService
-				.createHistoricProcessInstanceQuery().startedBy(username)
+				.createHistoricProcessInstanceQuery().startedBy(username).orderByProcessInstanceEndTime()
 				.listPage(start, size);
 
 		List<HistoricActivityInstance> hainstances = historyService
