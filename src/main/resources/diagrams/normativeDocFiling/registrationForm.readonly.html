@@ -13,8 +13,7 @@
 	    url : /*[[@{'/organization/'}+${organizationId}]]*/'',
 	    async : true,
 	    success : function(data) {
-		//temp = $('#selectedUser').text();
-		//temp += data + ';';
+
 		$('#organizationName').text(data.text);
 
 	    }

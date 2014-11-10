@@ -1,6 +1,7 @@
 package org.crusoe.service.workflow.normativeDocFiling;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -146,24 +147,30 @@ public class NormativeDocFilingService {
 		ndf.getReplies().add(ndfReply);
 		if (isPassed) {
 			ndf.setStatus("已备案");
-			PipedOutputStream out = new PipedOutputStream();
-			PipedInputStream in = null;
-			try {
-				in = new PipedInputStream(out);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ByteArrayInputStream in = null;
+
 			HashMap hm = new HashMap();
+			hm.put("title", "OK");
 			try {
-				replaceDoc(hm, "").write(out);
+				HWPFDocument doc = replaceDoc(hm, "templete/qrh.doc");
+				doc.write(out);
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			taskService.createAttachment("确认函", taskService.createTaskQuery()
-					.executionId(execution.getId()).singleResult().getId(),
-					execution.getProcessInstanceId(), "确认函.doc", "", in);
+
+			in = new ByteArrayInputStream(out.toByteArray());
+			Attachment attachment = taskService.createAttachment("确认函",
+					taskService.createTaskQuery()
+							.executionId(execution.getId()).singleResult()
+							.getId(), execution.getProcessInstanceId(),
+					"确认函.doc", "", in);
+			NormativeDocFilingAttachmentEntity ae = new NormativeDocFilingAttachmentEntity();
+			ae.setTaskId(attachment.getId());
+			ae.setName(attachment.getName());
+			ndf.getAttachments().add(ae);
 		} else
 			ndf.setStatus("待完善");
 		ndfDao.save(ndf);
@@ -173,10 +180,13 @@ public class NormativeDocFilingService {
 
 	private HWPFDocument replaceDoc(Map<String, String> map, String srcPath) {
 
-		// BufferedInputStream bis = new BufferedInputStream(ostream);
+		String classPath = this.getClass().getClassLoader().getResource("")
+				.getPath();
+		String path = classPath.substring(0, classPath.indexOf("WEB-INF"))
+				+ srcPath;
 		try {
 			// 读取word模板
-			FileInputStream fis = new FileInputStream(new File(srcPath));
+			FileInputStream fis = new FileInputStream(new File(path));
 			HWPFDocument doc = new HWPFDocument(fis);
 			// 读取word文本内容
 			Range bodyRange = doc.getRange();
