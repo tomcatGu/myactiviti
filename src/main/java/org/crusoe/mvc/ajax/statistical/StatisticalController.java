@@ -1,10 +1,14 @@
 package org.crusoe.mvc.ajax.statistical;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +29,15 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.task.Attachment;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -45,6 +56,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.Lists;
 
@@ -183,7 +195,7 @@ public class StatisticalController {
 		return rets;
 	}
 
-	@RequestMapping(value = "analyseByApplicant", method = RequestMethod.GET)
+	@RequestMapping(value = "analyseByApplicant", method = RequestMethod.POST)
 	public @ResponseBody
 	HashMap<String, Object> analyseByApplicant(
 			@RequestParam("applicantName") final String applicantName,
@@ -243,6 +255,75 @@ public class StatisticalController {
 		rets.put("err", false);
 		rets.put("records", result);
 		return rets;
+	}
+
+	@RequestMapping(value = "import", method = RequestMethod.POST)
+	public @ResponseBody
+	HashMap<String, Object> importFromExcel(
+			@RequestParam(value = "file", required = false) MultipartFile file) {
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		try {
+			InputStream fileInputStream = file.getInputStream();
+			BufferedInputStream bis = new BufferedInputStream(fileInputStream);
+			HSSFWorkbook hssfWorkbook = new HSSFWorkbook(bis);
+
+			// 循环工作表Sheet
+			for (int numSheet = 0; numSheet < hssfWorkbook.getNumberOfSheets(); numSheet++) {
+
+				HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);
+				if (hssfSheet == null) {
+					continue;
+				}
+				// 循环行Row
+				Iterator<Row> iter = hssfSheet.iterator();
+				while (iter.hasNext()) {
+					HSSFRow hssfRow = (HSSFRow) iter.next();
+					// HSSFRow hssfRow = hssfSheet.getRow(rowNum);
+					if (hssfRow == null) {
+						continue;
+					}
+
+					GovernmentInformationDisclosure gid = new GovernmentInformationDisclosure();
+					// 循环列Cell
+					// 0申请人 1提交部门 2申请事项 3处理结果
+					// for (int cellNum = 0; cellNum <=4; cellNum++) {
+					HSSFCell citizenName = hssfRow.getCell(0);
+					if (citizenName == null) {
+						continue;
+					}
+					gid.setCitizenName(citizenName.getStringCellValue());
+
+					HSSFCell departmentName = hssfRow.getCell(1);
+					if (departmentName == null) {
+						continue;
+					}
+					gid.setSubmitDepartment(departmentName.getStringCellValue());
+
+					HSSFCell applicationName = hssfRow.getCell(2);
+					if (applicationName == null) {
+						continue;
+					}
+					gid.setApplicationName(applicationName.getStringCellValue());
+
+					HSSFCell formOfResponse = hssfRow.getCell(3);
+					if (formOfResponse == null) {
+						continue;
+					}
+					gid.setFormOfResponse(formOfResponse.getStringCellValue());
+					gidDao.save(gid);
+
+				}
+
+			}
+
+			rets.put("msg", "OK");
+
+		} catch (Exception e) {
+			rets.put("msg", "upload failed.");
+		}
+
+		return rets;
+
 	}
 
 	@RequestMapping(value = "index")

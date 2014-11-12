@@ -222,4 +222,68 @@ public class GovernmentInformationDisclosureDTO {
 		this.createUser = createUser;
 	}
 
+	public String getApplicationName() {
+		return applicationName;
+	}
+
+	public void setApplicationName(String applicationName) {
+		this.applicationName = applicationName;
+	}
+
+	public String getCitizenName() {
+		return citizenName;
+	}
+
+	public void setCitizenName(String citizenName) {
+		this.citizenName = citizenName;
+	}
+
+	public String getCitizenCertificate() {
+		return citizenCertificate;
+	}
+
+	public void setCitizenCertificate(String citizenCertificate) {
+		this.citizenCertificate = citizenCertificate;
+	}
+
+	public String getCitizenCertificateID() {
+		return citizenCertificateID;
+	}
+
+	public void setCitizenCertificateID(String citizenCertificateID) {
+		this.citizenCertificateID = citizenCertificateID;
+	}
+
+	public String getCitizenAddress() {
+		return citizenAddress;
+	}
+
+	public void setCitizenAddress(String citizenAddress) {
+		this.citizenAddress = citizenAddress;
+	}
+
+	public String getCitizenFax() {
+		return citizenFax;
+	}
+
+	public void setCitizenFax(String citizenFax) {
+		this.citizenFax = citizenFax;
+	}
+
+	public String getCitizenEmail() {
+		return citizenEmail;
+	}
+
+	public void setCitizenEmail(String citizenEmail) {
+		this.citizenEmail = citizenEmail;
+	}
+
+	public Date getApplicationTime() {
+		return applicationTime;
+	}
+
+	public void setApplicationTime(Date applicationTime) {
+		this.applicationTime = applicationTime;
+	}
+
 }

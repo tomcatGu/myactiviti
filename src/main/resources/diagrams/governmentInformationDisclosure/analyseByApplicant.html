@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <title>统计列表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script src="/bootstrap/js/plugins/jqplot.json2.min.js"
 	type="text/javascript"
 	th:src="@{/bootstrap/js/plugins/jqplot.json2.min.js}"></script>
@@ -27,7 +28,7 @@
 	th:src="@{/bootstrap/js/excanvas.compiled.js}"></script>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-    function render(data) {
+    function rowRender(data) {
 	var newRow = "<tr>";
 
 	newRow += "<td>" + data.submitDepartment + "</td>";
@@ -46,12 +47,13 @@
 
 					    $
 						    .ajax({
-							type : "GET", //提交的类型
+							type : "POST", //提交的类型
 							dataType : "json",
+							contentType : "application/x-www-form-urlencoded; charset=GB2312",
 							data : {
 							    'applicantName' : $(
-								    "applicantName")
-								    .text(),
+								    '#applicantName')
+								    .val(),
 							    'startTime' : new Date(
 								    $(
 									    "#startTimePicker")
@@ -69,13 +71,23 @@
 							},
 							url : /*[[@{'/statistical/analyseByApplicant'}]]*/"", //提交地址
 							success : function(data) {
+
+							    $("#analyseTable")
+								    .find("tr")
+								    .nextAll()
+								    .remove();
 							    for (i = 0; i < data.records.length; i++) {
 								var newRow = rowRender(data.records[i]);
-								$("#analyseTable").find("tr:last").after(newRow);
+								$(
+									"#analyseTable")
+									.find(
+										"tr:last")
+									.after(
+										newRow);
 								// $("#permissionList
 								// tr:last").after(newRow);
 
-							}
+							    }
 							}
 						    });
 					});
@@ -119,7 +131,7 @@
 						<div class="controls">
 							<label class="control-label text-info">申请人：</label>
 							<div class="input-append date">
-								<input name="applicantName" id="applicantName" type="text" />
+								<input name="applicantName" id="applicantName" />
 							</div>
 							<label class="control-label text-info">开始时间：</label>
 							<div id="startTimePicker" class="input-append date">
