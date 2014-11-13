@@ -53,7 +53,7 @@
 						+ "&timestamp="
 						+ new Date().toString(),
 					render, $("#paginatorForTaskList"),
-					null);
+					updateBadge);
 
 		    });
 
@@ -65,9 +65,20 @@
 		.simpleTable(
 			/*[[@{'/runtime/tasks/listCandidateTasks?sort=name&order=desc'}]]*/""
 				+ "&timestamp=" + new Date().toString(),
-			render, $("#paginatorForTaskList"), null);
+			render, $("#paginatorForTaskList"), updateBadge);
 
-    }
+    };
+    function updateBadge(count, start, size) {
+	$("#taskList").trigger("evtCandidateBadge", {
+	    badges : count
+	});
+
+    };
+    
+	//$("#taskList").bind("evtCandidateBadge", function(evt, data) {
+	//    alert(data.badges);
+	//});
+
     function loadView(url) {
 	$("#view")
 		.load(
@@ -86,7 +97,7 @@
 								/*[[@{'/runtime/tasks/listCandidateTasks?sort=name&order=desc'}]]*/"",
 								render,
 								$("#paginatorForTaskList"),
-								null);
+								updateBadge);
 
 					    });
 			    $("#view").show();

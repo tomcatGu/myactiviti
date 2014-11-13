@@ -275,7 +275,6 @@ public class TaskController {
 			taskDTO.setAssignee(accountService.findUserByLoginName(
 					task.getAssignee()).getName());
 			todoList.add(taskDTO);
-
 		}
 		long count = taskService.createTaskQuery()
 				.taskAssignee(user.getLoginName()).count();
@@ -327,8 +326,8 @@ public class TaskController {
 			todoList.add(taskDTO);
 
 		}
-		long count = taskService.createTaskQuery()
-				.taskAssignee(user.getLoginName()).count();
+		long count = taskService.createTaskQuery().taskCandidateGroupIn(groups)
+				.count();
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("count", count);
 		rets.put("start", start);

@@ -23,8 +23,16 @@
 	$("#content").bind("evtWFSuccess", function(evt, data) {
 	    load('所有流程', 'runtime/process/userProcessIndex/admin');
 	});
+	$("#content").bind("evtCandidateBadge", function(evt, data) {
+	    alert(data);
+	    $("#candidateTasks").text(data.badges);
+	    
+	});
 
     };
+    
+
+
     
 	function loadOwner(title){
 	    
@@ -122,7 +130,8 @@
 							<li class="active"><a id="tasks"
 								onclick="load('待办事项','runtime/tasks/index')">待办事项</a></li>
 							<li><a id="candidateTasks"
-								onclick="load('待接收事项','runtime/tasks/candidateTaskIndex')">待接收事项</a></li>
+								onclick="load('待接收事项','runtime/tasks/candidateTaskIndex')">待接收事项<span
+									class="badge badge-warning" id="candidateTasks">4</span></a></li>
 							<li><a href="#"
 								onClick="load('已办事项','runtime/tasks/historicTasks')">已办事项</a></li>
 							<li><a href="#"
