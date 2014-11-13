@@ -3,7 +3,7 @@ package org.crusoe.dto.governmentInformationDisclosure;
 import java.util.Date;
 
 public class GovernmentInformationDisclosureDTO {
-	private String id;
+	private Long id;
 	private String applicationName;
 	private String citizenName;
 	private String citizenWorkunit;
@@ -38,11 +38,11 @@ public class GovernmentInformationDisclosureDTO {
 	private Date createTime;
 	private String createUser;
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

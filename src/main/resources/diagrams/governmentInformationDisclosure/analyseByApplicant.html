@@ -27,94 +27,94 @@
 <script type="text/javascript" src="../excanvas.compiled.js"
 	th:src="@{/bootstrap/js/excanvas.compiled.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    function rowRender(data) {
-	var newRow = "<tr>";
+	/*<![CDATA[*/
+	function rowRender(data) {
+		var newRow = "<tr>";
 
-	newRow += "<td>" + data.submitDepartment + "</td>";
-	newRow += "<td>" + data.applicationName + "</td>";
-	newRow += "<td>" + data.formOfResponse + "</td>";
+		newRow += "<td>" + data.submitDepartment + "</td>";
+		newRow += "<td>" + data.applicationName + "</td>";
+		newRow += "<td>" + data.formOfResponse + "</td>";
 
-	newRow += "</tr>";
-	return newRow;
-    };
-    $(document)
-	    .ready(
-		    function() {
-			$("#submitButton")
-				.click(
+		newRow += "</tr>";
+		return newRow;
+	};
+	$(document)
+			.ready(
 					function() {
+						$("#submitButton")
+								.click(
+										function() {
 
-					    $
-						    .ajax({
-							type : "POST", //提交的类型
-							dataType : "json",
-							contentType : "application/x-www-form-urlencoded; charset=GB2312",
-							data : {
-							    'applicantName' : $(
-								    '#applicantName')
-								    .val(),
-							    'startTime' : new Date(
-								    $(
-									    "#startTimePicker")
-									    .data(
-										    'datetimepicker')
-									    .getLocalDate())
-								    .ToString(),
-							    'endTime' : new Date(
-								    $(
-									    "#endTimePicker")
-									    .data(
-										    'datetimepicker')
-									    .getLocalDate())
-								    .ToString()
-							},
-							url : /*[[@{'/statistical/analyseByApplicant'}]]*/"", //提交地址
-							success : function(data) {
+											$
+													.ajax({
+														type : "POST", //提交的类型
+														dataType : "json",
+														contentType : "application/x-www-form-urlencoded; charset=GB2312",
+														data : {
+															'applicantName' : $(
+																	'#applicantName')
+																	.val(),
+															'startTime' : new Date(
+																	$(
+																			"#startTimePicker")
+																			.data(
+																					'datetimepicker')
+																			.getLocalDate())
+																	.ToString(),
+															'endTime' : new Date(
+																	$(
+																			"#endTimePicker")
+																			.data(
+																					'datetimepicker')
+																			.getLocalDate())
+																	.ToString()
+														},
+														url : /*[[@{'/statistical/analyseByApplicant'}]]*/"", //提交地址
+														success : function(data) {
 
-							    $("#analyseTable")
-								    .find("tr")
-								    .nextAll()
-								    .remove();
-							    for (i = 0; i < data.records.length; i++) {
-								var newRow = rowRender(data.records[i]);
-								$(
-									"#analyseTable")
-									.find(
-										"tr:last")
-									.after(
-										newRow);
-								// $("#permissionList
-								// tr:last").after(newRow);
+															$("#analyseTable")
+																	.find("tr")
+																	.nextAll()
+																	.remove();
+															for (i = 0; i < data.records.length; i++) {
+																var newRow = rowRender(data.records[i]);
+																$(
+																		"#analyseTable")
+																		.find(
+																				"tr:last")
+																		.after(
+																				newRow);
+																// $("#permissionList
+																// tr:last").after(newRow);
 
-							    }
-							}
-						    });
+															}
+														}
+													});
+										});
+
+						$("#startTimePicker").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
+						$("#endTimePicker").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
+
 					});
-
-			$("#startTimePicker").datetimepicker({
-			    language : 'zh-CN',
-			    format : 'yyyy-MM-dd hh:mm:ss',
-			    pickDate : true,
-			    pickTime : true,
-			    hourStep : 1,
-			    minuteStep : 15,
-			    secondStep : 30,
-			    inputMask : true
-			});
-			$("#endTimePicker").datetimepicker({
-			    language : 'zh-CN',
-			    format : 'yyyy-MM-dd hh:mm:ss',
-			    pickDate : true,
-			    pickTime : true,
-			    hourStep : 1,
-			    minuteStep : 15,
-			    secondStep : 30,
-			    inputMask : true
-			});
-
-		    });
-    /*]]>*/
+	/*]]>*/
 </script>
 <style>
 .hover {
@@ -126,13 +126,14 @@
 	<div>
 		<form class="form-inline">
 			<div class="control-group">
-				<div class="row">
-					<div class="span9">
-						<div class="controls">
-							<label class="control-label text-info">申请人：</label>
-							<div class="input-append date">
-								<input name="applicantName" id="applicantName" />
-							</div>
+
+				<div class="span9">
+					<div class="controls">
+						<label class="control-label text-info">申请人：</label>
+						<div class="input-append date">
+							<input name="applicantName" id="applicantName" />
+						</div>
+						<div class="row">
 							<label class="control-label text-info">开始时间：</label>
 							<div id="startTimePicker" class="input-append date">
 								<input name="startTime" class="datepicker"
@@ -154,6 +155,7 @@
 						</div>
 					</div>
 				</div>
+
 			</div>
 		</form>
 		<table id="analyseTable"

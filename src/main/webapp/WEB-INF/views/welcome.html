@@ -161,6 +161,11 @@
 							<li
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
 								href="#"
+								onClick="load('按姓名搜索','workflow/resource/governmentInformationDisclosure/analyseByApplicant')">按姓名搜索<i
+									class="icon-chevron-right"></i></a></li>
+							<li
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
+								href="#"
 								onClick="load('年度数据统计','workflow/resource/governmentInformationDisclosure/annualStatisticalSheet')">年度数据统计<i
 									class="icon-chevron-right"></i></a></li>
 						</ul>
@@ -175,7 +180,7 @@
 					<div class="span9">
 						<div class="row" id="content">
 							<h1>欢迎!</h1>
-							<p>这是一个政府公开信息系统.</p>
+							<p>这是一个政府公开信息共享系统.</p>
 							<p>
 								<a href="#" class="btn btn-primary btn-large">更多 &raquo;</a>
 							</p>
@@ -186,7 +191,7 @@
 			<!--/row-->
 			<hr />
 			<footer>
-				<p>&copy; Company tomcat.gu@gmail.com</p>
+				<p>建议使用IE8及以上版本,chrome,firefox等浏览器。不支持IE6。</p>
 			</footer>
 		</div>
 		<!--/.fluid-container-->

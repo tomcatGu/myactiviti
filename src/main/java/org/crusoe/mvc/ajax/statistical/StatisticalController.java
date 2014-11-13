@@ -31,6 +31,7 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.task.Attachment;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -221,13 +222,17 @@ public class StatisticalController {
 								.getExpressions();
 
 						try {
-							expressions.add(builder.between(
-									root.<Date> get("createTime"),
-									dateformat1.parse(startTime),
-									dateformat1.parse(endTime)));
-							expressions.add(builder.equal(
-									root.<String> get("citizenName"),
-									applicantName));
+							if (!startTime.equals(endTime)) {
+								expressions.add(builder.between(
+										root.<Date> get("createTime"),
+										dateformat1.parse(startTime),
+										dateformat1.parse(endTime)));
+							}
+							if (!applicantName.isEmpty()) {
+								expressions.add(builder.equal(
+										root.<String> get("citizenName"),
+										applicantName));
+							}
 						} catch (ParseException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -240,11 +245,14 @@ public class StatisticalController {
 		for (GovernmentInformationDisclosure gid : gids) {
 			GovernmentInformationDisclosureDTO gidDTO = new GovernmentInformationDisclosureDTO();
 			try {
-				BeanUtils.copyProperties(gidDTO, gid);
+				PropertyUtils.copyProperties(gidDTO, gid);
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
