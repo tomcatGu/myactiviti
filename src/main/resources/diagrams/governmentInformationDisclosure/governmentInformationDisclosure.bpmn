@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="governmentInformationDisclosure" name="政府信息公开new" isExecutable="true">
     <startEvent id="startevent1" name="Start" activiti:initiator="startUserId">
       <documentation>启动流程，显示申请人表单</documentation>
     </startEvent>
     <userTask id="usertask3" name="【审核办结】${applicationName}" activiti:assignee="${startUserId}" activiti:formKey="governmentInformationDisclosure/reviewForm"></userTask>
     <endEvent id="endevent1" name="End"></endEvent>
-    <serviceTask id="servicetask1" name="创建申请单" activiti:expression="${governmentInformationDisclosureService.save(execution,applicationName,citizenName, citizenWorkunit,citizenCertificate, citizenCertificateID,citizenTelphone, citizenZipcode,citizenAddress, citizenFax, citizenEmail,groupName, groupID, groupDelegate,groupDelegateName, groupDelegateTelphone,groupDelegateFax, groupDelegateAddress,groupDelegateEmail, applicationTime,submitDepartment, description, purpose,reply,mode, obtainMode,formOfDisclosure,attachmentList)}" activiti:resultVariableName="result"></serviceTask>
     <serviceTask id="servicetask3" name="保存审核意见" activiti:expression="${governmentInformationDisclosureService.addReplyAsReview(execution,result,reply,formOfResponse)}" activiti:resultVariableName="result"></serviceTask>
     <sequenceFlow id="flow21" sourceRef="servicetask3" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow22" sourceRef="usertask3" targetRef="servicetask3"></sequenceFlow>
-    <sequenceFlow id="flow23" sourceRef="servicetask1" targetRef="exclusivegateway2"></sequenceFlow>
-    <scriptTask id="scripttask1" name="设置选择项默认值" scriptFormat="javascript" activiti:autoStoreVariables="false">
+    <scriptTask id="scripttask1" name="保存申请单" scriptFormat="javascript" activiti:autoStoreVariables="false">
       <script>if(execution.getVariable("mode")==null){
 execution.setVariable("mode", "")
 }
@@ -20,9 +18,21 @@ execution.setVariable("obtainMode", "")
 }
 if(execution.getVariable("formOfDisclosure")==null){
 execution.setVariable("formOfDisclosure", "")
-}</script>
+}
+if(execution.getVariable("formOfResponse")==null){
+var gid=governmentInformationDisclosureService.save(execution,applicationName,citizenName, citizenWorkunit,citizenCertificate, citizenCertificateID,citizenTelphone, citizenZipcode,citizenAddress, citizenFax, citizenEmail,groupName, groupID, groupDelegate,groupDelegateName, groupDelegateTelphone,groupDelegateFax, groupDelegateAddress,groupDelegateEmail, applicationTime,submitDepartment, description, purpose,reply,mode, obtainMode,formOfDisclosure,attachmentList);
+execution.setVariable("result",gid);
+
+}
+else{
+var gid=governmentInformationDisclosureService.save(execution,applicationName,citizenName, citizenWorkunit,citizenCertificate, citizenCertificateID,citizenTelphone, citizenZipcode,citizenAddress, citizenFax, citizenEmail,groupName, groupID, groupDelegate,groupDelegateName, groupDelegateTelphone,groupDelegateFax, groupDelegateAddress,groupDelegateEmail, applicationTime,submitDepartment, description, purpose,reply,mode, obtainMode,formOfDisclosure,formOfResponse,attachmentList);
+execution.setVariable("result",gid);
+
+}
+
+</script>
     </scriptTask>
-    <sequenceFlow id="flow27" sourceRef="scripttask1" targetRef="servicetask1"></sequenceFlow>
+    <sequenceFlow id="flow27" sourceRef="scripttask1" targetRef="exclusivegateway2"></sequenceFlow>
     <subProcess id="subprocess1" name="单位回复意见">
       <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${accountService.resolveUsername(assigneeList,&quot;,&quot;)}" activiti:elementVariable="assignee">
         <completionCondition>${nrOfActiveInstances==0}</completionCondition>
@@ -78,9 +88,6 @@ execution.setVariable("formOfDisclosure", "")
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="997.0" y="233.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
-        <omgdc:Bounds height="55.0" width="105.0" x="285.0" y="116.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask3" id="BPMNShape_servicetask3">
         <omgdc:Bounds height="55.0" width="105.0" x="772.0" y="223.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
@@ -128,14 +135,9 @@ execution.setVariable("formOfDisclosure", "")
         <omgdi:waypoint x="732.0" y="250.0"></omgdi:waypoint>
         <omgdi:waypoint x="772.0" y="250.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow23" id="BPMNEdge_flow23">
-        <omgdi:waypoint x="337.0" y="116.0"></omgdi:waypoint>
-        <omgdi:waypoint x="336.0" y="95.0"></omgdi:waypoint>
-        <omgdi:waypoint x="510.0" y="95.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
         <omgdi:waypoint x="337.0" y="213.0"></omgdi:waypoint>
-        <omgdi:waypoint x="337.0" y="171.0"></omgdi:waypoint>
+        <omgdi:waypoint x="530.0" y="115.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow28" id="BPMNEdge_flow28">
         <omgdi:waypoint x="365.0" y="366.0"></omgdi:waypoint>

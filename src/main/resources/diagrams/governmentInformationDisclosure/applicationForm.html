@@ -10,337 +10,345 @@
 }
 </style>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function deleteAttachment(deleteUrl, attachmentId) {
-		$.ajax({
-			type : "POST",
-			url : deleteUrl + attachmentId,
-			data : {
-				_method : 'DELETE',
-			//items : selctedItems
-			},
-			// contentType : 'application/json',
-			//dataType : 'json',
-			success : function(data) {
-				var orignList = $("#attachmentList").val();
-				$("#attachmentList").val(
-						orginList.replace(attachmentId + ",", ""));
+    /*<![CDATA[*/
+    function deleteAttachment(deleteUrl, attachmentId) {
+	$.ajax({
+	    type : "POST",
+	    url : deleteUrl + attachmentId,
+	    data : {
+		_method : 'DELETE',
+	    //items : selctedItems
+	    },
+	    // contentType : 'application/json',
+	    //dataType : 'json',
+	    success : function(data) {
+		var orignList = $("#attachmentList").val();
+		$("#attachmentList").val(
+			orginList.replace(attachmentId + ",", ""));
 
-				$("#attachment" + attachmentId).remove();
+		$("#attachment" + attachmentId).remove();
 
-			}
-		});
-	};
+	    }
+	});
+    };
 
-	var options = {
-		beforeSend : function() {
-			$("#progress").show();
-			//clear everything
-			$("#bar").width('0%');
-			$("#message").html("");
-			$("#percent").html("0%");
-		},
-		uploadProgress : function(event, position, total, percentComplete) {
-			$("#bar").width(percentComplete + '%');
-			$("#percent").html(percentComplete + '%');
+    var options = {
+	beforeSend : function() {
+	    $("#progress").show();
+	    //clear everything
+	    $("#bar").width('0%');
+	    $("#message").html("");
+	    $("#percent").html("0%");
+	},
+	uploadProgress : function(event, position, total, percentComplete) {
+	    $("#bar").width(percentComplete + '%');
+	    $("#percent").html(percentComplete + '%');
 
-		},
-		success : function() {
-			$("#bar").width('100%');
-			$("#percent").html('100%');
+	},
+	success : function() {
+	    $("#bar").width('100%');
+	    $("#percent").html('100%');
 
-		},
-		complete : function(response) {
-			var ret = JSON.parse(response.responseText);
-			$("#message").html(
-					"<font color='green'>" + response.responseText + "</font>");
-			var li = $("<li></li>");
+	},
+	complete : function(response) {
+	    var ret = JSON.parse(response.responseText);
+	    $("#message").html(
+		    "<font color='green'>" + response.responseText + "</font>");
+	    var li = $("<li></li>");
 
-			var a = $("<a>" + ret.filename + "</a>");
-			var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
-			a.attr("href", "javascript:deleteAttachment(\"" + deleteUrl + "\","
-					+ ret.attachmentId + ");");
-			var i = $("<i class=\"icon-remove\"></i>");
-			i.appendTo(a);
-			a.appendTo(li);
-			li.attr("id", "attachment" + ret.attachmentId);
-			li.appendTo($("#uploadedAttachment"));
-			var orignList = $("#attachmentList").val();
-			$("#attachmentList").val(orignList + "," + ret.attachmentId);
-		},
-		error : function() {
-			$("#message").html("<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
-		}
-	};
-	$("#uploadForm").ajaxForm(options);
+	    var a = $("<a>" + ret.filename + "</a>");
+	    var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+	    a.attr("href", "javascript:deleteAttachment(\"" + deleteUrl + "\","
+		    + ret.attachmentId + ");");
+	    var i = $("<i class=\"icon-remove\"></i>");
+	    i.appendTo(a);
+	    a.appendTo(li);
+	    li.attr("id", "attachment" + ret.attachmentId);
+	    li.appendTo($("#uploadedAttachment"));
+	    var orignList = $("#attachmentList").val();
+	    $("#attachmentList").val(orignList + "," + ret.attachmentId);
+	},
+	error : function() {
+	    $("#message").html("<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+	}
+    };
+    $("#uploadForm").ajaxForm(options);
 
-	function encodeUTF8(str) {
-		var temp = "", rs = "";
-		for (var i = 0, len = str.length; i < len; i++) {
-			temp = str.charCodeAt(i).toString(16);
-			rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
-		}
-		return rs;
-	};
+    function encodeUTF8(str) {
+	var temp = "", rs = "";
+	for ( var i = 0, len = str.length; i < len; i++) {
+	    temp = str.charCodeAt(i).toString(16);
+	    rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
+	}
+	return rs;
+    };
 
-	function clearSelectedUser() {
-		$('#selectedUser').text("");
-		$('#assigneeList').val("");
-	};
+    function clearSelectedUser() {
+	$('#selectedUser').text("");
+	$('#assigneeList').val("");
+    };
 
-	$(document)
-			.ready(
+    $(document)
+	    .ready(
+		    function() {
+			$("#myForm").validate({
+			    ignore : [],
+			    rules : {
+				applicationName : {
+				    required : true,
+				    minlength : 5
+				},
+				applicationTime : {
+				    required : true,
+				    date : true
+				},
+				assigneeList : {
+				    required : true
+				}
+
+			    },
+			    messages : {
+				applicationName : {
+				    required : "请输入标题",
+				    minlength : "标题不能小于5个字符"
+				},
+				applicationTime : {
+				    required : "请选择申请时间",
+				    date : "请输入正确的时间"
+				},
+				assigneeList : {
+				    required : "必须选择处理单位人员"
+				}
+
+			    }
+			});
+			$("#clearButton").click(function() {
+			    $('#selectedUser').text("");
+			    $('#assigneeList').text("");
+
+			});
+
+			$('#myTab a:first').tab('show');
+
+			$("#datetimepicker1").datetimepicker({
+			    language : 'zh-CN',
+			    format : 'yyyy-MM-dd hh:mm:ss',
+			    pickDate : true,
+			    pickTime : true,
+			    hourStep : 1,
+			    minuteStep : 15,
+			    secondStep : 30,
+			    inputMask : true
+			});
+			$("#submitButton")
+				.click(
 					function() {
-						$("#myForm").validate({
-							ignore : [],
-							rules : {
-								applicationName : {
-									required : true,
-									minlength : 5
+					    $("#businessKey")
+						    .val(
+							    $(
+								    "#applicationName")
+								    .val());
+					    $("#isComplete").val("false");
+					    $("#myForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+								dataType : "text",
+								success : function(
+									data) {
+								    var ret = JSON
+									    .parse(data);
+								    alert(ret.msg);
+								    $("#myForm")
+									    .trigger(
+										    "evtWFSuccess",
+										    {
+											msg : "OK"
+										    });
+								    $(
+									    "#submitButton")
+									    .attr(
+										    "disabled",
+										    true)
+									    .attr(
+										    "value",
+										    "成功提交");
+
 								},
-								applicationTime : {
-									required : true,
-									date : true
-								},
-								assigneeList : {
-									required : true
+								beforeSubmit : function() {
+								    if ($(
+									    "#myForm")
+									    .valid()) {
+									$(
+										"#submitButton")
+										.attr(
+											"disabled",
+											true)
+										.attr(
+											"value",
+											"正在提交...");
+								    }
+								    return $(
+									    "#myForm")
+									    .valid();
 								}
 
-							},
-							messages : {
-								applicationName : {
-									required : "请输入标题",
-									minlength : "标题不能小于5个字符"
-								},
-								applicationTime : {
-									required : "请选择申请时间",
-									date : "请输入正确的时间"
-								},
-								assigneeList : {
-									required : "必须选择处理单位人员"
-								}
+							    }).submit();
+					    return false;
 
-							}
-						});
-						$("#clearButton").click(function() {
-							$('#selectedUser').text("");
-							$('#assigneeList').text("");
-
-						});
-
-						$('#myTab a:first').tab('show');
-
-						$("#datetimepicker1").datetimepicker({
-							language : 'zh-CN',
-							format : 'yyyy-MM-dd hh:mm:ss',
-							pickDate : true,
-							pickTime : true,
-							hourStep : 1,
-							minuteStep : 15,
-							secondStep : 30,
-							inputMask : true
-						});
-						$("#submitButton")
-								.click(
-										function() {
-											$("#businessKey")
-													.val(
-															$(
-																	"#applicationName")
-																	.val());
-											$("#isComplete").val("false");
-											$("#myForm")
-													.ajaxForm(
-															{
-																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-																dataType : "text",
-																success : function(
-																		data) {
-																	var ret = JSON
-																			.parse(data);
-																	alert(ret.msg);
-																	$("#myForm")
-																			.trigger(
-																					"evtWFSuccess",
-																					{
-																						msg : "OK"
-																					});
-																	$(
-																			"#submitButton")
-																			.attr(
-																					"disabled",
-																					true)
-																			.attr(
-																					"value",
-																					"成功提交");
-
-																},
-																beforeSubmit : function() {
-																	if ($(
-																			"#myForm")
-																			.valid()) {
-																		$(
-																				"#submitButton")
-																				.attr(
-																						"disabled",
-																						true)
-																				.attr(
-																						"value",
-																						"正在提交...");
-																	}
-																	return $(
-																			"#myForm")
-																			.valid();
-																}
-
-															}).submit();
-											return false;
-
-										});
-						$("#finishButton")
-								.click(
-										function() {
-											$("#businessKey")
-													.val(
-															$(
-																	"#applicationName")
-																	.val());
-											$("#isComplete").val("true");
-											$('#assigneeList')
-													.val(
-															"cheat value to disable validation");
-											$("#myForm")
-													.ajaxForm(
-															{
-																url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
-																dataType : "text",
-																success : function(
-																		data) {
-																	var ret = JSON
-																			.parse(data);
-																	alert(ret.msg);
-																	$("#myForm")
-																			.trigger(
-																					"evtWFSuccess",
-																					{
-																						msg : "OK"
-																					});
-																	$(
-																			"#finishButton")
-																			.attr(
-																					"disabled",
-																					true)
-																			.attr(
-																					"value",
-																					"成功提交");
-
-																},
-																beforeSubmit : function() {
-																	if ($(
-																			"#myForm")
-																			.valid()) {
-																		$(
-																				"#finishButton")
-																				.attr(
-																						"disabled",
-																						true)
-																				.attr(
-																						"value",
-																						"正在提交...");
-																	}
-																	return $(
-																			"#myForm")
-																			.valid();
-																}
-
-															}).submit();
-											return false;
-
-										});
-						$('#selectBtn')
-								.bind(
-										'click',
-										function() {
-											$("#selectUsers")
-													.load(
-															/*[[@{'/user/select'}]]*/'../../user/select',
-															function(data) {
-																$(
-																		"#selectUsers")
-																		.bind(
-																				"evtSelectUser",
-																				function(
-																						evt,
-																						data) {
-
-																					str = $(
-																							'#assigneeList')
-																							.val();
-																					for (var i = 0; i < data.users.length; i++) {
-																						str += data.users[i]
-																								+ ",";
-																					}
-																					$(
-																							'#assigneeList')
-																							.val(
-																									str);
-																					var userids = str
-																							.split(',');
-
-																					for (i = 0; i < userids.length; i++) {
-																						var id = userids[i];
-																						if (id == "")
-																							continue;
-																						$
-																								.ajax({
-																									type : 'GET',
-																									url : /*[[@{'/user/name/'}]]*/""
-																											+ id,
-																									async : true,
-																									success : function(
-																											data) {
-																										temp = $(
-																												'#selectedUser')
-																												.text();
-																										temp += data
-																												+ ';';
-																										$(
-																												'#selectedUser')
-																												.text(
-																														temp);
-
-																									}
-
-																								});
-																					}
-
-																					$(
-																							'#selectUsers')
-																							.modal(
-																									"hide");
-																				});
-																$(
-																		"#selectUsers")
-																		.bind(
-																				"evtCancled",
-																				function(
-																						evt,
-																						data) {
-																					console
-																							.log(data);
-																					$(
-																							'#selectUsers')
-																							.modal(
-																									"hide");
-																				});
-																$(
-																		'#selectUsers')
-																		.modal();
-
-															});
-										});
 					});
-	/*]]>*/
+			$("#finishButton")
+				.click(
+					function() {
+					    var formOfResponse = $(
+						    "input[name='formOfResponse']:checked")
+						    .val();
+					    if (formOfResponse == undefined) {
+						alert("请选择答复情况。");
+						return;
+					    }
+
+					    $("#businessKey")
+						    .val(
+							    $(
+								    "#applicationName")
+								    .val());
+					    $("#isComplete").val("true");
+					    $('#assigneeList')
+						    .val(
+							    "cheat value to disable validation");
+					    $("#myForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+								dataType : "text",
+								success : function(
+									data) {
+								    var ret = JSON
+									    .parse(data);
+								    alert(ret.msg);
+								    $("#myForm")
+									    .trigger(
+										    "evtWFSuccess",
+										    {
+											msg : "OK"
+										    });
+								    $(
+									    "#finishButton")
+									    .attr(
+										    "disabled",
+										    true)
+									    .attr(
+										    "value",
+										    "成功提交");
+
+								},
+								beforeSubmit : function() {
+								    if ($(
+									    "#myForm")
+									    .valid()) {
+									$(
+										"#finishButton")
+										.attr(
+											"disabled",
+											true)
+										.attr(
+											"value",
+											"正在提交...");
+								    }
+								    return $(
+									    "#myForm")
+									    .valid();
+								}
+
+							    }).submit();
+					    return false;
+
+					});
+			$('#selectBtn')
+				.bind(
+					'click',
+					function() {
+					    $("#selectUsers")
+						    .load(
+							    /*[[@{'/user/select'}]]*/'../../user/select',
+							    function(data) {
+								$(
+									"#selectUsers")
+									.bind(
+										"evtSelectUser",
+										function(
+											evt,
+											data) {
+
+										    str = $(
+											    '#assigneeList')
+											    .val();
+										    for ( var i = 0; i < data.users.length; i++) {
+											str += data.users[i]
+												+ ",";
+										    }
+										    $(
+											    '#assigneeList')
+											    .val(
+												    str);
+										    var userids = str
+											    .split(',');
+
+										    for (i = 0; i < userids.length; i++) {
+											var id = userids[i];
+											if (id == "")
+											    continue;
+											$
+												.ajax({
+												    type : 'GET',
+												    url : /*[[@{'/user/name/'}]]*/""
+													    + id,
+												    async : true,
+												    success : function(
+													    data) {
+													temp = $(
+														'#selectedUser')
+														.text();
+													temp += data
+														+ ';';
+													$(
+														'#selectedUser')
+														.text(
+															temp);
+
+												    }
+
+												});
+										    }
+
+										    $(
+											    '#selectUsers')
+											    .modal(
+												    "hide");
+										});
+								$(
+									"#selectUsers")
+									.bind(
+										"evtCancled",
+										function(
+											evt,
+											data) {
+										    console
+											    .log(data);
+										    $(
+											    '#selectUsers')
+											    .modal(
+												    "hide");
+										});
+								$(
+									'#selectUsers')
+									.modal();
+
+							    });
+					});
+		    });
+    /*]]>*/
 </script>
 </head>
 <body>
@@ -554,16 +562,16 @@
 									value="1" name="obtainMode" />传真</label><label class="checkbox inline"><input
 									type="checkbox" value="2" name="obtainMode" />自行领取</label>
 							</div>
-
 							<label class="control-label text-info">申请信息公开形式：</label>
 							<div class="controls">
 								<label class="radio inline"> <input type="radio"
 									value="当面申请" name="formOfDisclosure" />当面申请
 								</label><label class="radio inline"><input type="radio"
 									value="网上及电子邮件申请" name="formOfDisclosure" />网上及电子邮件申请</label><label
-									class="radio inline"><input type="radio" value="信函及传真申请"
-									name="formOfDisclosure" />信函及传真申请</label> <label class="radio inline"><input
-									type="radio" value="其它形式申请" name="formOfDisclosure" />其它形式申请</label>
+									class="radio inline"><input type="radio"
+									value="信函及传真申请" name="formOfDisclosure" />信函及传真申请</label> <label
+									class="radio inline"><input type="radio" value="其它形式申请"
+									name="formOfDisclosure" />其它形式申请</label>
 							</div>
 						</div>
 					</div>
@@ -591,6 +599,31 @@
 							</div>
 						</div>
 					</div>
+					<div class="box">
+						<legend>答复情况(如果直接办结，请选择答复类型)：</legend>
+						<div class="controls">
+							<label class="radio inline"> <input type="radio"
+								value="属于已主动公开范围，告知其获取途径" name="formOfResponse" />属于已主动公开范围，告知其获取途径
+							</label><label class="radio inline"><input type="radio"
+								value="同意公开" name="formOfResponse" />同意公开</label> <label
+								class="radio inline"><input type="radio" value="同意部分公开"
+								name="formOfResponse" />同意部分公开</label> <label class="radio inline"><input
+								type="radio" value="涉及国家秘密、商业秘密、个人隐私而不同意公开"
+								name="formOfResponse" />涉及国家秘密、商业秘密、个人隐私而不同意公开</label> <label
+								class="radio inline"><input type="radio"
+								value="危及国家安全、公共安全、经济安全和社会稳定而不同意公开" name="formOfResponse" />危及国家安全、公共安全、经济安全和社会稳定而不同意公开</label>
+							<label class="radio inline"><input type="radio"
+								value="不是《条例》所指政府信息" name="formOfResponse" />不是《条例》所指政府信息</label> <label
+								class="radio inline"><input type="radio"
+								value="不属于本机关公开范围" name="formOfResponse" />不属于本机关公开范围</label> <label
+								class="radio inline"><input type="radio"
+								value="信息不存在或本机关不掌握" name="formOfResponse" />信息不存在或本机关不掌握</label> <label
+								class="radio inline"><input type="radio"
+								value="法律法规规定的其他情形而不同意公开" name="formOfResponse" />法律法规规定的其他情形而不同意公开</label>
+							<label class="radio inline"><input type="radio"
+								value="重复申请" name="formOfResponse" />重复申请</label>
+						</div>
+					</div>
 				</div>
 			</fieldset>
 			<div class="control-group">
@@ -605,10 +638,8 @@
 		<div tabindex="-1" class="modal hide fade" id="selectUsers"
 			data-keyboard="false" data-backdrop="static"></div>
 	</div>
-
 	<div class="box">
 		<label>上传附件：</label>
-
 		<form id="uploadForm"
 			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
 			method="post" enctype="multipart/form-data">

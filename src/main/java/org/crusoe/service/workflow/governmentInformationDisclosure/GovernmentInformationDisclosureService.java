@@ -270,6 +270,121 @@ public class GovernmentInformationDisclosureService {
 
 	}
 
+	public GovernmentInformationDisclosure save(DelegateExecution execution,
+			String applicationName, String citizenName, String citizenWorkunit,
+			String citizenCertificate, String citizenCertificateID,
+			String citizenTelphone, String citizenZipcode,
+			String citizenAddress, String citizenFax, String citizenEmail,
+			String groupName, String groupID, String groupDelegate,
+			String groupDelegateName, String groupDelegateTelphone,
+			String groupDelegateFax, String groupDelegateAddress,
+			String groupDelegateEmail, String applicationTime,
+			String submitDepartment, String description, String purpose,
+			String reply, String mode, String obtainMode,
+			String formOfDisclosure, String formOfResponse,
+			String attachmentList) {
+
+		GovernmentInformationDisclosure gid = new GovernmentInformationDisclosure();
+
+		gid.setApplicationName(applicationName);
+		gid.setCitizenName(citizenName);
+		gid.setCitizenWorkunit(citizenWorkunit);
+		gid.setCitizenCertificate(citizenCertificate);
+		gid.setCitizenCertificateID(citizenCertificateID);
+		gid.setCitizenTelphone(citizenTelphone);
+		gid.setCitizenZipcode(citizenZipcode);
+		gid.setCitizenAddress(citizenAddress);
+		gid.setCitizenFax(citizenFax);
+		gid.setCitizenEmail(citizenEmail);
+
+		gid.setGroupName(groupName);
+		gid.setGroupID(groupID);
+		gid.setGroupDelegate(groupDelegate);
+		gid.setGroupDelegateName(groupDelegateName);
+		gid.setGroupDelegateTelphone(groupDelegateTelphone);
+		gid.setGroupDelegateFax(groupDelegateFax);
+		gid.setGroupDelegateAddress(groupDelegateAddress);
+		gid.setGroupDelegateEmail(groupDelegateEmail);
+		gid.setFormOfDisclosure(formOfDisclosure);
+		gid.setCreateTime(new Date());
+		gid.setCreateUser(SecurityUtils.getSubject().getPrincipal().toString());
+		gid.setFormOfResponse(formOfResponse);
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		try {
+			gid.setApplicationTime(formatter.parse(applicationTime));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		gid.setSubmitDepartment(submitDepartment);
+		gid.setDescription(description);
+		gid.setPurpose(purpose);
+
+		Reply replyEntity = new Reply();
+		replyEntity.setReply(reply);
+
+		replyEntity.setReplyTime(new Date());
+
+		replyEntity.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
+				.toString());
+		replyEntity
+				.setUsername(accountService.findUserByLoginName(
+						SecurityUtils.getSubject().getPrincipal().toString())
+						.getName());
+
+		String[] attachmentIds = attachmentList.split(",");
+		for (String id : attachmentIds) {
+			Attachment attachment = taskService.getAttachment(id);
+			if (attachment != null) {
+				AttachmentEntity ae = new AttachmentEntity();
+				ae.setId(attachment.getId());
+				ae.setName(attachment.getName());
+				replyEntity.getAttachments().add(ae);
+			}
+
+		}
+
+		gid.getReplies().add(replyEntity);
+
+		gid.setMode(mode);
+		gid.setObtainMode(obtainMode);
+		gidDao.save(gid);
+		// LuceneIKUtil ik = new LuceneIKUtil("/IK");
+		// execution.
+		List<FieldDTO> fields = Lists.newArrayList();
+		FieldDTO field = new FieldDTO("id", gid.getId().toString(),
+				Field.Store.YES, true);
+		fields.add(field);
+		field = new FieldDTO("processInstanceId",
+				execution.getProcessInstanceId(), Field.Store.YES, true);
+		fields.add(field);
+		field = new FieldDTO("applicationName", gid.getApplicationName(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("description", gid.getDescription(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("citizenName", gid.getCitizenName(),
+				Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("groupName", gid.getGroupName(), Field.Store.YES,
+				false);
+		fields.add(field);
+		field = new FieldDTO("review", "", Field.Store.YES, false);
+		fields.add(field);
+		field = new FieldDTO("reply", reply, Field.Store.YES, false);
+		fields.add(field);
+
+		ikUtil.addIndex(fields);
+
+		// ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
+		// gid.getApplicationName(), gid.getDescription());
+
+		return gid;
+
+	}
+
 	public GovernmentInformationDisclosure addReplyAsReview(
 			DelegateExecution execution, GovernmentInformationDisclosure gid,
 			String reply, String formOfResponse) {
