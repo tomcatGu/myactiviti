@@ -10,272 +10,272 @@
 }
 </style>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    function encodeUTF8(str) {
-	var temp = "", rs = "";
-	for ( var i = 0, len = str.length; i < len; i++) {
-	    temp = str.charCodeAt(i).toString(16);
-	    rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
-	}
-	return rs;
-    };
+	/*<![CDATA[*/
+	function encodeUTF8(str) {
+		var temp = "", rs = "";
+		for (var i = 0, len = str.length; i < len; i++) {
+			temp = str.charCodeAt(i).toString(16);
+			rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
+		}
+		return rs;
+	};
 
-    function clearSelectedUser() {
-	$('#selectedUser').text("");
-	$('#assigneeList').val("");
-    };
+	function clearSelectedUser() {
+		$('#selectedUser').text("");
+		$('#assigneeList').val("");
+	};
 
-    $(document)
-	    .ready(
-		    function() {
-			$("#myForm").validate({
-			    ignore : [],
-			    rules : {
-				applicationName : {
-				    required : true,
-				    minlength : 5
-				},
-				applicationTime : {
-				    required : true,
-				    date : true
-				},
-				assigneeList : {
-				    required : true
-				}
-
-			    },
-			    messages : {
-				applicationName : {
-				    required : "请输入标题",
-				    minlength : "标题不能小于5个字符"
-				},
-				applicationTime : {
-				    required : "请选择申请时间",
-				    date : "请输入正确的时间"
-				},
-				assigneeList : {
-				    required : "必须选择处理单位人员"
-				}
-
-			    }
-			});
-			$("#clearButton").click(function() {
-			    $('#selectedUser').text("");
-			});
-
-			$('#myTab a:first').tab('show');
-
-			$("#datetimepicker1").datetimepicker({
-			    language : 'zh-CN',
-			    format : 'yyyy-MM-dd hh:mm:ss',
-			    pickDate : true,
-			    pickTime : true,
-			    hourStep : 1,
-			    minuteStep : 15,
-			    secondStep : 30,
-			    inputMask : true
-			});
-			$("#submitButton")
-				.click(
+	$(document)
+			.ready(
 					function() {
-					    $("#businessKey")
-						    .val(
-							    $(
-								    "#applicationName")
-								    .val());
-					    $("#isComplete").val("false");
-					    $("#myForm")
-						    .ajaxForm(
-							    {
-								url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
-								dataType : "text",
-								success : function(
-									data) {
-								    var ret = JSON
-									    .parse(data);
-								    alert(ret.msg);
-								    $("#myForm")
-									    .trigger(
-										    "evtWFSuccess",
-										    {
-											msg : "OK"
-										    });
-								    $(
-									    "#submitButton")
-									    .attr(
-										    "disabled",
-										    true)
-									    .attr(
-										    "value",
-										    "成功提交");
-
+						$("#myForm").validate({
+							ignore : [],
+							rules : {
+								applicationName : {
+									required : true,
+									minlength : 5
 								},
-								beforeSubmit : function() {
-								    if ($(
-									    "#myForm")
-									    .valid()) {
-									$(
-										"#submitButton")
-										.attr(
-											"disabled",
-											true)
-										.attr(
-											"value",
-											"正在提交...");
-								    }
-								    return $(
-									    "#myForm")
-									    .valid();
+								applicationTime : {
+									required : true,
+									date : true
+								},
+								assigneeList : {
+									required : true
 								}
 
-							    }).submit();
-					    return false;
-
-					});
-			$("#finishButton")
-				.click(
-					function() {
-					    $("#businessKey")
-						    .val(
-							    $(
-								    "#applicationName")
-								    .val());
-					    $("#isComplete").val("true");
-					    $('#assigneeList')
-						    .val(
-							    "cheat value to disable validation");
-					    $("#myForm")
-						    .ajaxForm(
-							    {
-								url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
-								dataType : "text",
-								success : function(
-									data) {
-								    var ret = JSON
-									    .parse(data);
-								    alert(ret.msg);
-								    $("#myForm")
-									    .trigger(
-										    "evtWFSuccess",
-										    {
-											msg : "OK"
-										    });
-								    $(
-									    "#finishButton")
-									    .attr(
-										    "disabled",
-										    true)
-									    .attr(
-										    "value",
-										    "成功提交");
-
+							},
+							messages : {
+								applicationName : {
+									required : "请输入标题",
+									minlength : "标题不能小于5个字符"
 								},
-								beforeSubmit : function() {
-								    if ($(
-									    "#myForm")
-									    .valid()) {
-									$(
-										"#finishButton")
-										.attr(
-											"disabled",
-											true)
-										.attr(
-											"value",
-											"正在提交...");
-								    }
-								    return $(
-									    "#myForm")
-									    .valid();
+								applicationTime : {
+									required : "请选择申请时间",
+									date : "请输入正确的时间"
+								},
+								assigneeList : {
+									required : "必须选择处理单位人员"
 								}
 
-							    }).submit();
-					    return false;
+							}
+						});
+						$("#clearButton").click(function() {
+							$('#selectedUser').text("");
+						});
 
-					});
-			$('#selectBtn')
-				.bind(
-					'click',
-					function() {
-					    $("#selectUsers")
-						    .load(
-							    /*[[@{'/user/select'}]]*/'../../user/select',
-							    function(data) {
-								$(
-									"#selectUsers")
-									.bind(
-										"evtSelectUser",
-										function(
-											evt,
-											data) {
+						$('#myTab a:first').tab('show');
 
-										    str = $(
-											    '#assigneeList')
-											    .val();
-										    for ( var i = 0; i < data.users.length; i++) {
-											str += data.users[i]
-												+ ",";
-										    }
-										    $(
-											    '#assigneeList')
-											    .val(
-												    str);
-										    var userids = str
-											    .split(',');
+						$("#datetimepicker1").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
+						$("#submitButton")
+								.click(
+										function() {
+											$("#businessKey")
+													.val(
+															$(
+																	"#applicationName")
+																	.val());
+											$("#isComplete").val("false");
+											$("#myForm")
+													.ajaxForm(
+															{
+																url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
+																dataType : "text",
+																success : function(
+																		data) {
+																	var ret = JSON
+																			.parse(data);
+																	alert(ret.msg);
+																	$("#myForm")
+																			.trigger(
+																					"evtWFSuccess",
+																					{
+																						msg : "OK"
+																					});
+																	$(
+																			"#submitButton")
+																			.attr(
+																					"disabled",
+																					true)
+																			.attr(
+																					"value",
+																					"成功提交");
 
-										    for (i = 0; i < userids.length; i++) {
-											var id = userids[i];
-											if (id == "")
-											    continue;
-											$
-												.ajax({
-												    type : 'GET',
-												    url : /*[[@{'/user/name/'}]]*/""
-													    + id,
-												    async : true,
-												    success : function(
-													    data) {
-													temp = $(
-														'#selectedUser')
-														.text();
-													temp += data
-														+ ';';
-													$(
-														'#selectedUser')
-														.text(
-															temp);
+																},
+																beforeSubmit : function() {
+																	if ($(
+																			"#myForm")
+																			.valid()) {
+																		$(
+																				"#submitButton")
+																				.attr(
+																						"disabled",
+																						true)
+																				.attr(
+																						"value",
+																						"正在提交...");
+																	}
+																	return $(
+																			"#myForm")
+																			.valid();
+																}
 
-												    }
+															}).submit();
+											return false;
 
-												});
-										    }
-
-										    $(
-											    '#selectUsers')
-											    .modal(
-												    "hide");
 										});
-								$(
-									"#selectUsers")
-									.bind(
-										"evtCancled",
-										function(
-											evt,
-											data) {
-										    console
-											    .log(data);
-										    $(
-											    '#selectUsers')
-											    .modal(
-												    "hide");
-										});
-								$(
-									'#selectUsers')
-									.modal();
+						$("#finishButton")
+								.click(
+										function() {
+											$("#businessKey")
+													.val(
+															$(
+																	"#applicationName")
+																	.val());
+											$("#isComplete").val("true");
+											$('#assigneeList')
+													.val(
+															"cheat value to disable validation");
+											$("#myForm")
+													.ajaxForm(
+															{
+																url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
+																dataType : "text",
+																success : function(
+																		data) {
+																	var ret = JSON
+																			.parse(data);
+																	alert(ret.msg);
+																	$("#myForm")
+																			.trigger(
+																					"evtWFSuccess",
+																					{
+																						msg : "OK"
+																					});
+																	$(
+																			"#finishButton")
+																			.attr(
+																					"disabled",
+																					true)
+																			.attr(
+																					"value",
+																					"成功提交");
 
-							    });
+																},
+																beforeSubmit : function() {
+																	if ($(
+																			"#myForm")
+																			.valid()) {
+																		$(
+																				"#finishButton")
+																				.attr(
+																						"disabled",
+																						true)
+																				.attr(
+																						"value",
+																						"正在提交...");
+																	}
+																	return $(
+																			"#myForm")
+																			.valid();
+																}
+
+															}).submit();
+											return false;
+
+										});
+						$('#selectBtn')
+								.bind(
+										'click',
+										function() {
+											$("#selectUsers")
+													.load(
+															/*[[@{'/user/select'}]]*/'../../user/select',
+															function(data) {
+																$(
+																		"#selectUsers")
+																		.bind(
+																				"evtSelectUser",
+																				function(
+																						evt,
+																						data) {
+
+																					str = $(
+																							'#assigneeList')
+																							.val();
+																					for (var i = 0; i < data.users.length; i++) {
+																						str += data.users[i]
+																								+ ",";
+																					}
+																					$(
+																							'#assigneeList')
+																							.val(
+																									str);
+																					var userids = str
+																							.split(',');
+
+																					for (i = 0; i < userids.length; i++) {
+																						var id = userids[i];
+																						if (id == "")
+																							continue;
+																						$
+																								.ajax({
+																									type : 'GET',
+																									url : /*[[@{'/user/name/'}]]*/""
+																											+ id,
+																									async : true,
+																									success : function(
+																											data) {
+																										temp = $(
+																												'#selectedUser')
+																												.text();
+																										temp += data
+																												+ ';';
+																										$(
+																												'#selectedUser')
+																												.text(
+																														temp);
+
+																									}
+
+																								});
+																					}
+
+																					$(
+																							'#selectUsers')
+																							.modal(
+																									"hide");
+																				});
+																$(
+																		"#selectUsers")
+																		.bind(
+																				"evtCancled",
+																				function(
+																						evt,
+																						data) {
+																					console
+																							.log(data);
+																					$(
+																							'#selectUsers')
+																							.modal(
+																									"hide");
+																				});
+																$(
+																		'#selectUsers')
+																		.modal();
+
+															});
+										});
 					});
-		    });
-    /*]]>*/
+	/*]]>*/
 </script>
 </head>
 <body>
@@ -485,6 +485,41 @@
 						class="radio inline"><input type="radio" value="3"
 						name="formOfDisclosure"
 						th:checked="${result.formOfDisclosure=='其它形式申请'}" />其它形式申请</label>
+				</div>
+				<div>
+					<label class="control-label text-info">答复情况：</label>
+					<div class="controls">
+						<label class="radio inline"> <input type="radio" value="0"
+							name="formOfResponse"
+							th:checked="${result.formOfResponse=='属于已主动公开范围，告知其获取途径'}" />属于已主动公开范围，告知其获取途径
+						</label><label class="radio inline"><input type="radio" value="1"
+							name="formOfResponse"
+							th:checked="${result.formOfResponse=='同意公开'}" />同意公开</label> <label
+							class="radio inline"><input type="radio" value="2"
+							name="formOfResponse"
+							th:checked="${result.formOfResponse=='同意部分公开'}" />同意部分公开</label> <label
+							class="radio inline"><input type="radio" value="3"
+							name="formOfResponse"
+							th:checked="${result.formOfResponse=='涉及国家秘密、商业秘密、个人隐私而不同意公开'}" />涉及国家秘密、商业秘密、个人隐私而不同意公开</label>
+						<label class="radio inline"><input type="radio" value="4"
+							name="formOfResponse"
+							th:checked="${result.formOfResponse=='危及国家安全、公共安全、经济安全和社会稳定而不同意公开'}" />危及国家安全、公共安全、经济安全和社会稳定而不同意公开</label>
+						<label class="radio inline"><input type="radio" value="5"
+							name="formOfResponse"
+							th:checked="${result.formOfResponse=='不是《条例》所指政府信息'}" />不是《条例》所指政府信息</label>
+						<label class="radio inline"><input type="radio" value="6"
+							name="formOfResponse"
+							th:checked="${result.formOfResponse=='不属于本机关公开范围'}" />不属于本机关公开范围</label>
+						<label class="radio inline"><input type="radio" value="7"
+							name="formOfResponse"
+							th:checked="${result.formOfResponse=='信息不存在或本机关不掌握'}" />信息不存在或本机关不掌握</label>
+						<label class="radio inline"><input type="radio" value="8"
+							name="formOfResponse"
+							th:checked="${result.formOfResponse=='法律法规规定的其他情形而不同意公开'}" />法律法规规定的其他情形而不同意公开</label>
+						<label class="radio inline"><input type="radio" value="9"
+							name="formOfResponse"
+							th:checked="${result.formOfResponse=='重复申请'}" />重复申请</label>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -10,181 +10,181 @@
 }
 </style>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    $(document)
-	    .ready(
-		    function() {
-			$("#myForm").validate({
-			    ignore : [],
-			    rules : {
-				assigneeList : {
-				    required : true
-				}
-
-			    },
-			    messages : {
-
-				assigneeList : {
-				    required : "重新办理必须选择办理人员"
-				}
-
-			    }
-
-			});
-
-			$("#submitButton")
-				.click(
+	/*<![CDATA[*/
+	$(document)
+			.ready(
 					function() {
-					    $("#backFlag").val("false");
-					    $('#assigneeList')
-						    .val(
-							    "cheat the form validator!hahahaaaa");
-					    $("#myForm")
-						    .ajaxForm(
-							    {
-								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
-								dataType : "text",
-								success : function(
-									data) {
-
-								    $("#myForm")
-									    .trigger(
-										    "evtWFSuccess",
-										    {
-											msg : 'OK'
-										    });
-								    var ret = JSON
-									    .parse(data);
-								    alert(ret.msg);
-								},
-
-							    }).submit();
-
-					});
-
-			$("#backButton")
-				.click(
-					function() {
-					    $("#backFlag").val("true");
-
-					    $("#myForm")
-						    .ajaxForm(
-							    {
-								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
-								dataType : "text",
-								success : function(
-									data) {
-
-								    $("#myForm")
-									    .trigger(
-										    "evtWFSuccess",
-										    {
-											msg : 'OK'
-										    });
-								    var ret = JSON
-									    .parse(data);
-								    alert(ret.msg);
-								},
-								beforeSubmit : function() {
-								    return $(
-									    "#myForm")
-									    .valid();
+						$("#myForm").validate({
+							ignore : [],
+							rules : {
+								assigneeList : {
+									required : true
 								}
 
-							    }
+							},
+							messages : {
 
-						    ).submit();
+								assigneeList : {
+									required : "重新办理必须选择办理人员"
+								}
 
-					});
-			$("#clearButton").click(function() {
-			    $('#selectedUser').text("");
-			});
-			$('#selectBtn')
-				.bind(
-					'click',
-					function() {
-					    $("#selectUsers")
-						    .load(
-							    /*[[@{'/user/select'}]]*/'../../user/select'
-								    + "?timestamp="
-								    + (new Date())
-									    .valueOf(),
-							    function(data) {
+							}
 
-								$(
-									"#selectUsers")
-									.bind(
-										"evtSelectUser",
-										function(
-											evt,
-											data) {
+						});
 
-										    str = "";
-										    for ( var i = 0; i < data.users.length; i++) {
-											str += data.users[i]
-												+ ",";
-										    }
-										    $(
-											    '#assigneeList')
-											    .val(
-												    str);
-										    var userids = str
-											    .split(',');
+						$("#submitButton")
+								.click(
+										function() {
+											$("#backFlag").val("false");
+											$('#assigneeList')
+													.val(
+															"cheat the form validator!hahahaaaa");
+											$("#myForm")
+													.ajaxForm(
+															{
+																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
+																dataType : "text",
+																success : function(
+																		data) {
 
-										    for (i = 0; i < userids.length; i++) {
-											var id = userids[i];
-											if (id == "")
-											    continue;
-											$
-												.ajax({
-												    type : 'GET',
-												    url : /*[[@{'/user/name/'}]]*/"" //获取用户名称
-													    + id,
-												    async : true,
-												    success : function(
-													    data) {
-													temp = $(
-														'#selectedUser')
-														.text();
-													temp += data
-														+ ';';
-													$(
-														'#selectedUser')
-														.text(
-															temp);
+																	$("#myForm")
+																			.trigger(
+																					"evtWFSuccess",
+																					{
+																						msg : 'OK'
+																					});
+																	var ret = JSON
+																			.parse(data);
+																	alert(ret.msg);
+																},
 
-												    }
+															}).submit();
 
-												});
-										    }
-
-										    $(
-											    '#selectUsers')
-											    .modal(
-												    "hide");
 										});
-								$(
-									"#selectUsers")
-									.bind(
-										"evtCancled",
-										function(
-											evt,
-											data) {
-										    console
-											    .log(data);
-										    $(
-											    '#selectUsers')
-											    .modal(
-												    "hide");
-										});
-								$(
-									'#selectUsers')
-									.modal();
 
-							    });
+						$("#backButton")
+								.click(
+										function() {
+											$("#backFlag").val("true");
+
+											$("#myForm")
+													.ajaxForm(
+															{
+																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/'',
+																dataType : "text",
+																success : function(
+																		data) {
+
+																	$("#myForm")
+																			.trigger(
+																					"evtWFSuccess",
+																					{
+																						msg : 'OK'
+																					});
+																	var ret = JSON
+																			.parse(data);
+																	alert(ret.msg);
+																},
+																beforeSubmit : function() {
+																	return $(
+																			"#myForm")
+																			.valid();
+																}
+
+															}
+
+													).submit();
+
+										});
+						$("#clearButton").click(function() {
+							$('#selectedUser').text("");
+						});
+						$('#selectBtn')
+								.bind(
+										'click',
+										function() {
+											$("#selectUsers")
+													.load(
+															/*[[@{'/user/select'}]]*/'../../user/select'
+																	+ "?timestamp="
+																	+ (new Date())
+																			.valueOf(),
+															function(data) {
+
+																$(
+																		"#selectUsers")
+																		.bind(
+																				"evtSelectUser",
+																				function(
+																						evt,
+																						data) {
+
+																					str = "";
+																					for (var i = 0; i < data.users.length; i++) {
+																						str += data.users[i]
+																								+ ",";
+																					}
+																					$(
+																							'#assigneeList')
+																							.val(
+																									str);
+																					var userids = str
+																							.split(',');
+
+																					for (i = 0; i < userids.length; i++) {
+																						var id = userids[i];
+																						if (id == "")
+																							continue;
+																						$
+																								.ajax({
+																									type : 'GET',
+																									url : /*[[@{'/user/name/'}]]*/"" //获取用户名称
+																											+ id,
+																									async : true,
+																									success : function(
+																											data) {
+																										temp = $(
+																												'#selectedUser')
+																												.text();
+																										temp += data
+																												+ ';';
+																										$(
+																												'#selectedUser')
+																												.text(
+																														temp);
+
+																									}
+
+																								});
+																					}
+
+																					$(
+																							'#selectUsers')
+																							.modal(
+																									"hide");
+																				});
+																$(
+																		"#selectUsers")
+																		.bind(
+																				"evtCancled",
+																				function(
+																						evt,
+																						data) {
+																					console
+																							.log(data);
+																					$(
+																							'#selectUsers')
+																							.modal(
+																									"hide");
+																				});
+																$(
+																		'#selectUsers')
+																		.modal();
+
+															});
+										});
 					});
-		    });
-    /*]]>*/
+	/*]]>*/
 </script>
 </head>
 <body>
@@ -422,20 +422,25 @@
 				</div>
 				<label class="control-label text-info">答复情况：</label>
 				<div class="controls">
-					<label class="radio inline"> <input type="radio" value="同意公开"
-						name="formOfResponse" />同意公开
-					</label><label class="radio inline"><input type="radio" value="延期答复"
-						name="formOfResponse" />延期答复</label> <label class="radio inline"><input
-						type="radio" value="同意部分公开答复" name="formOfResponse" />同意部分公开答复</label> <label
-						class="radio inline"><input type="radio" value="已公开并告知检索途径"
-						name="formOfResponse" />已公开并告知检索途径</label> <label class="radio inline"><input
-						type="radio" value="不同意公开答复" name="formOfResponse" />不同意公开答复</label> <label
-						class="radio inline"><input type="radio" value="不属于本机关公开范围"
-						name="formOfResponse" />不属于本机关公开范围</label> <label class="radio inline"><input
-						type="radio" value="信息不存在" name="formOfResponse" />信息不存在</label> <label
-						class="radio inline"><input type="radio" value="申请内容不明确"
-						name="formOfResponse" />申请内容不明确</label> <label class="radio inline"><input
-						type="radio" value="其他答复情况" name="formOfResponse" />其他答复情况</label>
+					<label class="radio inline"> <input type="radio"
+						value="属于已主动公开范围，告知其获取途径" name="formOfResponse" />属于已主动公开范围，告知其获取途径
+					</label><label class="radio inline"><input type="radio"
+						value="同意公开" name="formOfResponse" />同意公开</label> <label
+						class="radio inline"><input type="radio" value="同意部分公开"
+						name="formOfResponse" />同意部分公开</label> <label class="radio inline"><input
+						type="radio" value="涉及国家秘密、商业秘密、个人隐私而不同意公开" name="formOfResponse" />涉及国家秘密、商业秘密、个人隐私而不同意公开</label>
+					<label class="radio inline"><input type="radio"
+						value="危及国家安全、公共安全、经济安全和社会稳定而不同意公开" name="formOfResponse" />危及国家安全、公共安全、经济安全和社会稳定而不同意公开</label>
+					<label class="radio inline"><input type="radio"
+						value="不是《条例》所指政府信息" name="formOfResponse" />不是《条例》所指政府信息</label> <label
+						class="radio inline"><input type="radio"
+						value="不属于本机关公开范围" name="formOfResponse" />不属于本机关公开范围</label> <label
+						class="radio inline"><input type="radio"
+						value="信息不存在或本机关不掌握" name="formOfResponse" />信息不存在或本机关不掌握</label> <label
+						class="radio inline"><input type="radio"
+						value="法律法规规定的其他情形而不同意公开" name="formOfResponse" />法律法规规定的其他情形而不同意公开</label>
+					<label class="radio inline"><input type="radio"
+						value="重复申请" name="formOfResponse" />重复申请</label>
 				</div>
 				<div class="box">
 					<legend>处理人员</legend>
