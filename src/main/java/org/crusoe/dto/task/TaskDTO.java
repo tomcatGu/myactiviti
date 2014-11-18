@@ -10,6 +10,7 @@ public class TaskDTO {
 	private Date startTime;
 	private String taskDefinitionKey;
 	private String processDefinitionId;
+	private String initiatorUserId;
 
 	public String getId() {
 		return id;
@@ -80,5 +81,13 @@ public class TaskDTO {
 		} else
 			return false;
 
+	}
+
+	public String getInitiatorUserId() {
+		return initiatorUserId;
+	}
+
+	public void setInitiatorUserId(String initiatorUserId) {
+		this.initiatorUserId = initiatorUserId;
 	}
 }

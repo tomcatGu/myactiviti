@@ -274,6 +274,10 @@ public class TaskController {
 			// taskDTO.setAssignee(task.getAssignee());
 			taskDTO.setAssignee(accountService.findUserByLoginName(
 					task.getAssignee()).getName());
+			taskDTO.setInitiatorUserId(historyService
+					.createHistoricProcessInstanceQuery()
+					.processInstanceId(task.getProcessInstanceId())
+					.singleResult().getStartUserId());
 			todoList.add(taskDTO);
 		}
 		long count = taskService.createTaskQuery()
