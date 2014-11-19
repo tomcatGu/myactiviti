@@ -2,6 +2,8 @@ package org.crusoe.dto.task;
 
 import java.util.Date;
 
+import org.crusoe.dto.UserDTO;
+
 public class TaskDTO {
 	private String id;
 	private String name;
@@ -11,6 +13,7 @@ public class TaskDTO {
 	private String taskDefinitionKey;
 	private String processDefinitionId;
 	private String initiatorUserId;
+	private UserDTO initiatorUser;
 
 	public String getId() {
 		return id;
@@ -89,5 +92,13 @@ public class TaskDTO {
 
 	public void setInitiatorUserId(String initiatorUserId) {
 		this.initiatorUserId = initiatorUserId;
+	}
+
+	public UserDTO getInitiatorUser() {
+		return initiatorUser;
+	}
+
+	public void setInitiatorUser(UserDTO initiatorUser) {
+		this.initiatorUser = initiatorUser;
 	}
 }

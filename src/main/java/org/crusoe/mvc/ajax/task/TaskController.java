@@ -30,6 +30,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.crusoe.dto.AttachmentDTO;
 import org.crusoe.dto.ResourceDTO;
+import org.crusoe.dto.UserDTO;
 import org.crusoe.dto.task.TaskDTO;
 import org.crusoe.entity.Role;
 import org.crusoe.entity.User;
@@ -274,10 +275,19 @@ public class TaskController {
 			// taskDTO.setAssignee(task.getAssignee());
 			taskDTO.setAssignee(accountService.findUserByLoginName(
 					task.getAssignee()).getName());
-			taskDTO.setInitiatorUserId(historyService
+			String initiatorUserId = historyService
 					.createHistoricProcessInstanceQuery()
 					.processInstanceId(task.getProcessInstanceId())
-					.singleResult().getStartUserId());
+					.singleResult().getStartUserId();
+			User u = accountService.findUserByLoginName(initiatorUserId);
+			UserDTO uDTO = new UserDTO();
+			uDTO.setId(u.getId());
+			uDTO.setLoginName(u.getLoginName());
+			uDTO.setName(u.getName());
+			uDTO.setOrganizationId(u.getOrganization().getId());
+			uDTO.setMobile(u.getMobile());
+			taskDTO.setInitiatorUser(uDTO);
+
 			todoList.add(taskDTO);
 		}
 		long count = taskService.createTaskQuery()
@@ -327,6 +337,18 @@ public class TaskController {
 			// taskDTO.setAssignee(task.getAssignee());
 			taskDTO.setAssignee(accountService.findUserByLoginName(
 					task.getAssignee()).getName());
+			String initiatorUserId = historyService
+					.createHistoricProcessInstanceQuery()
+					.processInstanceId(task.getProcessInstanceId())
+					.singleResult().getStartUserId();
+			User u = accountService.findUserByLoginName(initiatorUserId);
+			UserDTO uDTO = new UserDTO();
+			uDTO.setId(u.getId());
+			uDTO.setLoginName(u.getLoginName());
+			uDTO.setName(u.getName());
+			uDTO.setOrganizationId(u.getOrganization().getId());
+			uDTO.setMobile(u.getMobile());
+			taskDTO.setInitiatorUser(uDTO);
 			todoList.add(taskDTO);
 
 		}

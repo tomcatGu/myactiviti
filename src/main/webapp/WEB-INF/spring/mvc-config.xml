@@ -142,5 +142,5 @@
 		<property name="supportedMediaTypes" value="application/json" />
 	</bean>
 	<lang:defaults refresh-check-delay="5" />
-	<!-- <groovy:scan source-pattern="groovy/*.groovy" /> -->
+	<groovy:scan source-pattern="groovy/*.groovy" />
 </beans>
