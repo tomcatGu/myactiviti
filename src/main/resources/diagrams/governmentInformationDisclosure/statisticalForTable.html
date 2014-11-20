@@ -26,135 +26,130 @@
 <script type="text/javascript" src="../excanvas.compiled.js"
 	th:src="@{/bootstrap/js/excanvas.compiled.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function render(data) {
-		var newRow = "<tr>";
-		for (i = 0; i < 14; i++) {
-			newRow += "<td>" + data[i] + "</td>";
-		}
-		newRow += "</tr>";
-		return newRow;
-	};
-	$(document)
-			.ready(
+    /*<![CDATA[*/
+    function render(data) {
+	var newRow = "<tr>";
+	for (i = 0; i < 11; i++) {
+	    newRow += "<td>" + data[i] + "</td>";
+	}
+	newRow += "</tr>";
+	return newRow;
+    };
+    $(document)
+	    .ready(
+		    function() {
+			$("#submitButton")
+				.click(
 					function() {
-						$("#submitButton")
-								.click(
-										function() {
 
-											$
-													.ajax({
-														type : "GET", //提交的类型
-														dataType : "json",
-														data : {
-															'startTime' : new Date(
-																	$(
-																			"#startTimePicker")
-																			.data(
-																					'datetimepicker')
-																			.getLocalDate())
-																	.ToString(),
-															'endTime' : new Date(
-																	$(
-																			"#endTimePicker")
-																			.data(
-																					'datetimepicker')
-																			.getLocalDate())
-																	.ToString()
-														},
-														url : /*[[@{'/statistical/countergid'}]]*/"", //提交地址
-														success : function(data) {
-															var dataValue = new Array(); //数据
-															var ticks = new Array(); //横坐标值
-															var total = [
-																	"total", 0,
-																	0, 0, 0, 0,
-																	0, 0, 0, 0,
-																	0, 0, 0, 0 ];
-															if (ticks.length == 0) {
-																ticks = [
-																		"当面申请",
-																		"网上及电子邮件申请",
-																		"信函及传真申请",
-																		"其它形式申请",
-																		"同意公开",
-																		"延期答复",
-																		"同意部分公开答复",
-																		"已公开并告知检索途径",
-																		"不同意公开答复",
-																		"不属于本机关公开范围",
-																		"信息不存在",
-																		"申请内容不明确",
-																		"其他答复情况" ];
-																dataValue = [
-																		"admin",
-																		0, 0,
-																		0, 0,
-																		0, 0,
-																		0, 0,
-																		0, 0,
-																		0, 0, 0 ];
+					    $
+						    .ajax({
+							type : "GET", //提交的类型
+							dataType : "json",
+							data : {
+							    'startTime' : new Date(
+								    $(
+									    "#startTimePicker")
+									    .data(
+										    'datetimepicker')
+									    .getLocalDate())
+								    .ToString(),
+							    'endTime' : new Date(
+								    $(
+									    "#endTimePicker")
+									    .data(
+										    'datetimepicker')
+									    .getLocalDate())
+								    .ToString()
+							},
+							url : /*[[@{'/statistical/countergid'}]]*/"", //提交地址
+							success : function(data) {
+							    var dataValue = new Array(); //数据
+							    var ticks = new Array(); //横坐标值
+							    var total = [ "总计",
+								    0, 0, 0, 0,
+								    0, 0, 0, 0,
+								    0, 0 ];
+							    if (ticks.length == 0) {
+								ticks = [
+									"属于已主动公开范围，告知其获取途径",
+									"同意公开",
+									"同意部分公开",
+									"涉及国家秘密、商业秘密、个人隐私而不同意公开",
+									"危及国家安全、公共安全、经济安全和社会稳定而不同意公开",
+									"不是《条例》所指政府信息",
+									"不属于本机关公开范围",
+									"信息不存在或本机关不掌握",
+									"法律法规规定的其他情形而不同意公开",
+									"重复申请" ];
+								dataValue = [
+									"admin",
+									0, 0,
+									0, 0,
+									0, 0,
+									0, 0,
+									0, 0 ];
 
-															}
-															for (someUser in data.statisticalResult) {
-																dataValue[0] = someUser;
-																total[0] = "总计";
-																for (aData in data.statisticalResult[someUser]) {
+							    }
+							    for (someUser in data.statisticalResult) {
+								dataValue[0] = someUser;
+								total[0] = "总计";
+								for (aData in data.statisticalResult[someUser]) {
 
-																	var i = 0;
-																	for (i = 0; i < ticks.length; i++) {
-																		if (ticks[i] == aData)
-																			break;
+								    var i = 0;
+								    for (i = 0; i < ticks.length; i++) {
+									if (ticks[i] == aData)
+									    break;
 
-																	}
-																	dataValue[i + 1] = data.statisticalResult[someUser][aData];
-																	total[i + 1] += dataValue[i + 1];
+								    }
+								    dataValue[i + 1] = data.statisticalResult[someUser][aData];
+								    total[i + 1] += dataValue[i + 1];
 
-																}
-																var newRow = render(dataValue);
-																$(
-																		"#statisticalTable")
-																		.find(
-																				"tr:last")
-																		.after(
-																				newRow);
+								}
+								var newRow = render(dataValue);
+								$(
+									"#statisticalTable")
+									.find(
+										"tr:last")
+									.after(
+										newRow);
 
-															}
-															var newRow = render(total);
-															$(
-																	"#statisticalTable")
-																	.find(
-																			"tr:last")
-																	.after(
-																			newRow);
+							    }
+							    var newRow = render(total);
+							    $(
+								    "#statisticalTable")
+								    .find(
+									    "tr:last")
+								    .after(
+									    newRow);
 
-														}
-													});
-										});
-
-						$("#startTimePicker").datetimepicker({
-							language : 'zh-CN',
-							format : 'yyyy-MM-dd hh:mm:ss',
-							pickDate : true,
-							pickTime : true,
-							hourStep : 1,
-							minuteStep : 15,
-							secondStep : 30,
-							inputMask : true
-						});
-						$("#endTimePicker").datetimepicker({
-							language : 'zh-CN',
-							format : 'yyyy-MM-dd hh:mm:ss',
-							pickDate : true,
-							pickTime : true,
-							hourStep : 1,
-							minuteStep : 15,
-							secondStep : 30,
-							inputMask : true
-						});
-
+							}
+						    });
 					});
-	/*]]>*/
+
+			$("#startTimePicker").datetimepicker({
+			    language : 'zh-CN',
+			    format : 'yyyy-MM-dd hh:mm:ss',
+			    pickDate : true,
+			    pickTime : true,
+			    hourStep : 1,
+			    minuteStep : 15,
+			    secondStep : 30,
+			    inputMask : true
+			});
+			$("#endTimePicker").datetimepicker({
+			    language : 'zh-CN',
+			    format : 'yyyy-MM-dd hh:mm:ss',
+			    pickDate : true,
+			    pickTime : true,
+			    hourStep : 1,
+			    minuteStep : 15,
+			    secondStep : 30,
+			    inputMask : true
+			});
+
+		    });
+    /*]]>*/
 </script>
 <style>
 .hover {
@@ -163,13 +158,11 @@
 </style>
 </head>
 <body>
-
 	<div>
 		<form class="form-inline">
 			<div class="control-group">
 				<div class="row">
 					<div class="span9">
-
 						<div class="controls">
 							<label class="control-label text-info">开始时间：</label>
 							<div id="startTimePicker" class="input-append date">
@@ -191,34 +184,25 @@
 								class="btn btn-primary" />
 						</div>
 					</div>
-
 				</div>
-
 			</div>
-
 		</form>
-
 		<table id="statisticalTable"
 			class="table table-bordered table-striped table-condensed">
 			<tr>
 				<th>名称</th>
-				<th>当面申请</th>
-				<th>网上及电子邮件申请</th>
-				<th>信函及传真申请</th>
-				<th>其它形式申请</th>
+				<th>属于已主动公开范围，告知其获取途径</th>
 				<th>同意公开</th>
-				<th>延期答复</th>
-				<th>同意部分公开答复</th>
-				<th>已公开并告知检索途径</th>
-				<th>不同意公开答复</th>
+				<th>同意部分公开</th>
+				<th>涉及国家秘密、商业秘密、个人隐私而不同意公开</th>
+				<th>危及国家安全、公共安全、经济安全和社会稳定而不同意公开</th>
+				<th>不是《条例》所指政府信息</th>
 				<th>不属于本机关公开范围</th>
-				<th>信息不存在</th>
-				<th>申请内容不明确</th>
-				<th>其他答复情况</th>
+				<th>信息不存在或本机关不掌握</th>
+				<th>法律法规规定的其他情形而不同意公开</th>
+				<th>重复申请</th>
 			</tr>
-
 		</table>
-
 	</div>
 </body>
 </html>

@@ -32,6 +32,7 @@ import org.apache.shiro.authz.annotation.RequiresUser;
 //import org.codehaus.jackson.map.ObjectMapper;
 //import org.codehaus.jackson.node.ObjectNode;
 import org.crusoe.dto.repository.ModelDTO;
+import org.crusoe.dynamic.DynamicDeployBeans2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,8 +61,11 @@ public class ActivitiWorkflowController {
 	@Autowired
 	private FormService formService;
 
+
+
 	@RequestMapping(value = "index", method = RequestMethod.GET)
 	public String getIndexForm(Model model) {
+
 
 		return "/workflow/index";
 	}
@@ -173,7 +177,7 @@ public class ActivitiWorkflowController {
 			JsonNode modelNode = (JsonNode) new ObjectMapper()
 					.readTree(repositoryService.getModelEditorSource(modelData
 							.getId()));
-			
+
 			byte[] bpmnBytes = null;
 
 			BpmnModel model = new BpmnJsonConverter()

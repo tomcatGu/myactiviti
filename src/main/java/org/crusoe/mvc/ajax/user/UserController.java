@@ -20,6 +20,7 @@ import org.crusoe.dto.OrganizationDTO;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.RoleDTO;
 import org.crusoe.dto.UserDTO;
+import org.crusoe.dynamic.DynamicDeployBeans2;
 import org.crusoe.entity.Organization;
 import org.crusoe.entity.Resource;
 import org.crusoe.entity.Role;
@@ -75,6 +76,8 @@ public class UserController {
 	protected RoleService roleService;
 	@Autowired
 	protected OrganizationService organizationService;
+	@Autowired
+	private DynamicDeployBeans2 dynamicDeployBeans2;
 
 	@RequestMapping(value = "index")
 	public String list(
@@ -89,6 +92,8 @@ public class UserController {
 		// "DESC".equals(sortDirection.toUpperCase()) ? Sort.Direction.DESC
 		// : Sort.Direction.ASC, sortBy);
 		// accountService.searchUser(filtes,pageRequest);
+		//dynamicDeployBeans2
+		//		.registerGroovyController("classpath:org/crusoe/groovy/BlogController.groovy");
 		return "user/index";
 	}
 
