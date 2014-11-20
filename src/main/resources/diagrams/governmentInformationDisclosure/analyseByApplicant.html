@@ -31,6 +31,7 @@
 	function rowRender(data) {
 		var newRow = "<tr>";
 
+		newRow += "<td>" + data.citizenName + "</td>";
 		newRow += "<td>" + data.submitDepartment + "</td>";
 		newRow += "<td>" + data.applicationName + "</td>";
 		newRow += "<td>" + data.formOfResponse + "</td>";
@@ -161,6 +162,7 @@
 		<table id="analyseTable"
 			class="table table-bordered table-striped table-condensed">
 			<tr>
+				<th>提交人</th>
 				<th>提交部门</th>
 				<th>申请事项</th>
 				<th>结果</th>

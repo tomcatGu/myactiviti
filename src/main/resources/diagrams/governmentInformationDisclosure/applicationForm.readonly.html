@@ -469,7 +469,10 @@
 						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'1'):false}" />传真</label><label
 						class="checkbox inline"><input type="checkbox" value="2"
 						name="obtainMode"
-						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label><label
+						class="checkbox inline"><input type="checkbox" value="2"
+						name="obtainMode"
+						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'3'):false}" />邮寄</label>
 				</div>
 				<label class="control-label text-info">申请信息公开形式：</label>
 				<div class="controls">

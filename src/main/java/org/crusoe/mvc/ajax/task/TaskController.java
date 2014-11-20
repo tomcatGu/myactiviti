@@ -446,10 +446,19 @@ public class TaskController {
 			throws Exception {
 
 		for (int i = 0; i < items.length; i++) {
-			String processInstanceId = taskService.createTaskQuery()
-					.taskId(items[i]).singleResult().getProcessInstanceId();
-			runtimeService.deleteProcessInstance(processInstanceId, "");
-			taskService.deleteTask(items[i]);
+			Task task = taskService.createTaskQuery().taskId(items[i])
+					.singleResult();
+			if (task != null) {
+				String processInstanceId = task.getProcessInstanceId();
+
+				if (processInstanceId != null) {
+					runtimeService.deleteProcessInstance(processInstanceId, "");
+					taskService.deleteTask(items[i]);
+					historyService
+							.deleteHistoricProcessInstance(processInstanceId);
+				}
+			}
+			historyService.deleteHistoricTaskInstance(items[i]);
 
 		}
 		Map<String, String> msgs = new HashMap<String, String>();

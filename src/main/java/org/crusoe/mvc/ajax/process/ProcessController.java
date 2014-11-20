@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
@@ -158,7 +159,6 @@ public class ProcessController extends BaseServiceImpl {
 			identityService.setAuthenticatedUserId(currentUser.getPrincipal()
 					.toString());
 
-
 		ProcessInstance processInstance = runtimeService
 				.startProcessInstanceById(id);
 		runtimeService.updateBusinessKey(processInstance.getId(), "草稿");
@@ -167,8 +167,8 @@ public class ProcessController extends BaseServiceImpl {
 				.taskAssignee(currentUser.getPrincipal().toString())
 				.singleResult();
 		if (task != null) {
-			String formKey = formService.getTaskFormData(
-					task.getId()).getFormKey();
+			String formKey = formService.getTaskFormData(task.getId())
+					.getFormKey();
 			model.addAttribute("taskId", task.getId());
 			return formKey;
 
@@ -200,6 +200,7 @@ public class ProcessController extends BaseServiceImpl {
 	@RequestMapping(value = "listAllProcessInstances", method = RequestMethod.GET)
 	public @ResponseBody
 	HashMap<String, Object> listAllProcessInstances(
+			@RequestParam("processInstanceName") String processInstanceName,
 			@RequestParam("sort") String sort,
 			@RequestParam("order") String order,
 			@RequestParam(value = "start", defaultValue = "0") int start,
@@ -209,7 +210,9 @@ public class ProcessController extends BaseServiceImpl {
 
 		List<Object> objects = new ArrayList<Object>();
 		List<HistoricProcessInstance> userAllProcessInstances = historyService
-				.createHistoricProcessInstanceQuery().listPage(start, size);
+				.createHistoricProcessInstanceQuery()
+				.processDefinitionKey(processInstanceName)
+				.listPage(start, size);
 
 		List<HistoricActivityInstance> hainstances = historyService
 				.createHistoricActivityInstanceQuery()
@@ -240,7 +243,7 @@ public class ProcessController extends BaseServiceImpl {
 
 		}
 		long count = historyService.createHistoricProcessInstanceQuery()
-				.count();
+				.processInstanceName(processInstanceName).count();
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("count", count);
 		rets.put("start", start);
@@ -261,8 +264,8 @@ public class ProcessController extends BaseServiceImpl {
 
 		List<Object> objects = new ArrayList<Object>();
 		List<HistoricProcessInstance> userAllProcessInstances = historyService
-				.createHistoricProcessInstanceQuery().startedBy(username).orderByProcessInstanceEndTime()
-				.listPage(start, size);
+				.createHistoricProcessInstanceQuery().startedBy(username)
+				.orderByProcessInstanceStartTime().desc().listPage(start, size);
 
 		List<HistoricActivityInstance> hainstances = historyService
 				.createHistoricActivityInstanceQuery()
@@ -494,6 +497,28 @@ public class ProcessController extends BaseServiceImpl {
 		}
 		rets.put("coordinates", coordinates);
 		return rets;
+	}
+
+	@RequestMapping(value = "allProcesses", method = RequestMethod.DELETE)
+	public @ResponseBody
+	Map<String, ? extends Object> batchDelete(
+			@RequestParam(value = "items[]", required = false) String[] items)
+			throws Exception {
+
+		for (int i = 0; i < items.length; i++) {
+			if (runtimeService.createProcessInstanceQuery()
+					.processInstanceId(items[i]).singleResult() != null) {
+
+				runtimeService.deleteProcessInstance(items[i], "");
+			}
+			historyService.deleteHistoricProcessInstance(items[i]);
+			// taskService.deleteTask(items[i]);
+
+		}
+		Map<String, String> msgs = new HashMap<String, String>();
+
+		msgs.put("msg", "删除成功");
+		return msgs;
 	}
 
 }

@@ -3,6 +3,7 @@ package org.crusoe.mvc.interceptor;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -30,14 +31,19 @@ public class StatisticlaSheetInterceptor {
 
 	@Before("StatisticalSheetInterceptor() && args(items)")
 	public void batchDelete(String[] items) throws Exception {
-		//System.out.println("before delete.....");
-
+		// System.out.println("before delete.....");
+		if (items == null)
+			return;
 		for (int i = 0; i < items.length; i++) {
-			Object obj = taskService.getVariable(items[i], "result");
-			if (obj instanceof StatisticalSheet) {
-				StatisticalSheet ss = (StatisticalSheet) obj;
-				if (ss.getId() != null)
-					statisticalSheetService.delete(ss.getId());
+			Task task = taskService.createTaskQuery().taskId(items[i])
+					.singleResult();
+			if (task != null) {
+				Object obj = taskService.getVariable(items[i], "result");
+				if (obj instanceof StatisticalSheet) {
+					StatisticalSheet ss = (StatisticalSheet) obj;
+					if (ss.getId() != null)
+						statisticalSheetService.delete(ss.getId());
+				}
 			}
 
 		}
