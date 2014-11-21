@@ -284,7 +284,9 @@ public class TaskController {
 			uDTO.setId(u.getId());
 			uDTO.setLoginName(u.getLoginName());
 			uDTO.setName(u.getName());
-			uDTO.setOrganizationId(u.getOrganization().getId());
+			if (u.getOrganization() != null) {
+				uDTO.setOrganizationId(u.getOrganization().getId());
+			}
 			uDTO.setMobile(u.getMobile());
 			taskDTO.setInitiatorUser(uDTO);
 
