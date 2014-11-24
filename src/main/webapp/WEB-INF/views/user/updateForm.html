@@ -1,13 +1,66 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
+<link href="/jstree/themes/default/style.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/jstree/themes/default/style.min.css}" />
+<script src="/jstree/jstree.js" type="text/javascript"
+	th:src="@{/jstree/jstree.js}"></script>
 <title>修改用户</title>
-<script type="text/javascript">
-	var validator;
-	$(document).ready(function() {
-		validator = $("#userForm").validate();
-		$("#submitButton").bind("click", submitForm);
-	});
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var validator;
+    $(document).ready(function() {
+	validator = $("#userForm").validate();
+	$("#submitButton").bind("click", submitForm);
+    });
+
+    $(document)
+	    .ready(
+		    function() {
+
+			var organizationId = /*[[${user.organizationId}]]*/"";
+
+			$("#organization-update")
+				.jstree(
+					{
+					    "core" : {
+						"animation" : 0,
+						"check_callback" : true,
+						"themes" : {
+						    "stripes" : true
+						},
+						'data' : {
+						    'url' : function(node) {
+							return node.id === '#' ? /*[[@{'/organization/ajaxRoots'}]]*/'organization/ajaxRoots'
+								: /*[[@{'/organization/ajaxChildren'}]]*/'organization/ajaxChildren';
+						    },
+						    'data' : function(node) {
+							return {
+							    'id' : node.id
+							};
+						    }
+						}
+					    },
+					    "plugins" : [ "state", "types",
+						    "wholerow" ]
+					}).on(
+					"activate_node.jstree",
+					function(e, data) {
+					    var ref = $('#organization-update')
+						    .jstree(true), sel = ref
+						    .get_selected();
+					}).on("changed.jstree", function (e, data) {
+					    console.log(data.selected);
+					});;
+			var ref = $('#organization-update').jstree(true);
+			//alert(organizationId);
+			//alert("'" + organizationId + "'");
+			//ref.select_node("'" + organizationId + "'");
+			$('#organization-update').jstree('select_node',
+				String(organizationId));
+			//ref.refresh(true);
+		    });
+    /*]]>*/
 </script>
 </head>
 <body>
@@ -18,64 +71,91 @@
 			<h3>修改用户</h3>
 		</div>
 		<div class="modal-body">
-			<form id="userForm" method="POST" th:object="${user}">
-				<fieldset>
-					<label for="username">ID:</label> <input id="loginName" type="text"
-						th:field="*{id}" /> <label for="username">登陆名:</label> <input
-						id="loginName" placeholder="输入登陆名…" type="text"
-						th:field="*{loginName}" /> <label for="name">真实姓名:</label> <input
-						id="name" type="text" th:field="*{name}" /> <label for="mobile">手机号码:</label>
-					<input id="mobile" type="text" th:field="*{mobile}" /><br /> <label
-						class="control-label" for="email">电子邮箱:</label>
-					<div class="input-prepend">
-						<span class="add-on"><i class="icon-envelope"></i></span> <input
-							id="email" type="text" th:field="*{email}"
-							placeholder="输入电子邮箱（如123@sina.com)…" />
-					</div>
-					<label for="password">密码:</label> <input id="password" type="text"
-						th:field="*{password}" />
-					<div class="form-actions">
-						<div class="control-group">
-							<div class="controls">
-								<ul>
-									<li th:each="role : ${allRoles}"><input type="checkbox"
-										th:field="*{roles}" th:value="${role}" name="roles" /> <label
-										th:text="${role.name}">ROLE_USER</label></li>
-								</ul>
-							</div>
+			<div class="container">
+				<div class="row-fluid">
+					<div class="span2">
+						<!--Sidebar content-->
+						<div id="organization-update">
+							<ul>
+								<li>Root node 1
+									<ul>
+										<li>Child node 1</li>
+										<li><a href="#">Child node 2</a></li>
+									</ul>
+								</li>
+							</ul>
 						</div>
 					</div>
-				</fieldset>
-				<script type="text/javascript" th:inline="javascript">
-					function submitForm() {
+					<div class="span10">
+						<!--Body content-->
+						<form id="userForm" method="POST" th:object="${user}">
+							<fieldset>
+								<label for="username">ID:</label> <input id="loginName"
+									type="text" th:field="*{id}" /> <label for="username">登陆名:</label>
+								<input id="loginName" placeholder="输入登陆名…" type="text"
+									th:field="*{loginName}" /> <label for="name">真实姓名:</label> <input
+									id="name" type="text" th:field="*{name}" /> <label
+									for="mobile">手机号码:</label> <input id="mobile" type="text"
+									th:field="*{mobile}" /><br /> <label class="control-label"
+									for="email">电子邮箱:</label>
+								<div class="input-prepend">
+									<span class="add-on"><i class="icon-envelope"></i></span> <input
+										id="email" type="text" th:field="*{email}"
+										placeholder="输入电子邮箱（如123@sina.com)…" />
+								</div>
+								<label for="password">密码:</label> <input id="password"
+									type="text" th:field="*{password}" />
+								<div class="form-actions">
+									<div class="control-group">
+										<div class="controls">
+											<ul>
+												<li th:each="role : ${allRoles}"><input type="checkbox"
+													th:field="*{roles}" th:value="${role}" name="roles" /> <label
+													th:text="${role.name}">ROLE_USER</label></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</fieldset>
+							<script type="text/javascript" th:inline="javascript">
+				function submitForm() {
 
-						var user = $("#userForm").serializeObject();
-						alert(JSON.stringify(user));
-						$.postJSON(/*[[@{'/user/update/'}]]*/'', JSON
-								.stringify(user), false, function(data) {
-							if (data.err == "true") {
-								var errors = {};
-								for ( var obj in data) {
-									if (obj != "err")
-										errors[obj] = data[obj];
+				    var user = $("#userForm").serializeObject();
+				    var ref = $('#organization-update').jstree(true);
+				    user.organizationId=ref.get_selected()[0];
+				    alert(JSON.stringify(user));
+				    $.postJSON(
+				    /*[[@{'/user/update/'}]]*/'', JSON
+					    .stringify(user), false, function(
+					    data) {
+					if (data.err == "true") {
+					    var errors = {};
+					    for ( var obj in data) {
+						if (obj != "err")
+						    errors[obj] = data[obj];
 
-								}
-								validator.showErrors(errors);
-							} else {
-								$("#dialog-message .modal-body").html(
-										"Data has been saved!Its ID is:"
-												+ data.id);
-								$("#userForm").trigger("evtSuccess", {
-									msg : "OK"
-								});
-								$("#dialog-message").modal();
-							}
-
-						});
-						return false;
+					    }
+					    validator.showErrors(errors);
+					} else {
+					    $("#dialog-message .modal-body")
+						    .html(
+							    "Data has been saved!Its ID is:"
+								    + data.id);
+					    $("#userForm").trigger(
+						    "evtSuccess", {
+							msg : "OK"
+						    });
+					    $("#dialog-message").modal();
 					}
-				</script>
-			</form>
+
+				    });
+				    return false;
+				}
+			    </script>
+						</form>
+					</div>
+				</div>
+			</div>
 			<div class="modal-footer">
 				<button type="button" id="submitButton" class="btn btn-primary">保存修改</button>
 			</div>
