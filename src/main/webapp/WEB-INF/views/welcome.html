@@ -1,7 +1,7 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head thy:merge="/common::headerFragment">
-<title>Government Infomation Disclosure</title>
+<title>依申请公开办理系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
@@ -151,9 +151,9 @@
 				<div class="span3 bs-docs-sidebar">
 					<div class="">
 						<ul class="nav nav-list">
-							<li class="nav-header">政府信息公开</li>
+							<li class="nav-header">依申请公开</li>
 							<li><a href="#"
-								onClick="load('创建','runtime/process/governmentInformationDisclosure:8:37522/startAndRedirectToTaskForm')">创建<i
+								onClick="load('创建','runtime/process/governmentInformationDisclosure:187:105232/startAndRedirectToTaskForm')">创建<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="active"><a id="tasks"
 								onclick="load('待办事项','runtime/tasks/index')">待办事项<span
@@ -164,13 +164,13 @@
 							<li><a href="#"
 								onClick="load('已办事项','runtime/tasks/historicTasks')">已办事项</a></li>
 							<li><a href="#"
-								onClick="load('已办结','runtime/process/finishedProcessIndex/governmentInformationDisclosure:123:18208/')"
+								onClick="load('已办结','runtime/process/finishedProcessIndex/governmentInformationDisclosure:187:105232/')"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER')==true}">已办结</a></li>
-							<li><a href="#" onClick="loadOwner('我发起的流程')">我发起的流程</a></li>
+							<li><a href="#" onClick="loadOwner('我发起的')">我发起的</a></li>
 							<li><a href="#"
-								onClick="load('所有流程','runtime/process/allProcessIndex/')">所有流程</a></li>
+								onClick="load('所有依申请公开','runtime/process/allProcessIndex/')">所有依申请公开</a></li>
 							<li><a href="#"
-								onClick="load('填报年度统计表','runtime/process/annualStatistics:19:50519/startAndRedirectToTaskForm')">填报年度统计表<i
+								onClick="load('填报年度统计表','runtime/process/annualStatistics:105:105231/startAndRedirectToTaskForm')">填报年度统计表<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="nav-header"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">用户管理</li>
@@ -199,7 +199,7 @@
 							<li
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
 								href="#"
-								onClick="load('按姓名搜索','workflow/resource/governmentInformationDisclosure/analyseByApplicant')">按姓名搜索<i
+								onClick="load('按提交人搜索','workflow/resource/governmentInformationDisclosure/analyseByApplicant')">按提交人搜索<i
 									class="icon-chevron-right"></i></a></li>
 							<li
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a

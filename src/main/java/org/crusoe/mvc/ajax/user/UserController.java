@@ -20,6 +20,7 @@ import org.crusoe.dto.OrganizationDTO;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.RoleDTO;
 import org.crusoe.dto.UserDTO;
+import org.crusoe.dynamic.DynamicDeployBeans2;
 import org.crusoe.entity.Organization;
 import org.crusoe.entity.Resource;
 import org.crusoe.entity.Role;
@@ -75,6 +76,8 @@ public class UserController {
 	protected RoleService roleService;
 	@Autowired
 	protected OrganizationService organizationService;
+	@Autowired
+	private DynamicDeployBeans2 dynamicDeployBeans2;
 
 	@RequestMapping(value = "index")
 	public String list(
@@ -89,6 +92,8 @@ public class UserController {
 		// "DESC".equals(sortDirection.toUpperCase()) ? Sort.Direction.DESC
 		// : Sort.Direction.ASC, sortBy);
 		// accountService.searchUser(filtes,pageRequest);
+		// dynamicDeployBeans2
+		// .registerGroovyController("classpath:org/crusoe/groovy/BlogController.groovy");
 		return "user/index";
 	}
 
@@ -245,6 +250,8 @@ public class UserController {
 		UserDTO userDTO = new UserDTO();
 		BeanUtils.copyProperties(user, userDTO);
 		userDTO.setPassword("");
+		if (user.getOrganization() != null)
+			userDTO.setOrganizationId(user.getOrganization().getId());
 		userDTO.setRoles(new ArrayList<RoleDTO>());
 		iter = user.getRoles().iterator();
 		while (iter.hasNext()) {
@@ -266,13 +273,14 @@ public class UserController {
 	public @ResponseBody
 	Map<String, ? extends Object> update(@Valid @RequestBody UserDTO newUser,
 			RedirectAttributes redirectAttributes) {
-		User user = new User();
-		user.setId(newUser.getId());
+		User user = accountService.findById(newUser.getId());
 		user.setLoginName(newUser.getLoginName());
 		user.setName(newUser.getName());
 		user.setEmail(newUser.getEmail());
 		user.setMobile(newUser.getMobile());
-		user.setPassword(newUser.getPassword());
+		if (!newUser.getPassword().isEmpty())
+			user.setPassword(newUser.getPassword());
+		user.getRoles().clear();
 
 		// BeanUtils.copyProperties(newUser, user);
 		if (newUser.getRoles() != null) {
@@ -285,6 +293,12 @@ public class UserController {
 
 			}
 
+		}
+		Organization o = organizationService.findById(newUser
+				.getOrganizationId());
+		if (o != null) {
+			o.getUsers().add(user);
+			user.setOrganization(o);
 		}
 
 		user.setStatus("enabled");

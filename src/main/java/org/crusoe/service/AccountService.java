@@ -261,4 +261,9 @@ public class AccountService {
 		return userDao.findByOrganization(organizationId, pageRequest);
 	}
 
+	public User findById(Long id) {
+		// TODO Auto-generated method stub
+		return userDao.findOne(id);
+	}
+
 }
