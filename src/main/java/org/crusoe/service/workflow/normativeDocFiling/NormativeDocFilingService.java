@@ -12,8 +12,10 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.TaskService;
@@ -32,6 +34,8 @@ import org.crusoe.repository.jpa.workflow.normativeDocFiling.NormativeDocFilingD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Lists;
 
 @Service
 @Transactional(readOnly = true)
@@ -202,5 +206,11 @@ public class NormativeDocFilingService {
 			return null;
 		}
 
+	}
+
+	public List<NormativeDocFiling> findByCreateOn(Date startTime, Date endTime) {
+		// TODO Auto-generated method stub
+
+		return ndfDao.findByCreateOnBetween(startTime, endTime);
 	}
 }

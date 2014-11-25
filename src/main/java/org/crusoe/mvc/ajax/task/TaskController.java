@@ -337,6 +337,8 @@ public class TaskController {
 			taskDTO.setId(task.getId());
 			taskDTO.setName(task.getName());
 			// taskDTO.setAssignee(task.getAssignee());
+			taskDTO.setCreateTime(task.getCreateTime());
+			taskDTO.setDueDate(task.getDueDate());
 			taskDTO.setAssignee(accountService.findUserByLoginName(
 					task.getAssignee()).getName());
 			String initiatorUserId = historyService

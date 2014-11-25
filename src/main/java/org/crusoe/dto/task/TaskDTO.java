@@ -10,6 +10,8 @@ public class TaskDTO {
 	private String assignee;
 	private Date endTime;
 	private Date startTime;
+	private Date createTime;
+	private Date dueDate;
 	private String taskDefinitionKey;
 	private String processDefinitionId;
 	private String initiatorUserId;
@@ -100,5 +102,21 @@ public class TaskDTO {
 
 	public void setInitiatorUser(UserDTO initiatorUser) {
 		this.initiatorUser = initiatorUser;
+	}
+
+	public Date getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 }
