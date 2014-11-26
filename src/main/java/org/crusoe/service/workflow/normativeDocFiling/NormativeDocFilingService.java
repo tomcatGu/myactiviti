@@ -29,6 +29,7 @@ import org.crusoe.entity.workflow.governmentInformationDisclosure.AttachmentEnti
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFiling;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingAttachmentEntity;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingReply;
+import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingStatus;
 import org.crusoe.repository.jpa.OrganizationDao;
 import org.crusoe.repository.jpa.workflow.normativeDocFiling.NormativeDocFilingDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,8 @@ public class NormativeDocFilingService {
 		}
 
 		ndf.setOrganizationId(organizationId);
-		ndf.setStatus("待审核");
+		ndf.setStatus(NormativeDocFilingStatus.PENDING);
+		// ndf.setStatus(NormativeDocFilingStatus.PENDING);
 		ndfDao.save(ndf);
 
 		return ndf;
@@ -135,7 +137,7 @@ public class NormativeDocFilingService {
 		}
 
 		ndf.setOrganizationId(organizationId);
-		ndf.setStatus("待审核");
+		ndf.setStatus(NormativeDocFilingStatus.PENDING);
 		ndfDao.save(ndf);
 
 		return ndf;
@@ -150,7 +152,7 @@ public class NormativeDocFilingService {
 		ndfReply.setReplyTime(new Date());
 		ndf.getReplies().add(ndfReply);
 		if (isPassed) {
-			ndf.setStatus("已备案");
+			ndf.setStatus(NormativeDocFilingStatus.ACCEPT);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ByteArrayInputStream in = null;
 
@@ -176,7 +178,53 @@ public class NormativeDocFilingService {
 			ae.setName(attachment.getName());
 			ndf.getAttachments().add(ae);
 		} else
-			ndf.setStatus("待完善");
+			ndf.setStatus(NormativeDocFilingStatus.REVISE);
+		ndfDao.save(ndf);
+		// execution
+		return ndf;
+	}
+
+	public NormativeDocFiling saveReply(DelegateExecution execution,
+			NormativeDocFiling ndf, String reply, String status) {
+		NormativeDocFilingReply ndfReply = new NormativeDocFilingReply();
+		ndfReply.setReply(reply);
+		ndfReply.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
+				.toString());
+		ndfReply.setReplyTime(new Date());
+		ndf.getReplies().add(ndfReply);
+		if ("accept".equals(status)) {
+			ndf.setStatus(NormativeDocFilingStatus.ACCEPT);
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ByteArrayInputStream in = null;
+
+			HashMap hm = new HashMap();
+			hm.put("title", "OK");
+			try {
+				HWPFDocument doc = replaceDoc(hm, "templete/qrh.doc");
+				doc.write(out);
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			in = new ByteArrayInputStream(out.toByteArray());
+			Attachment attachment = taskService.createAttachment("doc",
+					taskService.createTaskQuery()
+							.executionId(execution.getId()).singleResult()
+							.getId(), execution.getProcessInstanceId(),
+					"确认函.doc", "", in);
+			NormativeDocFilingAttachmentEntity ae = new NormativeDocFilingAttachmentEntity();
+			ae.setTaskId(attachment.getId());
+			ae.setName(attachment.getName());
+			ndf.getAttachments().add(ae);
+		} else if ("revise".equals(status)) {
+			ndf.setStatus(NormativeDocFilingStatus.REVISE);
+
+		} else if ("refuse".equals(status)) {
+			ndf.setStatus(NormativeDocFilingStatus.REFUSE);
+
+		}
 		ndfDao.save(ndf);
 		// execution
 		return ndf;

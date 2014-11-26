@@ -85,6 +85,8 @@
 
 	function clearSelectedUser() {
 		$('#selectedUser').text("");
+		$('#assigneeList').text("");
+		$('#selectedUser').val("");
 		$('#assigneeList').val("");
 	};
 
@@ -125,6 +127,8 @@
 						$("#clearButton").click(function() {
 							$('#selectedUser').text("");
 							$('#assigneeList').text("");
+							$('#selectedUser').val("");
+							$('#assigneeList').val("");
 
 						});
 
@@ -294,6 +298,10 @@
 																									str);
 																					var userids = str
 																							.split(',');
+																					$(
+																							'#selectedUser')
+																							.text(
+																									"");
 
 																					for (i = 0; i < userids.length; i++) {
 																						var id = userids[i];

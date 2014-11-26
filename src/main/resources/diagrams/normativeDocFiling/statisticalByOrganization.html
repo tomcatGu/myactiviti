@@ -12,6 +12,14 @@
 			return "0.00%";
 		return (Math.round(num / num2 * 10000) / 100.00 + "%"); //小数点后两位百分比
 	};
+	function shape(num) {
+
+		if (num == undefined)
+			return 0;
+		else
+			return num;
+	};
+
 	$(document)
 			.ready(
 					function() {
@@ -22,17 +30,17 @@
 									+ "</td><td>"
 									+ data.organizationName
 									+ "</td><td>"
-									+ data.total
+									+ shape(data.total)
 									+ "</td><td>"
 									+ percentNum(data.approve, data.total)
 									+ "</td><td>"
 									+ percentNum(data.inTime, data.total)
 									+ "</td><td>"
-									+ data.approve
+									+ shape(data.approve)
 									+ "</td><td>"
 									+ percentNum(data.approve, data.total)
 									+ "</td><td>"
-									+ data.refuse
+									+ shape(data.refuse)
 									+ "</td><td>"
 									+ percentNum(data.refuse, data.total)
 									+ "</td></tr>";
