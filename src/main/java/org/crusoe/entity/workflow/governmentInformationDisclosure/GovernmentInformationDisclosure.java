@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -46,6 +47,7 @@ public class GovernmentInformationDisclosure implements Serializable,
 	private String groupDelegateEmail;
 	private Date applicationTime;
 	private String submitDepartment;
+
 	private String description;
 	private String purpose;
 	private String mode;
@@ -229,6 +231,7 @@ public class GovernmentInformationDisclosure implements Serializable,
 		this.submitDepartment = submitDepartment;
 	}
 
+	@Column(length = 1000)
 	public String getDescription() {
 		return description;
 	}

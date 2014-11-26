@@ -69,14 +69,16 @@ form {
 			$("#myForm").validate({
 			    rules : {
 				reply : {
-				    required : true
+				    required : true,
+				    maxlength : 255
 				}
 
 			    },
 			    messages : {
 
 				reply : {
-				    required : "必须输入回复意见"
+				    required : "必须输入回复意见",
+				    maxlength : "最多输入255个字符"
 				}
 
 			    }
@@ -353,9 +355,8 @@ form {
 						class="checkbox inline"><input type="checkbox" value="2"
 						name="obtainMode"
 						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'2'):false}" />自行领取</label>
-						<label
-						class="checkbox inline"><input type="checkbox" value="3"
-						name="obtainMode"
+					<label class="checkbox inline"><input type="checkbox"
+						value="3" name="obtainMode"
 						th:checked="${result.obtainMode!=null?#lists.contains(#strings.listSplit(result.obtainMode,','),'3'):false}" />邮寄</label>
 				</div>
 				<label class="control-label text-info">申请信息公开形式：</label>
