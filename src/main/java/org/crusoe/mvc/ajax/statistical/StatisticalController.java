@@ -164,13 +164,14 @@ public class StatisticalController {
 		HashMap<String, Integer> statisticalResult;
 		for (GovernmentInformationDisclosure gid : gids) {
 			String username = gid.getCreateUser();
-			username = accountService.findUserByLoginName(username).getName();
-			if (result.containsKey(username)) {
+			//username = accountService.findUserByLoginName(username).getName();
+			String organizationName=gid.getSubmitDepartment();
+			if (result.containsKey(organizationName)) {
 				statisticalResult = (HashMap<String, Integer>) result
-						.get(username);
+						.get(organizationName);
 			} else {
 				statisticalResult = new HashMap<String, Integer>();
-				result.put(username, statisticalResult);
+				result.put(organizationName, statisticalResult);
 			}
 			String fod = gid.getFormOfDisclosure();
 			if (statisticalResult.containsKey(fod)) {

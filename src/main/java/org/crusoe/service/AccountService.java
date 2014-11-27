@@ -187,25 +187,7 @@ public class AccountService {
 
 	public User findUserByLoginName(String loginName) {
 		User user = userDao.findByLoginName(loginName);
-		if (user == null) {
-			// Hibernates.initLazyProperty(user.getRoleList());
-			user = new User();
-			user.setId(0L);
-			user.setLoginName("1234");
-			user.setName("5678");
-			user.setPassword("abcd");
 
-			RandomNumberGenerator rng = new SecureRandomNumberGenerator();
-			String salt = rng.nextBytes().toHex();
-
-			String hashedPasswordHex = new SimpleHash(HASH_ALGORITHM,
-					user.getPassword(), salt, HASH_INTERATIONS).toHex();
-
-			user.setPassword(hashedPasswordHex);
-			user.setPasswordSalt(salt);
-			user.setStatus("enable");
-
-		}
 		return user;
 	}
 
