@@ -243,7 +243,7 @@ public class ProcessController extends BaseServiceImpl {
 
 		}
 		long count = historyService.createHistoricProcessInstanceQuery()
-				.processInstanceName(processInstanceName).count();
+				.processDefinitionKey(processInstanceName).count();
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("count", count);
 		rets.put("start", start);

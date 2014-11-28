@@ -76,7 +76,7 @@
 
 						$("#processList")
 								.simpleTable(
-										/*[[@{'/runtime/process/listAllProcessInstances/'+'?&sort=id&order=desc&processInstanceName='}]]*/""
+										/*[[@{'/runtime/process/listAllProcessInstances/'+'?&sort=id&order=desc&size=1&processInstanceName='}]]*/""
 												+ name, render,
 										$("#paginator"), null);
 						$("body").on('hidden', '.model', function(e) {
@@ -91,7 +91,7 @@
 
 		$("#processList")
 				.simpleTable(
-						/*[[@{'/runtime/process/listAllProcessInstances/'+'?sort=id&order=desc&&processInstanceName=governmentInformationDisclosure'}]]*/"",
+						/*[[@{'/runtime/process/listAllProcessInstances/'+'?sort=id&order=desc&size=1&processInstanceName=governmentInformationDisclosure'}]]*/"",
 						render, $("#paginator"), null);
 	};
 	function getProcessStatus(status) {

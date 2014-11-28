@@ -164,8 +164,11 @@ public class StatisticalController {
 		HashMap<String, Integer> statisticalResult;
 		for (GovernmentInformationDisclosure gid : gids) {
 			String username = gid.getCreateUser();
-			//username = accountService.findUserByLoginName(username).getName();
-			String organizationName=gid.getSubmitDepartment();
+			// username =
+			// accountService.findUserByLoginName(username).getName();
+			String organizationName = gid.getSubmitDepartment();
+			if (organizationName == null)
+				break;
 			if (result.containsKey(organizationName)) {
 				statisticalResult = (HashMap<String, Integer>) result
 						.get(organizationName);
@@ -177,7 +180,8 @@ public class StatisticalController {
 			if (statisticalResult.containsKey(fod)) {
 				statisticalResult.put(fod, statisticalResult.get(fod) + 1);
 			} else {
-				statisticalResult.put(fod, 1);
+				if (fod != null)
+					statisticalResult.put(fod, 1);
 
 			}
 
@@ -186,7 +190,8 @@ public class StatisticalController {
 				statisticalResult.put(formOfResponse,
 						statisticalResult.get(formOfResponse) + 1);
 			} else {
-				statisticalResult.put(formOfResponse, 1);
+				if (formOfResponse != null)
+					statisticalResult.put(formOfResponse, 1);
 
 			}
 

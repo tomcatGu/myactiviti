@@ -89,7 +89,7 @@ public class NormativeDocFilingService {
 		}
 
 		ndf.setOrganizationId(organizationId);
-		ndf.setStatus(NormativeDocFilingStatus.PENDING);
+		ndf.setStatus(NormativeDocFilingStatus.PENDING.name());
 		// ndf.setStatus(NormativeDocFilingStatus.PENDING);
 		ndfDao.save(ndf);
 
@@ -137,7 +137,7 @@ public class NormativeDocFilingService {
 		}
 
 		ndf.setOrganizationId(organizationId);
-		ndf.setStatus(NormativeDocFilingStatus.PENDING);
+		ndf.setStatus(NormativeDocFilingStatus.PENDING.name());
 		ndfDao.save(ndf);
 
 		return ndf;
@@ -152,7 +152,7 @@ public class NormativeDocFilingService {
 		ndfReply.setReplyTime(new Date());
 		ndf.getReplies().add(ndfReply);
 		if (isPassed) {
-			ndf.setStatus(NormativeDocFilingStatus.ACCEPT);
+			ndf.setStatus(NormativeDocFilingStatus.ACCEPT.name());
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ByteArrayInputStream in = null;
 
@@ -178,7 +178,7 @@ public class NormativeDocFilingService {
 			ae.setName(attachment.getName());
 			ndf.getAttachments().add(ae);
 		} else
-			ndf.setStatus(NormativeDocFilingStatus.REVISE);
+			ndf.setStatus(NormativeDocFilingStatus.REVISE.name());
 		ndfDao.save(ndf);
 		// execution
 		return ndf;
@@ -193,7 +193,7 @@ public class NormativeDocFilingService {
 		ndfReply.setReplyTime(new Date());
 		ndf.getReplies().add(ndfReply);
 		if ("accept".equals(status)) {
-			ndf.setStatus(NormativeDocFilingStatus.ACCEPT);
+			ndf.setStatus(NormativeDocFilingStatus.ACCEPT.name());
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ByteArrayInputStream in = null;
 
@@ -219,10 +219,10 @@ public class NormativeDocFilingService {
 			ae.setName(attachment.getName());
 			ndf.getAttachments().add(ae);
 		} else if ("revise".equals(status)) {
-			ndf.setStatus(NormativeDocFilingStatus.REVISE);
+			ndf.setStatus(NormativeDocFilingStatus.REVISE.name());
 
 		} else if ("refuse".equals(status)) {
-			ndf.setStatus(NormativeDocFilingStatus.REFUSE);
+			ndf.setStatus(NormativeDocFilingStatus.REFUSE.name());
 
 		}
 		ndfDao.save(ndf);

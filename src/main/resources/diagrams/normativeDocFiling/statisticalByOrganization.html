@@ -92,6 +92,10 @@
 														},
 														url : /*[[@{'/normativeStatistical/analyseByOrganization'}]]*/"", //Ã·Ωªµÿ÷∑
 														success : function(data) {
+															$(
+																	"#normativeDocFilingList tr")
+																	.nextAll()
+																	.remove();
 															for (result in data.statisticalResult) {
 																var newRow = render(data.statisticalResult[result]);
 																$(

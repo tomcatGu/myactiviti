@@ -32,7 +32,7 @@ public class NormativeDocFiling {
 	private Date releaseDate;
 	private Date implementationDate;
 	private String isOpen;
-	private NormativeDocFilingStatus status;
+	private String status;
 	private Date createOn;
 	private String username;
 
@@ -115,11 +115,11 @@ public class NormativeDocFiling {
 		this.isOpen = isOpen;
 	}
 
-	public NormativeDocFilingStatus getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(NormativeDocFilingStatus status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
