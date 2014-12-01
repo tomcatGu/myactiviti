@@ -1,6 +1,7 @@
 package org.crusoe.mvc.ajax.form;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -111,6 +112,7 @@ public class FormController {
 	public @ResponseBody
 	HashMap<String, Object> submitTaskForm(@PathVariable String taskId,
 			HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("submitTaskForm start from:" + new Date());
 		Map<String, String> map = null;
 		Map<String, String[]> map1 = request.getParameterMap();
 		Map returnMap = new HashMap();
@@ -150,7 +152,7 @@ public class FormController {
 					businessKey);
 
 		}
-		//formService.submitTaskFormData(taskId, returnMap);
+		// formService.submitTaskFormData(taskId, returnMap);
 		taskService.complete(taskId, returnMap);
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("msg", "成功保存.");

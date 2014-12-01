@@ -380,7 +380,7 @@ public class GovernmentInformationDisclosureService {
 
 		// ikUtil.addIndex(execution.getProcessInstanceId(), gid.getId(),
 		// gid.getApplicationName(), gid.getDescription());
-
+		System.out.println("submitTaskForm stop at:" + new Date());
 		return gid;
 
 	}

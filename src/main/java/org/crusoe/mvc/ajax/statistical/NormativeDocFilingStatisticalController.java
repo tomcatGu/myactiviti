@@ -1,13 +1,17 @@
 package org.crusoe.mvc.ajax.statistical;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.PropertyUtils;
+import org.crusoe.dto.normativeDocFiling.NormativeDocFilingDTO;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFiling;
 import org.crusoe.service.OrganizationService;
 import org.crusoe.service.workflow.normativeDocFiling.NormativeDocFilingService;
@@ -108,5 +112,48 @@ public class NormativeDocFilingStatisticalController {
 		rets.put("err", false);
 		rets.put("statisticalResult", result);
 		return rets;
+	}
+
+	public @ResponseBody
+	List<NormativeDocFilingDTO> listNormativeDocFiling(
+			@RequestParam("title") String title,
+			@RequestParam("startTime") final String startTime,
+			@RequestParam("endTime") final String endTime,
+			@RequestParam("organizationName") String organizationName) {
+		ArrayList<NormativeDocFilingDTO> ndfDTOs = Lists.newArrayList();
+
+		SimpleDateFormat dateformat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss");
+		List<NormativeDocFiling> ndfs = null;
+		try {
+			ndfs = ndfService.findByTitleAndCreateTimeAndOrganization(title,
+					dateformat.parse(startTime), dateformat.parse(endTime),
+					organizationName);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Iterator iter = ndfs.iterator();
+		while (iter.hasNext()) {
+			NormativeDocFiling ndf = (NormativeDocFiling) iter.next();
+			NormativeDocFilingDTO ndfDTO = new NormativeDocFilingDTO();
+			try {
+				PropertyUtils.copyProperties(ndfDTO, ndf);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ndfDTOs.add(ndfDTO);
+
+		}
+
+		return ndfDTOs;
 	}
 }

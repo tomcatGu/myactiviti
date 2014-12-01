@@ -261,4 +261,12 @@ public class NormativeDocFilingService {
 
 		return ndfDao.findByCreateOnBetween(startTime, endTime);
 	}
+
+	public List<NormativeDocFiling> findByTitleAndCreateTimeAndOrganization(
+			String title, Date startTime, Date endTime, String organizationName) {
+		// TODO Auto-generated method stub
+		return (List<NormativeDocFiling>) ndfDao
+				.findByTitleAndCreateTimeAndOrganization(title, startTime,
+						endTime, organizationName);
+	}
 }
