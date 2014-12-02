@@ -18,6 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.task.Attachment;
@@ -26,6 +32,7 @@ import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.shiro.SecurityUtils;
 import org.crusoe.entity.Organization;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.AttachmentEntity;
+import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInformationDisclosure;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFiling;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingAttachmentEntity;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingReply;
@@ -33,6 +40,7 @@ import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingStatus;
 import org.crusoe.repository.jpa.OrganizationDao;
 import org.crusoe.repository.jpa.workflow.normativeDocFiling.NormativeDocFilingDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -262,11 +270,42 @@ public class NormativeDocFilingService {
 		return ndfDao.findByCreateOnBetween(startTime, endTime);
 	}
 
-	public List<NormativeDocFiling> findByTitleAndCreateTimeAndOrganization(
-			String title, Date startTime, Date endTime, String organizationName) {
+	public List<NormativeDocFiling> findByTitleAndCreateTimeAndOrganizationAndStatus(
+			final String title, final Date startTime, final Date endTime,
+			final Long organizationId, final String status) {
 		// TODO Auto-generated method stub
 		return (List<NormativeDocFiling>) ndfDao
-				.findByTitleAndCreateTimeAndOrganization(title, startTime,
-						endTime, organizationName);
+				.findAll(new Specification<NormativeDocFiling>() {
+
+					@Override
+					public Predicate toPredicate(Root<NormativeDocFiling> root,
+							CriteriaQuery<?> query, CriteriaBuilder builder) {
+						// TODO Auto-generated method stub
+						SimpleDateFormat dateformat1 = new SimpleDateFormat(
+								"yyyy-MM-dd HH:mm:ss");
+						Predicate predicate = builder.conjunction();
+						List<Expression<Boolean>> expressions = predicate
+								.getExpressions();
+						if (startTime.compareTo(endTime) != 0)
+							expressions.add(builder.between(
+									root.<Date> get("createTime"), startTime,
+									endTime));
+						if (!title.isEmpty())
+							expressions.add(builder.like(
+									root.<String> get("fileName"), "%" + title
+											+ "%"));
+						if (organizationId != -1L) {
+							expressions.add(builder.equal(
+									root.<String> get("organizationId"),
+									organizationId));
+
+						}
+						if (!status.isEmpty())
+							expressions.add(builder.equal(
+									root.<String> get("status"), title));
+
+						return predicate;
+					}
+				});
 	}
 }

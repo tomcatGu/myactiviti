@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.crusoe.dto.normativeDocFiling.NormativeDocFilingDTO;
+import org.crusoe.entity.Organization;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFiling;
 import org.crusoe.service.OrganizationService;
 import org.crusoe.service.workflow.normativeDocFiling.NormativeDocFilingService;
@@ -114,21 +115,32 @@ public class NormativeDocFilingStatisticalController {
 		return rets;
 	}
 
+	@RequestMapping(value = "listNormativeDocFiling", method = RequestMethod.POST)
 	public @ResponseBody
 	List<NormativeDocFilingDTO> listNormativeDocFiling(
 			@RequestParam("title") String title,
 			@RequestParam("startTime") final String startTime,
 			@RequestParam("endTime") final String endTime,
-			@RequestParam("organizationName") String organizationName) {
+			@RequestParam("organizationName") String organizationName,
+			@RequestParam("status") String status) {
 		ArrayList<NormativeDocFilingDTO> ndfDTOs = Lists.newArrayList();
 
 		SimpleDateFormat dateformat = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss");
 		List<NormativeDocFiling> ndfs = null;
+		Long organizationId = null;
+		Organization o = oService.findbyName(organizationName);
+		if (o == null) {
+			organizationId = -1L;
+
+		} else {
+			organizationId = o.getId();
+
+		}
 		try {
-			ndfs = ndfService.findByTitleAndCreateTimeAndOrganization(title,
+			ndfs = ndfService.findByTitleAndCreateTimeAndOrganizationAndStatus(title,
 					dateformat.parse(startTime), dateformat.parse(endTime),
-					organizationName);
+					organizationId,status);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

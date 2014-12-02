@@ -60,4 +60,10 @@ public class OrganizationService {
 		organizationDao.delete(parentId);
 
 	}
+
+	public Organization findbyName(String organizationName) {
+		// TODO Auto-generated method stub
+		// Organization o=new Organization();
+		return organizationDao.findByName(organizationName);
+	}
 }
