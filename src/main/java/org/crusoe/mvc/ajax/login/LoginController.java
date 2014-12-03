@@ -84,7 +84,7 @@ public class LoginController {
 
 			return "redirect:" + reUrl;
 		}
-
+		model.addAttribute("err", "用户名或密码错误。");
 		return "login";
 
 	}

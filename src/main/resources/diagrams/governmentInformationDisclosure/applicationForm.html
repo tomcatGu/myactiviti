@@ -114,6 +114,9 @@
 				},
 				formOfResponse : {
 				    required : true
+				},
+				reply : {
+				    maxlength : 1000
 				}
 
 			    },
@@ -135,6 +138,9 @@
 				},
 				formOfResponse : {
 				    required : "请选择回复类型"
+				},
+				reply : {
+				    maxlength : "最多只能输入1000个字符"
 				}
 
 			    }
@@ -378,12 +384,12 @@
 	<div>
 		<form id="myForm"
 			th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
-			method="POST">
+			method="POST" class="form-horizontal">
 			<fieldset>
 				<div class="well">
 					<div class="box">
 						<div class="control-group">
-							<label class="control-label text-info">标题：</label>
+							<label class="control-label text-info" for="applicationName">标题：</label>
 							<div class="controls">
 								<input id="businessKey" name="businessKey" type="hidden" /> <input
 									name="applicationName" id="applicationName"
@@ -399,16 +405,16 @@
 						</ul>
 						<div class="tab-content">
 							<div class="box tab-pane active" id="citizen">
-								<div class="control-group">
-									<div class="row">
+								<div class="row">
+									<div class="control-group">
 										<div class="span4">
-											<label class="control-label text-info">姓名：</label>
+											<label class="control-label text-info" for="citizenName">姓名：</label>
 											<div class="controls">
 												<input name="citizenName" />
 											</div>
 										</div>
 										<div class="span4">
-											<label class="control-label text-info">工作单位：</label>
+											<label class="control-label text-info" for="citizenWorkunit">工作单位：</label>
 											<div class="controls">
 												<input name="citizenWorkunit" />
 											</div>
@@ -416,59 +422,67 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="span4">
-										<label class="control-label text-info">证件名称：</label>
-										<div class="controls">
-											<input name="citizenCertificate" />
+									<div class="control-group">
+										<div class="span4">
+											<label class="control-label text-info">证件名称：</label>
+											<div class="controls">
+												<input name="citizenCertificate" />
+											</div>
 										</div>
-									</div>
-									<div class="span4">
-										<label class="control-label text-info">证件号码：</label>
-										<div class="controls">
-											<input name="citizenCertificateID" />
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="span4">
-										<label class="control-label text-info">联系电话：</label>
-										<div class="controls">
-											<input name="citizenTelphone" />
-										</div>
-									</div>
-									<div class="span4">
-										<label class="control-label text-info">邮件编码：</label>
-										<div class="controls">
-											<input name="citizenZipcode" />
+										<div class="span4">
+											<label class="control-label text-info">证件号码：</label>
+											<div class="controls">
+												<input name="citizenCertificateID" />
+											</div>
 										</div>
 									</div>
 								</div>
 								<div class="row">
-									<div class="span4">
-										<label class="control-label text-info">联系地址：</label>
-										<div class="controls">
-											<input name="citizenAddress" />
+									<div class="control-group">
+										<div class="span4">
+											<label class="control-label text-info">联系电话：</label>
+											<div class="controls">
+												<input name="citizenTelphone" />
+											</div>
 										</div>
-									</div>
-									<div class="span4">
-										<label class="control-label text-info">传真：</label>
-										<div class="controls">
-											<input name="citizenFax" />
+										<div class="span4">
+											<label class="control-label text-info">邮件编码：</label>
+											<div class="controls">
+												<input name="citizenZipcode" />
+											</div>
 										</div>
 									</div>
 								</div>
 								<div class="row">
-									<div class="span4">
-										<label class="control-label text-info">电子邮箱：</label>
-										<div class="controls">
-											<input name="citizenEmail" />
+									<div class="control-group">
+										<div class="span4">
+											<label class="control-label text-info">联系地址：</label>
+											<div class="controls">
+												<input name="citizenAddress" />
+											</div>
+										</div>
+										<div class="span4">
+											<label class="control-label text-info">传真：</label>
+											<div class="controls">
+												<input name="citizenFax" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="control-group">
+										<div class="span4">
+											<label class="control-label text-info">电子邮箱：</label>
+											<div class="controls">
+												<input name="citizenEmail" />
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="box box tab-pane" id="group">
-								<div class="control-group">
-									<div class="row">
+								<div class="row">
+									<div class="control-group">
 										<div class="span4">
 											<label class="control-label text-info">名称：</label>
 											<div class="controls">
@@ -482,7 +496,9 @@
 											</div>
 										</div>
 									</div>
-									<div class="row">
+								</div>
+								<div class="row">
+									<div class="control-group">
 										<div class="span4">
 											<label class="control-label text-info">法人代表：</label>
 											<div class="controls">
@@ -496,7 +512,9 @@
 											</div>
 										</div>
 									</div>
-									<div class="row">
+								</div>
+								<div class="row">
+									<div class="control-group">
 										<div class="span4">
 											<label class="control-label text-info">联系人电话：</label>
 											<div class="controls">
@@ -510,7 +528,9 @@
 											</div>
 										</div>
 									</div>
-									<div class="row">
+								</div>
+								<div class="row">
+									<div class="control-group">
 										<div class="span4">
 											<label class="control-label text-info">联系地址：</label>
 											<div class="controls">
@@ -530,9 +550,9 @@
 					</div>
 					<div class="box">
 						<legend>申请信息</legend>
-						<div class="control-group">
-							<div class="row">
-								<div class="span4">
+						<div class="row">
+							<div class="control-group">
+								<div class="span3">
 									<label class="control-label text-info">申请时间：</label>
 									<div class="controls">
 										<div id="datetimepicker1" class="input-append date">
@@ -544,14 +564,18 @@
 										</div>
 									</div>
 								</div>
-								<div class="span4">
+							</div>
+							<div class="control-group">
+								<div class="span3">
 									<label class="control-label text-info">提交部门：</label>
 									<div class="controls">
 										<input name="submitDepartment" />
 									</div>
 								</div>
 							</div>
-							<div class="row">
+						</div>
+						<div class="row">
+							<div class="control-group">
 								<div class="span8">
 									<label class="control-label text-info">所需信息的内容描述：</label>
 									<div class="controls">
@@ -562,7 +586,9 @@
 									</div>
 								</div>
 							</div>
-							<div class="row">
+						</div>
+						<div class="row">
+							<div class="control-group">
 								<div class="span8">
 									<label class="control-label text-info">所需信息的用途：</label>
 									<div class="controls">
@@ -570,33 +596,52 @@
 									</div>
 								</div>
 							</div>
-							<label class="control-label text-info">所需信息的指定提供方式：</label>
-							<div class="controls">
-								<label class="checkbox inline"> <input type="checkbox"
-									value="0" name="mode" />纸面
-								</label><label class="checkbox inline"><input type="checkbox"
-									value="1" name="mode" />电子邮件</label>
+						</div>
+						<div class="row">
+							<div class="control-group">
+								<div class="span8">
+									<label class="control-label text-info">所需信息的指定提供方式：</label>
+									<div class="controls">
+										<label class="checkbox inline"> <input type="checkbox"
+											value="0" name="mode" />纸面
+										</label><label class="checkbox inline"><input type="checkbox"
+											value="1" name="mode" />电子邮件</label>
+									</div>
+								</div>
 							</div>
-							<label class="control-label text-info">读取信息的方式：</label>
-							<div class="controls">
-								<label class="checkbox inline"><input type="checkbox"
-									value="0" name="obtainMode" />电子邮件</label><label
-									class="checkbox inline"><input type="checkbox"
-									value="1" name="obtainMode" />传真</label><label class="checkbox inline"><input
-									type="checkbox" value="2" name="obtainMode" />自行领取</label><label
-									class="checkbox inline"><input type="checkbox"
-									value="3" name="obtainMode" />邮寄</label>
+						</div>
+						<div class="row">
+							<div class="control-group">
+								<div class="span8">
+									<label class="control-label text-info">读取信息的方式：</label>
+									<div class="controls">
+										<label class="checkbox inline"><input type="checkbox"
+											value="0" name="obtainMode" />电子邮件</label><label
+											class="checkbox inline"><input type="checkbox"
+											value="1" name="obtainMode" />传真</label><label
+											class="checkbox inline"><input type="checkbox"
+											value="2" name="obtainMode" />自行领取</label><label
+											class="checkbox inline"><input type="checkbox"
+											value="3" name="obtainMode" />邮寄</label>
+									</div>
+								</div>
 							</div>
-							<label class="control-label text-info">申请信息公开形式：</label>
-							<div class="controls">
-								<label class="radio inline"> <input type="radio"
-									value="当面申请" name="formOfDisclosure" />当面申请
-								</label><label class="radio inline"><input type="radio"
-									value="网上及电子邮件申请" name="formOfDisclosure" />网上及电子邮件申请</label><label
-									class="radio inline"><input type="radio"
-									value="信函及传真申请" name="formOfDisclosure" />信函及传真申请</label> <label
-									class="radio inline"><input type="radio" value="其它形式申请"
-									name="formOfDisclosure" />其它形式申请</label>
+						</div>
+						<div class="row">
+							<div class="control-group">
+								<div class="span8">
+									<label class="control-label text-info">申请信息公开形式：</label>
+									<div class="controls">
+										<label class="radio inline"> <input type="radio"
+											value="当面申请" name="formOfDisclosure" />当面申请
+										</label><label class="radio inline"><input type="radio"
+											value="网上及电子邮件申请" name="formOfDisclosure" />网上及电子邮件申请</label><label
+											class="radio inline"><input type="radio"
+											value="信函及传真申请" name="formOfDisclosure" />信函及传真申请</label> <label
+											class="radio inline"><input type="radio"
+											value="其它形式申请" name="formOfDisclosure" />其它形式申请</label>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -627,27 +672,32 @@
 					<div class="box">
 						<legend>答复情况(如果直接办结，请选择答复类型)：</legend>
 						<div class="row">
-							<div class="controls">
-								<label class="radio inline"> <input type="radio"
-									value="属于已主动公开范围，告知其获取途径" name="formOfResponse" />属于已主动公开范围，告知其获取途径
-								</label><label class="radio inline"><input type="radio"
-									value="同意公开" name="formOfResponse" />同意公开</label> <label
-									class="radio inline"><input type="radio" value="同意部分公开"
-									name="formOfResponse" />同意部分公开</label> <label class="radio inline"><input
-									type="radio" value="涉及国家秘密、商业秘密、个人隐私而不同意公开"
-									name="formOfResponse" />涉及国家秘密、商业秘密、个人隐私而不同意公开</label> <label
-									class="radio inline"><input type="radio"
-									value="危及国家安全、公共安全、经济安全和社会稳定而不同意公开" name="formOfResponse" />危及国家安全、公共安全、经济安全和社会稳定而不同意公开</label>
-								<label class="radio inline"><input type="radio"
-									value="不是《条例》所指政府信息" name="formOfResponse" />不是《条例》所指政府信息</label> <label
-									class="radio inline"><input type="radio"
-									value="不属于本机关公开范围" name="formOfResponse" />不属于本机关公开范围</label> <label
-									class="radio inline"><input type="radio"
-									value="信息不存在或本机关不掌握" name="formOfResponse" />信息不存在或本机关不掌握</label> <label
-									class="radio inline"><input type="radio"
-									value="法律法规规定的其他情形而不同意公开" name="formOfResponse" />法律法规规定的其他情形而不同意公开</label>
-								<label class="radio inline"><input type="radio"
-									value="重复申请" name="formOfResponse" />重复申请</label>
+							<div class="control-group">
+								<div class="span8">
+									<label class="control-label text-info">答复类型：</label>
+									<div class="controls">
+										<label class="radio inline"> <input type="radio"
+											value="属于已主动公开范围，告知其获取途径" name="formOfResponse" />属于已主动公开范围，告知其获取途径
+										</label><label class="radio inline"><input type="radio"
+											value="同意公开" name="formOfResponse" />同意公开</label> <label
+											class="radio inline"><input type="radio"
+											value="同意部分公开" name="formOfResponse" />同意部分公开</label> <label
+											class="radio inline"><input type="radio"
+											value="涉及国家秘密、商业秘密、个人隐私而不同意公开" name="formOfResponse" />涉及国家秘密、商业秘密、个人隐私而不同意公开</label>
+										<label class="radio inline"><input type="radio"
+											value="危及国家安全、公共安全、经济安全和社会稳定而不同意公开" name="formOfResponse" />危及国家安全、公共安全、经济安全和社会稳定而不同意公开</label>
+										<label class="radio inline"><input type="radio"
+											value="不是《条例》所指政府信息" name="formOfResponse" />不是《条例》所指政府信息</label> <label
+											class="radio inline"><input type="radio"
+											value="不属于本机关公开范围" name="formOfResponse" />不属于本机关公开范围</label> <label
+											class="radio inline"><input type="radio"
+											value="信息不存在或本机关不掌握" name="formOfResponse" />信息不存在或本机关不掌握</label> <label
+											class="radio inline"><input type="radio"
+											value="法律法规规定的其他情形而不同意公开" name="formOfResponse" />法律法规规定的其他情形而不同意公开</label>
+										<label class="radio inline"><input type="radio"
+											value="重复申请" name="formOfResponse" />重复申请</label>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

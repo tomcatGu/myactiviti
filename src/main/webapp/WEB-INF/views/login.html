@@ -40,6 +40,10 @@ body {
 		<form action="#" th:action="@{/login}" method="post"
 			class="form-signin">
 			<h2 class="form-signin-heading">登录依申请公开办理系统</h2>
+			<div class="alert alert-error" th:if="${err!=null}">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<strong>警告!</strong> 用户名或者密码不正确。
+			</div>
 			<div class="control-group">
 				<label for="username" class="control-label">用户名: </label>
 				<div class="controls">

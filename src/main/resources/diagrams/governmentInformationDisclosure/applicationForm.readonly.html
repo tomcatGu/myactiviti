@@ -10,276 +10,280 @@
 }
 </style>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function encodeUTF8(str) {
-		var temp = "", rs = "";
-		for (var i = 0, len = str.length; i < len; i++) {
-			temp = str.charCodeAt(i).toString(16);
-			rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
-		}
-		return rs;
-	};
+    /*<![CDATA[*/
+    function encodeUTF8(str) {
+	var temp = "", rs = "";
+	for ( var i = 0, len = str.length; i < len; i++) {
+	    temp = str.charCodeAt(i).toString(16);
+	    rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
+	}
+	return rs;
+    };
 
-	function clearSelectedUser() {
-		$('#selectedUser').text("");
-		$('#assigneeList').val("");
-	};
+    function clearSelectedUser() {
+	$('#selectedUser').text("");
+	$('#assigneeList').val("");
+    };
 
-	$(document)
-			.ready(
+    $(document)
+	    .ready(
+		    function() {
+			$("#myForm").validate({
+			    ignore : [],
+			    rules : {
+				applicationName : {
+				    required : true,
+				    minlength : 5
+				},
+				applicationTime : {
+				    required : true,
+				    date : true
+				},
+				assigneeList : {
+				    required : true
+				}
+
+			    },
+			    messages : {
+				applicationName : {
+				    required : "请输入标题",
+				    minlength : "标题不能小于5个字符"
+				},
+				applicationTime : {
+				    required : "请选择申请时间",
+				    date : "请输入正确的时间"
+				},
+				assigneeList : {
+				    required : "必须选择处理单位人员"
+				}
+
+			    }
+			});
+			$("#clearButton").click(function() {
+			    $('#selectedUser').text("");
+			});
+
+			$('#myTab a:first').tab('show');
+
+			$("#datetimepicker1").datetimepicker({
+			    language : 'zh-CN',
+			    format : 'yyyy-MM-dd hh:mm:ss',
+			    pickDate : true,
+			    pickTime : true,
+			    hourStep : 1,
+			    minuteStep : 15,
+			    secondStep : 30,
+			    inputMask : true
+			});
+			$("#submitButton")
+				.click(
 					function() {
-						$("#myForm").validate({
-							ignore : [],
-							rules : {
-								applicationName : {
-									required : true,
-									minlength : 5
+					    $("#businessKey")
+						    .val(
+							    $(
+								    "#applicationName")
+								    .val());
+					    $("#isComplete").val("false");
+					    $("#myForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
+								dataType : "text",
+								success : function(
+									data) {
+								    var ret = JSON
+									    .parse(data);
+								    alert(ret.msg);
+								    $("#myForm")
+									    .trigger(
+										    "evtWFSuccess",
+										    {
+											msg : "OK"
+										    });
+								    $(
+									    "#submitButton")
+									    .attr(
+										    "disabled",
+										    true)
+									    .attr(
+										    "value",
+										    "成功提交");
+
 								},
-								applicationTime : {
-									required : true,
-									date : true
-								},
-								assigneeList : {
-									required : true
+								beforeSubmit : function() {
+								    if ($(
+									    "#myForm")
+									    .valid()) {
+									$(
+										"#submitButton")
+										.attr(
+											"disabled",
+											true)
+										.attr(
+											"value",
+											"正在提交...");
+								    }
+								    return $(
+									    "#myForm")
+									    .valid();
 								}
 
-							},
-							messages : {
-								applicationName : {
-									required : "请输入标题",
-									minlength : "标题不能小于5个字符"
-								},
-								applicationTime : {
-									required : "请选择申请时间",
-									date : "请输入正确的时间"
-								},
-								assigneeList : {
-									required : "必须选择处理单位人员"
-								}
+							    }).submit();
+					    return false;
 
-							}
-						});
-						$("#clearButton").click(function() {
-							$('#selectedUser').text("");
-						});
-
-						$('#myTab a:first').tab('show');
-
-						$("#datetimepicker1").datetimepicker({
-							language : 'zh-CN',
-							format : 'yyyy-MM-dd hh:mm:ss',
-							pickDate : true,
-							pickTime : true,
-							hourStep : 1,
-							minuteStep : 15,
-							secondStep : 30,
-							inputMask : true
-						});
-						$("#submitButton")
-								.click(
-										function() {
-											$("#businessKey")
-													.val(
-															$(
-																	"#applicationName")
-																	.val());
-											$("#isComplete").val("false");
-											$("#myForm")
-													.ajaxForm(
-															{
-																url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
-																dataType : "text",
-																success : function(
-																		data) {
-																	var ret = JSON
-																			.parse(data);
-																	alert(ret.msg);
-																	$("#myForm")
-																			.trigger(
-																					"evtWFSuccess",
-																					{
-																						msg : "OK"
-																					});
-																	$(
-																			"#submitButton")
-																			.attr(
-																					"disabled",
-																					true)
-																			.attr(
-																					"value",
-																					"成功提交");
-
-																},
-																beforeSubmit : function() {
-																	if ($(
-																			"#myForm")
-																			.valid()) {
-																		$(
-																				"#submitButton")
-																				.attr(
-																						"disabled",
-																						true)
-																				.attr(
-																						"value",
-																						"正在提交...");
-																	}
-																	return $(
-																			"#myForm")
-																			.valid();
-																}
-
-															}).submit();
-											return false;
-
-										});
-						$("#finishButton")
-								.click(
-										function() {
-											$("#businessKey")
-													.val(
-															$(
-																	"#applicationName")
-																	.val());
-											$("#isComplete").val("true");
-											$('#assigneeList')
-													.val(
-															"cheat value to disable validation");
-											$("#myForm")
-													.ajaxForm(
-															{
-																url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
-																dataType : "text",
-																success : function(
-																		data) {
-																	var ret = JSON
-																			.parse(data);
-																	alert(ret.msg);
-																	$("#myForm")
-																			.trigger(
-																					"evtWFSuccess",
-																					{
-																						msg : "OK"
-																					});
-																	$(
-																			"#finishButton")
-																			.attr(
-																					"disabled",
-																					true)
-																			.attr(
-																					"value",
-																					"成功提交");
-
-																},
-																beforeSubmit : function() {
-																	if ($(
-																			"#myForm")
-																			.valid()) {
-																		$(
-																				"#finishButton")
-																				.attr(
-																						"disabled",
-																						true)
-																				.attr(
-																						"value",
-																						"正在提交...");
-																	}
-																	return $(
-																			"#myForm")
-																			.valid();
-																}
-
-															}).submit();
-											return false;
-
-										});
-						$('#selectBtn')
-								.bind(
-										'click',
-										function() {
-											$("#selectUsers")
-													.load(
-															/*[[@{'/user/select'}]]*/'../../user/select',
-															function(data) {
-																$(
-																		"#selectUsers")
-																		.bind(
-																				"evtSelectUser",
-																				function(
-																						evt,
-																						data) {
-
-																					str = $(
-																							'#assigneeList')
-																							.val();
-																					for (var i = 0; i < data.users.length; i++) {
-																						str += data.users[i]
-																								+ ",";
-																					}
-																					$(
-																							'#assigneeList')
-																							.val(
-																									str);
-																					var userids = str
-																							.split(',');
-
-																					for (i = 0; i < userids.length; i++) {
-																						var id = userids[i];
-																						if (id == "")
-																							continue;
-																						$
-																								.ajax({
-																									type : 'GET',
-																									url : /*[[@{'/user/name/'}]]*/""
-																											+ id,
-																									async : true,
-																									success : function(
-																											data) {
-																										temp = $(
-																												'#selectedUser')
-																												.text();
-																										temp += data
-																												+ ';';
-																										$(
-																												'#selectedUser')
-																												.text(
-																														temp);
-
-																									}
-
-																								});
-																					}
-
-																					$(
-																							'#selectUsers')
-																							.modal(
-																									"hide");
-																				});
-																$(
-																		"#selectUsers")
-																		.bind(
-																				"evtCancled",
-																				function(
-																						evt,
-																						data) {
-																					console
-																							.log(data);
-																					$(
-																							'#selectUsers')
-																							.modal(
-																									"hide");
-																				});
-																$(
-																		'#selectUsers')
-																		.modal();
-
-															});
-										});
 					});
-	/*]]>*/
+			$("#finishButton")
+				.click(
+					function() {
+					    $("#businessKey")
+						    .val(
+							    $(
+								    "#applicationName")
+								    .val());
+					    $("#isComplete").val("true");
+					    $('#assigneeList')
+						    .val(
+							    "cheat value to disable validation");
+					    $("#myForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/form/submitStartForm/'+${processDefinitionId}}]]*/"",
+								dataType : "text",
+								success : function(
+									data) {
+								    var ret = JSON
+									    .parse(data);
+								    alert(ret.msg);
+								    $("#myForm")
+									    .trigger(
+										    "evtWFSuccess",
+										    {
+											msg : "OK"
+										    });
+								    $(
+									    "#finishButton")
+									    .attr(
+										    "disabled",
+										    true)
+									    .attr(
+										    "value",
+										    "成功提交");
+
+								},
+								beforeSubmit : function() {
+								    if ($(
+									    "#myForm")
+									    .valid()) {
+									$(
+										"#finishButton")
+										.attr(
+											"disabled",
+											true)
+										.attr(
+											"value",
+											"正在提交...");
+								    }
+								    return $(
+									    "#myForm")
+									    .valid();
+								}
+
+							    }).submit();
+					    return false;
+
+					});
+			$('#selectBtn')
+				.bind(
+					'click',
+					function() {
+					    $("#selectUsers")
+						    .load(
+							    /*[[@{'/user/select'}]]*/'../../user/select',
+							    function(data) {
+								$(
+									"#selectUsers")
+									.bind(
+										"evtSelectUser",
+										function(
+											evt,
+											data) {
+
+										    str = $(
+											    '#assigneeList')
+											    .val();
+										    for ( var i = 0; i < data.users.length; i++) {
+											str += data.users[i]
+												+ ",";
+										    }
+										    $(
+											    '#assigneeList')
+											    .val(
+												    str);
+										    var userids = str
+											    .split(',');
+
+										    for (i = 0; i < userids.length; i++) {
+											var id = userids[i];
+											if (id == "")
+											    continue;
+											$
+												.ajax({
+												    type : 'GET',
+												    url : /*[[@{'/user/name/'}]]*/""
+													    + id,
+												    async : true,
+												    success : function(
+													    data) {
+													temp = $(
+														'#selectedUser')
+														.text();
+													temp += data
+														+ ';';
+													$(
+														'#selectedUser')
+														.text(
+															temp);
+
+												    }
+
+												});
+										    }
+
+										    $(
+											    '#selectUsers')
+											    .modal(
+												    "hide");
+										});
+								$(
+									"#selectUsers")
+									.bind(
+										"evtCancled",
+										function(
+											evt,
+											data) {
+										    console
+											    .log(data);
+										    $(
+											    '#selectUsers')
+											    .modal(
+												    "hide");
+										});
+								$(
+									'#selectUsers')
+									.modal();
+
+							    });
+					});
+		    });
+    /*]]>*/
 </script>
 </head>
 <body>
-	<div class="well">
+	<div class="alert alert-error" th:if="${result==null}">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<strong>警告!</strong> 该表单还未填写数据。
+	</div>
+	<div class="well" th:if="${result!=null}">
 		<div class="box">
 			<div class="control-group">
 				<label class="control-label text-info">标题：</label>
