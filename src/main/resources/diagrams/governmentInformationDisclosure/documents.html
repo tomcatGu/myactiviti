@@ -1,0 +1,240 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<title>统计列表</title>
+<script src="/bootstrap/js/plugins/jqplot.json2.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.json2.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.barRenderer.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.barRenderer.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.categoryAxisRenderer.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.categoryAxisRenderer.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.pointLabels.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.pointLabels.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.dateAxisRenderer.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.dateAxisRenderer.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.canvasTextRenderer.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.canvasTextRenderer.min.js}"></script>
+<script src="/bootstrap/js/plugins/jqplot.canvasAxisTickRenderer.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/plugins/jqplot.canvasAxisTickRenderer.min.js}"></script>
+<script type="text/javascript" src="../excanvas.compiled.js"
+	th:src="@{/bootstrap/js/excanvas.compiled.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	function render(data) {
+		var newRow = "<tr><td><input type=\"checkbox\" /></td><td>" + data.id
+				+ "</td><td>" + data.name + "</td><td>" + data.assignee
+				+ "</td><td><a href=\"claim/"+data.id+"\">接受</a></td></tr>";
+		return newRow;
+	};
+	$(document)
+			.ready(
+					function() {
+						$("#submitButton")
+								.click(
+										function() {
+											alert($("#startTimePicker").data(
+													'datetimepicker')
+													.getLocalDate());
+											$
+													.ajax({
+														type : "GET", //提交的类型
+														dataType : "json",
+														data : {
+															'startTime' : new Date(
+																	$(
+																			"#startTimePicker")
+																			.data(
+																					'datetimepicker')
+																			.getLocalDate())
+																	.ToString(),
+															'endTime' : new Date(
+																	$(
+																			"#endTimePicker")
+																			.data(
+																					'datetimepicker')
+																			.getLocalDate())
+																	.ToString()
+														},
+														url : /*[[@{'/statistical/countergid'}]]*/"", //提交地址
+														success : function(data) {
+															var dataValue = new Array(); //数据
+															var ticks = new Array(); //横坐标值
+															if (ticks.length == 0) {
+																ticks = [
+																		"属于已主动公开范围，告知其获取途径",
+																		"同意公开",
+																		"同意部分公开",
+																		"涉及国家秘密、商业秘密、个人隐私而不同意公开",
+																		"危及国家安全、公共安全、经济安全和社会稳定而不同意公开",
+																		"不是《条例》所指政府信息",
+																		"不属于本机关公开范围",
+																		"信息不存在或本机关不掌握",
+																		"法律法规规定的其他情形而不同意公开",
+																		"重复申请" ];
+																dataValue = [
+																		0, 0,
+																		0, 0,
+																		0, 0,
+																		0, 0,
+																		0, 0 ];
+
+															}
+															for (aData in data.statisticalResult) {
+
+																var i = 0;
+																for (i = 0; i < ticks.length; i++) {
+																	if (ticks[i] == aData)
+																		break;
+
+																}
+																dataValue[i] = data.statisticalResult[aData];
+
+															}
+
+															$("#chart")
+																	.html("");
+															var plot1 = $
+																	.jqplot(
+																			'chart',
+																			[ dataValue ],
+																			{
+																				animate : !$.jqplot.use_excanvas, //是否动画显示
+																				series : [ {
+																					renderer : $.jqplot.BarRenderer
+																				} ],
+																				axesDefaults : {
+																					tickRenderer : $.jqplot.CanvasAxisTickRenderer,
+																					tickOptions : {
+																						angle : -30
+																					}
+																				},
+																				title : '统计表', //标题
+																				axes : {
+																					xaxis : {
+																						renderer : $.jqplot.CategoryAxisRenderer, // 设置横（纵）轴上数据加载的渲染器
+																						ticks : ticks,
+																						labelPosition : 'middle'
+																					//设置横（纵）坐标的刻度上的值，可为该ticks数组中的值
+																					},
+																					yaxis : {
+																						min : 0,
+																						tickInterval : 1,
+																						pad : 2, // 一个相乘因子
+																						tickOptions : {
+																							formatString : '%d'
+																						}
+
+																					}
+																				}
+																			});
+														}
+													});
+										});
+
+						$("#startTimePicker").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
+						$("#endTimePicker").datetimepicker({
+							language : 'zh-CN',
+							format : 'yyyy-MM-dd hh:mm:ss',
+							pickDate : true,
+							pickTime : true,
+							hourStep : 1,
+							minuteStep : 15,
+							secondStep : 30,
+							inputMask : true
+						});
+
+					});
+	/*]]>*/
+</script>
+<style>
+.hover {
+	background-color: #cccc00;
+}
+</style>
+</head>
+<body>
+
+	<div class="box">
+		<h1>资料库</h1>
+		<table id="statisticalTable"
+			class="table table-bordered table-striped table-condensed">
+			<tr>
+				<th>序号</th>
+				<th>标题</th>
+				<th>发布时间</th>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>依申请公开规范文本</td>
+				<td>2014-10-15</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>依申请公开答复运转单</td>
+				<td>2014-10-15</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>全国法院政府信息公开十大案例</td>
+				<td>2014-10-15</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>《最高人民法院关于审理政府信息公开行政案件若干问题的规定》</td>
+				<td>2014-10-15</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>《国务院办公厅关于做好政府信息依申请公开工作的意见》</td>
+				<td>2014-10-15</td>
+			</tr>
+			<tr>
+				<td>6</td>
+				<td>《国务院办公厅关于加强和规范政府信息公开情况统计报送工作的通知》</td>
+				<td>2014-10-12</td>
+			</tr>
+			<tr>
+				<td>7</td>
+				<td>政府信息依申请公开实施过程中的若干法律问题研究</td>
+				<td>2014-10-12</td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>政府信息公开工作制度汇编</td>
+				<td>2014-10-12</td>
+			</tr>
+			<tr>
+				<td>9</td>
+				<td>公民申请政府信息公开为何胜诉不多</td>
+				<td>2014-10-12</td>
+			</tr>
+			<tr>
+				<td>10</td>
+				<td>征地过程中的“一书四方案”可否公开</td>
+				<td>2014-10-12</td>
+			</tr>
+			<tr>
+				<td>11</td>
+				<td>系统使用说明</td>
+				<td>2014-10-12</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

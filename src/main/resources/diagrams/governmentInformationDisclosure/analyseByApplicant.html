@@ -147,32 +147,40 @@
 	<div>
 		<form class="form-inline">
 			<div class="control-group">
+				<div class="row">
+					<div class="span9">
+						<div class="controls">
+							<label class="control-label text-info">申 请 人：</label>
+							<div class="input-append date">
+								<input name="applicantName" id="applicantName" />
+							</div>
 
-				<div class="span9">
-					<div class="controls">
-						<label class="control-label text-info">申请人：</label>
-						<div class="input-append date">
-							<input name="applicantName" id="applicantName" />
 						</div>
-						<div class="row">
-							<label class="control-label text-info">开始时间：</label>
-							<div id="startTimePicker" class="input-append date">
-								<input name="startTime" class="datepicker"
-									data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-									<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-								</i>
-								</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span9">
+						<div class="controls">
+							<div class="">
+								<label class="control-label text-info">开始时间：</label>
+								<div id="startTimePicker" class="input-append date">
+									<input name="startTime" class="datepicker"
+										data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
+										class="add-on"> <i data-time-icon="icon-time"
+										data-date-icon="icon-calendar"> </i>
+									</span>
+								</div>
+								<label class="control-label text-info">结束时间：</label>
+								<div id="endTimePicker" class="input-append date">
+									<input name="endTime" class="datepicker"
+										data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
+										class="add-on"> <i data-time-icon="icon-time"
+										data-date-icon="icon-calendar"> </i>
+									</span>
+								</div>
+								<input type="button" id="submitButton" value="提交"
+									class="btn btn-primary" />
 							</div>
-							<label class="control-label text-info">结束时间：</label>
-							<div id="endTimePicker" class="input-append date">
-								<input name="endTime" class="datepicker"
-									data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-									<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-								</i>
-								</span>
-							</div>
-							<input type="button" id="submitButton" value="提交"
-								class="btn btn-primary" />
 						</div>
 					</div>
 				</div>
@@ -183,10 +191,10 @@
 		<table id="analyseTable"
 			class="table table-bordered table-striped table-condensed">
 			<tr>
-				<th>提交人</th>
-				<th>提交部门</th>
-				<th>申请事项</th>
-				<th>结果</th>
+				<th width="60px">提交人</th>
+				<th width="120px">提交部门</th>
+				<th align="center">申请事项</th>
+				<th align="center">结果</th>
 			</tr>
 		</table>
 	</div>

@@ -613,6 +613,8 @@ public class GovernmentInformationDisclosureService {
 				piDTO.setStartTime(instance.getStartTime());
 				piDTO.setEndTime(instance.getEndTime());
 				piDTO.setStartUserId(instance.getStartUserId());
+				piDTO.setUsername(accountService.findUserByLoginName(
+						piDTO.getStartUserId()).getName());
 				if (piDTO.getEndTime() == null)
 					piDTO.setStatus("activited");
 				else

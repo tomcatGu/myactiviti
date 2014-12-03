@@ -108,15 +108,16 @@
 	    load('所有流程', 'runtime/process/userProcessIndex/admin');
 	});
 	
-
+$("#time").text(new Date().toLocaleTimeString());
 
     });
     /*]]>*/
 </script>
 </head>
+<style id="holderjs-style" type="text/css"></style>
 <body>
 
-	<div class="span12">
+	<div class="">
 		<div class="navbar navbar-inverse navbar-fixed-top showgrid">
 			<div class="navbar-inner">
 				<div class="container-fluid">
@@ -125,7 +126,8 @@
 						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 							class="icon-bar"></span>
 					</button>
-					<a class="brand" href="#">依申请公开办理系统</a>
+					<span id="time" class="brand">2014年12月3日</span>
+
 					<div class="nav-collapse collapse">
 						<div class="btn-group pull-right">
 							<button class="btn btn-info"
@@ -146,25 +148,32 @@
 				</div>
 			</div>
 		</div>
+		<header class="jumbotron subhead" id="overview">
+			<div class="container">
+				<h1>依申请公开办理系统</h1>
+				<p class="lead">登记、办理、检索依申请公开信息。</p>
+			</div>
+		</header>
 		<div class="container">
 			<div class="row">
 				<div class="span3 bs-docs-sidebar">
 					<div class="">
-						<ul class="nav nav-list">
+						<ul class="nav nav-list bs-docs-sidenav affix-top">
 							<li class="nav-header">依申请公开</li>
 							<li><a href="#"
-								onClick="load('创建','runtime/process/governmentInformationDisclosure:188:112622/startAndRedirectToTaskForm')">创建<i
+								onClick="load('创建','runtime/process/governmentInformationDisclosure:25:67784/startAndRedirectToTaskForm')">创建<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="active"><a id="tasks"
 								onclick="load('待办事项','runtime/tasks/index')">待办事项<span
 									class="badge badge-warning pull-right" id="tasksBadge">2</span></a></li>
 							<li><a id="candidateTasks"
-								onclick="load('待接收事项','runtime/tasks/candidateTaskIndex')">待接收事项<span
+								onclick="load('待接收事项','runtime/tasks/candidateTaskIndex')"
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER1')==true}">待接收事项<span
 									class="badge badge-warning pull-right" id="candidateBadge">2</span></a></li>
 							<li><a href="#"
 								onClick="load('已办事项','runtime/tasks/historicTasks')">已办事项</a></li>
 							<li><a href="#"
-								onClick="load('已办结','runtime/process/finishedProcessIndex/governmentInformationDisclosure:187:105232/')"
+								onClick="load('已办结','runtime/process/finishedProcessIndex/governmentInformationDisclosure:25:67784/')"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_USER')==true}">已办结</a></li>
 							<li><a href="#" onClick="loadOwner('我发起的')">我发起的</a></li>
 							<li><a href="#"
