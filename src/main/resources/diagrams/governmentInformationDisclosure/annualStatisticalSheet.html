@@ -2,44 +2,55 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    $(document)
-	    .ready(
-		    function() {
-			$('#submitBtn')
-				.click(
+	/*<![CDATA[*/
+	$(document)
+			.ready(
 					function() {
-					    $("#totalPanel")
-						    .load(
-							    /*[[@{'/statistical/total/'}]]*/"statistical/total/"
-								    + $(
-									    "#annual")
-									    .val()
-								    + '/commited?'
-								    + (new Date())
-									    .valueOf(),
-							    function(event) {
+						$('#submitBtn')
+								.click(
+										function() {
+											$("#totalPanel")
+													.load(
+															/*[[@{'/statistical/total/'}]]*/"statistical/total/"
+																	+ $(
+																			"#annual")
+																			.val()
+																	+ '/commited?'
+																	+ (new Date())
+																			.valueOf(),
+															function(event) {
 
-							    });
+															});
+
+										});
 
 					});
-
-		    });
-    /*]]>*/
+	/*]]>*/
 </script>
 </head>
 <body>
 	<form>
 		<div>
-			<label class="control-label text-info">年度：</label> <select
-				name="annual" id="annual">
-				<option value="2014" selected="selected">2014</option>
-				<option value="2015">2015</option>
-				<option value="2016">2016</option>
-				<option value="2017">2017</option>
-				<option value="2018">2018</option>
-			</select><input id="submitBtn" type="button" class="btn btn-info" value="统计" />
+			<label class="control-label text-info">年度：</label>
+			<div class="input-append">
+				<select name="annual" id="annual">
+					<option value="2014" selected="selected">2014</option>
+					<option value="2015">2015</option>
+					<option value="2016">2016</option>
+					<option value="2017">2017</option>
+					<option value="2018">2018</option>
+				</select><input id="submitBtn" type="button" class="btn btn-info" value="统计" />
+				<input id="listBtn" type="button" class="btn btn-info" value="查看" />
+			</div>
 		</div>
+		<table id="statisticalList"
+			class="table table-bordered table-striped table-condensed">
+			<tr>
+				<th>部门</th>
+				<th>上报时间</th>
+				<th>查看</th>
+			</tr>
+		</table>
 	</form>
 	<div id="totalPanel"></div>
 </body>
