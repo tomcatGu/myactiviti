@@ -32,6 +32,8 @@ import org.crusoe.entity.workflow.governmentInformationDisclosure.StatisticalShe
 import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.StatisticalSheetDao;
 import org.crusoe.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -268,5 +270,15 @@ public class StatisticalSheetService {
 	public void delete(Long id) {
 		// TODO Auto-generated method stub
 		statisticalSheetDao.delete(id);
+	}
+
+	public Iterator<StatisticalSheet> findByAnnualAndStatus(String annual,
+			String status, PageRequest pageRequest) {
+		// TODO Auto-generated method stub
+		Page<StatisticalSheet> ss = statisticalSheetDao.findByAnnualAndStatus(
+				annual, status, pageRequest);
+		if (ss != null)
+			return ss.iterator();
+		return null;
 	}
 }

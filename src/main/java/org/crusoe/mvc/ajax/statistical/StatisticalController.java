@@ -49,6 +49,9 @@ import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.Govern
 import org.crusoe.service.AccountService;
 import org.crusoe.service.workflow.governmentInformationDisclosure.StatisticalSheetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -360,6 +363,26 @@ public class StatisticalController {
 				statisticalSheetService.total(annual, status));
 
 		return "governmentInformationDisclosure/statisticalSheet.readonly";
+	}
+
+	@RequestMapping(value = "listSheet", method = RequestMethod.POST)
+	public Map<Long, Object> listSheet(@PathVariable("annual") String annual,
+			@PathVariable("status") String status,
+			@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			Model model) {
+		HashMap<Long, Object> sheets = new HashMap<Long, Object>();
+
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
+				Direction.DESC, new String[] { sort }) : new Sort(
+				Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size,
+				sortRequest);
+		Iterator<StatisticalSheet> ss = statisticalSheetService
+				.findByAnnualAndStatus(annual, status, pageRequest);
+		return sheets;
 	}
 
 }
