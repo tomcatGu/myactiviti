@@ -34,6 +34,9 @@
 			         
 			         $("#tasksBadge").text(data.badges);
 			     });
+				$("#content").bind("evt_SaveSuccess", function(evt, data) {
+				    load('所有流程', 'runtime/process/userProcessIndex/admin');
+				});
 			 
 		 };
 		  
@@ -104,7 +107,7 @@
 	//load('待办', 'runtime/tasks/candidateTaskIndex');
 	load('待办', 'runtime/tasks/index');
 	
-	//$("#content").bind("evtWFSuccess", function(evt, data) {
+	//$("#content").bind("evt_SaveSuccess", function(evt, data) {
 	//    load('所有流程', 'runtime/process/userProcessIndex/admin');
 	//});
 	
@@ -159,7 +162,7 @@ $("#time").text(new Date().toLocaleTimeString());
 						<ul class="nav nav-list bs-docs-sidenav affix-top">
 							<li class="nav-header">依申请公开</li>
 							<li><a href="#"
-								onClick="load('创建','runtime/process/governmentInformationDisclosure:198:127652/startAndRedirectToTaskForm')">创建<i
+								onClick="load('创建','runtime/process/governmentInformationDisclosure:27:70023/startAndRedirectToTaskForm')">创建<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="active"><a id="tasks"
 								onclick="load('待办事项','runtime/tasks/index')">待办事项<span
@@ -219,10 +222,11 @@ $("#time").text(new Date().toLocaleTimeString());
 				</div>
 				<!--/span-->
 				<div class="span9">
+
 					<ul class="breadcrumb" id="breadcrumb">
 						<li><a href="#">首页</a> <span class="divider">/</span></li>
 					</ul>
-					<div class="span9">
+					<div class="box">
 						<div class="row" id="content">
 							<h1>欢迎!</h1>
 							<p>这是一个政府公开信息共享系统.</p>

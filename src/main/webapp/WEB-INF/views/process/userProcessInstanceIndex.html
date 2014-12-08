@@ -107,14 +107,14 @@
 		+ data.id
 		+ "','"
 		+ data.processDefinitionId
-		+ "');\"><i class='icon-edit'></i></a></td></tr>";
+		+ "');\"><i class='icon-search'></i></a></td></tr>";
 	return newRow;
     };
     /*]]>*/
 </script>
 </head>
 <body>
-	<div class="box">
+	<div class="box span9">
 		<div class="control-group pull-right">
 			<form th:action="@{'/runtime/search/searchHistoryTasks'}"
 				method="POST" id="searchForm">

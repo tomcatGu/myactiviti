@@ -2,112 +2,120 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
+	/*<![CDATA[*/
 
-    function render(data) {
-	var newRow = "<tr><td><a href=\"javascript:viewSheet('" + data.id
-		+ "');\">" + data.name + "</a></td><td>"
-		+ new Date(data.fillingDate).ToString("yyyy-MM-dd HH:mm:ss")
-		+ "</td><td></tr>";
-	return newRow;
-    };
-    function viewSheet(id) {
-	$
-		.blockUI({
-		    message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
+	function render(data) {
+		var newRow = "<tr><td><a href=\"javascript:viewSheet('" + data.id
+				+ "');\">" + data.name + "</a></td><td>"
+				+ new Date(data.fillingDate).ToString("yyyy-MM-dd HH:mm:ss")
+				+ "</td><td></tr>";
+		return newRow;
+	};
+	function viewSheet(id) {
+		$
+				.blockUI({
+					message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
+				});
+		$("#totalPanel").load(
+		/*[[@{'/statistical/viewSheet/'}]]*/"statistical/viewSheet/" //view statisticalSheet
+				+ id, function(event) {
+			$.unblockUI();
 		});
-	$("#totalPanel").load(
-	/*[[@{'/statistical/viewSheet/'}]]*/"statistical/viewSheet/" //view statisticalSheet
-		+ id, function(event) {
-	    $.unblockUI();
-	});
-    };
-    $(document)
-	    .ready(
-		    function() {
-			//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-			$('#submitBtn')
-				.click(
+	};
+	$(document)
+			.ready(
 					function() {
-					    $
-						    .blockUI({
-							message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
-						    });
-					    $("#totalPanel")
-						    .load(
-							    /*[[@{'/statistical/total/'}]]*/"statistical/total/"
-								    + $(
-									    "#annual")
-									    .val()
-								    + '/commited?'
-								    + (new Date())
-									    .valueOf(),
-							    function(event) {
-								$.unblockUI();
-							    });
+						//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+						$('#submitBtn')
+								.click(
+										function() {
+											$
+													.blockUI({
+														message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
+													});
+											$("#totalPanel")
+													.load(
+															/*[[@{'/statistical/total/'}]]*/"statistical/total/"
+																	+ $(
+																			"#annual")
+																			.val()
+																	+ '/commited?'
+																	+ (new Date())
+																			.valueOf(),
+															function(event) {
+																$.unblockUI();
+															});
+
+										});
+						$("#listBtn")
+								.click(
+										function() {
+											$
+													.blockUI({
+														message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
+													});
+											$
+													.ajax({
+														type : 'POST',
+														url : /*[[@{'/statistical/listSheet/'}]]*/""
+																+ $("#annual")
+																		.val()
+																+ "/commited?sort=id&order=desc",
+														async : true,
+														success : function(data) {
+															$(
+																	"#statisticalList")
+																	.find("tr")
+																	.nextAll()
+																	.remove();
+															for (aSheet in data) {
+																var row = render(data[aSheet]);
+																$(
+																		"#statisticalList")
+																		.find(
+																				"tr:last")
+																		.after(
+																				row);
+															}
+															$.unblockUI();
+
+														}
+
+													});
+
+										});
 
 					});
-			$("#listBtn")
-				.click(
-					function() {
-					    $
-						    .blockUI({
-							message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
-						    });
-					    $
-						    .ajax({
-							type : 'POST',
-							url : /*[[@{'/statistical/listSheet/'}]]*/""
-								+ $("#annual")
-									.val()
-								+ "/commited?sort=id&order=desc",
-							async : true,
-							success : function(data) {
-							    for (aSheet in data) {
-								var row = render(data[aSheet]);
-								$(
-									"#statisticalList")
-									.find(
-										"tr:last")
-									.after(
-										row);
-							    }
-							    $.unblockUI();
-
-							}
-
-						    });
-
-					});
-
-		    });
-    /*]]>*/
+	/*]]>*/
 </script>
 </head>
 <body>
-	<form>
-		<div>
-			<label class="control-label text-info">年度：</label>
-			<div class="input-append">
-				<select name="annual" id="annual">
-					<option value="2014" selected="selected">2014</option>
-					<option value="2015">2015</option>
-					<option value="2016">2016</option>
-					<option value="2017">2017</option>
-					<option value="2018">2018</option>
-				</select><input id="submitBtn" type="button" class="btn btn-info" value="统计" />
-				<input id="listBtn" type="button" class="btn btn-info" value="查看" />
+	<div class="box span9">
+		<form>
+			<div>
+				<label class="control-label text-info">年度：</label>
+				<div class="input-append">
+					<select name="annual" id="annual">
+						<option value="2014" selected="selected">2014</option>
+						<option value="2015">2015</option>
+						<option value="2016">2016</option>
+						<option value="2017">2017</option>
+						<option value="2018">2018</option>
+					</select><input id="submitBtn" type="button" class="btn btn-info" value="统计" />
+					<input id="listBtn" type="button" class="btn btn-info" value="查看" />
+				</div>
 			</div>
-		</div>
-		<table id="statisticalList"
-			class="table table-bordered table-striped table-condensed">
-			<tr>
-				<th>部门</th>
-				<th>上报时间</th>
-			</tr>
-		</table>
-	</form>
-	<div id="totalPanel"></div>
-	<div id="sheetLoading"></div>
+			<table id="statisticalList"
+				class="table table-bordered table-striped table-condensed">
+				<tr>
+					<th>部门</th>
+					<th>上报时间</th>
+				</tr>
+			</table>
+		</form>
+		<div id="totalPanel"></div>
+		<div id="sheetLoading"></div>
+	</div>
+
 </body>
 </html>

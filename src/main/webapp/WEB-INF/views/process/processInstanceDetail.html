@@ -5,47 +5,48 @@
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <title>我发起的流程</title>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    $(document).ready(function() {
+	/*<![CDATA[*/
+	$(document).ready(function() {
 
-    });
+	});
 
-    function loadProcessDiagram(processInstanceId, processDefinitionId) {
-	$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
-	+processDefinitionId + "?timestamp=" + (new Date()).valueOf());
-	/*
-	$
-			.ajax({
-				type : 'GET',
-				url : [[@{'/runtime/process/activityCoordinate/'}]]''
-						+ processDefinitionId+ "?timestamp=" + (new Date()).valueOf(),
-				async : false,
-				success : function(data) {
-					var coord = data.coordinates;
-					var i = 0;
-					for (i = 0; i < coord.length; i++) {
-						var obj = coord[i];
-						//alert(obj.id);
-						//alert(obj.x);
-						//alert(obj.y);
+	function loadProcessDiagram(processInstanceId, processDefinitionId) {
+		$("#processDiagram").attr("src", /*[[@{'/runtime/process/processDiagram/'}]]*/
+		+processDefinitionId + "?timestamp=" + (new Date()).valueOf()).attr(
+				"width", "800px");
+		/*
+		$
+				.ajax({
+					type : 'GET',
+					url : [[@{'/runtime/process/activityCoordinate/'}]]''
+							+ processDefinitionId+ "?timestamp=" + (new Date()).valueOf(),
+					async : false,
+					success : function(data) {
+						var coord = data.coordinates;
+						var i = 0;
+						for (i = 0; i < coord.length; i++) {
+							var obj = coord[i];
+							//alert(obj.id);
+							//alert(obj.x);
+							//alert(obj.y);
 
-						var childdiv = $("<div style='position:absolute; border:2px solid red;'></div>"); //创建一个子div
-						childdiv.attr('left', obj.x);
-						childdiv.attr('top', obj.y);
-						childdiv.width(obj.width);
-						childdiv.height(obj.height);
-						//childdiv.appendTo($("#parentDiv"));
+							var childdiv = $("<div style='position:absolute; border:2px solid red;'></div>"); //创建一个子div
+							childdiv.attr('left', obj.x);
+							childdiv.attr('top', obj.y);
+							childdiv.width(obj.width);
+							childdiv.height(obj.height);
+							//childdiv.appendTo($("#parentDiv"));
+
+						}
 
 					}
 
-				}
+				});
+		 */
 
-			});
-	 */
+	};
 
-    };
-
-    /*]]>*/
+	/*]]>*/
 </script>
 </head>
 <body>

@@ -271,12 +271,9 @@ public class ProcessController extends BaseServiceImpl {
 				.createHistoricActivityInstanceQuery()
 
 				.list();
-		for (HistoricActivityInstance hai : hainstances) {
 
-			// String activityName = hai.getActivityName();
-
-		}
 		for (HistoricProcessInstance historicProcessInstance : userAllProcessInstances) {
+			//taskService.createTaskQuery().processInstanceBusinessKey(historicProcessInstance.getBusinessKey()).processInstanceId(historic)
 			HistoricProcessInstanceDTO piDTO = new HistoricProcessInstanceDTO();
 			piDTO.setBusinessKey(historicProcessInstance.getBusinessKey());
 			piDTO.setId(historicProcessInstance.getId());

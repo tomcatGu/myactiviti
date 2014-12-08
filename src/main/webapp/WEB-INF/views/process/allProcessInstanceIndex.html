@@ -133,14 +133,15 @@
 				+ data.id
 				+ "','"
 				+ data.processDefinitionId
-				+ "');\"><i class='icon-edit'></i></a></td></tr>";
+				+ "');\"><i class='icon-search'></i></a></td></tr>";
 		return newRow;
 	};
 	/*]]>*/
 </script>
 </head>
 <body>
-	<div class="box">
+
+	<div class="span9">
 		<div class="control-group pull-right">
 			<form th:action="@{'/runtime/search/searchHistoryTasks'}"
 				method="POST" id="searchForm">
@@ -186,20 +187,28 @@
 
 		</div>
 		<div id="confirmDiv"></div>
-		<div id="viewDiagram" class="modal hide fade span12" data-cache="false">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
-				<h3>流程信息</h3>
-			</div>
-			<div class="modal-body" id="parentDiv">
-				<div id="diagramDiv">
-					<img id="processDiagram" src="" usemap="#ImageMap"
-						data-cache="false" />
+
+
+		<div id="viewDiagram" class="modal hide fade text-center"
+			data-cache="false">
+			<div class="modal-dialog" style="display: inline-block; width: auto;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">×</button>
+						<h3>流程信息</h3>
+					</div>
+					<div class="modal-body" id="parentDiv">
+						<div id="diagramDiv">
+							<img id="processDiagram" src="" usemap="#ImageMap"
+								data-cache="false" />
+						</div>
+						<div id="detailDiv"></div>
+					</div>
 				</div>
-				<div id="detailDiv"></div>
 			</div>
 		</div>
 	</div>
+
 </body>
 </html>
