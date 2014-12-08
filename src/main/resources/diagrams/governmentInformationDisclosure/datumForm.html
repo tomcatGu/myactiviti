@@ -1,0 +1,177 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>资料库表单</title>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    //TODO delete attachment
+    function deleteAttachment(deleteUrl, attachmentId) {
+	$.ajax({
+	    type : "POST",
+	    url : deleteUrl + attachmentId,
+	    data : {
+		_method : 'DELETE',
+	    //items : selctedItems
+	    },
+	    // contentType : 'application/json',
+	    //dataType : 'json',
+	    success : function(data) {
+		var orignList = $("#attachmentList").val();
+		$("#attachmentList").val(
+			orginList.replace(attachmentId + ",", ""));
+
+		$("#attachment" + attachmentId).remove();
+
+	    }
+	});
+    };
+    //TODO:uploadForm init.
+    var options = {
+	beforeSend : function() {
+	    $("#progress").show();
+	    //clear everything
+	    $("#bar").width('0%');
+	    $("#message").html("");
+	    $("#percent").html("0%");
+	},
+	uploadProgress : function(event, position, total, percentComplete) {
+	    $("#bar").width(percentComplete + '%');
+	    $("#percent").html(percentComplete + '%');
+
+	},
+	success : function() {
+	    $("#bar").width('100%');
+	    $("#percent").html('100%');
+
+	},
+	complete : function(response) {
+	    var ret = JSON.parse(response.responseText);
+	    $("#message").html(
+		    "<font color='green'>" + response.responseText + "</font>");
+	    var li = $("<li></li>");
+
+	    var a = $("<a>" + ret.filename + "</a>");
+	    var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+	    a.attr("href", "javascript:deleteAttachment(\"" + deleteUrl + "\","
+		    + ret.attachmentId + ");");
+	    var i = $("<i class=\"icon-remove\"></i>");
+	    i.appendTo(a);
+	    a.appendTo(li);
+	    li.attr("id", "attachment" + ret.attachmentId);
+	    li.appendTo($("#uploadedAttachment"));
+	    var orignList = $("#attachmentList").val();
+	    $("#attachmentList").val(orignList + "," + ret.attachmentId);
+	},
+	error : function() {
+	    $("#message").html("<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+	}
+    };
+    $("#uploadForm").ajaxForm(options);
+    //document ready
+    $(document)
+	    .ready(
+		    function() {
+			$("#myForm").validate({
+			    ignore : [],
+			    rules : {
+				title : {
+				    required : true,
+				    maxlength : 255,
+				    minlength : 5
+				},
+				substance : {
+
+				    required : true,
+				    maxlength : 1000,
+				    minlength : 5
+				}
+			    },
+			    messages : {
+				title : {
+				    required : "请输入标题",
+				    maxlength : "标题不能多于255个字符",
+				    minlength : "标题不能小于5个字符"
+				},
+				substance : {
+				    required : "请输入标题",
+				    maxlength : "标题不能多于255个字符",
+				    minlength : "标题不能小于5个字符"
+				}
+			    }
+			});
+			//submitButton click event handler
+			$("#submitButton")
+				.click(
+					function() {
+					    $("#myForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+								dataType : "text",
+								success : function(
+									data) {
+								    $
+									    .unblockUI();
+								},
+								beforeSubmit : function() {
+								    if ($(
+									    "#myForm")
+									    .valid()) {
+									$
+										.blockUI({
+										    message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
+										});
+								    }
+								    return $(
+									    "#myForm")
+									    .valid();
+								}
+							    }).submit();
+					});
+
+		    });
+    /*]]>*/
+</script>
+</head>
+<body>
+	<form id="datumForm" method="POST">
+		<fieldset>
+			<input name="title" />
+			<textarea name="substance" rows="8" cols="80" class="span7"></textarea>
+			<div>
+				<ul id="uploadedAttachment"></ul>
+				<input type="hidden" name="attachmentList" id="attachmentList" />
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input type="button" id="submitButton" value="保存"
+						class="btn btn-primary" />
+				</div>
+			</div>
+		</fieldset>
+	</form>
+	<div class="box">
+		<label>上传附件：</label>
+		<form id="uploadForm"
+			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
+			method="post" enctype="multipart/form-data">
+			<div class="row">
+				<div class="span3">
+					<input type="file" name="file" />
+				</div>
+				<div class="span1">
+					<input type="submit" value="上传" class="btn btn-info" />
+				</div>
+				<div class="span3">
+					<div id="progress">
+						<div id="bar"></div>
+						<div id="percent">0%</div>
+					</div>
+					<div id="message"></div>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
