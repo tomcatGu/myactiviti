@@ -2,30 +2,86 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	$(document)
-			.ready(
+    /*<![CDATA[*/
+
+    function render(data) {
+	var newRow = "<tr><td><a href=\"javascript:viewSheet('" + data.id
+		+ "');\">" + data.name + "</a></td><td>"
+		+ new Date(data.fillingDate).ToString("yyyy-MM-dd HH:mm:ss")
+		+ "</td><td></tr>";
+	return newRow;
+    };
+    function viewSheet(id) {
+	$
+		.blockUI({
+		    message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
+		});
+	$("#totalPanel").load(
+	/*[[@{'/statistical/viewSheet/'}]]*/"statistical/viewSheet/" //view statisticalSheet
+		+ id, function(event) {
+	    $.unblockUI();
+	});
+    };
+    $(document)
+	    .ready(
+		    function() {
+			//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+			$('#submitBtn')
+				.click(
 					function() {
-						$('#submitBtn')
-								.click(
-										function() {
-											$("#totalPanel")
-													.load(
-															/*[[@{'/statistical/total/'}]]*/"statistical/total/"
-																	+ $(
-																			"#annual")
-																			.val()
-																	+ '/commited?'
-																	+ (new Date())
-																			.valueOf(),
-															function(event) {
-
-															});
-
-										});
+					    $
+						    .blockUI({
+							message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
+						    });
+					    $("#totalPanel")
+						    .load(
+							    /*[[@{'/statistical/total/'}]]*/"statistical/total/"
+								    + $(
+									    "#annual")
+									    .val()
+								    + '/commited?'
+								    + (new Date())
+									    .valueOf(),
+							    function(event) {
+								$.unblockUI();
+							    });
 
 					});
-	/*]]>*/
+			$("#listBtn")
+				.click(
+					function() {
+					    $
+						    .blockUI({
+							message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
+						    });
+					    $
+						    .ajax({
+							type : 'POST',
+							url : /*[[@{'/statistical/listSheet/'}]]*/""
+								+ $("#annual")
+									.val()
+								+ "/commited?sort=id&order=desc",
+							async : true,
+							success : function(data) {
+							    for (aSheet in data) {
+								var row = render(data[aSheet]);
+								$(
+									"#statisticalList")
+									.find(
+										"tr:last")
+									.after(
+										row);
+							    }
+							    $.unblockUI();
+
+							}
+
+						    });
+
+					});
+
+		    });
+    /*]]>*/
 </script>
 </head>
 <body>
@@ -48,10 +104,10 @@
 			<tr>
 				<th>部门</th>
 				<th>上报时间</th>
-				<th>查看</th>
 			</tr>
 		</table>
 	</form>
 	<div id="totalPanel"></div>
+	<div id="sheetLoading"></div>
 </body>
 </html>

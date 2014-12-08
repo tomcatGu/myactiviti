@@ -364,24 +364,43 @@ public class StatisticalController {
 
 		return "governmentInformationDisclosure/statisticalSheet.readonly";
 	}
+	@RequestMapping(value = "viewSheet/{id}")
+	public String countAnnualStatistical(@PathVariable("id") String id,
+			 Model model) {
+		model.addAttribute("result",
+				statisticalSheetService.findById(Long.parseLong(id)));
 
-	@RequestMapping(value = "listSheet", method = RequestMethod.POST)
-	public Map<Long, Object> listSheet(@PathVariable("annual") String annual,
+		return "governmentInformationDisclosure/statisticalSheet.readonly";
+	}
+
+	@RequestMapping(value = "listSheet/{annual}/{status}", method = RequestMethod.POST)
+	public @ResponseBody
+	Map<String, Object> listSheet(@PathVariable("annual") String annual,
 			@PathVariable("status") String status,
 			@RequestParam("sort") String sort,
 			@RequestParam("order") String order,
 			@RequestParam(value = "start", defaultValue = "0") int start,
 			@RequestParam(value = "size", defaultValue = "10") int size,
 			Model model) {
-		HashMap<Long, Object> sheets = new HashMap<Long, Object>();
+		HashMap<String, Object> sheets = new HashMap<String, Object>();
 
 		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
 				Direction.DESC, new String[] { sort }) : new Sort(
 				Direction.ASC, new String[] { sort });
 		PageRequest pageRequest = new PageRequest(start / size, size,
 				sortRequest);
-		Iterator<StatisticalSheet> ss = statisticalSheetService
+		Iterator<StatisticalSheet> sheetList = statisticalSheetService
 				.findByAnnualAndStatus(annual, status, pageRequest);
+		while (sheetList.hasNext()) {
+			StatisticalSheet ss = sheetList.next();
+			HashMap<String, Object> aSheet = new HashMap<String, Object>();
+			aSheet.put("id", ss.getId());
+			aSheet.put("name", ss.getLoginName());
+			aSheet.put("fillingDate", ss.getFillingDate());
+			aSheet.put("state", ss.getStatus());
+			sheets.put(ss.getId().toString(), aSheet);
+
+		}
 		return sheets;
 	}
 

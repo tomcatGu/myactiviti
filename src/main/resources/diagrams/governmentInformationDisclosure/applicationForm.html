@@ -184,34 +184,32 @@
 								    var ret = JSON
 									    .parse(data);
 								    alert(ret.msg);
-								    $("#myForm")
+								    $(
+									    "#applicationDiv")
 									    .trigger(
 										    "evtWFSuccess",
 										    {
 											msg : "OK"
 										    });
 								    $(
-									    "#submitButton")
-									    .attr(
-										    "disabled",
-										    true)
-									    .attr(
-										    "value",
-										    "成功提交");
+									    "#applicationDiv")
+									    .trigger(
+										    "evt_SaveSuccess",
+										    {
+											msg : "OK"
+										    });
+								    $
+									    .unblockUI();
 
 								},
 								beforeSubmit : function() {
 								    if ($(
 									    "#myForm")
 									    .valid()) {
-									$(
-										"#submitButton")
-										.attr(
-											"disabled",
-											true)
-										.attr(
-											"value",
-											"正在提交...");
+									$
+										.blockUI({
+										    message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
+										});
 								    }
 								    return $(
 									    "#myForm")
@@ -225,6 +223,7 @@
 			$("#finishButton")
 				.click(
 					function() {
+
 					    var formOfResponse = $(
 						    "input[name='formOfResponse']:checked")
 						    .val();
@@ -252,34 +251,33 @@
 								    var ret = JSON
 									    .parse(data);
 								    alert(ret.msg);
-								    $("#myForm")
+								    $(
+									    "#applicationDiv")
 									    .trigger(
 										    "evtWFSuccess",
 										    {
 											msg : "OK"
 										    });
 								    $(
-									    "#finishButton")
-									    .attr(
-										    "disabled",
-										    true)
-									    .attr(
-										    "value",
-										    "成功提交");
+									    "#applicationDiv")
+									    .trigger(
+										    "evt_SaveSuccess",
+										    {
+											msg : "OK"
+										    });
+
+								    $
+									    .unblockUI();
 
 								},
 								beforeSubmit : function() {
 								    if ($(
 									    "#myForm")
 									    .valid()) {
-									$(
-										"#finishButton")
-										.attr(
-											"disabled",
-											true)
-										.attr(
-											"value",
-											"正在提交...");
+									$
+										.blockUI({
+										    message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
+										});
 								    }
 								    return $(
 									    "#myForm")
@@ -381,7 +379,7 @@
 </script>
 </head>
 <body>
-	<div>
+	<div id="applicationDiv">
 		<form id="myForm"
 			th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
 			method="POST" class="form-horizontal">

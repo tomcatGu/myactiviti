@@ -6,7 +6,10 @@
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
     function load(title, url) {
-
+	$
+	    .blockUI({
+		message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h3>'
+	    });
     	
 	$("#content")
 		.load(
@@ -24,33 +27,27 @@
 				//    $("#candidateBadge").text(data.badges);
 				    
 				//});
-				
-				
-			    var eventHandler = {name: 'evt_handler'};
-			    
-			 // 他要订阅Levi的周总结（学会怎么订阅别的对象的事件~）
-			 eventHandler.handle1 = function() {
-				 $('#content').bind('evt_CandidateBadge', function(evt, data) {
-			         //alert(A.name + ': 哎哟，不错哦');
-			         $("#candidateBadge").text(data.badges);
-			     });
-			 };
+				var eventHandler = {name: 'evt_handler'};
+		 eventHandler.handle2 = function() {
 			 
-			 eventHandler.handle2 = function() {
-				 $('#content').bind('evtTasksBadge', function(evt, data) {
-			         //alert(A.name + ': 哎哟，不错哦');
+			 $('#content').bind('evtTasksBadge', function(evt, data) {
+			         
 			         $("#tasksBadge").text(data.badges);
 			     });
-			 };
-			  
-			 //eventHandler.handle1();
-			 eventHandler.handle2();
 			 
-			 $('#content').bind('evt_CandidateBadge', function(evt, data) {
-		         //alert(A.name + ': 哎哟，不错哦');
-		         $("#candidateBadge").text(data.badges);
-		     });
+		 };
+		  
+		 //eventHandler.handle1();
+		 eventHandler.handle2();
+		 
+		 $('#content').bind('evt_CandidateBadge', function(evt, data) {
+	         
+	         $("#candidateBadge").text(data.badges);
+	     });
 
+				
+			  
+			 $.unblockUI();
 			});
 
 
@@ -78,7 +75,10 @@
     };
     $(document).ready(function() {
     	
-
+	$('#content').bind('evt_SaveSuccess', function(evt, data) {
+	      alert(data+ ': 哎哟，不错哦');
+		     load('待办', 'runtime/tasks/index');
+	     });
 
 	//ajaxify menus
 	$('ul.nav a').click(function(e) {
@@ -104,9 +104,9 @@
 	//load('待办', 'runtime/tasks/candidateTaskIndex');
 	load('待办', 'runtime/tasks/index');
 	
-	$("#content").bind("evtWFSuccess", function(evt, data) {
-	    load('所有流程', 'runtime/process/userProcessIndex/admin');
-	});
+	//$("#content").bind("evtWFSuccess", function(evt, data) {
+	//    load('所有流程', 'runtime/process/userProcessIndex/admin');
+	//});
 	
 $("#time").text(new Date().toLocaleTimeString());
 
@@ -116,7 +116,6 @@ $("#time").text(new Date().toLocaleTimeString());
 </head>
 <style id="holderjs-style" type="text/css"></style>
 <body>
-
 	<div class="">
 		<div class="navbar navbar-inverse navbar-fixed-top showgrid">
 			<div class="navbar-inner">
@@ -127,7 +126,6 @@ $("#time").text(new Date().toLocaleTimeString());
 							class="icon-bar"></span>
 					</button>
 					<span id="time" class="brand">2014年12月3日</span>
-
 					<div class="nav-collapse collapse">
 						<div class="btn-group pull-right">
 							<button class="btn btn-info"

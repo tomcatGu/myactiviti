@@ -281,4 +281,10 @@ public class StatisticalSheetService {
 			return ss.iterator();
 		return null;
 	}
+
+	public Object findById(long id) {
+		// TODO Auto-generated method stub
+		return statisticalSheetDao.findOne(id);
+
+	}
 }

@@ -27,115 +27,117 @@
 <script type="text/javascript" src="../excanvas.compiled.js"
 	th:src="@{/bootstrap/js/excanvas.compiled.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function rowRender(data) {
-		var newRow = "<tr>";
+    /*<![CDATA[*/
+    function rowRender(data) {
+	var newRow = "<tr>";
 
-		newRow += "<td>" + data.citizenName + "</td>";
-		newRow += "<td>" + data.submitDepartment + "</td>";
-		newRow += "<td>" + data.applicationName + "</td>";
-		newRow += "<td>" + data.formOfResponse + "</td>";
+	newRow += "<td>" + data.citizenName + "</td>";
+	newRow += "<td>" + data.submitDepartment + "</td>";
+	newRow += "<td>" + data.applicationName + "</td>";
+	newRow += "<td>" + data.formOfResponse + "</td>";
 
-		newRow += "</tr>";
-		return newRow;
-	};
-	$(document)
-			.ready(
+	newRow += "</tr>";
+	return newRow;
+    };
+    $(document)
+	    .ready(
+		    function() {
+			$("#submitButton")
+				.click(
 					function() {
-						$("#submitButton")
-								.click(
-										function() {
-											var opts = {
-												lines : 13, // The number of lines to draw
-												length : 16, // The length of each line
-												width : 12, // The line thickness
-												radius : 25, // The radius of the inner circle
-												corners : 0.6, // Corner roundness (0..1)
-												rotate : 3, // The rotation offset
-												direction : 1, // 1: clockwise, -1: counterclockwise
-												color : '#000', // #rgb or #rrggbb or array of colors
-												speed : 1, // Rounds per second
-												trail : 60, // Afterglow percentage
-												shadow : false, // Whether to render a shadow
-												hwaccel : false, // Whether to use hardware acceleration
-												className : 'spinner', // The CSS class to assign to the spinner
-												zIndex : 2e9, // The z-index (defaults to 2000000000)
-												top : '50%', // Top position relative to parent
-												left : '50%' // Left position relative to parent
-											};
-											$("#loading").spin();
-											$
-													.ajax({
-														type : "POST", //提交的类型
-														dataType : "json",
-														contentType : "application/x-www-form-urlencoded; charset=GB2312",
-														data : {
-															'applicantName' : $(
-																	'#applicantName')
-																	.val(),
-															'startTime' : new Date(
-																	$(
-																			"#startTimePicker")
-																			.data(
-																					'datetimepicker')
-																			.getLocalDate())
-																	.ToString(),
-															'endTime' : new Date(
-																	$(
-																			"#endTimePicker")
-																			.data(
-																					'datetimepicker')
-																			.getLocalDate())
-																	.ToString()
-														},
-														url : /*[[@{'/statistical/analyseByApplicant'}]]*/"", //提交地址
-														success : function(data) {
-															$("#loading").spin(
-																	false);
+					    var opts = {
+						lines : 13, // The number of lines to draw
+						length : 16, // The length of each line
+						width : 12, // The line thickness
+						radius : 25, // The radius of the inner circle
+						corners : 0.6, // Corner roundness (0..1)
+						rotate : 3, // The rotation offset
+						direction : 1, // 1: clockwise, -1: counterclockwise
+						color : '#000', // #rgb or #rrggbb or array of colors
+						speed : 1, // Rounds per second
+						trail : 60, // Afterglow percentage
+						shadow : false, // Whether to render a shadow
+						hwaccel : false, // Whether to use hardware acceleration
+						className : 'spinner', // The CSS class to assign to the spinner
+						zIndex : 2e9, // The z-index (defaults to 2000000000)
+						top : '50%', // Top position relative to parent
+						left : '50%' // Left position relative to parent
+					    };
+					    $
+						    .blockUI({
+							message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
+						    });
+					    $
+						    .ajax({
+							type : "POST", //提交的类型
+							dataType : "json",
+							contentType : "application/x-www-form-urlencoded; charset=GB2312",
+							data : {
+							    'applicantName' : $(
+								    '#applicantName')
+								    .val(),
+							    'startTime' : new Date(
+								    $(
+									    "#startTimePicker")
+									    .data(
+										    'datetimepicker')
+									    .getLocalDate())
+								    .ToString(),
+							    'endTime' : new Date(
+								    $(
+									    "#endTimePicker")
+									    .data(
+										    'datetimepicker')
+									    .getLocalDate())
+								    .ToString()
+							},
+							url : /*[[@{'/statistical/analyseByApplicant'}]]*/"", //提交地址
+							success : function(data) {
 
-															$("#analyseTable")
-																	.find("tr")
-																	.nextAll()
-																	.remove();
-															for (i = 0; i < data.records.length; i++) {
-																var newRow = rowRender(data.records[i]);
-																$(
-																		"#analyseTable")
-																		.find(
-																				"tr:last")
-																		.after(
-																				newRow);
-																// $("#permissionList
-																// tr:last").after(newRow);
+							    $("#analyseTable")
+								    .find("tr")
+								    .nextAll()
+								    .remove();
+							    for (i = 0; i < data.records.length; i++) {
+								var newRow = rowRender(data.records[i]);
+								$(
+									"#analyseTable")
+									.find(
+										"tr:last")
+									.after(
+										newRow);
+								// $("#permissionList
+								// tr:last").after(newRow);
 
-															}
-														}
-													});
-										});
-
-						$("#startTimePicker").datetimepicker({
-							language : 'zh-CN',
-							format : 'yyyy-MM-dd hh:mm:ss',
-							pickDate : true,
-							pickTime : true,
-							hourStep : 1,
-							minuteStep : 15,
-							secondStep : 30,
-							inputMask : true
-						});
-						$("#endTimePicker").datetimepicker({
-							language : 'zh-CN',
-							format : 'yyyy-MM-dd hh:mm:ss',
-							pickDate : true,
-							pickTime : true,
-							hourStep : 1,
-							minuteStep : 15,
-							secondStep : 30,
-							inputMask : true
-						});
-
+							    }
+							    $.unblockUI();
+							}
+						    });
 					});
-	/*]]>*/
+
+			$("#startTimePicker").datetimepicker({
+			    language : 'zh-CN',
+			    format : 'yyyy-MM-dd hh:mm:ss',
+			    pickDate : true,
+			    pickTime : true,
+			    hourStep : 1,
+			    minuteStep : 15,
+			    secondStep : 30,
+			    inputMask : true
+			});
+			$("#endTimePicker").datetimepicker({
+			    language : 'zh-CN',
+			    format : 'yyyy-MM-dd hh:mm:ss',
+			    pickDate : true,
+			    pickTime : true,
+			    hourStep : 1,
+			    minuteStep : 15,
+			    secondStep : 30,
+			    inputMask : true
+			});
+
+		    });
+    /*]]>*/
 </script>
 <style>
 .hover {
@@ -154,7 +156,6 @@
 							<div class="input-append date">
 								<input name="applicantName" id="applicantName" />
 							</div>
-
 						</div>
 					</div>
 				</div>
@@ -184,7 +185,6 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</form>
 		<div id="loading"></div>
