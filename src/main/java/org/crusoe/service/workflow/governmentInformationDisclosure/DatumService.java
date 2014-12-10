@@ -7,6 +7,7 @@ import org.activiti.engine.task.Attachment;
 import org.apache.shiro.SecurityUtils;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.AttachmentEntity;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.Datum;
+import org.crusoe.entity.workflow.governmentInformationDisclosure.DatumAttachmentEntity;
 import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.DatumDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class DatumService {
 	@Autowired
 	private TaskService taskService;
 
-	public Datum create(String title, String substance, String attachmentList) {
+	public Datum save(String title, String substance, String attachmentList) {
 		Datum datum = new Datum();
 		datum.setTitle(title);
 		datum.setSubstance(substance);
@@ -28,13 +29,14 @@ public class DatumService {
 		for (String id : attachmentIds) {
 			Attachment attachment = taskService.getAttachment(id);
 			if (attachment != null) {
-				AttachmentEntity ae = new AttachmentEntity();
+				DatumAttachmentEntity ae = new DatumAttachmentEntity();
 				ae.setId(attachment.getId());
 				ae.setName(attachment.getName());
 				datum.getAttachments().add(ae);
 			}
 
 		}
+		datumDao.save(datum);
 		return datum;
 	}
 }

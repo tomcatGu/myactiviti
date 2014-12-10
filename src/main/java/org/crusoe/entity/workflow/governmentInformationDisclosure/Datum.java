@@ -61,12 +61,12 @@ public class Datum {
 	}
 
 	@ElementCollection
-	@CollectionTable(name = "workflow_attachment")
-	public List<AttachmentEntity> getAttachments() {
+	@CollectionTable(name = "workflow_DatumAttachment")
+	public List<DatumAttachmentEntity> getAttachments() {
 		return attachments;
 	}
 
-	public void setAttachments(List<AttachmentEntity> attachments) {
+	public void setAttachments(List<DatumAttachmentEntity> attachments) {
 		this.attachments = attachments;
 	}
 
@@ -75,6 +75,6 @@ public class Datum {
 	private String substance;
 	private Date createTime;
 	private String author;
-	private List<AttachmentEntity> attachments = Lists.newArrayList();
+	private List<DatumAttachmentEntity> attachments = Lists.newArrayList();
 
 }
