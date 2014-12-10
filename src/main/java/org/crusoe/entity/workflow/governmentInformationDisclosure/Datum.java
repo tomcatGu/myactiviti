@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import com.google.common.collect.Lists;
 
 @Entity
-@Table(name = "workflow__governmentInformationDisclosure_datum")
+@Table(name = "workflow_governmentInformationDisclosure_datum")
 public class Datum {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,12 +36,12 @@ public class Datum {
 	}
 
 	@Column(length = 1000)
-	public String getContent() {
-		return content;
+	public String getSubstance() {
+		return substance;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setSubstance(String substance) {
+		this.substance = substance;
 	}
 
 	public Date getCreateTime() {
@@ -72,7 +72,7 @@ public class Datum {
 
 	private Long id;
 	private String title;
-	private String content;
+	private String substance;
 	private Date createTime;
 	private String author;
 	private List<AttachmentEntity> attachments = Lists.newArrayList();

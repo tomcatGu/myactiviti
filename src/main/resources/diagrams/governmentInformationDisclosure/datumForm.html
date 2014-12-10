@@ -60,8 +60,8 @@
 	    a.appendTo(li);
 	    li.attr("id", "attachment" + ret.attachmentId);
 	    li.appendTo($("#uploadedAttachment"));
-	    var orignList = $("#attachmentList").val();
-	    $("#attachmentList").val(orignList + "," + ret.attachmentId);
+	    var orignList = $("#datumAttachmentList").val();
+	    $("#datumAttachmentList").val(orignList + "," + ret.attachmentId);
 	},
 	error : function() {
 	    $("#message").html("<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
@@ -72,7 +72,7 @@
     $(document)
 	    .ready(
 		    function() {
-			$("#myForm").validate({
+			$("#datumForm").validate({
 			    ignore : [],
 			    rules : {
 				title : {
@@ -104,7 +104,7 @@
 			$("#submitButton")
 				.click(
 					function() {
-					    $("#myForm")
+					    $("#datumForm")
 						    .ajaxForm(
 							    {
 								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
@@ -113,10 +113,11 @@
 									data) {
 								    $
 									    .unblockUI();
+								    alert(data.msg);
 								},
 								beforeSubmit : function() {
 								    if ($(
-									    "#myForm")
+									    "#datumForm")
 									    .valid()) {
 									$
 										.blockUI({
@@ -124,7 +125,7 @@
 										});
 								    }
 								    return $(
-									    "#myForm")
+									    "#datumForm")
 									    .valid();
 								}
 							    }).submit();
@@ -135,43 +136,50 @@
 </script>
 </head>
 <body>
-	<form id="datumForm" method="POST">
-		<fieldset>
-			<input name="title" />
-			<textarea name="substance" rows="8" cols="80" class="span7"></textarea>
-			<div>
-				<ul id="uploadedAttachment"></ul>
-				<input type="hidden" name="attachmentList" id="attachmentList" />
-			</div>
-			<div class="control-group">
-				<div class="controls">
-					<input type="button" id="submitButton" value="保存"
-						class="btn btn-primary" />
+	<div class="well">
+		<form id="datumForm" method="POST">
+			<fieldset>
+				<label class="control-label text-info" for="title">标题：</label> <input
+					name="title" id="title" /> <label class="control-label text-info"
+					for="substance">内容：</label>
+				<textarea name="substance" id="substance" rows="8" cols="80"
+					class="span7"></textarea>
+				<div>
+					<label class="control-label text-info">附件：</label>
+					<ul id="uploadedAttachment"></ul>
+					<input type="hidden" name="datumAttachmentList"
+						id="datumAttachmentList" />
 				</div>
-			</div>
-		</fieldset>
-	</form>
-	<div class="box">
-		<label>上传附件：</label>
-		<form id="uploadForm"
-			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
-			method="post" enctype="multipart/form-data">
-			<div class="row">
-				<div class="span3">
-					<input type="file" name="file" />
-				</div>
-				<div class="span1">
-					<input type="submit" value="上传" class="btn btn-info" />
-				</div>
-				<div class="span3">
-					<div id="progress">
-						<div id="bar"></div>
-						<div id="percent">0%</div>
+				<div class="control-group">
+					<div class="controls">
+						<input type="button" id="submitButton" value="保存"
+							class="btn btn-primary" />
 					</div>
-					<div id="message"></div>
 				</div>
-			</div>
+			</fieldset>
 		</form>
+		<div class="box">
+			<label>上传附件：</label>
+			<form id="uploadForm"
+				th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
+				method="post" enctype="multipart/form-data">
+				<div class="row">
+					<div class="span3">
+						<input type="file" name="file" />
+					</div>
+					<div class="span1">
+						<input type="submit" value="上传" class="btn btn-info" />
+					</div>
+					<div class="span3">
+						<div id="progress">
+							<div id="bar"></div>
+							<div id="percent">0%</div>
+						</div>
+						<div id="message"></div>
+					</div>
+				</div>
+			</form>
+		</div>
 	</div>
 </body>
 </html>
