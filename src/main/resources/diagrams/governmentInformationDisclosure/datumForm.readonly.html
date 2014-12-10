@@ -1,0 +1,56 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>资料库表单</title>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    //document ready
+    $(document).ready(function() {
+    });
+    /*]]>*/
+</script>
+</head>
+<body>
+	<div class="alert alert-error" th:if="${result==null}">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<strong>警告!</strong> 该表单还未填写数据。
+	</div>
+	<div class="box span9" th:if="${result!=null}">
+		<div class="hero-unit">
+			<div class="box">
+				<div class="control-group">
+					<div class="controls">
+						<h3 th:text="${result.title}" class="text-center text-warning"></h3>
+						<span th:text="${result.author}"
+							class="span3 text-right text-info"></span> <span
+							th:text="${result.createTime}"
+							class="span3 text-center text-info"></span>
+					</div>
+				</div>
+			</div>
+			<div class="box">
+				<div class="control-group">
+					<div class="controls">
+						<legend></legend>
+						<p th:text="${result.substance}" class="lead text-left"></p>
+					</div>
+				</div>
+			</div>
+			<div class="box">
+				<div class="control-group">
+					<label class="control-label text-info">附件：</label>
+					<div class="controls">
+						<div th:each="attachment:${result.attachments}">
+							<label class="checkbox inline"><a
+								th:href="@{'/runtime/attachment/'+${attachment.id}}"><span
+									th:text="${attachment.name}">file.ext</span></a></label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
