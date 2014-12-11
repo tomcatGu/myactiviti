@@ -70,11 +70,20 @@ public class Datum {
 		this.attachments = attachments;
 	}
 
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
 	private Long id;
 	private String title;
 	private String substance;
 	private Date createTime;
 	private String author;
 	private List<DatumAttachmentEntity> attachments = Lists.newArrayList();
+	private String taskId;
 
 }

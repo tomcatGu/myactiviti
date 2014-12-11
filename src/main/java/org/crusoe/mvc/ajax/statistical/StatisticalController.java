@@ -28,8 +28,10 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.task.Attachment;
+import org.activiti.engine.task.Task;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -42,11 +44,14 @@ import org.apache.poi.ss.usermodel.Row;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.crusoe.dto.governmentInformationDisclosure.DatumDTO;
 import org.crusoe.dto.governmentInformationDisclosure.GovernmentInformationDisclosureDTO;
+import org.crusoe.entity.workflow.governmentInformationDisclosure.Datum;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInformationDisclosure;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.StatisticalSheet;
 import org.crusoe.repository.jpa.workflow.governmentInformationDisclosure.GovernmentInformationDisclosureDao;
 import org.crusoe.service.AccountService;
+import org.crusoe.service.workflow.governmentInformationDisclosure.DatumService;
 import org.crusoe.service.workflow.governmentInformationDisclosure.StatisticalSheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -63,6 +68,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 @Controller
 @RequestMapping(value = "/statistical")
@@ -89,6 +95,8 @@ public class StatisticalController {
 	protected AccountService accountService;
 	@Autowired
 	protected StatisticalSheetService statisticalSheetService;
+	@Autowired
+	protected DatumService datumService;
 
 	@RequestMapping(value = "counter/{processDefinitionId}", method = RequestMethod.GET)
 	public @ResponseBody
@@ -364,9 +372,10 @@ public class StatisticalController {
 
 		return "governmentInformationDisclosure/statisticalSheet.readonly";
 	}
+
 	@RequestMapping(value = "viewSheet/{id}")
 	public String countAnnualStatistical(@PathVariable("id") String id,
-			 Model model) {
+			Model model) {
 		model.addAttribute("result",
 				statisticalSheetService.findById(Long.parseLong(id)));
 
@@ -402,6 +411,42 @@ public class StatisticalController {
 
 		}
 		return sheets;
+	}
+
+	@RequestMapping(value = "listDatum", method = RequestMethod.POST)
+	public @ResponseBody
+	Map<Long, DatumDTO> listDatum(@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			Model model) {
+
+		HashMap<Long, DatumDTO> result = Maps.newHashMap();
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
+				Direction.DESC, new String[] { sort }) : new Sort(
+				Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size,
+				sortRequest);
+		Iterator iter = datumService.findAll(pageRequest).iterator();
+		while (iter.hasNext()) {
+			Datum datum = (Datum) iter.next();
+			DatumDTO datumDTO = new DatumDTO();
+			datumDTO.setId(datum.getId());
+			datumDTO.setTitle(datum.getTitle());
+			datumDTO.setContent(datum.getSubstance());
+			datumDTO.setAuthor(datum.getAuthor());
+			HistoricTaskInstance task = historyService
+					.createHistoricTaskInstanceQuery()
+					.taskId(datum.getTaskId()).singleResult();
+			datumDTO.setTaskId(task.getId());
+			datumDTO.setProcessDefinitionId(task.getProcessDefinitionId());
+			datumDTO.setTaskDefinitionKey(task.getTaskDefinitionKey());
+			result.put(datum.getId(), datumDTO);
+
+		}
+
+		return result;
+
 	}
 
 }
