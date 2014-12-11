@@ -415,13 +415,13 @@ public class StatisticalController {
 
 	@RequestMapping(value = "listDatum", method = RequestMethod.POST)
 	public @ResponseBody
-	Map<Long, DatumDTO> listDatum(@RequestParam("sort") String sort,
+	Map<String, Object> listDatum(@RequestParam("sort") String sort,
 			@RequestParam("order") String order,
 			@RequestParam(value = "start", defaultValue = "0") int start,
 			@RequestParam(value = "size", defaultValue = "10") int size,
 			Model model) {
 
-		HashMap<Long, DatumDTO> result = Maps.newHashMap();
+		List<Object> result = Lists.newArrayList();
 		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
 				Direction.DESC, new String[] { sort }) : new Sort(
 				Direction.ASC, new String[] { sort });
@@ -441,11 +441,16 @@ public class StatisticalController {
 			datumDTO.setTaskId(task.getId());
 			datumDTO.setProcessDefinitionId(task.getProcessDefinitionId());
 			datumDTO.setTaskDefinitionKey(task.getTaskDefinitionKey());
-			result.put(datum.getId(), datumDTO);
+			result.add(datumDTO);
 
 		}
 
-		return result;
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		rets.put("count", datumService.count());
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", result);
+		return rets;
 
 	}
 

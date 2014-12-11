@@ -7,6 +7,7 @@ import java.util.List;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.task.Attachment;
+import org.activiti.engine.task.Task;
 import org.apache.shiro.SecurityUtils;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.AttachmentEntity;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.Datum;
@@ -33,7 +34,9 @@ public class DatumService {
 		datum.setSubstance(substance);
 		datum.setCreateTime(new Date());
 		datum.setAuthor(SecurityUtils.getSubject().getPrincipal().toString());
-		datum.setTaskId(execution.getCurrentActivityId());
+		Task task = taskService.createTaskQuery()
+				.executionId(execution.getId()).singleResult();
+		datum.setTaskId(task.getId());
 		String[] attachmentIds = attachmentList.split(",");
 		for (String id : attachmentIds) {
 			Attachment attachment = taskService.getAttachment(id);
@@ -54,5 +57,10 @@ public class DatumService {
 
 		return datumDao.findAll(pageRequest);
 
+	}
+
+	public long count() {
+		// TODO Auto-generated method stub
+		return datumDao.count();
 	}
 }
