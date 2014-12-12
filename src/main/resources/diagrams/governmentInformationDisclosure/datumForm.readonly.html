@@ -4,12 +4,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <title>资料库表单</title>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
+	/*<![CDATA[*/
 
-    //document ready
-    $(document).ready(function() {
-    });
-    /*]]>*/
+	//document ready
+	$(document).ready(function() {
+	});
+	/*]]>*/
 </script>
 </head>
 <body>
@@ -17,7 +17,7 @@
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		<strong>警告!</strong> 该表单还未填写数据。
 	</div>
-	<div class="box span9" th:if="${result!=null}">
+	<div th:if="${result!=null}">
 		<div class="hero-unit">
 			<div class="box">
 				<div class="control-group">

@@ -441,6 +441,7 @@ public class StatisticalController {
 			datumDTO.setTaskId(task.getId());
 			datumDTO.setProcessDefinitionId(task.getProcessDefinitionId());
 			datumDTO.setTaskDefinitionKey(task.getTaskDefinitionKey());
+			datumDTO.setCreateTime(datum.getCreateTime());
 			result.add(datumDTO);
 
 		}

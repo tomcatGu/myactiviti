@@ -29,9 +29,11 @@ public class OrganizationController {
 	private OrganizationService organizationService;
 
 	@RequestMapping(value = "index")
+	
 	public String index(ServletRequest request) {
 
 		return "organization/index";
+		
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.POST)

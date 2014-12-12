@@ -20,25 +20,50 @@
 				+ "</td></tr>";
 		return newRow;
 	};
+	function loadView(url){
+		$("#datumShow").load(url,function(e){
+			//e.preventDefault();
+			$('#datumTabs a[href="#datum"]').tab('show');
+			
+		});
+		
+	};
 
 	$(document).ready(function() {
 		$("#datumList").simpleTable(
 				/*[[@{/statistical/listDatum?sort=createTime&order=desc}]]*/, render,
 				$("#datumPaginator"),null,"POST");
+		$('#datumTabs a[href="#lists"]').tab('show');
 		
 	});
 	/*]]>*/
 </script>
 </head>
 <body>
-	<table cellpadding="0" cellspacing="0" border="0"
-		class="table table-striped table-bordered" id="datumList">
-		<tr>
-			<th><input type="checkbox" id="checkAll" /></th>
-			<th class="text-center">标题</th>
-			<th class="text-center">创建时间</th>
-		</tr>
-	</table>
-	<div id="datumPaginator"></div>
+	<div class="span9">
+		<ul class="nav nav-tabs" id="datumTabs">
+			<li class="active"><a href="#lists" data-toggle="tab">资料库列表</a></li>
+			<li><a href="#datum" data-toggle="tab">显示文章</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="lists">
+				<table cellpadding="0" cellspacing="0" border="0"
+					class="table table-striped table-bordered" id="datumList">
+					<tr>
+						<th><input type="checkbox" id="checkAll" /></th>
+						<th><span class="text-center">标题</span></th>
+						<th><span class="text-center">创建时间</span></th>
+					</tr>
+				</table>
+				<div id="datumPaginator"></div>
+			</div>
+			<div class="tab-pane" id="datum">
+				<div id="datumShow"></div>
+			</div>
+
+		</div>
+
+
+	</div>
 </body>
 </html>
