@@ -63,4 +63,9 @@ public class DatumService {
 		// TODO Auto-generated method stub
 		return datumDao.count();
 	}
+
+	public void delete(Long id) {
+		// TODO Auto-generated method stub
+		datumDao.delete(id);
+	}
 }

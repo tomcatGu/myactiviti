@@ -5,7 +5,7 @@
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\"  value=\""+data.taskId+"\"//></td>"
+		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\"  value=\""+data.id+"\"//></td>"
 				+ "<td><a href=\"javascript:loadView('"
 				+ /*[[@{/runtime/tasks/reviewTaskForm/}]]*/""
 				+ data.taskId
@@ -28,12 +28,49 @@
 		});
 		
 	};
+	function successCallback() {
 
-	$(document).ready(function() {
+		$("#datumList tr").nextAll().remove();
+
 		$("#datumList").simpleTable(
 				/*[[@{/statistical/listDatum?sort=createTime&order=desc}]]*/, render,
 				$("#datumPaginator"),null,"POST");
 		$('#datumTabs a[href="#lists"]').tab('show');
+
+	};
+
+	$(document).ready(function() {
+		
+		$('#checkAll').bind('click', function() {
+			checkAll("#checkAll");
+		});
+		
+		$("#datumList").simpleTable(
+				/*[[@{/statistical/listDatum?sort=createTime&order=desc}]]*/, render,
+				$("#datumPaginator"),null,"POST");
+		$('#datumTabs a[href="#lists"]').tab('show');
+		$('#deleteDatumBtn')
+		.bind(
+				'click',
+				function() {
+
+					//alert("delete.....");
+					$("#confirmDiv")
+							.confirm(
+									{
+										heading : '确认删除',
+										body : '你真的要删除吗?',
+										yesBtn : '是',
+										noBtn : '否',
+										callback : function() {
+											batchDelete(
+													/*[[@{'/statistical/datums/'}]]*/"/statistical/datums/",
+													successCallback);
+
+										}
+									});
+
+				});
 		
 	});
 	/*]]>*/
@@ -56,13 +93,15 @@
 					</tr>
 				</table>
 				<div id="datumPaginator"></div>
+				<input type="button" id="deleteDatumBtn" value="删除选中"
+					class="btn btn-danger" />
 			</div>
 			<div class="tab-pane" id="datum">
 				<div id="datumShow"></div>
 			</div>
 
 		</div>
-
+		<div id="confirmDiv"></div>
 
 	</div>
 </body>

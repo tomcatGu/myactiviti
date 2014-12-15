@@ -455,4 +455,19 @@ public class StatisticalController {
 
 	}
 
+	@RequestMapping(value = "datums", method = RequestMethod.DELETE)
+	public @ResponseBody
+	Map<String, ? extends Object> batchDelete(
+			@RequestParam(value = "items[]", required = false) String[] items)
+			throws Exception {
+
+		for (int i = 0; i < items.length; i++) {
+			datumService.delete(Long.parseLong(items[i]));
+		}
+		Map<String, String> msgs = new HashMap<String, String>();
+
+		msgs.put("msg", "删除成功");
+		return msgs;
+	}
+
 }
