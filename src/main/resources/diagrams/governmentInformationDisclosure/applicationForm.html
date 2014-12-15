@@ -8,389 +8,418 @@
 	width: auto;
 	color: red;
 }
+
+#progress {
+	position: relative;
+	border: 1px solid #ddd;
+	padding: 1px;
+	border-radius: 3px;
+}
+
+#bar {
+	background-color: #B4F5B4;
+	width: 0%;
+	height: 20px;
+	border-radius: 3px;
+}
+
+#percent {
+	position: absolute;
+	display: inline-block;
+	top: 3px;
+	left: 48%;
+}
 </style>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function deleteAttachment(deleteUrl, attachmentId) {
-		$.ajax({
-			type : "POST",
-			url : deleteUrl + attachmentId,
-			data : {
-				_method : 'DELETE',
-			//items : selctedItems
-			},
-			// contentType : 'application/json',
-			//dataType : 'json',
-			success : function(data) {
-				var orignList = $("#attachmentList").val();
-				$("#attachmentList").val(
-						orginList.replace(attachmentId + ",", ""));
+    /*<![CDATA[*/
+    function deleteAttachment(deleteUrl, attachmentId) {
+	$.ajax({
+	    type : "POST",
+	    url : deleteUrl + attachmentId,
+	    data : {
+		_method : 'DELETE',
+	    //items : selctedItems
+	    },
+	    // contentType : 'application/json',
+	    //dataType : 'json',
+	    success : function(data) {
+		var orignList = $("#attachmentList").val();
+		$("#attachmentList").val(
+			orignList.replace(attachmentId + ",", ""));
 
-				$("#attachment" + attachmentId).remove();
+		$("#attachment" + attachmentId).remove();
 
-			}
-		});
-	};
+	    }
+	});
+    };
 
-	var options = {
-		beforeSend : function() {
-			$("#progress").show();
-			//clear everything
-			$("#bar").width('0%');
-			$("#message").html("");
-			$("#percent").html("0%");
-		},
-		uploadProgress : function(event, position, total, percentComplete) {
-			$("#bar").width(percentComplete + '%');
-			$("#percent").html(percentComplete + '%');
+    var options = {
+	beforeSend : function() {
+	    $("#progress").show();
+	    //clear everything
+	    $("#bar").width('0%');
+	    $("#message").html("");
+	    $("#percent").html("0%");
+	},
+	uploadProgress : function(event, position, total, percentComplete) {
+	    $("#bar").width(percentComplete + '%');
+	    $("#percent").html(percentComplete + '%');
 
-		},
-		success : function() {
-			$("#bar").width('100%');
-			$("#percent").html('100%');
+	},
+	success : function() {
+	    $("#bar").width('100%');
+	    $("#percent").html('100%');
 
-		},
-		complete : function(response) {
-			var ret = JSON.parse(response.responseText);
-			$("#message").html(
-					"<font color='green'>" + response.responseText + "</font>");
-			var li = $("<li></li>");
+	},
+	complete : function(response) {
+	    var ret = JSON.parse(response.responseText);
+	    $("#message").html(
+		    "<font color='green'>" + response.responseText + "</font>");
+	    var li = $("<li></li>");
 
-			var a = $("<a>" + ret.filename + "</a>");
-			var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
-			a.attr("href", "javascript:deleteAttachment(\"" + deleteUrl + "\","
-					+ ret.attachmentId + ");");
-			var i = $("<i class=\"icon-remove\"></i>");
-			i.appendTo(a);
-			a.appendTo(li);
-			li.attr("id", "attachment" + ret.attachmentId);
-			li.appendTo($("#uploadedAttachment"));
-			var orignList = $("#attachmentList").val();
-			$("#attachmentList").val(orignList + "," + ret.attachmentId);
-		},
-		error : function() {
-			$("#message").html("<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
-		}
-	};
-	$("#uploadForm").ajaxForm(options);
+	    var a = $("<a>" + ret.filename + "</a>");
+	    var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+	    a.attr("href", "javascript:deleteAttachment(\"" + deleteUrl + "\","
+		    + ret.attachmentId + ");");
+	    var i = $("<i class=\"icon-remove\"></i>");
+	    i.appendTo(a);
+	    a.appendTo(li);
+	    li.attr("id", "attachment" + ret.attachmentId);
+	    li.appendTo($("#uploadedAttachment"));
+	    var orignList = $("#attachmentList").val();
+	    $("#attachmentList").val(orignList + "," + ret.attachmentId);
+	},
+	error : function() {
+	    $("#message").html("<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+	}
+    };
+    $("#uploadForm").ajaxForm(options);
 
-	function encodeUTF8(str) {
-		var temp = "", rs = "";
-		for (var i = 0, len = str.length; i < len; i++) {
-			temp = str.charCodeAt(i).toString(16);
-			rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
-		}
-		return rs;
-	};
+    function encodeUTF8(str) {
+	var temp = "", rs = "";
+	for ( var i = 0, len = str.length; i < len; i++) {
+	    temp = str.charCodeAt(i).toString(16);
+	    rs += "\\u" + new Array(5 - temp.length).join("0") + temp;
+	}
+	return rs;
+    };
 
-	function clearSelectedUser() {
-		$('#selectedUser').text("");
-		$('#assigneeList').text("");
-		$('#selectedUser').val("");
-		$('#assigneeList').val("");
-	};
+    function clearSelectedUser() {
+	$('#selectedUser').text("");
+	$('#assigneeList').text("");
+	$('#selectedUser').val("");
+	$('#assigneeList').val("");
+    };
 
-	$(document)
-			.ready(
+    $(document)
+	    .ready(
+		    function() {
+			$("#myForm").validate({
+			    ignore : [],
+			    rules : {
+				applicationName : {
+				    required : true,
+				    maxlength : 255,
+				    minlength : 5
+				},
+				applicationTime : {
+				    required : true,
+				    date : true
+				},
+				assigneeList : {
+				    required : true
+				},
+				description : {
+
+				    maxlength : 1000
+				},
+				formOfResponse : {
+				    required : true
+				},
+				reply : {
+				    maxlength : 1000
+				}
+
+			    },
+			    messages : {
+				applicationName : {
+				    required : "请输入标题",
+				    maxlength : "标题不能多于255个字符",
+				    minlength : "标题不能小于5个字符"
+				},
+				applicationTime : {
+				    required : "请选择申请时间",
+				    date : "请输入正确的时间"
+				},
+				assigneeList : {
+				    required : "必须选择处理单位人员"
+				},
+				description : {
+				    maxlength : "最多只能输入1000个字符"
+				},
+				formOfResponse : {
+				    required : "请选择回复类型"
+				},
+				reply : {
+				    maxlength : "最多只能输入1000个字符"
+				}
+
+			    }
+			});
+			$("#clearButton").click(function() {
+			    $('#selectedUser').text("");
+			    $('#assigneeList').text("");
+			    $('#selectedUser').val("");
+			    $('#assigneeList').val("");
+
+			});
+
+			$('#myTab a:first').tab('show');
+
+			$("#datetimepicker1").datetimepicker({
+			    language : 'zh-CN',
+			    format : 'yyyy-MM-dd hh:mm:ss',
+			    pickDate : true,
+			    pickTime : true,
+			    hourStep : 1,
+			    minuteStep : 15,
+			    secondStep : 30,
+			    inputMask : true
+			});
+			$("#submitButton")
+				.click(
 					function() {
-						$("#myForm").validate({
-							ignore : [],
-							rules : {
-								applicationName : {
-									required : true,
-									maxlength : 255,
-									minlength : 5
-								},
-								applicationTime : {
-									required : true,
-									date : true
-								},
-								assigneeList : {
-									required : true
-								},
-								description : {
+					    $("#businessKey")
+						    .val(
+							    $(
+								    "#applicationName")
+								    .val());
+					    $("#isComplete").val("false");
+					    $("#myForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+								dataType : "text",
+								error : function(
+									data) {
 
-									maxlength : 1000
 								},
-								formOfResponse : {
-									required : true
+								success : function(
+									data) {
+
+								    var ret = JSON
+									    .parse(data);
+								    $
+									    .teninedialog({
+										title : '系统提示',
+										content : ret.msg
+									    });
+								    //alert(ret.msg);
+								    $(
+									    "#applicationDiv")
+									    .trigger(
+										    "evtWFSuccess",
+										    {
+											msg : "OK"
+										    });
+								    $(
+									    "#applicationDiv")
+									    .trigger(
+										    "evt_SaveSuccess",
+										    {
+											msg : "OK"
+										    });
+								    $
+									    .unblockUI();
+
 								},
-								reply : {
-									maxlength : 1000
+								beforeSubmit : function() {
+								    if ($(
+									    "#myForm")
+									    .valid()) {
+									$
+										.blockUI({
+										    message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
+										});
+								    }
+								    return $(
+									    "#myForm")
+									    .valid();
 								}
 
-							},
-							messages : {
-								applicationName : {
-									required : "请输入标题",
-									maxlength : "标题不能多于255个字符",
-									minlength : "标题不能小于5个字符"
-								},
-								applicationTime : {
-									required : "请选择申请时间",
-									date : "请输入正确的时间"
-								},
-								assigneeList : {
-									required : "必须选择处理单位人员"
-								},
-								description : {
-									maxlength : "最多只能输入1000个字符"
-								},
-								formOfResponse : {
-									required : "请选择回复类型"
-								},
-								reply : {
-									maxlength : "最多只能输入1000个字符"
-								}
+							    }).submit();
+					    return false;
 
-							}
-						});
-						$("#clearButton").click(function() {
-							$('#selectedUser').text("");
-							$('#assigneeList').text("");
-							$('#selectedUser').val("");
-							$('#assigneeList').val("");
-
-						});
-
-						$('#myTab a:first').tab('show');
-
-						$("#datetimepicker1").datetimepicker({
-							language : 'zh-CN',
-							format : 'yyyy-MM-dd hh:mm:ss',
-							pickDate : true,
-							pickTime : true,
-							hourStep : 1,
-							minuteStep : 15,
-							secondStep : 30,
-							inputMask : true
-						});
-						$("#submitButton")
-								.click(
-										function() {
-											$("#businessKey")
-													.val(
-															$(
-																	"#applicationName")
-																	.val());
-											$("#isComplete").val("false");
-											$("#myForm")
-													.ajaxForm(
-															{
-																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-																dataType : "text",
-																error : function(
-																		data) {
-
-																	if (data.status == 415) {
-																		alert("操作超时，请重新登录");
-																		//retrun;
-																	} else {
-																		alert("内部程序错误");
-																	}
-																},
-																success : function(
-																		data) {
-
-																	var ret = JSON
-																			.parse(data);
-																	alert(ret.msg);
-																	$(
-																			"#applicationDiv")
-																			.trigger(
-																					"evtWFSuccess",
-																					{
-																						msg : "OK"
-																					});
-																	$(
-																			"#applicationDiv")
-																			.trigger(
-																					"evt_SaveSuccess",
-																					{
-																						msg : "OK"
-																					});
-																	$
-																			.unblockUI();
-
-																},
-																beforeSubmit : function() {
-																	if ($(
-																			"#myForm")
-																			.valid()) {
-																		$
-																				.blockUI({
-																					message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
-																				});
-																	}
-																	return $(
-																			"#myForm")
-																			.valid();
-																}
-
-															}).submit();
-											return false;
-
-										});
-						$("#finishButton")
-								.click(
-										function() {
-
-											var formOfResponse = $(
-													"input[name='formOfResponse']:checked")
-													.val();
-											if (formOfResponse == undefined) {
-												alert("请选择答复情况。");
-												return;
-											}
-
-											$("#businessKey")
-													.val(
-															$(
-																	"#applicationName")
-																	.val());
-											$("#isComplete").val("true");
-											$('#assigneeList')
-													.val(
-															"cheat value to disable validation");
-											$("#myForm")
-													.ajaxForm(
-															{
-																url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-																dataType : "text",
-																success : function(
-																		data) {
-																	var ret = JSON
-																			.parse(data);
-																	alert(ret.msg);
-																	$(
-																			"#applicationDiv")
-																			.trigger(
-																					"evtWFSuccess",
-																					{
-																						msg : "OK"
-																					});
-																	$(
-																			"#applicationDiv")
-																			.trigger(
-																					"evt_SaveSuccess",
-																					{
-																						msg : "OK"
-																					});
-
-																	$
-																			.unblockUI();
-
-																},
-																beforeSubmit : function() {
-																	if ($(
-																			"#myForm")
-																			.valid()) {
-																		$
-																				.blockUI({
-																					message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
-																				});
-																	}
-																	return $(
-																			"#myForm")
-																			.valid();
-																}
-
-															}).submit();
-											return false;
-
-										});
-						$('#selectBtn')
-								.bind(
-										'click',
-										function() {
-											$("#selectUsers")
-													.load(
-															/*[[@{'/user/select'}]]*/'../../user/select',
-															function(data) {
-																$(
-																		"#selectUsers")
-																		.bind(
-																				"evtSelectUser",
-																				function(
-																						evt,
-																						data) {
-
-																					str = $(
-																							'#assigneeList')
-																							.val();
-																					for (var i = 0; i < data.users.length; i++) {
-																						str += data.users[i]
-																								+ ",";
-																					}
-																					$(
-																							'#assigneeList')
-																							.val(
-																									str);
-																					var userids = str
-																							.split(',');
-																					$(
-																							'#selectedUser')
-																							.text(
-																									"");
-
-																					for (i = 0; i < userids.length; i++) {
-																						var id = userids[i];
-																						if (id == "")
-																							continue;
-																						$
-																								.ajax({
-																									type : 'GET',
-																									url : /*[[@{'/user/name/'}]]*/""
-																											+ id,
-																									async : true,
-																									success : function(
-																											data) {
-																										temp = $(
-																												'#selectedUser')
-																												.text();
-																										temp += data
-																												+ ';';
-																										$(
-																												'#selectedUser')
-																												.text(
-																														temp);
-
-																									}
-
-																								});
-																					}
-
-																					$(
-																							'#selectUsers')
-																							.modal(
-																									"hide");
-																				});
-																$(
-																		"#selectUsers")
-																		.bind(
-																				"evtCancled",
-																				function(
-																						evt,
-																						data) {
-																					console
-																							.log(data);
-																					$(
-																							'#selectUsers')
-																							.modal(
-																									"hide");
-																				});
-																$(
-																		'#selectUsers')
-																		.modal();
-
-															});
-										});
 					});
-	/*]]>*/
+			$("#finishButton")
+				.click(
+					function() {
+
+					    var formOfResponse = $(
+						    "input[name='formOfResponse']:checked")
+						    .val();
+					    if (formOfResponse == undefined) {
+						$.teninedialog({
+						    title : '系统提示',
+						    content : '请选择答复情况。'
+						});
+						//alert("请选择答复情况。");
+						return;
+					    }
+
+					    $("#businessKey")
+						    .val(
+							    $(
+								    "#applicationName")
+								    .val());
+					    $("#isComplete").val("true");
+					    $('#assigneeList')
+						    .val(
+							    "cheat value to disable validation");
+					    $("#myForm")
+						    .ajaxForm(
+							    {
+								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+								dataType : "text",
+								success : function(
+									data) {
+								    var ret = JSON
+									    .parse(data);
+								    //alert(ret.msg);
+								    $
+									    .teninedialog({
+										title : '系统提示',
+										content : ret.msg
+									    });
+								    $(
+									    "#applicationDiv")
+									    .trigger(
+										    "evtWFSuccess",
+										    {
+											msg : "OK"
+										    });
+								    $(
+									    "#applicationDiv")
+									    .trigger(
+										    "evt_SaveSuccess",
+										    {
+											msg : "OK"
+										    });
+
+								    $
+									    .unblockUI();
+
+								},
+								beforeSubmit : function() {
+								    if ($(
+									    "#myForm")
+									    .valid()) {
+									$
+										.blockUI({
+										    message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
+										});
+								    }
+								    return $(
+									    "#myForm")
+									    .valid();
+								}
+
+							    }).submit();
+					    return false;
+
+					});
+			$('#selectBtn')
+				.bind(
+					'click',
+					function() {
+					    $("#selectUsers")
+						    .load(
+							    /*[[@{'/user/select'}]]*/'../../user/select',
+							    function(data) {
+								$(
+									"#selectUsers")
+									.bind(
+										"evtSelectUser",
+										function(
+											evt,
+											data) {
+
+										    str = $(
+											    '#assigneeList')
+											    .val();
+										    for ( var i = 0; i < data.users.length; i++) {
+											str += data.users[i]
+												+ ",";
+										    }
+										    $(
+											    '#assigneeList')
+											    .val(
+												    str);
+										    var userids = str
+											    .split(',');
+										    $(
+											    '#selectedUser')
+											    .text(
+												    "");
+
+										    for (i = 0; i < userids.length; i++) {
+											var id = userids[i];
+											if (id == "")
+											    continue;
+											$
+												.ajax({
+												    type : 'GET',
+												    url : /*[[@{'/user/name/'}]]*/""
+													    + id,
+												    async : true,
+												    success : function(
+													    data) {
+													temp = $(
+														'#selectedUser')
+														.text();
+													temp += data
+														+ ';';
+													$(
+														'#selectedUser')
+														.text(
+															temp);
+
+												    }
+
+												});
+										    }
+
+										    $(
+											    '#selectUsers')
+											    .modal(
+												    "hide");
+										});
+								$(
+									"#selectUsers")
+									.bind(
+										"evtCancled",
+										function(
+											evt,
+											data) {
+										    console
+											    .log(data);
+										    $(
+											    '#selectUsers')
+											    .modal(
+												    "hide");
+										});
+								$(
+									'#selectUsers')
+									.modal();
+
+							    });
+					});
+		    });
+    /*]]>*/
 </script>
 </head>
 <body>
-	<div id="applicationDiv">
+	<div id="applicationDiv" class="span9">
 		<form id="myForm"
 			th:action="@{'/runtime/form/submitStartForm/'+${processDefinitionId}}"
 			method="POST" class="form-horizontal">
@@ -402,7 +431,7 @@
 							<div class="controls">
 								<input id="businessKey" name="businessKey" type="hidden" /> <input
 									name="applicationName" id="applicationName"
-									class="span7 required:true maxlength:200 minlength:2 messages:{required:'请输入...', maxlength:'请最多输入200个字符',minlength:'请至少输入两个字符'}" />
+									class="span6 required:true maxlength:200 minlength:2 messages:{required:'请输入...', maxlength:'请最多输入200个字符',minlength:'请至少输入两个字符'}" />
 							</div>
 						</div>
 					</div>
@@ -419,13 +448,13 @@
 										<div class="span4">
 											<label class="control-label text-info" for="citizenName">姓名：</label>
 											<div class="controls">
-												<input name="citizenName" />
+												<input name="citizenName" class="span2" />
 											</div>
 										</div>
 										<div class="span4">
 											<label class="control-label text-info" for="citizenWorkunit">工作单位：</label>
 											<div class="controls">
-												<input name="citizenWorkunit" />
+												<input name="citizenWorkunit" class="span2" />
 											</div>
 										</div>
 									</div>
@@ -435,13 +464,13 @@
 										<div class="span4">
 											<label class="control-label text-info">证件名称：</label>
 											<div class="controls">
-												<input name="citizenCertificate" />
+												<input name="citizenCertificate" class="span2" />
 											</div>
 										</div>
 										<div class="span4">
 											<label class="control-label text-info">证件号码：</label>
 											<div class="controls">
-												<input name="citizenCertificateID" />
+												<input name="citizenCertificateID" class="span2" />
 											</div>
 										</div>
 									</div>
@@ -451,13 +480,13 @@
 										<div class="span4">
 											<label class="control-label text-info">联系电话：</label>
 											<div class="controls">
-												<input name="citizenTelphone" />
+												<input name="citizenTelphone" class="span2" />
 											</div>
 										</div>
 										<div class="span4">
 											<label class="control-label text-info">邮件编码：</label>
 											<div class="controls">
-												<input name="citizenZipcode" />
+												<input name="citizenZipcode" class="span2" />
 											</div>
 										</div>
 									</div>
@@ -467,13 +496,13 @@
 										<div class="span4">
 											<label class="control-label text-info">联系地址：</label>
 											<div class="controls">
-												<input name="citizenAddress" />
+												<input name="citizenAddress" class="span2" />
 											</div>
 										</div>
 										<div class="span4">
 											<label class="control-label text-info">传真：</label>
 											<div class="controls">
-												<input name="citizenFax" />
+												<input name="citizenFax" class="span2" />
 											</div>
 										</div>
 									</div>
@@ -483,7 +512,7 @@
 										<div class="span4">
 											<label class="control-label text-info">电子邮箱：</label>
 											<div class="controls">
-												<input name="citizenEmail" />
+												<input name="citizenEmail" class="span2" />
 											</div>
 										</div>
 									</div>
@@ -495,13 +524,13 @@
 										<div class="span4">
 											<label class="control-label text-info">名称：</label>
 											<div class="controls">
-												<input name="groupName" />
+												<input name="groupName" class="span2" />
 											</div>
 										</div>
 										<div class="span4">
 											<label class="control-label text-info">组织机构代码：</label>
 											<div class="controls">
-												<input name="groupID" />
+												<input name="groupID" class="span2" />
 											</div>
 										</div>
 									</div>
@@ -511,13 +540,13 @@
 										<div class="span4">
 											<label class="control-label text-info">法人代表：</label>
 											<div class="controls">
-												<input name="groupDelegate" />
+												<input name="groupDelegate" class="span2" />
 											</div>
 										</div>
 										<div class="span4">
 											<label class="control-label text-info">联系人名称：</label>
 											<div class="controls">
-												<input name="groupDelegateName" />
+												<input name="groupDelegateName" class="span2" />
 											</div>
 										</div>
 									</div>
@@ -527,13 +556,13 @@
 										<div class="span4">
 											<label class="control-label text-info">联系人电话：</label>
 											<div class="controls">
-												<input name="groupDelegateTelphone" />
+												<input name="groupDelegateTelphone" class="span2" />
 											</div>
 										</div>
 										<div class="span4">
 											<label class="control-label text-info">传真：</label>
 											<div class="controls">
-												<input name="groupDelegateFax" />
+												<input name="groupDelegateFax" class="span2" />
 											</div>
 										</div>
 									</div>
@@ -543,13 +572,13 @@
 										<div class="span4">
 											<label class="control-label text-info">联系地址：</label>
 											<div class="controls">
-												<input name="groupDelegateAddress" />
+												<input name="groupDelegateAddress" class="span2" />
 											</div>
 										</div>
 										<div class="span4">
 											<label class="control-label text-info">电子邮箱：</label>
 											<div class="controls">
-												<input name="groupDelegateEmail" />
+												<input name="groupDelegateEmail" class="span2" />
 											</div>
 										</div>
 									</div>
@@ -561,11 +590,17 @@
 						<legend>申请信息</legend>
 						<div class="row">
 							<div class="control-group">
-								<div class="span3">
+								<div class="span4">
+									<label class="control-label text-info">提交部门：</label>
+									<div class="controls">
+										<input name="submitDepartment" class="span2" />
+									</div>
+								</div>
+								<div class="span4">
 									<label class="control-label text-info">申请时间：</label>
 									<div class="controls">
 										<div id="datetimepicker1" class="input-append date">
-											<input name="applicationTime" class="datepicker"
+											<input name="applicationTime" class="datepicker span2"
 												data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
 												class="add-on"> <i data-time-icon="icon-time"
 												data-date-icon="icon-calendar"> </i>
@@ -574,41 +609,30 @@
 									</div>
 								</div>
 							</div>
-							<div class="control-group">
-								<div class="span3">
-									<label class="control-label text-info">提交部门：</label>
-									<div class="controls">
-										<input name="submitDepartment" />
-									</div>
-								</div>
-							</div>
 						</div>
 						<div class="row">
 							<div class="control-group">
-								<div class="span8">
+								<div class="span9">
 									<label class="control-label text-info">所需信息的内容描述：</label>
 									<div class="controls">
-										<textarea name="description" rows="8" cols="80" class="span7"></textarea>
-										<div>
-											<ul id="uploadedAttachment"></ul>
-										</div>
+										<textarea name="description" rows="8" cols="80" class="span6"></textarea>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="control-group">
-								<div class="span8">
+								<div class="span9">
 									<label class="control-label text-info">所需信息的用途：</label>
 									<div class="controls">
-										<input name="purpose" class="span7" />
+										<input name="purpose" class="span6" />
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="control-group">
-								<div class="span8">
+								<div class="span9">
 									<label class="control-label text-info">所需信息的指定提供方式：</label>
 									<div class="controls">
 										<label class="checkbox inline"> <input type="checkbox"
@@ -621,7 +645,7 @@
 						</div>
 						<div class="row">
 							<div class="control-group">
-								<div class="span8">
+								<div class="span9">
 									<label class="control-label text-info">读取信息的方式：</label>
 									<div class="controls">
 										<label class="checkbox inline"><input type="checkbox"
@@ -638,7 +662,7 @@
 						</div>
 						<div class="row">
 							<div class="control-group">
-								<div class="span8">
+								<div class="span9">
 									<label class="control-label text-info">申请信息公开形式：</label>
 									<div class="controls">
 										<label class="radio inline"> <input type="radio"
@@ -673,7 +697,7 @@
 							<div class="span8">
 								<label class="control-label text-info">处理意见：</label>
 								<div class="controls">
-									<textarea name="reply" rows="8" cols="20" class="span7"></textarea>
+									<textarea name="reply" rows="8" cols="20" class="span6"></textarea>
 								</div>
 							</div>
 						</div>
@@ -723,28 +747,31 @@
 		</form>
 		<div tabindex="-1" class="modal hide fade" id="selectUsers"
 			data-keyboard="false" data-backdrop="static"></div>
-	</div>
-	<div class="box">
-		<label>上传附件：</label>
-		<form id="uploadForm"
-			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
-			method="post" enctype="multipart/form-data">
-			<div class="row">
-				<div class="span3">
-					<input type="file" name="file" />
-				</div>
-				<div class="span1">
-					<input type="submit" value="上传" class="btn btn-info" />
-				</div>
-				<div class="span3">
-					<div id="progress">
-						<div id="bar"></div>
-						<div id="percent">0%</div>
-					</div>
-					<div id="message"></div>
-				</div>
+		<div class="box">
+			<label>上传附件：</label>
+			<div>
+				<ul id="uploadedAttachment"></ul>
 			</div>
-		</form>
+			<form id="uploadForm"
+				th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
+				method="post" enctype="multipart/form-data">
+				<div class="row">
+					<div class="span3">
+						<input type="file" name="file" />
+					</div>
+					<div class="span1">
+						<input type="submit" value="上传" class="btn btn-info" />
+					</div>
+					<div class="span4">
+						<div id="progress" class="span4">
+							<div id="bar"></div>
+							<div id="percent">0%</div>
+						</div>
+						<div id="message" class="span4"></div>
+					</div>
+				</div>
+			</form>
+		</div>
 	</div>
 </body>
 </html>

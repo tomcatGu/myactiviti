@@ -8,6 +8,7 @@
 	width: auto;
 	color: red;
 }
+
 </style>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
@@ -20,8 +21,8 @@
 				assigneeList : {
 				    required : true
 				},
-				formOfResponse:{
-				    
+				formOfResponse : {
+
 				    required : true
 				}
 
@@ -62,7 +63,12 @@
 										    });
 								    var ret = JSON
 									    .parse(data);
-								    alert(ret.msg);
+
+								    $
+									    .teninedialog({
+										title : '系统提示',
+										content : ret.msg
+									    });
 								},
 
 							    }).submit();
@@ -90,7 +96,12 @@
 										    });
 								    var ret = JSON
 									    .parse(data);
-								    alert(ret.msg);
+								    //alert(ret.msg);
+								    $
+									    .teninedialog({
+										title : '系统提示',
+										content : ret.msg
+									    });
 								},
 								beforeSubmit : function() {
 								    return $(
@@ -195,7 +206,7 @@
 </script>
 </head>
 <body>
-	<div class="well">
+	<div class="span9">
 		<div class="box">
 			<div class="control-group">
 				<label class="control-label text-info">标题：</label>

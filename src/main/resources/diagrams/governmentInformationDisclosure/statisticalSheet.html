@@ -69,8 +69,14 @@
 				async : false,
 				success : function(data) {
 					if(data==true) {
+					    
+
+				    $.teninedialog({
+					    title : '系统提示',
+					    content : $('#annual').val()+"年度统计已存在。"
+					});
 						
-						alert( $('#annual').val()+"年度统计已存在。");
+						//alert( $('#annual').val()+"年度统计已存在。");
 						isExists=true;
 					}
 
@@ -83,7 +89,11 @@ if(isExists) return;
 			for (i = 2; i <= 65; i++) {
 				var v = $('#sheetParent').getCellValue(i, 3, 0)
 				if (isNaN(v)) {
-					alert("第" + i + "行的第3列输入的内容无法转换成数值，请更正");
+				    $.teninedialog({
+					    title : '系统提示',
+					    content : "第" + i + "行的第3列输入的内容无法转换成数值，请更正"
+					});
+					//alert("第" + i + "行的第3列输入的内容无法转换成数值，请更正");
 					return;
 				}
 			}
@@ -102,7 +112,11 @@ if(isExists) return;
 				type : "POST",
 				success : function(data) {
 					var ret = JSON.parse(data);
-					alert(ret.msg);
+					$.teninedialog({
+					    title : '系统提示',
+					    content : ret.msg
+					});
+					//alert(ret.msg);
 				},
 				beforeSubmit : function() {
 
@@ -123,8 +137,11 @@ if(isExists) return;
 					async : false,
 					success : function(data) {
 						if(data==true) {
-							
-							alert( $('#annual').val()+"年度统计已存在。");
+						    $.teninedialog({
+							    title : '系统提示',
+							    content : $('#annual').val()+"年度统计已存在。"
+							});
+							//alert( $('#annual').val()+"年度统计已存在。");
 							isExists=true;
 						}
 
@@ -137,7 +154,12 @@ if(isExists) return;
 			for (i = 2; i <= 65; i++) {
 				var v = $('#sheetParent').getCellValue(i, 3, 0)
 				if (isNaN(v)) {
-					alert("第" + i + "行的第3列输入的内容无法转换成数值，请更正");
+				    
+				    $.teninedialog({
+					    title : '系统提示',
+					    content :"第" + i + "行的第3列输入的内容无法转换成数值，请更正"
+					});
+					//alert("第" + i + "行的第3列输入的内容无法转换成数值，请更正");
 					return;
 				}
 			}
@@ -156,7 +178,10 @@ if(isExists) return;
 				type : "POST",
 				success : function(data) {
 					var ret = JSON.parse(data);
-					alert(ret.msg);
+					$.teninedialog({
+					    title : '系统提示',
+					    content : ret.msg
+					});
 				},
 				beforeSubmit : function() {
 

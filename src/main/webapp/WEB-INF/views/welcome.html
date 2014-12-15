@@ -114,16 +114,7 @@
 $("#time").text(new Date().toLocaleTimeString());
 
 
-$.ajaxSetup({ 
-	contentType : "application/x-www-form-urlencoded;charset=utf-8", 
-	complete : function(XMLHttpRequest, textStatus) { 
-	var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
-	if (sessionstatus == "timeout") { 
-	// 如果超时就处理 ，指定要跳转的页面 
-	window.location.replace("/login"); 
-	} 
-	} 
-	}); 
+
 
     });
     /*]]>*/
@@ -164,7 +155,7 @@ $.ajaxSetup({
 		<header class="jumbotron subhead" id="overview">
 			<div class="container">
 				<h1>依申请公开办理系统</h1>
-				<p class="lead">登记、办理、检索依申请公开信息。</p>
+				<p class="lead">登记、办理、检索依申请公开信息</p>
 			</div>
 		</header>
 		<div class="container">
@@ -174,10 +165,10 @@ $.ajaxSetup({
 						<ul class="nav nav-list bs-docs-sidenav affix-top">
 							<li class="nav-header">依申请公开</li>
 							<li><a href="#"
-								onClick="load('创建','runtime/process/governmentInformationDisclosure:49:85132/startAndRedirectToTaskForm')">创建<i
+								onClick="load('创建','runtime/process/governmentInformationDisclosure:247:160129/startAndRedirectToTaskForm')">创建<i
 									class="icon-chevron-right"></i></a></li>
 							<li><a href="#"
-								onClick="load('添加资料库','runtime/process/datumProcess:2:80027/startAndRedirectToTaskForm')">添加资料库<i
+								onClick="load('添加资料库','runtime/process/datumProcess:21:152627/startAndRedirectToTaskForm')">添加资料库<i
 									class="icon-chevron-right"></i></a></li>
 							<li><a href="#"
 								onClick="load('资料库','workflow/resource/governmentInformationDisclosure/datumIndex#datum')">资料库<i

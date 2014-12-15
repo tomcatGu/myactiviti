@@ -3,6 +3,33 @@
 <head thy:merge="/common::headerFragment">
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <title>资料库表单</title>
+<style type="text/css">
+#myForm label.error {
+	width: auto;
+	color: red;
+}
+
+#progress {
+	position: relative;
+	border: 1px solid #ddd;
+	padding: 1px;
+	border-radius: 3px;
+}
+
+#bar {
+	background-color: #B4F5B4;
+	width: 0%;
+	height: 20px;
+	border-radius: 3px;
+}
+
+#percent {
+	position: absolute;
+	display: inline-block;
+	top: 3px;
+	left: 48%;
+}
+</style>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
     //TODO delete attachment
@@ -17,9 +44,9 @@
 	    // contentType : 'application/json',
 	    //dataType : 'json',
 	    success : function(data) {
-		var orignList = $("#attachmentList").val();
-		$("#attachmentList").val(
-			orginList.replace(attachmentId + ",", ""));
+		var orignList = $("#datumAttachmentList").val();
+		$("#datumAttachmentList").val(
+			orignList.replace(attachmentId + ",", ""));
 
 		$("#attachment" + attachmentId).remove();
 
@@ -113,7 +140,13 @@
 									data) {
 								    $
 									    .unblockUI();
-								    alert(data.msg);
+								    var ret = JSON
+									    .parse(data);
+								    $
+									    .teninedialog({
+										title : '系统提示',
+										content : ret.msg
+									    });
 								},
 								beforeSubmit : function() {
 								    if ($(
@@ -171,11 +204,11 @@
 						<input type="submit" value="上传" class="btn btn-info" />
 					</div>
 					<div class="span3">
-						<div id="progress">
+						<div id="progress" class="span3">
 							<div id="bar"></div>
 							<div id="percent">0%</div>
 						</div>
-						<div id="message"></div>
+						<div id="message" class="span3"></div>
 					</div>
 				</div>
 			</form>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="governmentInformationDisclosure" name="政府信息公开new" isExecutable="true">
     <startEvent id="startevent1" name="Start" activiti:initiator="startUserId">
       <documentation>启动流程，显示申请人表单</documentation>
@@ -62,7 +62,7 @@ execution.setVariable("result",gid);
 }]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow36" sourceRef="startevent1" targetRef="usertask5"></sequenceFlow>
-    <userTask id="usertask5" name="【开始】填写申请单" activiti:assignee="${startUserId}" activiti:formKey="governmentInformationDisclosure/applicationForm"></userTask>
+    <userTask id="usertask5" name="【填写】申请单" activiti:assignee="${startUserId}" activiti:formKey="governmentInformationDisclosure/applicationForm"></userTask>
     <sequenceFlow id="flow37" sourceRef="usertask5" targetRef="scripttask1"></sequenceFlow>
     <textAnnotation id="textannotation2">
       <text>审核办结</text>
@@ -80,7 +80,7 @@ execution.setVariable("result",gid);
   <bpmndi:BPMNDiagram id="BPMNDiagram_governmentInformationDisclosure">
     <bpmndi:BPMNPlane bpmnElement="governmentInformationDisclosure" id="BPMNPlane_governmentInformationDisclosure">
       <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="20.0" y="223.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="20.0" y="217.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="usertask3" id="BPMNShape_usertask3">
         <omgdc:Bounds height="61.0" width="131.0" x="601.0" y="220.0"></omgdc:Bounds>
@@ -116,7 +116,7 @@ execution.setVariable("result",gid);
         <omgdc:Bounds height="40.0" width="40.0" x="510.0" y="75.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="usertask5" id="BPMNShape_usertask5">
-        <omgdc:Bounds height="55.0" width="135.0" x="112.0" y="213.0"></omgdc:Bounds>
+        <omgdc:Bounds height="66.0" width="135.0" x="112.0" y="202.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation2" id="BPMNShape_textannotation2">
         <omgdc:Bounds height="50.0" width="100.0" x="670.0" y="140.0"></omgdc:Bounds>
@@ -187,11 +187,11 @@ execution.setVariable("result",gid);
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow36" id="BPMNEdge_flow36">
-        <omgdi:waypoint x="55.0" y="240.0"></omgdi:waypoint>
-        <omgdi:waypoint x="112.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="55.0" y="234.0"></omgdi:waypoint>
+        <omgdi:waypoint x="112.0" y="235.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow37" id="BPMNEdge_flow37">
-        <omgdi:waypoint x="247.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="247.0" y="235.0"></omgdi:waypoint>
         <omgdi:waypoint x="280.0" y="240.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association2" id="BPMNEdge_association2">
@@ -200,7 +200,7 @@ execution.setVariable("result",gid);
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association3" id="BPMNEdge_association3">
         <omgdi:waypoint x="116.0" y="299.0"></omgdi:waypoint>
-        <omgdi:waypoint x="37.0" y="258.0"></omgdi:waypoint>
+        <omgdi:waypoint x="37.0" y="252.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association4" id="BPMNEdge_association4">
         <omgdi:waypoint x="156.0" y="179.0"></omgdi:waypoint>
