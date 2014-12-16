@@ -46,6 +46,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.crusoe.dto.governmentInformationDisclosure.DatumDTO;
 import org.crusoe.dto.governmentInformationDisclosure.GovernmentInformationDisclosureDTO;
+import org.crusoe.entity.User;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.Datum;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.GovernmentInformationDisclosure;
 import org.crusoe.entity.workflow.governmentInformationDisclosure.StatisticalSheet;
@@ -177,7 +178,9 @@ public class StatisticalController {
 			String username = gid.getCreateUser();
 			// username =
 			// accountService.findUserByLoginName(username).getName();
-			String organizationName = gid.getSubmitDepartment();
+			User user = accountService.findUserByLoginName(gid.getCreateUser());
+
+			String organizationName = user.getOrganization().getName();
 			if (organizationName == null)
 				break;
 			if (result.containsKey(organizationName)) {
