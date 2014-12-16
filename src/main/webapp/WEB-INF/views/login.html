@@ -13,7 +13,7 @@ body {
 	max-width: 400px;
 	padding: 19px 29px 29px;
 	margin: 0 auto 20px;
-	background-color: #fff;
+	background-color: #e5e5ee;
 	border: 1px solid #e5e5e5;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -26,49 +26,55 @@ body {
 .form-signin .form-signin-heading,.form-signin .checkbox {
 	margin-bottom: 10px;
 }
-
-.form-signin input[type="text"],.form-signin input[type="password"] {
-	font-size: 16px;
-	height: auto;
-	margin-bottom: 15px;
-	padding: 7px 9px;
-}
 </style>
 </head>
 <body>
-	<div class="container">
-		<form action="#" th:action="@{/login}" method="post"
-			class="form-signin">
-			<h2 class="form-signin-heading">登录依申请公开办理系统</h2>
-			<div class="alert alert-error" th:if="${err!=null}">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
-				<strong>警告!</strong> 用户名或者密码不正确。
-			</div>
-			<div class="control-group">
-				<label for="username" class="control-label">用户名: </label>
-				<div class="controls">
-					<input type="text" id="username" name="username" />
+	<header class="jumbotron subhead">
+		<div class="container">
+			<form action="#" th:action="@{/login}" method="post"
+				class="form-signin">
+				<h2 class="form-signin-heading text-center">登录依申请公开办理系统</h2>
+				<div class="alert alert-error" th:if="${err!=null}">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<strong>警告!</strong> 用户名或者密码不正确。
 				</div>
-			</div>
-			<div class="control-group">
-				<label for="password" class="control-label">密码:</label>
-				<div class="controls">
-					<input type="password" id="password" name="password" />
+				<div class="control-group">
+					<span class="span1"></span> <label for="username"
+						class="control-label">用户名: </label>
+					<div class="controls text-center">
+						<div class="input-prepend" data-rel="tooltip"
+							data-original-title="Username">
+							<span class="add-on"><i class="icon-user"></i></span> <input
+								type="text" id="username" name="username" class="span3" />
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="controls">
-					<label class="checkbox inline"> <input type="checkbox"
-						id="rememberMe" name="rememberMe" />记住我
-					</label>
+				<div class="control-group">
+					<span class="span1"></span> <label for="password"
+						class="control-label"><span class="text-center">密码:</span></label>
+					<div class="controls text-center">
+						<div class="input-prepend" data-rel="tooltip"
+							data-original-title="Password">
+							<span class="add-on"><i class="icon-lock"></i></span> <input
+								type="password" id="password" name="password" class="span3" />
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="controls">
-					<input class="btn btn-large btn-primary" type="submit" value="登录" />
+				<div class="control-group">
+					<div class="controls">
+						<span class="span1"></span> <label class="checkbox inline">
+							<input type="checkbox" id="rememberMe" name="rememberMe" />记住我
+						</label>
+					</div>
 				</div>
-			</div>
-		</form>
-	</div>
+				<div class="control-group">
+					<div class="controls text-center">
+						<input class="btn btn-large btn-primary span3" type="submit"
+							value="登录" />
+					</div>
+				</div>
+			</form>
+		</div>
+	</header>
 </body>
 </html>
