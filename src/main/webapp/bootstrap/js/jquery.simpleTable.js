@@ -36,7 +36,7 @@
 					    table.simpleTable(orginDataUrl
 						    + "&start=" + (newPage - 1)
 						    * size, rowRender,
-						    paginator, callback)
+						    paginator, callback,type)
 
 					},
 					itemContainerClass : function(type,
@@ -72,7 +72,7 @@
 
 		},
 		simpleTableFromData : function(data, rowRender, paginator,
-			callback) {
+			callback,type) {
 		    var table = this;
 		    table.clearSimpleTable();
 
@@ -94,7 +94,7 @@
 
 			    table.simpleTable(orginDataUrl + "&start="
 				    + (newPage - 1) * size, rowRender,
-				    paginator, callback)
+				    paginator, callback,type)
 
 			},
 			itemContainerClass : function(type, page, current) {

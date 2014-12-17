@@ -67,6 +67,35 @@
 													.blockUI({
 														message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
 													});
+
+											$("#analyseTable")
+													.simpleTable(
+															/*[[@{'/statistical/analyseByApplicant?sort=citizenName&order=desc'}]]*/""
+																	+ "&applicantName="
+																	+ $(
+																			'#applicantName')
+																			.val()
+																	+ "&startTime="
+																	+ new Date(
+																			$(
+																					"#startTimePicker")
+																					.data(
+																							'datetimepicker')
+																					.getLocalDate())
+																			.ToString()
+																	+ "&endTime="
+																	+ new Date(
+																			$(
+																					"#endTimePicker")
+																					.data(
+																							'datetimepicker')
+																					.getLocalDate())
+																			.ToString(),
+															rowRender,
+															$("#paginator"),
+															null, "POST");
+											$.unblockUI();
+/*
 											$
 													.ajax({
 														type : "POST", //提交的类型
@@ -91,8 +120,8 @@
 																			.getLocalDate())
 																	.ToString()
 														},
-														url : /*[[@{'/statistical/analyseByApplicant'}]]*/"", //提交地址
-														success : function(data) {
+														url : /*[[@{'/statistical/analyseByApplicant?sort=citizenName&order=desc'}]]*/"", //提交地址
+					/*									success : function(data) {
 
 															$("#analyseTable")
 																	.find("tr")
@@ -113,6 +142,8 @@
 															$.unblockUI();
 														}
 													});
+													
+													*/
 										});
 
 						$("#startTimePicker").datetimepicker({
@@ -188,6 +219,7 @@
 				<th align="center">结果</th>
 			</tr>
 		</table>
+		<div id="paginator"></div>
 	</div>
 </body>
 </html>

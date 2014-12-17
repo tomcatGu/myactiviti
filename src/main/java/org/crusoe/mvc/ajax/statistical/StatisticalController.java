@@ -55,6 +55,7 @@ import org.crusoe.service.AccountService;
 import org.crusoe.service.workflow.governmentInformationDisclosure.DatumService;
 import org.crusoe.service.workflow.governmentInformationDisclosure.StatisticalSheetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -219,47 +220,60 @@ public class StatisticalController {
 	@RequestMapping(value = "analyseByApplicant", method = RequestMethod.POST)
 	public @ResponseBody
 	HashMap<String, Object> analyseByApplicant(
+			@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size,
 			@RequestParam("applicantName") final String applicantName,
 			@RequestParam("startTime") final String startTime,
 			@RequestParam("endTime") final String endTime,
 			HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
+				Direction.DESC, new String[] { sort }) : new Sort(
+				Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size,
+				sortRequest);
+		Specification<GovernmentInformationDisclosure> spec = new Specification<GovernmentInformationDisclosure>() {
+			// Date startTime;
+			// Date endTime;
 
-		List<GovernmentInformationDisclosure> gids = gidDao
-				.findAll(new Specification<GovernmentInformationDisclosure>() {
-					// Date startTime;
-					// Date endTime;
+			@Override
+			public Predicate toPredicate(
+					Root<GovernmentInformationDisclosure> root,
+					CriteriaQuery<?> query, CriteriaBuilder builder) {
+				// TODO Auto-generated method stub
+				SimpleDateFormat dateformat1 = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss");
+				Predicate predicate = builder.conjunction();
+				List<Expression<Boolean>> expressions = predicate
+						.getExpressions();
 
-					@Override
-					public Predicate toPredicate(
-							Root<GovernmentInformationDisclosure> root,
-							CriteriaQuery<?> query, CriteriaBuilder builder) {
-						// TODO Auto-generated method stub
-						SimpleDateFormat dateformat1 = new SimpleDateFormat(
-								"yyyy-MM-dd HH:mm:ss");
-						Predicate predicate = builder.conjunction();
-						List<Expression<Boolean>> expressions = predicate
-								.getExpressions();
-
-						try {
-							if (!startTime.equals(endTime)) {
-								expressions.add(builder.between(
-										root.<Date> get("createTime"),
-										dateformat1.parse(startTime),
-										dateformat1.parse(endTime)));
-							}
-							if (!applicantName.isEmpty()) {
-								expressions.add(builder.equal(
+				try {
+					if (!startTime.equals(endTime)) {
+						expressions.add(builder.between(
+								root.<Date> get("createTime"),
+								dateformat1.parse(startTime),
+								dateformat1.parse(endTime)));
+					}
+					if (!applicantName.isEmpty()) {
+						expressions
+								.add(builder.equal(
 										root.<String> get("citizenName"),
 										applicantName));
-							}
-						} catch (ParseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						return predicate;
 					}
-				});
+
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				return predicate;
+			}
+		};
+
+		Page<GovernmentInformationDisclosure> gids = gidDao.findAll(spec,
+				pageRequest);
 		List<GovernmentInformationDisclosureDTO> result = Lists.newArrayList();
 
 		for (GovernmentInformationDisclosure gid : gids) {
@@ -282,6 +296,9 @@ public class StatisticalController {
 
 		rets.put("err", false);
 		rets.put("records", result);
+		rets.put("count", gidDao.findAll(spec).size());
+		rets.put("start", start);
+		rets.put("size", size);
 		return rets;
 	}
 
