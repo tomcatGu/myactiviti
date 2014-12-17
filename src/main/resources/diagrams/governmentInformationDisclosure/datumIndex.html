@@ -94,15 +94,14 @@
 				</table>
 				<div id="datumPaginator"></div>
 				<input type="button" id="deleteDatumBtn" value="删除选中"
-					class="btn btn-danger" />
+					class="btn btn-danger"
+					th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('信息公开管理员')==true}" />
 			</div>
 			<div class="tab-pane" id="datum">
 				<div id="datumShow"></div>
 			</div>
-
 		</div>
 		<div id="confirmDiv"></div>
-
 	</div>
 </body>
 </html>

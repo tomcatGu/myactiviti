@@ -64,6 +64,10 @@
 							},
 							url : /*[[@{'/statistical/countergid'}]]*/"", //提交地址
 							success : function(data) {
+							    $(
+								    "#statisticalTable tr")
+								    .nextAll()
+								    .remove();
 							    var dataValue = new Array(); //数据
 							    var ticks = new Array(); //横坐标值
 							    var total = [ "总计",
@@ -173,7 +177,7 @@
 						<div class="controls">
 							<label class="control-label text-info">开始时间：</label>
 							<div id="startTimePicker" class="input-append date">
-								<input name="startTime" class="datepicker"
+								<input name="startTime" class="datepicker span2"
 									data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
 									<i data-time-icon="icon-time" data-date-icon="icon-calendar">
 								</i>
@@ -181,7 +185,7 @@
 							</div>
 							<label class="control-label text-info">结束时间：</label>
 							<div id="endTimePicker" class="input-append date">
-								<input name="endTime" class="datepicker"
+								<input name="endTime" class="datepicker span2"
 									data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
 									<i data-time-icon="icon-time" data-date-icon="icon-calendar">
 								</i>
@@ -197,7 +201,8 @@
 		<table id="statisticalList">
 		</table>
 		<table id="statisticalTable"
-			class="table table-bordered table-striped table-condensed">
+			class="table table-bordered table-striped table-condensed"
+			style="table-layout: fixed;">
 			<tr>
 				<th>名称</th>
 				<th>属于已主动公开范围，告知其获取途径</th>
