@@ -2,106 +2,97 @@
 <html>
 <head th:fragment="headerFragment" th:remove="tag">
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
-<link href="/bootstrap/css/bootstrap-responsive.min.css"
-	rel="stylesheet" type="text/css"
-	th:href="@{/bootstrap/css/bootstrap-responsive.min.css}" />
-<link href="/bootstrap/css/docs.css" rel="stylesheet" type="text/css"
-	th:href="@{/bootstrap/css/docs.css}" />
-<link href="/bootstrap/css/prettify.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/prettify.css}" />
-<link href="/bootstrap/css/bootstrap-modal.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/bootstrap-modal.css}" />
-<link href="/bootstrap/css/bootstrap-datetimepicker.min.css"
-	rel="stylesheet" type="text/css"
-	th:href="@{/bootstrap/css/bootstrap-datetimepicker.min.css}" />
-<link href="/bootstrap/css/mysite.css" rel="stylesheet" type="text/css"
-	th:href="@{/bootstrap/css/mysite.css}" />
-<link href="/bootstrap/css/jquery.jqplot.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/jquery.jqplot.css}" />
-<script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
-	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
-<script src="/bootstrap/js/prettify.js" type="text/javascript"
-	th:src="@{/bootstrap/js/prettify.js}"></script>
-<script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-<script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
-<script src="/bootstrap/js/bootstrap-datetimepicker.min.js"
-	type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap-datetimepicker.min.js}"></script>
-<script src="/bootstrap/js/bootstrap-datetimepicker.zh-CN.js"
-	type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap-datetimepicker.zh-CN.js}"></script>
-<script src="/scripts/jquery-ui-1.10.3.custom.min.js"
-	type="text/javascript"
-	th:src="@{/scripts/jquery-ui-1.10.3.custom.min.js}"></script>
-<script src="/bootstrap/js/bootstrap-modal.js" type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap-modal.js}"></script>
-<script src="/bootstrap/js/bootstrap-modalmanager.js"
-	type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap-modalmanager.js}"></script>
-<script src="/bootstrap/js/bootstrap-confirm.js" type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap-confirm.js}"></script>
-<script src="/bootstrap/js/bootstrap-paginator.js"
-	type="text/javascript" th:src="@{/bootstrap/js/bootstrap-paginator.js}"></script>
-<script src="/bootstrap/js/jquery.form.js" type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.form.js}"></script>
-<script src="/bootstrap/js/jquery.jqplot.min.js" type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.jqplot.min.js}"></script>
-<script src="/scripts/jquery.validate.js" type="text/javascript"
-	th:src="@{/scripts/jquery.validate.js}"></script>
-<script src="/scripts/jquery.metadata.js" type="text/javascript"
-	th:src="@{/scripts/jquery.metadata.js}"></script>
-<script src="/scripts/json2.js" type="text/javascript"
-	th:src="@{/scripts/json2.js}"></script>
-<script src="/bootstrap/js/jquery.simpleTable.js" type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.simpleTable.js}"></script>
-<script src="/bootstrap/js/crud.js" type="text/javascript"
-	th:src="@{/bootstrap/js/crud.js}"></script>
-<script src="/bootstrap/js/jquery.blockUI.js" type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.blockUI.js}"></script>
-<script src="/bootstrap/js/jquery.bootstrap.teninedialog.min.js"
-	type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.bootstrap.teninedialog.min.js}"></script>
-<script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    $.ajaxSetup({
-	contentType : "application/x-www-form-urlencoded;charset=utf-8",
-	complete : function(XMLHttpRequest, textStatus) {
-	    var sessionstatus = XMLHttpRequest
-		    .getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
-	    if (sessionstatus == "timeout") {
-		// 如果超时就处理 ，指定要跳转的页面 
-		//alert("会话已经超时，请重新登录。");
-		$.teninedialog({
-		    title : '系统提示',
-		    content : '会话已经超时，请重新登录。',
-		    dialogHidden : function() {
-			var loginUrl = /*[[@{'/login'}]]*/'';
-			window.location.replace(loginUrl);
-		    }
-		});
+<!-- basic styles -->
+<link href="../../assets/css/bootstrap.min.css" rel="stylesheet"
+	th:href="@{/assets/css/bootstrap.min.css}" />
+<!-- -->
+<link rel="stylesheet" href="../assets/css/font-awesome.min.css"
+	th:href="@{/assets/css/font-awesome.min.css}" />
 
-	    }
-	}
-    });
+<!--[if IE 7]>
+		  <link rel="stylesheet" href="../../assets/css/font-awesome-ie7.min.css" th:href="@{/assets/css/font-awesome-ie7.min.css}"/>
+		<![endif]-->
+<!-- page specific plugin styles -->
+<!-- fonts 
 
-    /*]]>*/
-</script>
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />
+-->
+
+<!-- ace styles -->
+<link rel="stylesheet" href="../../assets/css/ace.min.css"
+	th:href="@{/assets/css/ace.min.css}" />
+<link rel="stylesheet" href="../../assets/css/ace-rtl.min.css"
+	th:href="@{/assets/css/ace-rtl.min.css}" />
+<link rel="stylesheet" href="../../assets/css/ace-skins.min.css"
+	th:href="@{/assets/css/ace-skins.min.css}" />
+<!--[if lte IE 8]>
+		  <link rel="stylesheet" href="../../assets/css/ace-ie.min.css" th:href="@{/assets/css/ace-ie.min.css}"/>
+		<![endif]-->
+<!-- inline styles related to this page -->
+<!-- ace settings handler -->
+<script src="../../assets/js/ace-extra.min.js"
+	th:src="@{/assets/js/ace-extra.min.js}"></script>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+		<script src="../../assets/js/html5shiv.js" th:src="@{/assets/js/html5shiv.js}"></script>
+		<script src="../../assets/js/respond.min.js" th:src="@{/assets/js/respond.min.js}"></script>
+		<![endif]-->
+
+
 </head>
 <body>
 	<div th:fragment="javascriptFragment">
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
-			th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
+
+		<!--[if !IE]> -->
+		<script src="../../assets/js/jquery-2.0.3.min.js"
+			th:src="@{/assets/js/jquery-2.0.3.min.js}"></script>
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+			<script src="../../assets/js/jquery-1.10.2.min.js" th:src="@{/assets/js/jquery-1.10.2.min.js}"></script>
+		<![endif]-->
+
+
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script src="/bootstrap/js/prettify.js" type="text/javascript"
-			th:src="@{/bootstrap/js/prettify.js}"></script>
-		<script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"
-			th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+		<script src="../..//assets/js/bootstrap.min.js" type="text/javascript"
+			th:src="@{/assets/js/bootstrap.min.js}"></script>
+		<script src="../../assets/js/typeahead-bs2.min.js"
+			th:src="@{/assets/js/typeahead-bs2.min.js}"></script>
+
+		<!-- page specific plugin scripts -->
+
+		<!--[if lte IE 8]>
+		  <script src="../../assets/js/excanvas.min.js" th:src="@{/assets/js/excanvas.min.js}"></script>
+		<![endif]-->
+
+		<script src="../../assets/js/jquery-ui-1.10.3.custom.min.js"
+			th:src="@{/assets/js/jquery-ui-1.10.3.custom.min.js}"></script>
+		<script src="../../assets/js/jquery.ui.touch-punch.min.js"
+			th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
+		<script src="../../assets/js/jquery.slimscroll.min.js"
+			th:src="@{/assets/js/jquery.slimscroll.min.js}"></script>
+		<script src="../../assets/js/jquery.easy-pie-chart.min.js"
+			th:src="@{/assets/js/jquery.easy-pie-chart.min.js}"></script>
+		<script src="../../assets/js/jquery.sparkline.min.js"
+			th:src="@{/assets/js/jquery.sparkline.min.js}"></script>
+		<script src="../../assets/js/flot/jquery.flot.min.js"
+			th:src="@{/assets/js/flot/jquery.flot.min.js}"></script>
+		<script src="../../assets/js/flot/jquery.flot.pie.min.js"
+			th:src="@{/assets/js/flot/jquery.flot.pie.min.js}"></script>
+		<script src="../../assets/js/flot/jquery.flot.resize.min.js"
+			th:src="@{/assets/js/flot/jquery.flot.resize.min.js}"></script>
+
+		<!-- ace scripts -->
+
+		<script src="../../assets/js/ace-elements.min.js"
+			th:src="@{/assets/js/ace-elements.min.js}"></script>
+		<script src="../../assets/js/ace.min.js"
+			th:src="@{/assets/js/ace.min.js}"></script>
+
 		<script src="/bootstrap/js/jquery.dataTables.js"
 			type="text/javascript" th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
 		<script src="/bootstrap/js/bootstrap-datetimepicker.min.js"
@@ -122,8 +113,7 @@
 			th:src="@{/bootstrap/js/bootstrap-paginator.js}"></script>
 		<script src="/bootstrap/js/jquery.form.js" type="text/javascript"
 			th:src="@{/bootstrap/js/jquery.form.js}"></script>
-		<script src="/bootstrap/js/jquery.jqplot.min.js"
-			type="text/javascript" th:src="@{/bootstrap/js/jquery.jqplot.min.js}"></script>
+
 		<script src="/scripts/jquery.validate.js" type="text/javascript"
 			th:src="@{/scripts/jquery.validate.js}"></script>
 		<script src="/scripts/jquery.metadata.js" type="text/javascript"
@@ -141,31 +131,31 @@
 			type="text/javascript"
 			th:src="@{/bootstrap/js/jquery.bootstrap.teninedialog.min.js}"></script>
 		<script type="text/javascript" th:inline="javascript">
-	    /*<![CDATA[*/
-	    $
-		    .ajaxSetup({
-			contentType : "application/x-www-form-urlencoded;charset=utf-8",
-			complete : function(XMLHttpRequest, textStatus) {
-			    var sessionstatus = XMLHttpRequest
-				    .getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
-			    if (sessionstatus == "timeout") {
-				// 如果超时就处理 ，指定要跳转的页面 
-				//alert("会话已经超时，请重新登录。");
-				$.teninedialog({
-				    title : '系统提示',
-				    content : '会话已经超时，请重新登录。',
-				    dialogHidden : function() {
-					var loginUrl = /*[[@{'/login'}]]*/'';
-					window.location.replace(loginUrl);
-				    }
-				});
+			/*<![CDATA[*/
+			$
+					.ajaxSetup({
+						contentType : "application/x-www-form-urlencoded;charset=utf-8",
+						complete : function(XMLHttpRequest, textStatus) {
+							var sessionstatus = XMLHttpRequest
+									.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
+							if (sessionstatus == "timeout") {
+								// 如果超时就处理 ，指定要跳转的页面 
+								//alert("会话已经超时，请重新登录。");
+								$.teninedialog({
+									title : '系统提示',
+									content : '会话已经超时，请重新登录。',
+									dialogHidden : function() {
+										var loginUrl = /*[[@{'/login'}]]*/'';
+										window.location.replace(loginUrl);
+									}
+								});
 
-			    }
-			}
-		    });
+							}
+						}
+					});
 
-	    /*]]>*/
-	</script>
+			/*]]>*/
+		</script>
 	</div>
 </body>
 </html>

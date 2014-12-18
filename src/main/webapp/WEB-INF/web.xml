@@ -104,6 +104,24 @@
 		<url-pattern>*.swf</url-pattern>
 	</servlet-mapping>
 
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.eot</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.svg</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.ttf</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.woff</url-pattern>
+	</servlet-mapping>
+
+
 
 
 	<servlet>
@@ -156,20 +174,13 @@
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
-	<!--
-		<filter>
-			<filter-name>ajaxSessionTimeoutFilter</filter-name>
-			<filter-class>org.crusoe.filter.SessionTimeoutFilter</filter-class>
-		</filter>
-		<filter-mapping>
-			<filter-name>ajaxSessionTimeoutFilter</filter-name>
-			<url-pattern>/*</url-pattern>
-		</filter-mapping>
--->
-	<session-config> 
-		<session-timeout>30</session-timeout> 
-	</session-config> 
-	
+	<!-- <filter> <filter-name>ajaxSessionTimeoutFilter</filter-name> <filter-class>org.crusoe.filter.SessionTimeoutFilter</filter-class> 
+		</filter> <filter-mapping> <filter-name>ajaxSessionTimeoutFilter</filter-name> 
+		<url-pattern>/*</url-pattern> </filter-mapping> -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
 	<error-page>
 		<exception-type>org.apache.shiro.session.InvalidSessionException</exception-type>
 		<location>/login</location>
