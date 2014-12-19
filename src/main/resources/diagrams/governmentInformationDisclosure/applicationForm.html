@@ -124,7 +124,7 @@
 				},
 				applicationTime : {
 				    required : true,
-				    date : false
+				    date : true
 				},
 				assigneeList : {
 				    required : true
@@ -178,7 +178,7 @@
 
 			$("#datetimepicker1").datetimepicker({
 			    language : 'zh-CN',
-			    format : 'yyyy-MM-dd hh:mm:ss',
+			    format : 'MM/dd/yyyy hh:mm:ss',
 			    pickDate : true,
 			    pickTime : true,
 			    hourStep : 1,
@@ -601,7 +601,7 @@
 									<div class="controls">
 										<div id="datetimepicker1" class="input-append date">
 											<input name="applicationTime" class="datepicker span2"
-												data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
+												data-date-format="MM/dd/yyyy hh:mm:ss" /> <span
 												class="add-on"> <i data-time-icon="icon-time"
 												data-date-icon="icon-calendar"> </i>
 											</span>
