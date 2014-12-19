@@ -26,6 +26,7 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.util.IOUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.shiro.subject.Subject;
 import org.crusoe.dto.HistoricProcessInstanceDTO;
 import org.crusoe.dto.ProcessDefinitionDTO;
@@ -115,6 +116,7 @@ public class ProcessController extends BaseServiceImpl {
 		return rets;
 	}
 
+	@RequiresUser
 	@RequestMapping(value = "{id}/start", method = RequestMethod.GET)
 	public String start(@PathVariable String id, Model model) {
 		RuntimeService runtimeService = processEngine.getRuntimeService();
@@ -144,6 +146,7 @@ public class ProcessController extends BaseServiceImpl {
 		}
 	}
 
+	@RequiresUser
 	@RequestMapping(value = "{id}/startAndRedirectToTaskForm", method = RequestMethod.GET)
 	public String startAndRedirectToTaskForm(@PathVariable String id,
 			Model model) {

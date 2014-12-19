@@ -18,7 +18,13 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Attachment;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.util.IOUtils;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.crusoe.service.AccountService;
+import org.crusoe.util.JSONUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -85,11 +91,11 @@ public class AttachmentController {
 
 	}
 
-	@RequestMapping(value = "uploadAttachment/{taskId}", method = RequestMethod.POST)
+	@RequestMapping(value = "uploadAttachment/{taskId}", method = RequestMethod.POST, produces = { "text/html;charset=UTF-8" })
 	public @ResponseBody
-	HashMap<String, Object> uploadAttachment(
-			@PathVariable("taskId") String taskId,
-			@RequestParam(value = "file", required = false) MultipartFile file) {
+	String uploadAttachment(@PathVariable("taskId") String taskId,
+			@RequestParam(value = "file", required = false) MultipartFile file)
+			throws JsonGenerationException, JsonMappingException, IOException {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		String fileName = file.getOriginalFilename();
 
@@ -107,10 +113,14 @@ public class AttachmentController {
 			rets.put("filename", fileName);
 			rets.put("size", file.getSize());
 		} catch (Exception e) {
+			e.printStackTrace();
 			rets.put("msg", "upload failed.");
 		}
 
-		return rets;
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(rets);
+
+		return json;
 
 	}
 
