@@ -16,7 +16,7 @@ function checkAll(checkAllId) {
 
 function create(createDiv, createUrl, successCallback) {
 
-	$(createDiv).load(createUrl + '?' + (new Date()).valueOf(), function(data) {
+	$(createDiv).load(createUrl + '?timestamp=' + (new Date()).valueOf(), function(data) {
 		$(createDiv).bind("evtSuccess", function(evt, data) {
 			successCallback();
 		});
