@@ -20,6 +20,7 @@
 				    remainder = (count - start) % size;
 
 				    var options = {
+					bootstrapMajorVersion : 3,
 					numberOfPages : remainder == 0 ? (count == 0 ? 1
 						: count / size)
 						: (count - remainder) / size
@@ -36,7 +37,7 @@
 					    table.simpleTable(orginDataUrl
 						    + "&start=" + (newPage - 1)
 						    * size, rowRender,
-						    paginator, callback,type)
+						    paginator, callback, type)
 
 					},
 					itemContainerClass : function(type,
@@ -55,15 +56,15 @@
 				    }
 
 				    paginator.bootstrapPaginator(options);
-				    
+
 				    if (callback != undefined)
 					callback(count, start, size);
 				},
 				error : function(XMLHttpRequest, textStatus,
 					errorThrown) {
 				    if (XMLHttpRequest.status == 413) {
-					//alert("需要登陆。");
-					//window.location = "login";
+					// alert("需要登陆。");
+					// window.location = "login";
 				    }
 				}
 			    });
@@ -72,7 +73,7 @@
 
 		},
 		simpleTableFromData : function(data, rowRender, paginator,
-			callback,type) {
+			callback, type) {
 		    var table = this;
 		    table.clearSimpleTable();
 
@@ -83,6 +84,7 @@
 		    remainder = (count - start) % size;
 
 		    var options = {
+			bootstrapMajorVersion : 3,
 			numberOfPages : remainder == 0 ? (count == 0 ? 1
 				: count / size) : (count - remainder) / size
 				+ 1,
@@ -94,7 +96,7 @@
 
 			    table.simpleTable(orginDataUrl + "&start="
 				    + (newPage - 1) * size, rowRender,
-				    paginator, callback,type)
+				    paginator, callback, type)
 
 			},
 			itemContainerClass : function(type, page, current) {

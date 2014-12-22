@@ -3,120 +3,120 @@
 <head thy:merge="/common::headerFragment">
 <title>任务列表</title>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"/></td><td>"
-				+ data.id
-				+ "</td><td>"
-				+ data.name
-				+ "</td><td>"
-				+ data.initiatorUser.name
-				+ "</td><td>"
-				+ getOrganization(data.initiatorUser.organizationId)
-				+ "</td><td><a href=\"javascript:loadView('"
-				+ /*[[@{'/runtime/tasks/claim/'}]]*/"1234/" //url
-				+ data.id + "')\">接受</a></td></tr>";
-		return newRow;
-	};
-	function getOrganization(organizationId) {
-		var organizationName;
-		$.ajax({
-			type : 'GET',
-			url : /*[[@{'/organization/'}]]*/''//load organization  
-					+ organizationId,
-			async : false,
-			success : function(data) {
-				organizationName = data.text;
-			}
-		});
-		return organizationName;
+    /*<![CDATA[*/
+    function render(data) {
+	var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"/></td><td>"
+		+ data.id
+		+ "</td><td>"
+		+ data.name
+		+ "</td><td>"
+		+ data.initiatorUser.name
+		+ "</td><td>"
+		+ getOrganization(data.initiatorUser.organizationId)
+		+ "</td><td><a href=\"javascript:loadView('"
+		+ /*[[@{'/runtime/tasks/claim/'}]]*/"1234/" //url
+		+ data.id + "')\">接受</a></td></tr>";
+	return newRow;
+    };
+    function getOrganization(organizationId) {
+	var organizationName;
+	$.ajax({
+	    type : 'GET',
+	    url : /*[[@{'/organization/'}]]*/''//load organization  
+		    + organizationId,
+	    async : false,
+	    success : function(data) {
+		organizationName = data.text;
+	    }
+	});
+	return organizationName;
 
-	};
-	$(document)
-			.ready(
+    };
+    $(document)
+	    .ready(
+		    function() {
+
+			$('#checkAll').bind('click', function() {
+			    checkAll("#checkAll");
+			});
+
+			$('#deleteTaskBtn')
+				.bind(
+					'click',
 					function() {
 
-						$('#checkAll').bind('click', function() {
-							checkAll("#checkAll");
-						});
+					    //alert("delete.....");
+					    $("#confirmDiv")
+						    .confirm(
+							    {
+								heading : '确认删除',
+								body : '你真的要删除吗?',
+								yesBtn : '是',
+								noBtn : '否',
+								callback : function() {
+								    batchDelete(
+									    /*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
+									    successCallback);
 
-						$('#deleteTaskBtn')
-								.bind(
-										'click',
-										function() {
-
-											//alert("delete.....");
-											$("#confirmDiv")
-													.confirm(
-															{
-																heading : '确认删除',
-																body : '你真的要删除吗?',
-																yesBtn : '是',
-																noBtn : '否',
-																callback : function() {
-																	batchDelete(
-																			/*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
-																			successCallback);
-
-																}
-															});
-
-										});
-
-						$("#taskList")
-								.simpleTable(
-										/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
-												+ "&timestamp="
-												+ new Date().toString(),
-										render, $("#paginatorForTaskList"),
-										updateBadge);
+								}
+							    });
 
 					});
 
-	function successCallback() {
+			$("#taskList")
+				.simpleTable(
+					/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
+						+ "&timestamp="
+						+ new Date().toString(),
+					render, $("#paginatorForTaskList"),
+					updateBadge);
 
-		$("#taskList tr").nextAll().remove();
+		    });
 
-		$("#taskList").simpleTable(
-				/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
-						+ "&timestamp=" + new Date().toString(), render,
-				$("#paginatorForTaskList"), updateBadge);
+    function successCallback() {
 
-	};
+	$("#taskList tr").nextAll().remove();
 
-	function updateBadge(count, start, size) {
-		$("#listView").trigger("evtTasksBadge", {
-			badges : count
-		});
+	$("#taskList").simpleTable(
+		/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
+			+ "&timestamp=" + new Date().toString(), render,
+		$("#paginatorForTaskList"), updateBadge);
 
-	};
-	function loadView(url) {
-		$("#view")
-				.load(
-						url + '?' + (new Date()).valueOf(),
-						function(data) {
-							$("#view")
-									.bind(
-											"evtWFSuccess",
-											function(evt, data) {
-												$("#view").hide();
-												$("#taskList")
-														.clearSimpleTable();
-												$("#listView").show();
-												$("#taskList")
-														.simpleTable(
-																/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/"",
-																render,
-																$("#paginatorForTaskList"),
-																updateBadge);
+    };
 
-											});
-							$("#view").show();
-							$("#listView").hide();
+    function updateBadge(count, start, size) {
+	$("#listView").trigger("evtTasksBadge", {
+	    badges : count
+	});
 
-						});
-	};
-	/*]]>*/
+    };
+    function loadView(url) {
+	$("#view")
+		.load(
+			url + '?' + (new Date()).valueOf(),
+			function(data) {
+			    $("#view")
+				    .bind(
+					    "evtWFSuccess",
+					    function(evt, data) {
+						$("#view").hide();
+						$("#taskList")
+							.clearSimpleTable();
+						$("#listView").show();
+						$("#taskList")
+							.simpleTable(
+								/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/"",
+								render,
+								$("#paginatorForTaskList"),
+								updateBadge);
+
+					    });
+			    $("#view").show();
+			    $("#listView").hide();
+
+			});
+    };
+    /*]]>*/
 </script>
 <style>
 .hover {
@@ -125,26 +125,29 @@
 </style>
 </head>
 <body>
-	<div class="box span9" id="listView">
-		<table id="taskList" cellpadding="0" cellspacing="0" border="0"
-			class="table table-striped table-bordered table-hover ">
-			<thead>
-				<tr>
-					<th><input type="checkbox" id="checkAll" value="" /></th>
-					<th>序号</th>
-					<th>名称</th>
-					<th>发起者</th>
-					<th>所在部门</th>
-					<th>操作</th>
-				</tr>
-			</thead>
-			<tbody>
-
-			</tbody>
-		</table>
-		<div id="paginatorForTaskList"></div>
-		<input type="button" id="deleteTaskBtn" value="删除选中"
-			class="btn btn-danger" />
+	<div class="col-xs-12">
+		<div class="table-responsive" id="listView">
+			<table id="taskList" cellpadding="0" cellspacing="0" border="0"
+				class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th><input type="checkbox" id="checkAll" value="" /></th>
+						<th>序号</th>
+						<th>名称</th>
+						<th>发起者</th>
+						<th>所在部门</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<div>
+				<ul id="paginatorForTaskList"></ul>
+			</div>
+			<input type="button" id="deleteTaskBtn" value="删除选中"
+				class="btn btn-danger" />
+		</div>
 	</div>
 	<div id="view"></div>
 	<div id="confirmDiv"></div>
