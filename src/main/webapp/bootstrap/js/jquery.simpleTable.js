@@ -49,7 +49,7 @@
 				    };
 				    for (i = 0; i < data.records.length; i++) {
 					var newRow = rowRender(data.records[i]);
-					table.find("tr:last").after(newRow);
+					table.find("tbody").append(newRow);
 					// $("#permissionList
 					// tr:last").after(newRow);
 
@@ -92,7 +92,7 @@
 			totalPages : remainder == 0 ? (count == 0 ? 1 : count
 				/ size) : (count - remainder) / size + 1,
 			onPageChanged : function(e, oldPage, newPage) {
-			    table.find("tr").nextAll().remove();
+			    table.find("tbody").find("tr").nextAll().remove();
 
 			    table.simpleTable(orginDataUrl + "&start="
 				    + (newPage - 1) * size, rowRender,
@@ -107,7 +107,7 @@
 		    };
 		    for (i = 0; i < data.records.length; i++) {
 			var newRow = rowRender(data.records[i]);
-			table.find("tr:last").after(newRow);
+			table.find("tbody").append(newRow);
 			// $("#permissionList
 			// tr:last").after(newRow);
 
@@ -120,7 +120,7 @@
 		},
 		clearSimpleTable : function() {
 		    var table = this;
-		    table.find("tr").nextAll().remove();
+		    table.find("tbody").remove();
 
 		}
 	    });

@@ -8,18 +8,14 @@
 <!-- basic styles -->
 <link href="../../assets/css/bootstrap.min.css" rel="stylesheet"
 	th:href="@{/assets/css/bootstrap.min.css}" />
-<!-- -->
+
 <link rel="stylesheet" href="../assets/css/font-awesome.min.css"
 	th:href="@{/assets/css/font-awesome.min.css}" />
-<!--[if IE 7]>-->
+<!--[if IE 7]>
 <link rel="stylesheet" href="../../assets/css/font-awesome-ie7.min.css"
 	th:href="@{/assets/css/font-awesome-ie7.min.css}" />
-<!--<![endif]-->
+<![endif]-->
 <!-- page specific plugin styles -->
-<!-- fonts 
-
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />
--->
 <!-- ace styles -->
 <link rel="stylesheet" href="../../assets/css/ace.min.css"
 	th:href="@{/assets/css/ace.min.css}" />
@@ -27,29 +23,30 @@
 	th:href="@{/assets/css/ace-rtl.min.css}" />
 <link rel="stylesheet" href="../../assets/css/ace-skins.min.css"
 	th:href="@{/assets/css/ace-skins.min.css}" />
-<!--[if lte IE 8]>-->
+
+<!--[if lte IE 8]>
 <link rel="stylesheet" href="../../assets/css/ace-ie.min.css"
 	th:href="@{/assets/css/ace-ie.min.css}" />
-<!--<![endif]-->
+<![endif]-->
 <!-- inline styles related to this page -->
 <!-- ace settings handler -->
 <script src="../../assets/js/ace-extra.min.js"
 	th:src="@{/assets/js/ace-extra.min.js}"></script>
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>-->
+<!--[if lt IE 9]>
 <script src="../../assets/js/html5shiv.js"
 	th:src="@{/assets/js/html5shiv.js}"></script>
 <script src="../../assets/js/respond.min.js"
 	th:src="@{/assets/js/respond.min.js}"></script>
-<!--<![endif]-->
+<![endif]-->
 </head>
 <body>
 	<div th:fragment="javascriptFragment">
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<!--[if !IE]> -->
+		<!--[if !IE]> 
 		<script src="../../assets/js/jquery-2.0.3.min.js"
 			th:src="@{/assets/js/jquery-2.0.3.min.js}"></script>
-		<!-- <![endif]-->
+		 <![endif]-->
 		<!--[if IE]>-->
 		<script src="../../assets/js/jquery-1.10.2.min.js"
 			th:src="@{/assets/js/jquery-1.10.2.min.js}"></script>
@@ -124,31 +121,31 @@
 			type="text/javascript"
 			th:src="@{/bootstrap/js/jquery.bootstrap.teninedialog.min.js}"></script>
 		<script type="text/javascript" th:inline="javascript">
-	    /*<![CDATA[*/
-	    $
-		    .ajaxSetup({
-			contentType : "application/x-www-form-urlencoded;charset=utf-8",
-			complete : function(XMLHttpRequest, textStatus) {
-			    var sessionstatus = XMLHttpRequest
-				    .getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
-			    if (sessionstatus == "timeout") {
-				// 如果超时就处理 ，指定要跳转的页面 
-				//alert("会话已经超时，请重新登录。");
-				$.teninedialog({
-				    title : '系统提示',
-				    content : '会话已经超时，请重新登录。',
-				    dialogHidden : function() {
-					var loginUrl = /*[[@{'/login'}]]*/'';
-					window.location.replace(loginUrl);
-				    }
-				});
+			/*<![CDATA[*/
+			$
+					.ajaxSetup({
+						contentType : "application/x-www-form-urlencoded;charset=utf-8",
+						complete : function(XMLHttpRequest, textStatus) {
+							var sessionstatus = XMLHttpRequest
+									.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
+							if (sessionstatus == "timeout") {
+								// 如果超时就处理 ，指定要跳转的页面 
+								//alert("会话已经超时，请重新登录。");
+								$.teninedialog({
+									title : '系统提示',
+									content : '会话已经超时，请重新登录。',
+									dialogHidden : function() {
+										var loginUrl = /*[[@{'/login'}]]*/'';
+										window.location.replace(loginUrl);
+									}
+								});
 
-			    }
-			}
-		    });
+							}
+						}
+					});
 
-	    /*]]>*/
-	</script>
+			/*]]>*/
+		</script>
 	</div>
 </body>
 </html>
