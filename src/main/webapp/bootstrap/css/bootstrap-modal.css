@@ -91,7 +91,7 @@
 
 .modal.container {
   width: 940px;
-  margin-left: 0px;
+  margin-left: -470px;
 }
 
 /* Modal Overflow */
@@ -118,7 +118,7 @@
 @media (min-width: 1200px) {
 	.modal.container {
 		width: 1170px;
-		margin-left: 0px;
+		margin-left: -585px;
 	}
 }
 
@@ -167,7 +167,7 @@
 
 /*
 Animate.css - http://daneden.me/animate
-Licensed under the 鈽�license (http://licence.visualidiot.com/)
+Licensed under the ☺ license (http://licence.visualidiot.com/)
 
 Copyright (c) 2012 Dan Eden*/
 

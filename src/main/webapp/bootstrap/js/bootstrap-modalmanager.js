@@ -1,5 +1,5 @@
 /* ===========================================================
- * bootstrap-modalmanager.js v2.2.2
+ * bootstrap-modalmanager.js v2.2.5
  * ===========================================================
  * Copyright 2012 Jordan Schroter.
  *
@@ -99,7 +99,7 @@
 						};
 
 						transition ?
-							modal.$element.one($.support.transition.end, complete):
+							modal.$element.one($.support.transition.end, complete) :
 							complete();
 					});
 				};
@@ -128,10 +128,9 @@
 
 			}));
 
-			modal.$element.on('destroy.modalmanager', targetIsSelf(function (e) {
+			modal.$element.on('destroyed.modalmanager', targetIsSelf(function (e) {
 				that.destroyModal(modal);
 			}));
-
 		},
 
 		getOpenModals: function () {
@@ -386,7 +385,7 @@
 	// if Boostsrap namespaced events, this would not be needed.
 	function targetIsSelf(callback){
 		return function (e) {
-			if (this === e.target){
+			if (e && this === e.target){
 				return callback.apply(this, arguments);
 			}
 		}
@@ -414,5 +413,11 @@
 	};
 
 	$.fn.modalmanager.Constructor = ModalManager
+
+	// ModalManager handles the modal-open class so we need 
+	// to remove conflicting bootstrap 3 event handlers
+	$(function () {
+		$(document).off('show.bs.modal').off('hidden.bs.modal');
+	});
 
 }(jQuery);
