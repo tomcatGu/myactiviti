@@ -134,50 +134,91 @@
 </script>
 </head>
 <body>
-	<form id="myForm" method="POST">
-		<div>
-			<label>文件名称：<input type="text" name="fileName" /></label>
+	<form id="myForm" method="POST" class="form-horizontal">
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">文件名称：</label>
+			<div class="col-sm-9">
+				<input type="text" name="fileName" id="fileName"
+					class="col-xs-10 col-sm-5" />
+			</div>
+			<div class="space-4"></div>
 		</div>
-		<div>
-			<label>单位名称： <span id="organizationName" class="label"></span>
-				<input type="hidden" id="organizationId" name="organizationId" />
-			</label>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">单位名称：</label>
+			<div class="col-sm-9">
+				<span id="organizationName" class="col-xs-10 col-sm-5"></span> <input
+					type="hidden" id="organizationId" name="organizationId" />
+			</div>
 		</div>
-		<div>
-			<label>发文字号：<input type="text" name="messageNumber" /></label>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right"
+				for="messageNumber">发文字号：</label>
+			<div class="col-sm-9">
+				<input class="col-xs-10 col-sm-5" type="text" name="messageNumber"
+					id="messageNumber" />
+			</div>
 		</div>
-		<div>
-			<label>文件性质：<select id="fileProperty" name="fileProperty"><option
-						value="党内规范性文件">党内规范性文件</option></select></label>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right"
+				for="fileProperty">文件性质：</label>
+			<div class="col-sm-9">
+				<select id="fileProperty" name="fileProperty"
+					class="col-xs-10 col-sm-5"><option value="党内规范性文件">党内规范性文件</option></select>
+			</div>
 		</div>
-		<div>
-			<label>内容分类：<select id="contentClassification"
-				name="contentClassification"><option value="党内">党内</option></select></label>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right"
+				for="contentClassification">内容分类：</label>
+			<div class="col-sm-9">
+				<select id="contentClassification" name="contentClassification"><option
+						value="党内">党内</option></select>
+			</div>
 		</div>
-		<div id="datetimepicker1" class="input-append date">
-			<label>发布时间： <input name="releaseDate"   class="datepicker"
-				data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-					<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
-			</span></label>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right"
+				for="datetimepicker1">发布时间：</label>
+			<div class="col-sm-9">
+				<div id="datetimepicker1" class="input-append date">
+					<input name="releaseDate" class="datepicker"
+						data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+						<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+					</i>
+					</span>
+				</div>
+			</div>
 		</div>
-		<div id="datetimepicker2" class="input-append date">
-			<label>实施时间：<input name="implementationDate"
-				class="datepicker" data-date-format="yyyy-MM-dd hh:mm:ss" /> <span
-				class="add-on"> <i data-time-icon="icon-time"
-					data-date-icon="icon-calendar"> </i>
-			</span></label>
+		<div class="form-group">
+			<label class="col-sm-3 controle-label no-padding-right"
+				for="datetimepicker2">实施时间：</label>
+			<div class="col-sm-9">
+				<div id="datetimepicker2" class="input-append date">
+					<input name="implementationDate" class="datepicker"
+						data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
+						<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+					</i>
+					</span>
+				</div>
+			</div>
 		</div>
-		<div>
-			<label>是否公开：</label> <label class="radio inline"><input
-				name="isOpen" type="radio" value="是" />是</label> <label
-				class="radio inline"><input name="isOpen" type="radio"
-				value="否" />否</label>
+		<div class="form-group">
+			<label class="col-sm-3 controle-label no-padding-right"
+				for="isOpen">是否公开：</label>
+			<div class="col-sm-9">
+				<div class="radio">
+					<label class="radio inline"><input name="isOpen"
+						type="radio" value="是" />是</label> <label class="radio inline"><input
+						name="isOpen" type="radio" value="否" />否</label>
+				</div>
+			</div>
 		</div>
-		<div class="control-group">
-			<div class="controls">
-				<input type="button" id="submitButton" value="提交"
-					class="btn btn-primary" /> <input type="hidden"
-					name="attachmentList" id="attachmentList" />
+		<div class="form-group">
+			<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<button type="button" id="submitButton" class="btn btn-info">
+						<i class="icon-ok bigger-110"></i>提交
+					</button>
+					<input type="hidden" name="attachmentList" id="attachmentList" />
+				</div>
 			</div>
 		</div>
 	</form>
@@ -186,10 +227,10 @@
 		<div>
 			<ul id="uploadedAttachment"></ul>
 		</div>
-		<form id="uploadForm"
+		<form id="uploadForm" class="form-horizontal"
 			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
 			method="post" enctype="multipart/form-data">
-			<div class="row">
+			<div class="form-group">
 				<div>
 					<div class="span3">
 						<input type="file" name="file" />
@@ -208,5 +249,6 @@
 			</div>
 		</form>
 	</div>
+	<div th:replace="/common::javascriptFragment"></div>
 </body>
 </html>
