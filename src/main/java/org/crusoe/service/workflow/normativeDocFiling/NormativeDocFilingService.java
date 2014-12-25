@@ -67,7 +67,7 @@ public class NormativeDocFilingService {
 		ndf.setFileProperty(fileProperty);
 		ndf.setContentClassification(contentClassification);
 		ndf.setUsername(SecurityUtils.getSubject().getPrincipal().toString());
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		try {
 			ndf.setReleaseDate(formatter.parse(releaseDate));
 		} catch (ParseException e) {
@@ -115,7 +115,7 @@ public class NormativeDocFilingService {
 		ndf.setFileProperty(fileProperty);
 		ndf.setContentClassification(contentClassification);
 		ndf.setUsername(SecurityUtils.getSubject().getPrincipal().toString());
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		try {
 			ndf.setReleaseDate(formatter.parse(releaseDate));
 		} catch (ParseException e) {
