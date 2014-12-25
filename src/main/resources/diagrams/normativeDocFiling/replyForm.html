@@ -96,13 +96,26 @@
 				<div>
 					<textarea rows="8" cols="80" name="reply"></textarea>
 				</div>
+				<div class="ace-spinner" style="width: 70px;">
+					<div class="input-group">
+						<input type="text" class="input-mini spinner-input form-control"
+							id="spinner1" maxlength="3" name="orderNumber" />
+						<div class="spinner-buttons input-group-btn btn-group-vertical">
+							<button type="button" class="btn spinner-up btn-xs btn-info">
+								<i class="icon-chevron-up"></i>
+							</button>
+							<button type="button" class="btn spinner-down btn-xs btn-info">
+								<i class="icon-chevron-down"></i>
+							</button>
+						</div>
+					</div>
+				</div>
 				<div>
 					<label>审核是否通过：</label> <label class="radio inline"><input
 						name="isPassed" type="radio" value="accept" />准予备案</label> <label
 						class="radio inline"><input name="isPassed" type="radio"
-						value="refuse" />不予备案</label><label
-						class="radio inline"><input name="isPassed" type="radio"
-						value="revise" />返回修改</label>
+						value="refuse" />不予备案</label><label class="radio inline"><input
+						name="isPassed" type="radio" value="revise" />返回修改</label>
 				</div>
 				<div class="control-group">
 					<div class="controls">

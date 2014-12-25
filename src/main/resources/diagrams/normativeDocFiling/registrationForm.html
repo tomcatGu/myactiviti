@@ -89,7 +89,6 @@
 						<i class="icon-calendar bigger-110"></i>
 					</span>
 				</div>
-
 			</div>
 			<div class="space-4"></div>
 		</div>
@@ -97,7 +96,6 @@
 			<label class="col-sm-3 controle-label no-padding-right text-right"
 				for="isOpen">是否公开：</label>
 			<div class="col-sm-9" style="z-index: 0">
-
 				<div class="radio-inline">
 					<label> <input name="isOpen" type="radio" class="ace"
 						value="是" /> <span class="lbl"> 是</span>
@@ -108,7 +106,6 @@
 						value="否" /> <span class="lbl"> 否</span>
 					</label>
 				</div>
-
 			</div>
 			<div class="space-4"></div>
 		</div>
@@ -152,143 +149,164 @@
 	</div>
 	<div th:replace="/common::javascriptFragment"></div>
 	<script type="text/javascript" th:inline="javascript">
-		/*<![CDATA[*/
-		function deleteAttachment(deleteUrl, attachmentId) {
-			$.ajax({
-				type : "POST",
-				url : deleteUrl + attachmentId,
-				data : {
-					_method : 'DELETE',
-				},
-				success : function(data) {
-					var orignList = $("#attachmentList").val();
-					orignList = orignList.replace(attachmentId + ",", "");
-					$("#attachmentList").val(orignList);
-					$("#attachment" + attachmentId).remove();
-				}
-			});
-		};
-		$(document)
-				.ready(
-						function() {
-							$('.date-picker').datepicker({
-								language : 'zh-CN',
-								autoclose : true
-							}).next().on(ace.click_event, function() {
-								$(this).prev().focus();
+	/*<![CDATA[*/
+	function deleteAttachment(deleteUrl, attachmentId) {
+	    $.ajax({
+		type : "POST",
+		url : deleteUrl + attachmentId,
+		data : {
+		    _method : 'DELETE',
+		},
+		success : function(data) {
+		    var orignList = $("#attachmentList").val();
+		    orignList = orignList.replace(attachmentId + ",", "");
+		    $("#attachmentList").val(orignList);
+		    $("#attachment" + attachmentId).remove();
+		}
+	    });
+	};
+	$(document)
+		.ready(
+			function() {
+			    $('.date-picker').datepicker({
+				language : 'zh-CN',
+				autoclose : true
+			    }).next().on(ace.click_event, function() {
+				$(this).prev().focus();
+			    });
+			    /*
+			    $("#datetimepicker1").datetimepicker({
+			    	language : 'zh-CN',
+			    	format : 'yyyy-MM-dd hh:mm:ss',
+			    	pickDate : true,
+			    	pickTime : true,
+			    	hourStep : 1,
+			    	minuteStep : 15,
+			    	secondStep : 30,
+			    	inputMask : true
+			    });
+			    $("#datetimepicker2").datetimepicker({
+			    	language : 'zh-CN',
+			    	format : 'yyyy-MM-dd hh:mm:ss',
+			    	pickDate : true,
+			    	pickTime : true,
+			    	hourStep : 1,
+			    	minuteStep : 15,
+			    	secondStep : 30,
+			    	inputMask : true
+			    });
+			     */
+			    $
+				    .ajax({
+					type : 'GET',
+					url : /*[[@{'/user/getOrganization/'}+${T(org.apache.shiro.SecurityUtils).subject.principal.loginName}]]*/'',
+					async : true,
+					success : function(data) {
+					    //temp = $('#selectedUser').text();
+					    //temp += data + ';';
+					    $('#organizationName').text(
+						    data.text);
+					    $('#organizationId').val(data.id);
+
+					}
+
+				    });
+			    $("#submitButton")
+				    .click(
+					    function() {
+
+						$
+							.blockUI({
+							    message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
 							});
-							/*
-							$("#datetimepicker1").datetimepicker({
-								language : 'zh-CN',
-								format : 'yyyy-MM-dd hh:mm:ss',
-								pickDate : true,
-								pickTime : true,
-								hourStep : 1,
-								minuteStep : 15,
-								secondStep : 30,
-								inputMask : true
-							});
-							$("#datetimepicker2").datetimepicker({
-								language : 'zh-CN',
-								format : 'yyyy-MM-dd hh:mm:ss',
-								pickDate : true,
-								pickTime : true,
-								hourStep : 1,
-								minuteStep : 15,
-								secondStep : 30,
-								inputMask : true
-							});
-							 */
-							$
-									.ajax({
-										type : 'GET',
-										url : /*[[@{'/user/getOrganization/'}+${T(org.apache.shiro.SecurityUtils).subject.principal.loginName}]]*/'',
-										async : true,
-										success : function(data) {
-											//temp = $('#selectedUser').text();
-											//temp += data + ';';
-											$('#organizationName').text(
-													data.text);
-											$('#organizationId').val(data.id);
+						$("#myForm")
+							.ajaxForm(
+								{
+								    url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+								    dataType : "text",
+								    success : function(
+									    data) {
+									var ret = JSON
+										.parse(data);
+									$
+										.teninedialog({
+										    title : '系统提示',
+										    content : ret.msg,
+										    dialogHidden : function() {
 
-										}
-
-									});
-							$("#submitButton")
-									.click(
-											function() {
-												$("#myForm")
-														.ajaxForm(
-																{
-																	url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-																	dataType : "text",
-																	success : function(
-																			data) {
-																		var ret = JSON
-																				.parse(data);
-																		alert(ret.msg);
-																	}
-
-																}).submit();
-
+										    }
+										});
+									$(
+										"#myForm")
+										.trigger(
+											"evtWFSuccess",
+											{
+											    msg : "OK"
 											});
-							var options = {
-								beforeSend : function() {
-									$("#progress").show();
-									//clear everything
-									$("#bar").width('0%').height('1px').css({
-										background : "green"
-									}).fadeIn("fast");
-									;
-									$("#message").html("").fadeIn("fast");
-									$("#percent").html("0%").fadeIn("fast");
-								},
-								uploadProgress : function(event, position,
-										total, percentComplete) {
-									$("#bar").width(percentComplete + '%');
-									$("#percent").html(percentComplete + '%');
+									$
+										.unblockUI();
+								    }
 
-								},
-								success : function() {
-									$("#bar").width('100%').fadeOut("slow");
+								}).submit();
 
-									$("#percent").html('100%').fadeOut("slow");
+					    });
+			    var options = {
+				beforeSend : function() {
+				    $("#progress").show();
+				    //clear everything
+				    $("#bar").width('0%').height('1px').css({
+					background : "green"
+				    }).fadeIn("fast");
+				    ;
+				    $("#message").html("").fadeIn("fast");
+				    $("#percent").html("0%").fadeIn("fast");
+				},
+				uploadProgress : function(event, position,
+					total, percentComplete) {
+				    $("#bar").width(percentComplete + '%');
+				    $("#percent").html(percentComplete + '%');
 
-								},
-								complete : function(response) {
-									var ret = JSON.parse(response.responseText);
-									$("#message").html(
-											"<font color='green'>"
-													+ response.responseText
-													+ "</font>").fadeIn("fast")
-											.fadeOut("slow");
-									var li = $("<li></li>");
+				},
+				success : function() {
+				    $("#bar").width('100%').fadeOut("slow");
 
-									var a = $("<a>" + ret.filename + "</a>");
-									var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
-									a.attr("href",
-											"javascript:deleteAttachment(\""
-													+ deleteUrl + "\","
-													+ ret.attachmentId + ");");
-									var i = $("<i class=\"icon-remove\"></i>");
-									i.appendTo(a);
-									a.appendTo(li);
-									li.attr("id", "attachment"
-											+ ret.attachmentId);
-									li.appendTo($("#uploadedAttachment"));
-									var orignList = $("#attachmentList").val();
-									$("#attachmentList").val(
-											orignList + "," + ret.attachmentId);
-								},
-								error : function() {
-									$("#message")
-											.html(
-													"<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
-								}
-							};
-							$("#uploadForm").ajaxForm(options);
-						});
-		/*]]>*/
-	</script>
+				    $("#percent").html('100%').fadeOut("slow");
+
+				},
+				complete : function(response) {
+				    var ret = JSON.parse(response.responseText);
+				    $("#message").html(
+					    "<font color='green'>"
+						    + response.responseText
+						    + "</font>").fadeIn("fast")
+					    .fadeOut("slow");
+				    var li = $("<li></li>");
+
+				    var a = $("<a>" + ret.filename + "</a>");
+				    var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+				    a.attr("href",
+					    "javascript:deleteAttachment(\""
+						    + deleteUrl + "\","
+						    + ret.attachmentId + ");");
+				    var i = $("<i class=\"icon-remove\"></i>");
+				    i.appendTo(a);
+				    a.appendTo(li);
+				    li.attr("id", "attachment"
+					    + ret.attachmentId);
+				    li.appendTo($("#uploadedAttachment"));
+				    var orignList = $("#attachmentList").val();
+				    $("#attachmentList").val(
+					    orignList + "," + ret.attachmentId);
+				},
+				error : function() {
+				    $("#message")
+					    .html(
+						    "<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+				}
+			    };
+			    $("#uploadForm").ajaxForm(options);
+			});
+	/*]]>*/
+    </script>
 </body>
 </html>

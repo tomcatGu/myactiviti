@@ -45,19 +45,14 @@
 					'click',
 					function() {
 
-					    //alert("delete.....");
-					    $("#confirmDiv")
+					    bootbox
 						    .confirm(
-							    {
-								heading : '确认删除',
-								body : '你真的要删除吗?',
-								yesBtn : '是',
-								noBtn : '否',
-								callback : function() {
+							    "are you sure?",
+							    function(result) {
+								if (result) {
 								    batchDelete(
 									    /*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
 									    successCallback);
-
 								}
 							    });
 

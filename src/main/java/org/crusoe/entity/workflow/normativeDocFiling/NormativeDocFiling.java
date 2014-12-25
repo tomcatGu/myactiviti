@@ -35,6 +35,7 @@ public class NormativeDocFiling {
 	private String status;
 	private Date createOn;
 	private String username;
+	private Long orderNumber;
 
 	private List<NormativeDocFilingReply> replies = Lists.newArrayList();
 
@@ -158,6 +159,14 @@ public class NormativeDocFiling {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public Long getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(Long orderNumber) {
+		this.orderNumber = orderNumber;
 	}
 
 }

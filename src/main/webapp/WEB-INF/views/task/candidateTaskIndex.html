@@ -2,132 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <title>任务列表</title>
-<script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"/></td><td>"
-				+ data.id
-				+ "</td><td>"
-				+ data.name
-				+ "</td><td>"
-				+ data.initiatorUser.name
-				+ "</td><td>"
-				+ new Date(data.createTime).ToString("yyyy-MM-dd HH:mm:ss")
-				+ "</td><td>"
-				+ getOrganization(data.initiatorUser.organizationId)
-				+ "</td><td><a href=\"javascript:loadView('"
-				+ /*[[@{'/runtime/tasks/claim/'}]]*/"1234/" //url
-				+ data.id + "')\">接受</a></td></tr>";
-		return newRow;
-	};
-	function getOrganization(organizationId) {
-		var organizationName;
-		$.ajax({
-			type : 'GET',
-			url : /*[[@{'/organization/'}]]*/''//load organization  
-					+ organizationId,
-			async : false,
-			success : function(data) {
-				organizationName = data.text;
-			}
-		});
-		return organizationName;
-
-	};
-	$(document)
-			.ready(
-					function() {
-
-						$('#checkAll').bind('click', function() {
-							checkAll("#checkAll");
-						});
-
-						$('#deleteTaskBtn')
-								.bind(
-										'click',
-										function() {
-
-											//alert("delete.....");
-											$("#confirmDiv")
-													.confirm(
-															{
-																heading : '确认删除',
-																body : '你真的要删除吗?',
-																yesBtn : '是',
-																noBtn : '否',
-																callback : function() {
-																	batchDelete(
-																			/*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
-																			successCallback);
-
-																}
-															});
-
-										});
-
-						$("#taskList")
-								.simpleTable(
-										/*[[@{'/runtime/tasks/listCandidateTasks?sort=name&order=desc'}]]*/""
-												+ "&timestamp="
-												+ new Date().toString(),
-										render, $("#paginatorForTaskList"),
-										updateBadge);
-
-					});
-
-	function successCallback() {
-
-		$("#taskList tr").nextAll().remove();
-
-		$("#taskList")
-				.simpleTable(
-						/*[[@{'/runtime/tasks/listCandidateTasks?sort=name&order=desc'}]]*/""
-								+ "&timestamp=" + new Date().toString(),
-						render, $("#paginatorForTaskList"), updateBadge);
-
-	};
-	function updateBadge(count, start, size) {
-
-		$("#candidateListView").trigger("evt_CandidateBadge", {
-			badges : count
-		});
-
-	};
-
-	//$("#listView").parent("div").bind("evtCandidateBadge", function(evt, data) {
-	//alert(data.badges);
-	//alert($("#listView").parent("div").attr("id"));
-	//	$("#candidateBadge").text(data.badges);
-	//});
-
-	function loadView(url) {
-		$("#view")
-				.load(
-						url + '?' + (new Date()).valueOf(),
-						function(data) {
-							$("#view")
-									.bind(
-											"evtWFSuccess",
-											function(evt, data) {
-												$("#view").hide();
-												$("#taskList")
-														.clearSimpleTable();
-												$("#candidateListView").show();
-												$("#taskList")
-														.simpleTable(
-																/*[[@{'/runtime/tasks/listCandidateTasks?sort=name&order=desc'}]]*/"",
-																render,
-																$("#paginatorForTaskList"),
-																updateBadge);
-
-											});
-							$("#view").show();
-							$("#candidateListView").hide();
-
-						});
-	};
-	/*]]>*/
-</script>
 <style>
 .hover {
 	background-color: #cccc00;
@@ -152,11 +26,141 @@
 			<tbody>
 			</tbody>
 		</table>
-		<div id="paginatorForTaskList"></div>
+		<div>
+			<ul id="paginatorForTaskList"></ul>
+		</div>
 		<input type="button" id="deleteTaskBtn" value="删除选中"
 			class="btn btn-danger" />
 	</div>
 	<div id="view"></div>
 	<div id="confirmDiv"></div>
+	
+	<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	function render(data) {
+	    var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"/></td><td>"
+		    + data.id
+		    + "</td><td>"
+		    + data.name
+		    + "</td><td>"
+		    + data.initiatorUser.name
+		    + "</td><td>"
+		    + new Date(data.createTime).ToString("yyyy-MM-dd HH:mm:ss")
+		    + "</td><td>"
+		    + getOrganization(data.initiatorUser.organizationId)
+		    + "</td><td><a href=\"javascript:loadView('"
+		    + /*[[@{'/runtime/tasks/claim/'}]]*/"1234/" //url
+		    + data.id + "')\">接受</a></td></tr>";
+	    return newRow;
+	};
+	function getOrganization(organizationId) {
+	    var organizationName;
+	    $.ajax({
+		type : 'GET',
+		url : /*[[@{'/organization/'}]]*/''//load organization  
+			+ organizationId,
+		async : false,
+		success : function(data) {
+		    organizationName = data.text;
+		}
+	    });
+	    return organizationName;
+
+	};
+	$(document)
+		.ready(
+			function() {
+
+			    $('#checkAll').bind('click', function() {
+				checkAll("#checkAll");
+			    });
+
+			    $('#deleteTaskBtn')
+				    .bind(
+					    'click',
+					    function() {
+
+						//alert("delete.....");
+						$("#confirmDiv")
+							.confirm(
+								{
+								    heading : '确认删除',
+								    body : '你真的要删除吗?',
+								    yesBtn : '是',
+								    noBtn : '否',
+								    callback : function() {
+									batchDelete(
+										/*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
+										successCallback);
+
+								    }
+								});
+
+					    });
+
+			    $("#taskList")
+				    .simpleTable(
+					    /*[[@{'/runtime/tasks/listCandidateTasks?sort=name&order=desc'}]]*/""
+						    + "&timestamp="
+						    + new Date().toString(),
+					    render, $("#paginatorForTaskList"),
+					    updateBadge);
+
+			});
+
+	function successCallback() {
+
+	    $("#taskList tr").nextAll().remove();
+
+	    $("#taskList")
+		    .simpleTable(
+			    /*[[@{'/runtime/tasks/listCandidateTasks?sort=name&order=desc'}]]*/""
+				    + "&timestamp=" + new Date().toString(),
+			    render, $("#paginatorForTaskList"), updateBadge);
+
+	};
+	function updateBadge(count, start, size) {
+
+	    $("#candidateListView").trigger("evt_CandidateBadge", {
+		badges : count
+	    });
+
+	};
+
+	//$("#listView").parent("div").bind("evtCandidateBadge", function(evt, data) {
+	//alert(data.badges);
+	//alert($("#listView").parent("div").attr("id"));
+	//	$("#candidateBadge").text(data.badges);
+	//});
+
+	function loadView(url) {
+	    $("#view")
+		    .load(
+			    url + '?' + (new Date()).valueOf(),
+			    function(data) {
+				$("#view")
+					.bind(
+						"evtWFSuccess",
+						function(evt, data) {
+						    $("#view").hide();
+						    $("#taskList")
+							    .clearSimpleTable();
+						    $("#candidateListView")
+							    .show();
+						    $("#taskList")
+							    .simpleTable(
+								    /*[[@{'/runtime/tasks/listCandidateTasks?sort=name&order=desc'}]]*/"",
+								    render,
+								    $("#paginatorForTaskList"),
+								    updateBadge);
+
+						});
+				$("#view").show();
+				$("#candidateListView").hide();
+
+			    });
+	};
+	/*]]>*/
+    </script>
 </body>
 </html>

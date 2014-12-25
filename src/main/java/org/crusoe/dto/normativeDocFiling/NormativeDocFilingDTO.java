@@ -15,6 +15,7 @@ public class NormativeDocFilingDTO {
 	private String status;
 	private Date createOn;
 	private String username;
+	private Long orderNumber;
 
 	public Long getId() {
 		return id;
@@ -110,5 +111,13 @@ public class NormativeDocFilingDTO {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public Long getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(Long orderNumber) {
+		this.orderNumber = orderNumber;
 	}
 }
