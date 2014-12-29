@@ -247,8 +247,8 @@
 							</a></li>
 						</ul></li>
 					<li><a href="#"
-						onClick="load('待审核规范性文件','runtime/tasks/candidateTaskIndex')"> <i
-							class="icon-list-alt"></i> <span class="menu-text">
+						onClick="load('待审核规范性文件','runtime/tasks/candidateTaskIndex')">
+							<i class="icon-list-alt"></i> <span class="menu-text">
 								待审核规范性文件 </span>
 					</a></li>
 					<li><a href="calendar.html"> <i class="icon-calendar"></i>
@@ -419,86 +419,107 @@
 	<div th:replace="/common::javascriptFragment"></div>
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
-	jQuery(function($) {
-	    $('.accordion').on('hide', function(e) {
-		$(e.target).prev().children(0).addClass('collapsed');
-	    })
-	    $('.accordion').on('show', function(e) {
-		$(e.target).prev().children(0).removeClass('collapsed');
-	    })
-	});
-
-	function load(title, url) {
-	    $
-		    .blockUI({
-			message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h3>'
+	var load, changePassword, successCallback;
+	var browserDetectUri = /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
+	require(
+		[ browserDetectUri ],
+		function($) {
+		    jQuery(function($) {
+			$('.accordion').on(
+				'hide',
+				function(e) {
+				    $(e.target).prev().children(0).addClass(
+					    'collapsed');
+				})
+			$('.accordion').on(
+				'show',
+				function(e) {
+				    $(e.target).prev().children(0).removeClass(
+					    'collapsed');
+				})
 		    });
 
-	    $("#page")
-		    .load(
-			    url + '?' + (new Date()).valueOf(),
-			    function(event) {
-				$('#breadcrumb').empty();
-				$('#breadcrumb')
-					.append(
-						'<li><i class="icon-home home-icon"></i><a href="#">首页</a></li>');
-				$('#breadcrumb')
-					.append(
-						'<li class="active">' + title
-							+ '</li>');
-				//$('#events').bind("evt_CandidateBadge", function(evt, data) {
-				//	alert(event);
-				//    alert(data);
-				//    $("#candidateBadge").text(data.badges);
+		    load = function(title, url) {
+			$
+				.blockUI({
+				    message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h3>'
+				});
 
-				//});
-				var eventHandler = {
-				    name : 'evt_handler'
-				};
-				eventHandler.handle2 = function() {
+			$("#page")
+				.load(
+					url + '?' + (new Date()).valueOf(),
+					function(event) {
+					    $('#breadcrumb').empty();
+					    $('#breadcrumb')
+						    .append(
+							    '<li><i class="icon-home home-icon"></i><a href="#">首页</a></li>');
+					    $('#breadcrumb').append(
+						    '<li class="active">'
+							    + title + '</li>');
+					    //$('#events').bind("evt_CandidateBadge", function(evt, data) {
+					    //	alert(event);
+					    //    alert(data);
+					    //    $("#candidateBadge").text(data.badges);
 
-				    $('#page').bind(
-					    'evtTasksBadge',
-					    function(evt, data) {
+					    //});
+					    var eventHandler = {
+						name : 'evt_handler'
+					    };
+					    eventHandler.handle2 = function() {
 
-						$("#tasksBadge").text(
-							data.badges);
-					    });
-				    $("#page")
-					    .bind(
-						    "evt_SaveSuccess",
-						    function(evt, data) {
-							load('所有流程',
-								'runtime/process/userProcessIndex/admin');
-						    });
+						$('#page')
+							.bind(
+								'evtTasksBadge',
+								function(evt,
+									data) {
 
-				};
+								    $(
+									    "#tasksBadge")
+									    .text(
+										    data.badges);
+								});
+						$("#page")
+							.bind(
+								"evt_SaveSuccess",
+								function(evt,
+									data) {
+								    load(
+									    '所有流程',
+									    'runtime/process/userProcessIndex/admin');
+								});
 
-				//eventHandler.handle1();
-				eventHandler.handle2();
+					    };
 
-				$('#page').bind(
-					'evt_CandidateBadge',
-					function(evt, data) {
+					    //eventHandler.handle1();
+					    eventHandler.handle2();
 
-					    $("#candidateBadge").text(
-						    data.badges);
+					    $('#page')
+						    .bind(
+							    'evt_CandidateBadge',
+							    function(evt, data) {
+
+								$(
+									"#candidateBadge")
+									.text(
+										data.badges);
+							    });
+
+					    $.unblockUI();
 					});
 
-				$.unblockUI();
-			    });
+		    };
 
-	};
-	function changePassword() {
-	    //bootbox.alert("Hello world!");
-	    create('#changePasswordDialog',/*[[@{'/user/changePassword'}]]*/'' //changePassword Uri
-	    , successCallback);
-	};
-	function successCallback() {
+		    changePassword = function() {
+			//bootbox.alert("Hello world!");
+			create('#changePasswordDialog',/*[[@{'/user/changePassword'}]]*/'abccc', successCallback);//aline
+		    };
+		    successCallback = function() {
 
-	    $("#changePasswordDialog").modal("hide");
+			$("#changePasswordDialog").modal("hide");
 
-	};
+		    };
+
+		});
 	/*]]>*/
     </script>
 	<div tabindex="-1" class="modal fade" id="changePasswordDialog"

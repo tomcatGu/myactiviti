@@ -3,9 +3,7 @@
 <head thy:merge="/common::headerFragment">
 <link href="/jstree/themes/default/style.min.css" rel="stylesheet"
 	type="text/css" th:href="@{/jstree/themes/default/style.min.css}" />
-
 <title>ÐÞ¸ÄÓÃ»§</title>
-
 </head>
 <body>
 	<div>
@@ -62,41 +60,8 @@
 								</div>
 							</fieldset>
 							<script type="text/javascript" th:inline="javascript">
-								function submitForm() {
-
-									var user = $("#userForm").serializeObject();
-									var ref = $('#organization-update').jstree(
-											true);
-									user.organizationId = ref.get_selected()[0];
-									alert(JSON.stringify(user));
-									$.postJSON(
-									/*[[@{'/user/update/'}]]*/'', JSON
-											.stringify(user), false, function(
-											data) {
-										if (data.err == "true") {
-											var errors = {};
-											for ( var obj in data) {
-												if (obj != "err")
-													errors[obj] = data[obj];
-
-											}
-											validator.showErrors(errors);
-										} else {
-											$("#dialog-message .modal-body")
-													.html(
-															"Data has been saved!Its ID is:"
-																	+ data.id);
-											$("#userForm").trigger(
-													"evtSuccess", {
-														msg : "OK"
-													});
-											$("#dialog-message").modal();
-										}
-
-									});
-									return false;
-								}
-							</script>
+				
+			    </script>
 						</form>
 					</div>
 				</div>
@@ -121,68 +86,91 @@
 			</div>
 		</div>
 	</div>
-	<div th:replace="/common::javascriptFragment" th:remove="tag"></div>
+	<div th:replace="/common::javascriptFragment"></div>
 	<script type="text/javascript" th:inline="javascript">
-		/*<![CDATA[*/
-		var validator;
-		$(document).ready(function() {
-			validator = $("#userForm").validate();
-			$("#submitButton").bind("click", submitForm);
+	/*<![CDATA[*/
+	var validator;
+
+	var jstreeUrl = /*[[@{'/jstree/jstree.min.js'}]]*/'../../jstree/jstree.min.js';
+	require(
+		[ 'browserDetect', jstreeUrl ],
+		function($) {
+		    submitForm = function() {
+
+			var user = $("#userForm").serializeObject();
+			var ref = $('#organization-update').jstree(true);
+			user.organizationId = ref.get_selected()[0];
+			alert(JSON.stringify(user));
+			$.postJSON(
+			/*[[@{'/user/update/'}]]*/'', JSON.stringify(user),
+				false, function(data) {
+				    if (data.err == "true") {
+					var errors = {};
+					for ( var obj in data) {
+					    if (obj != "err")
+						errors[obj] = data[obj];
+
+					}
+					validator.showErrors(errors);
+				    } else {
+					$("#dialog-message .modal-body").html(
+						"Data has been saved!Its ID is:"
+							+ data.id);
+					$("#userForm").trigger("evtSuccess", {
+					    msg : "OK"
+					});
+					$("#dialog-message").modal();
+				    }
+
+				});
+			return false;
+		    };
+		    validator = $("#userForm").validate();
+		    $("#submitButton").bind("click", submitForm);
+		    var organizationId = /*[[${user.organizationId}]]*/"";
+
+		    $("#organization-update")
+			    .jstree(
+				    {
+					"core" : {
+					    "animation" : 0,
+					    "check_callback" : true,
+					    "themes" : {
+						"stripes" : true
+					    },
+					    'data' : {
+						'url' : function(node) {
+						    return node.id === '#' ? /*[[@{'/organization/ajaxRoots'}]]*/'organization/ajaxRoots'
+							    : /*[[@{'/organization/ajaxChildren'}]]*/'organization/ajaxChildren';
+						},
+						'data' : function(node) {
+						    return {
+							'id' : node.id
+						    };
+						}
+					    }
+					},
+					"plugins" : [ "state", "types",
+						"wholerow" ]
+				    }).on(
+				    "activate_node.jstree",
+				    function(e, data) {
+					var ref = $('#organization-update')
+						.jstree(true), sel = ref
+						.get_selected();
+				    }).on("changed.jstree", function(e, data) {
+				//console.log(data.selected);
+			    });
+		    ;
+		    var ref = $('#organization-update').jstree(true);
+		    //alert(organizationId);
+		    //alert("'" + organizationId + "'");
+		    //ref.select_node("'" + organizationId + "'");
+		    $('#organization-update').jstree('select_node',
+			    String(organizationId));
+		    //ref.refresh(true);
 		});
-
-		$(document)
-				.ready(
-						function() {
-
-							var organizationId = /*[[${user.organizationId}]]*/"";
-
-							$("#organization-update")
-									.jstree(
-											{
-												"core" : {
-													"animation" : 0,
-													"check_callback" : true,
-													"themes" : {
-														"stripes" : true
-													},
-													'data' : {
-														'url' : function(node) {
-															return node.id === '#' ? /*[[@{'/organization/ajaxRoots'}]]*/'organization/ajaxRoots'
-																	: /*[[@{'/organization/ajaxChildren'}]]*/'organization/ajaxChildren';
-														},
-														'data' : function(node) {
-															return {
-																'id' : node.id
-															};
-														}
-													}
-												},
-												"plugins" : [ "state", "types",
-														"wholerow" ]
-											})
-									.on(
-											"activate_node.jstree",
-											function(e, data) {
-												var ref = $(
-														'#organization-update')
-														.jstree(true), sel = ref
-														.get_selected();
-											}).on("changed.jstree",
-											function(e, data) {
-												console.log(data.selected);
-											});
-							;
-							var ref = $('#organization-update').jstree(true);
-							//alert(organizationId);
-							//alert("'" + organizationId + "'");
-							//ref.select_node("'" + organizationId + "'");
-							$('#organization-update').jstree('select_node',
-									String(organizationId));
-							//ref.refresh(true);
-						});
-		/*]]>*/
-	</script>
-	<script src="/jstree/jstree.js" type="text/javascript"
-		th:src="@{/jstree/jstree.js}"></script>
+	/*]]>*/
+    </script>
 </body>
 </html>
