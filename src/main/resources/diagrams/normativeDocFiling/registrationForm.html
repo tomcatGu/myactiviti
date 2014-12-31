@@ -128,11 +128,11 @@
 		<form id="uploadForm" class="form-horizontal"
 			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
 			method="post" enctype="multipart/form-data">
-			<div class="ace-file-input">
-				<input type="file" id="id-input-file-1" /><label class="file-label"
-					data-title="选择"><span class="file-name"
-					data-title="没有文件 ..."><i class="icon-upload-alt"></i></span></label><a
-					class="remove" href="#"><i class="icon-remove"></i></a>
+			<input type="file" id="id-input-file-1" name="file" />
+			<div class="form-actions center">
+				<button type="submit" class="btn btn-sm btn-success">
+					点击上传 <i class="icon-arrow-up icon-on-right bigger-110"></i>
+				</button>
 			</div>
 		</form>
 	</div>
@@ -144,19 +144,18 @@
 	//	[ browserDetectUri ],
 	//	function($) {
 	$('#id-input-file-1').ace_file_input({
-	    no_file : 'No file ...',
-	    btn_choose : 'choose',
-	    btn_change : 'choose',
+	    no_file : '没有文件 ...',
+	    btn_choose : '选择',
+	    btn_change : '选择',
 	    droppable : false,
-	    //onchange : null,
-	    thumbnail : false,
-	    //| true | large
-	    whitelist : 'doc|docx|xls|xlsx|rar|zip|gif|png|jpg|jpeg',
-	    blacklist : 'exe|php|asp|jsp|htm|html'
+	    onchange : null,
+	    thumbnail : false
+	//| true | large
+	//whitelist:'gif|png|jpg|jpeg'
+	//blacklist:'exe|php'
 	//onchange:''
 	//
-	}).on('change', function() {
-	    //${"#file"}.val($(this).data('ace_input_files'));
+	//
 	});
 
 	$('.date-picker').datepicker({
