@@ -193,13 +193,16 @@ public class NormativeDocFilingService {
 	}
 
 	public NormativeDocFiling saveReply(DelegateExecution execution,
-			NormativeDocFiling ndf, String reply, String status) {
+			NormativeDocFiling ndf, String reply, String status,
+			Long orderNumber) {
 		NormativeDocFilingReply ndfReply = new NormativeDocFilingReply();
 		ndfReply.setReply(reply);
 		ndfReply.setUserLoginName(SecurityUtils.getSubject().getPrincipal()
 				.toString());
 		ndfReply.setReplyTime(new Date());
+
 		ndf.getReplies().add(ndfReply);
+		ndf.setOrderNumber(orderNumber);
 		if ("accept".equals(status)) {
 			ndf.setStatus(NormativeDocFilingStatus.ACCEPT.name());
 			ByteArrayOutputStream out = new ByteArrayOutputStream();

@@ -4,76 +4,117 @@
 <title>规范性文件备案登记表</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
+	/*<![CDATA[*/
 
-    $(document).ready(function() {
-	$("#submitButton").click(function() {
-	    $("#myForm").ajaxForm({
-		url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-		dataType : "text",
-		success : function(data) {
-		    var ret = JSON.parse(data);
-		    alert(ret.msg);
-		}
+	$(document).ready(function() {
+		$("#submitButton").click(function() {
+			$("#myForm").ajaxForm({
+				url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+				dataType : "text",
+				success : function(data) {
+					var ret = JSON.parse(data);
+					alert(ret.msg);
+				}
 
-	    }).submit();
+			}).submit();
 
+		});
+		$.ajax({
+			type : 'GET',
+			url : /*[[@{'/organization/'}+${result.organizationId}]]*/'',
+			async : true,
+			success : function(data) {
+				//temp = $('#selectedUser').text();
+				//temp += data + ';';
+				$('#organizationName').text(data.text);
+
+			}
+
+		});
 	});
-	$.ajax({
-	    type : 'GET',
-	    url : /*[[@{'/organization/'}+${result.organizationId}]]*/'',
-	    async : true,
-	    success : function(data) {
-		//temp = $('#selectedUser').text();
-		//temp += data + ';';
-		$('#organizationName').text(data.text);
 
-	    }
-
-	});
-    });
-
-    /*]]>*/
+	/*]]>*/
 </script>
 </head>
 <body>
-	<div>
-		<div class="box">
-			<legend>基本信息</legend>
-			<div>
-				<label>文件名称：<span th:text="${result.fileName}" class="label"></span></label>
+
+
+	<form id="myForm" method="POST" class="form-horizontal">
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">文件名称：</label>
+			<div class="col-sm-9">
+				<input type="text" class="col-xs-10 col-sm-5"
+					th:value="${result.fileName}" id="form-input-readonly"
+					value="This text field is readonly!" readonly="true" />
 			</div>
-			<div>
-				<label>单位名称： <span id="organizationName" class="label"></span>
-				</label>
-			</div>
-			<div>
-				<label>发文字号：<span th:text="${result.messageNumber}"
-					class="label" /></label>
-			</div>
-			<div>
-				<label>文件性质：<span th:text="${result.fileProperty}"
-					class="label"></span></label>
-			</div>
-			<div>
-				<label>内容分类：<span th:text="${result.contentClassification}"
-					class="label"></span></label>
-			</div>
-			<div id="datetimepicker1" class="input-append date">
-				<label>发布时间： <span th:text="${result.releaseDate}"
-					class="label"></span></label>
-			</div>
-			<div id="datetimepicker2" class="input-append date">
-				<label>实施时间：<span th:text="${result.implementationDate}"
-					class="label" />
-				</label>
-			</div>
-			<div>
-				<label>是否公开：</label> <span th:text="${result.isOpen}" class="label"></span>
+
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">单位名称：</label>
+			<div class="col-sm-9">
+				<span id="organizationName" class="label"></span>
 			</div>
 		</div>
-		<div class="box" th:if="${not #lists.isEmpty(result.replies)}">
-			<legend>审核意见</legend>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">发文字号：</label>
+			<div class="col-sm-9">
+				<input type="text" class="col-xs-10 col-sm-5"
+					th:value="${result.messageNumber}" id="form-input-readonly"
+					value="This text field is readonly!" readonly="true" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">文件性质：</label>
+			<div class="col-sm-9">
+				<input type="text" class="col-xs-10 col-sm-5"
+					th:value="${result.fileProperty}" id="form-input-readonly"
+					value="This text field is readonly!" readonly="true" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">内容分类：</label>
+			<div class="col-sm-9">
+				<input type="text" class="col-xs-10 col-sm-5"
+					th:value="${result.contentClassification}" id="form-input-readonly"
+					value="This text field is readonly!" readonly="true" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">发布时间：</label>
+			<div class="col-sm-9">
+				<input type="text" class="col-xs-10 col-sm-5"
+					th:value="${result.releaseDate}" id="form-input-readonly"
+					value="This text field is readonly!" readonly="true" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">实施时间：</label>
+			<div class="col-sm-9">
+				<input type="text" class="col-xs-10 col-sm-5"
+					th:value="${result.implementationDate}" id="form-input-readonly"
+					value="This text field is readonly!" readonly="true" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">是否公开：</label>
+			<div class="col-sm-9">
+				<input type="text" class="col-xs-10 col-sm-5"
+					th:value="${result.isOpen}" id="form-input-readonly"
+					value="This text field is readonly!" readonly="true" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">备案是否通过：</label>
+			<div class="col-sm-9">
+				<input type="text" class="col-xs-10 col-sm-5"
+					th:value="${result.status}" id="form-input-readonly"
+					value="This text field is readonly!" readonly="true" />
+			</div>
+		</div>
+
+		<div class="form-group" th:if="${not #lists.isEmpty(result.replies)}">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">历史审核意见：</label>
+
 			<div th:each="aReply:${result.replies}">
 				<blockquote>
 					<p th:text="${aReply.reply}" class="text-left" />
@@ -82,25 +123,23 @@
 				</blockquote>
 			</div>
 		</div>
-		<div class="box">
-			<legend>附件</legend>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">附件：</label>
 			<div th:each="attachment:${result.attachments}">
 				<label class="checkbox inline"><a
 					th:href="@{'/runtime/attachment/'+${attachment.taskId}}"><span
 						th:text="${attachment.name}">file.ext</span></a></label>
 			</div>
 		</div>
-		<form id="myForm" method="POST">
-			<div class="box">
-				<div class="control-group">
-					<div class="controls">
-						<input type="button" id="submitButton" value="确认"
-							class="btn btn-primary" /> <input type="hidden"
-							name="attachmentList" id="attachmentList" />
-					</div>
+		<div class="form-group">
+			<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<i class="icon-ok bigger-110"></i><input type="button"
+						id="submitButton" value="确认" class="btn btn-primary" />
 				</div>
 			</div>
-		</form>
-	</div>
+		</div>
+	</form>
+
 </body>
 </html>
