@@ -136,6 +136,27 @@
 			</div>
 		</form>
 	</div>
+	<div class="modal fade" id="dialog-message" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true"
+		data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">X</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">消息</h4>
+				</div>
+				<div class="modal-body">
+					<p>已成功提交备案信息。</p>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-danger" type="button" data-dismiss="modal"
+						id="yes">是</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div th:replace="/common::javascriptFragment"></div>
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
@@ -208,19 +229,22 @@
 						dataType : "text",
 						success : function(data) {
 						    var ret = JSON.parse(data);
-						    $
-							    .teninedialog({
-								title : '系统提示',
-								content : ret.msg,
-								dialogHidden : function() {
+						    $("#dialog-message")
+							    .modal()
+							    .on(
+								    'hidden.bs.modal',
+								    function(e) {
+									$(
+										"#myForm")
+										.trigger(
+											"evtWFSuccess",
+											{
+											    msg : "OK"
+											});
+									$
+										.unblockUI();
+								    });
 
-								}
-							    });
-						    $("#myForm").trigger(
-							    "evtWFSuccess", {
-								msg : "OK"
-							    });
-						    $.unblockUI();
 						}
 
 					    }).submit();

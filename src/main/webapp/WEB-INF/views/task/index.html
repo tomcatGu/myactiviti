@@ -29,12 +29,36 @@
 			<div>
 				<ul id="paginatorForTaskList"></ul>
 			</div>
-			<input type="button" id="deleteTaskBtn" value="删除选中"
-				class="btn btn-danger" />
+			<button id="deleteTaskBtn" class="btn btn-danger">
+				<i class="icon-trash bigger-110"></i>删除选中
+			</button>
 		</div>
 	</div>
 	<div id="view"></div>
-	<div id="confirmDiv"></div>
+
+	<div class="modal fade" id="dialog-message" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true"
+		data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">X</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">消息</h4>
+				</div>
+				<div class="modal-body">
+					<p>你真的要删除吗?</p>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-danger" type="button" data-dismiss="modal"
+						id="yes">是</button>
+					<button class="btn btn-primary" type="button" data-dismiss="modal"
+						id="no">否</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div th:replace="/common::javascriptFragment"></div>
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
@@ -74,24 +98,25 @@
 		    $('#checkAll').bind('click', function() {
 			checkAll("#checkAll");
 		    });
+		    $('#yes').bind(
+			    'click',
+			    function() {
+				batchDelete(
+				/*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
+					successCallback);
+				$("#dialog-message").modal('hide');
 
-		    $('#deleteTaskBtn')
-			    .bind(
-				    'click',
-				    function() {
+			    });
+		    $('#no').bind('click', function() {
 
-					bootbox
-						.confirm(
-							"are you sure?",
-							function(result) {
-							    if (result) {
-								batchDelete(
-									/*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
-									successCallback);
-							    }
-							});
+			$("#dialog-message").modal('hide');
 
-				    });
+		    });
+
+		    $('#deleteTaskBtn').bind('click', function() {
+			$("#dialog-message").modal();
+
+		    });
 
 		    $("#taskList")
 			    .simpleTable(

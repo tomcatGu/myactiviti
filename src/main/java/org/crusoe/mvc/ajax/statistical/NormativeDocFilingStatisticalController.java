@@ -14,6 +14,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.crusoe.dto.normativeDocFiling.NormativeDocFilingDTO;
 import org.crusoe.entity.Organization;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFiling;
+import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingStatus;
 import org.crusoe.service.OrganizationService;
 import org.crusoe.service.workflow.normativeDocFiling.NormativeDocFilingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class NormativeDocFilingStatisticalController {
 			@RequestParam("endTime") final String endTime) {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		SimpleDateFormat dateformat = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss");
+				"MM/dd/yyyy");
 
 		List<NormativeDocFiling> ndfs = Lists.newArrayList();
 		try {
@@ -77,7 +78,7 @@ public class NormativeDocFilingStatisticalController {
 				statisticalResult.put("total", temp + 1);
 			}
 
-			if ("已备案".equals(ndf.getStatus())) {
+			if (NormativeDocFilingStatus.ACCEPT.name().equals(ndf.getStatus())) {
 				temp = (Long) statisticalResult.get("approve");
 				if (temp == null) {
 					statisticalResult.put("approve", 1L);
@@ -89,7 +90,7 @@ public class NormativeDocFilingStatisticalController {
 			Calendar releaseDate = Calendar.getInstance();
 			releaseDate.setTime(ndf.getReleaseDate());
 			releaseDate.add(Calendar.DAY_OF_YEAR, 30);
-			if (ndf.getCreateOn().before(releaseDate.getTime())) {
+			if (ndf.getCreateOn().before(releaseDate.getTime())) {//发布日期在备案日期前30天之内
 				temp = (Long) statisticalResult.get("inTime");
 				if (temp == null) {
 					statisticalResult.put("inTime", 1L);
@@ -99,7 +100,7 @@ public class NormativeDocFilingStatisticalController {
 
 			}
 
-			if ("不予备案".equals(ndf.getStatus())) {
+			if (NormativeDocFilingStatus.REFUSE.name().equals(ndf.getStatus())) {
 				temp = (Long) statisticalResult.get("refuse");
 				if (temp == null) {
 					statisticalResult.put("refuse", 1L);

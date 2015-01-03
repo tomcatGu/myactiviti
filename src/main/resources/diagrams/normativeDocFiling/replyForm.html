@@ -4,39 +4,39 @@
 <title>规范性文件备案登记表</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
+    /*<![CDATA[*/
 
-	$(document).ready(function() {
-		$("#submitButton").click(function() {
-			if ($("#status").val() == "") {
-				$("#status").val(-1);
-			}
-			$("#myForm").ajaxForm({
-				url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-				dataType : "text",
-				success : function(data) {
-					var ret = JSON.parse(data);
-					alert(ret.msg);
-				}
+    $(document).ready(function() {
+	$("#submitButton").click(function() {
+	    if ($("#status").val() == "") {
+		$("#status").val(-1);
+	    }
+	    $("#myForm").ajaxForm({
+		url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+		dataType : "text",
+		success : function(data) {
+		    var ret = JSON.parse(data);
+		    alert(ret.msg);
+		}
 
-			}).submit();
+	    }).submit();
 
-		});
-		$.ajax({
-			type : 'GET',
-			url : /*[[@{'/organization/'}+${result.organizationId}]]*/'',
-			async : true,
-			success : function(data) {
-				//temp = $('#selectedUser').text();
-				//temp += data + ';';
-				$('#organizationName').text(data.text);
-
-			}
-
-		});
 	});
+	$.ajax({
+	    type : 'GET',
+	    url : /*[[@{'/organization/'}+${result.organizationId}]]*/'',
+	    async : true,
+	    success : function(data) {
+		//temp = $('#selectedUser').text();
+		//temp += data + ';';
+		$('#organizationName').text(data.text);
 
-	/*]]>*/
+	    }
+
+	});
+    });
+
+    /*]]>*/
 </script>
 </head>
 <body>
@@ -48,7 +48,6 @@
 					th:value="${result.fileName}" id="form-input-readonly"
 					value="This text field is readonly!" readonly="true" />
 			</div>
-
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label no-padding-right" for="fileName">单位名称：</label>
@@ -104,24 +103,51 @@
 					value="This text field is readonly!" readonly="true" />
 			</div>
 		</div>
-
 		<div class="form-group" th:if="${not #lists.isEmpty(result.replies)}">
-			<label class="col-sm-3 control-label no-padding-right" for="fileName">历史审核意见：</label>
-
-			<div th:each="aReply:${result.replies}">
-				<blockquote>
-					<p th:text="${aReply.reply}" class="text-left" />
-					<small><span
-						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
-				</blockquote>
+			<label class="col-sm-3 controle-label no-padding-right text-right"
+				for="isOpen">历史审核意见：</label>
+			<div id="timeline-2">
+				<div class="col-sm-9">
+					<div class="col-xs-12 col-sm-10">
+						<div class="timeline-container timeline-style2">
+							<span class="timeline-label"> <b></b>
+							</span>
+							<div class="timeline-items">
+								<div th:each="aReply:${result.replies}">
+									<div class="timeline-item clearfix">
+										<div class="timeline-info">
+											<span class="timeline-date" th:text="${aReply.replyTime}">9:00
+												am</span> <i class="timeline-indicator btn btn-info no-hover"></i>
+										</div>
+										<div class="widget-box transparent">
+											<div class="widget-body">
+												<div class="widget-main no-padding">
+													<span class="bigger-110"> <span
+														class="purple bolder" th:text="${aReply.userLoginName}">Susan</span>
+														的审核意见是：
+													</span> <br /> <i class="icon-hand-right grey bigger-125"></i> <span
+														th:text="${aReply.reply}">同意备案。</span>
+													<p></p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label no-padding-right">附件：</label>
-			<div th:each="attachment:${result.attachments}">
-				<label class="checkbox inline"><a
-					th:href="@{'/runtime/attachment/'+${attachment.taskId}}"><span
-						th:text="${attachment.name}">file.ext</span></a></label>
+			<div class="col-sm-9">
+				<ul class="list-unstyled spaced2">
+					<li th:each="attachment:${result.attachments}"><i
+						class="icon-paper-clip"></i><a
+						th:href="@{'/runtime/attachment/'+${attachment.taskId}}"><span
+							th:text="${attachment.name}">file.ext</span></a></li>
+				</ul>
 			</div>
 		</div>
 		<div class="form-group">
@@ -139,7 +165,6 @@
 			</div>
 		</div>
 		<div class="form-group">
-
 			<label class="col-sm-3 control-label no-padding-right">审核是否通过</label>
 			<div class="radio-inline">
 				<label><input name="status" type="radio" value="accept"
@@ -153,8 +178,6 @@
 				<label><input name="status" type="radio" value="revise"
 					class="ace" /><span class="lbl"> 返回修改</span></label>
 			</div>
-
-
 		</div>
 		<div class="form-group">
 			<div class="clearfix form-actions">
@@ -166,8 +189,6 @@
 				</div>
 			</div>
 		</div>
-
 	</form>
-
 </body>
 </html>

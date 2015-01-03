@@ -13,6 +13,7 @@ import java.io.PipedOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +96,7 @@ public class NormativeDocFilingService {
 			}
 
 		}
-
+		ndf.setCreateOn(new Date());
 		ndf.setOrganizationId(organizationId);
 		ndf.setStatus(NormativeDocFilingStatus.PENDING.name());
 		// ndf.setStatus(NormativeDocFilingStatus.PENDING);
@@ -165,7 +166,20 @@ public class NormativeDocFilingService {
 			ByteArrayInputStream in = null;
 
 			HashMap hm = new HashMap();
-			hm.put("title", "OK");
+			hm.put("title", ndf.getFileName());
+			hm.put("messageNumber", ndf.getMessageNumber());
+			hm.put("orderNumber", ndf.getOrderNumber().toString());
+			hm.put("organizationName", oDao.findOne(ndf.getOrganizationId())
+					.getName());
+			Calendar c = Calendar.getInstance();
+			hm.put("year", String.valueOf((c.get(Calendar.YEAR))));
+			hm.put("month", String.valueOf((c.get(Calendar.MONTH))));
+			hm.put("day", String.valueOf((c.get(Calendar.DAY_OF_MONTH))));
+			if (NormativeDocFilingStatus.ACCEPT.name().equals(ndf.getStatus())) {
+				hm.put("status", "准予备案");
+			} else {
+				hm.put("status", "不予备案");
+			}
 			try {
 				HWPFDocument doc = replaceDoc(hm, "templete/qrh.doc");
 				doc.write(out);
@@ -180,7 +194,7 @@ public class NormativeDocFilingService {
 					taskService.createTaskQuery()
 							.executionId(execution.getId()).singleResult()
 							.getId(), execution.getProcessInstanceId(),
-					"确认函.doc", "", in);
+					ndf.getFileName() + "备案确认函.doc", "", in);
 			NormativeDocFilingAttachmentEntity ae = new NormativeDocFilingAttachmentEntity();
 			ae.setTaskId(attachment.getId());
 			ae.setName(attachment.getName());
@@ -209,7 +223,20 @@ public class NormativeDocFilingService {
 			ByteArrayInputStream in = null;
 
 			HashMap hm = new HashMap();
-			hm.put("title", "OK");
+			hm.put("title", ndf.getFileName());
+			hm.put("messageNumber", ndf.getMessageNumber());
+			hm.put("orderNumber", ndf.getOrderNumber().toString());
+			hm.put("organizationName", oDao.findOne(ndf.getOrganizationId())
+					.getName());
+			Calendar c = Calendar.getInstance();
+			hm.put("year", String.valueOf((c.get(Calendar.YEAR))));
+			hm.put("month", String.valueOf((c.get(Calendar.MONTH))));
+			hm.put("day", String.valueOf((c.get(Calendar.DAY_OF_MONTH))));
+			if (NormativeDocFilingStatus.ACCEPT.name().equals(ndf.getStatus())) {
+				hm.put("status", "准予备案");
+			} else {
+				hm.put("status", "不予备案");
+			}
 			try {
 				HWPFDocument doc = replaceDoc(hm, "templete/qrh.doc");
 				doc.write(out);
@@ -224,7 +251,7 @@ public class NormativeDocFilingService {
 					taskService.createTaskQuery()
 							.executionId(execution.getId()).singleResult()
 							.getId(), execution.getProcessInstanceId(),
-					"确认函.doc", "", in);
+					ndf.getFileName() + "备案确认函.doc", "", in);
 			NormativeDocFilingAttachmentEntity ae = new NormativeDocFilingAttachmentEntity();
 			ae.setTaskId(attachment.getId());
 			ae.setName(attachment.getName());

@@ -220,11 +220,27 @@
 							<i class="icon-text-width"></i> <span class="menu-text">
 								待办事项</span>
 					</a></li>
-					<li><a href="#"
-						onClick="load('创建','runtime/process/normativeDocFiling:39:122641/startAndRedirectToTaskForm')">
-							<i class="icon-desktop"></i> <span class="menu-text">
-								填写规范性文件备案表 </span>
-					</a></li>
+					<li><a href="#" class="dropdown-toggle"> <i
+							class="icon-tag"></i> <span class="menu-text"> 规范性文件备案</span> <b
+							class="arrow icon-angle-down"></b>
+					</a>
+						<ul class="submenu">
+							<li><a href="#"
+								onClick="load('创建','runtime/process/normativeDocFiling:106:197771/startAndRedirectToTaskForm')">
+									<i class="icon-desktop"></i> <span class="menu-text">
+										填写规范性文件备案表 </span>
+							</a></li>
+							<li><a href="#"
+								onClick="load('待审核规范性文件','runtime/tasks/candidateTaskIndex')">
+									<i class="icon-list-alt"></i> <span class="menu-text">
+										待审核规范性文件 </span>
+							</a></li>
+							<li><a href="#"
+								onClick="load('已备案规范性文件','runtime/tasks/candidateTaskIndex')">
+									<i class="icon-list-alt"></i> <span class="menu-text">
+										已备案规范性文件 </span>
+							</a></li>
+						</ul></li>
 					<li
 						th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
 						href="#" class="dropdown-toggle"> <i class="icon-list"></i> <span
@@ -246,11 +262,6 @@
 								href="#"> <i class="icon-double-angle-right"></i> 用户列表
 							</a></li>
 						</ul></li>
-					<li><a href="#"
-						onClick="load('待审核规范性文件','runtime/tasks/candidateTaskIndex')">
-							<i class="icon-list-alt"></i> <span class="menu-text">
-								待审核规范性文件 </span>
-					</a></li>
 					<li><a href="calendar.html"> <i class="icon-calendar"></i>
 							<span class="menu-text"> 日历 <span
 								class="badge badge-transparent tooltip-error"
@@ -263,37 +274,13 @@
 							class="menu-text"> 相册 </span>
 					</a></li>
 					<li><a href="#" class="dropdown-toggle"> <i
-							class="icon-tag"></i> <span class="menu-text"> 更多页面 </span> <b
-							class="arrow icon-angle-down"></b>
-					</a>
-						<ul class="submenu">
-							<li><a href="profile.html"> <i
-									class="icon-double-angle-right"></i> 用户信息
-							</a></li>
-							<li><a href="inbox.html"> <i
-									class="icon-double-angle-right"></i> 收件箱
-							</a></li>
-							<li><a href="pricing.html"> <i
-									class="icon-double-angle-right"></i> 售价单
-							</a></li>
-							<li><a href="invoice.html"> <i
-									class="icon-double-angle-right"></i> 购物车
-							</a></li>
-							<li><a href="timeline.html"> <i
-									class="icon-double-angle-right"></i> 时间轴
-							</a></li>
-							<li><a href="login.html"> <i
-									class="icon-double-angle-right"></i> 登录 &amp; 注册
-							</a></li>
-						</ul></li>
-					<li><a href="#" class="dropdown-toggle"> <i
-							class="icon-file-alt"></i> <span class="menu-text"> 其他页面 <span
-								class="badge badge-primary ">5</span>
+							class="icon-file-alt"></i> <span class="menu-text">统计
 						</span> <b class="arrow icon-angle-down"></b>
 					</a>
 						<ul class="submenu">
-							<li><a href="faq.html"> <i
-									class="icon-double-angle-right"></i> 帮助
+							<li><a href="#"
+								onClick="load('规范性文件备案统计','workflow/resource/normativeDocFiling/statisticalByOrganization')">
+									<i class="icon-double-angle-right"></i> 规范性文件备案统计
 							</a></li>
 							<li><a href="error-404.html"> <i
 									class="icon-double-angle-right"></i> 404错误页面
@@ -511,7 +498,8 @@
 
 		    changePassword = function() {
 			//bootbox.alert("Hello world!");
-			create('#changePasswordDialog',/*[[@{'/user/changePassword'}]]*/'abccc', successCallback);//aline
+			create('#changePasswordDialog',/*[[@{'/user/changePassword'}]]*/'/user/changePassword'//change password dialog
+				, successCallback);//aline
 		    };
 		    successCallback = function() {
 
@@ -522,7 +510,8 @@
 		});
 	/*]]>*/
     </script>
-	<div tabindex="-1" class="modal fade" id="changePasswordDialog"
-		data-keyboard="false" data-backdrop="static" style="display: none;"></div>
+	<div tabindex="-1" class="modal fade bs-example-modal-sm"
+		id="changePasswordDialog" data-keyboard="false" data-backdrop="static"
+		style="display: none;"></div>
 </body>
 </html>

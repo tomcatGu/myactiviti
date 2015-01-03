@@ -4,116 +4,95 @@
 <title>已备案规范性文件列表</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function percentNum(num, num2) {
-		if (num2 == 0)
-			return "0.00%";
-		if (num == undefined)
-			return "0.00%";
-		return (Math.round(num / num2 * 10000) / 100.00 + "%"); //小数点后两位百分比
-	};
-	function shape(num) {
+    /*<![CDATA[*/
+    function percentNum(num, num2) {
+	if (num2 == 0)
+	    return "0.00%";
+	if (num == undefined)
+	    return "0.00%";
+	return (Math.round(num / num2 * 10000) / 100.00 + "%"); //小数点后两位百分比
+    };
+    function shape(num) {
 
-		if (num == undefined)
-			return 0;
-		else
-			return num;
-	};
+	if (num == undefined)
+	    return 0;
+	else
+	    return num;
+    };
 
-	$(document)
-			.ready(
+    $(document)
+	    .ready(
+		    function() {
+			$('.date-picker').datepicker({
+			    language : 'zh-CN',
+			    autoclose : true
+			}).next().on(ace.click_event, function() {
+			    $(this).prev().focus();
+			});
+			function render(data) {
+			    var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+				    + data.id
+				    + "</td><td>"
+				    + data.organizationName
+				    + "</td><td>"
+				    + shape(data.total)
+				    + "</td><td>"
+				    + percentNum(data.approve, data.total)
+				    + "</td><td>"
+				    + percentNum(data.inTime, data.total)
+				    + "</td><td>"
+				    + shape(data.approve)
+				    + "</td><td>"
+				    + percentNum(data.approve, data.total)
+				    + "</td><td>"
+				    + shape(data.refuse)
+				    + "</td><td>"
+				    + percentNum(data.refuse, data.total)
+				    + "</td></tr>";
+			    return newRow;
+			}
+			;
+
+			$("#statisticalByOrganizationButton")
+				.click(
 					function() {
+					    $
+						    .ajax({
+							type : "POST", //提交的类型
+							dataType : "json",
+							data : {
+							    startTime : $(
+								    "#startTime")
+								    .val(),
+							    endTime : $(
+								    "#endTime")
+								    .val()
 
-						function render(data) {
-							var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
-									+ data.id
-									+ "</td><td>"
-									+ data.organizationName
-									+ "</td><td>"
-									+ shape(data.total)
-									+ "</td><td>"
-									+ percentNum(data.approve, data.total)
-									+ "</td><td>"
-									+ percentNum(data.inTime, data.total)
-									+ "</td><td>"
-									+ shape(data.approve)
-									+ "</td><td>"
-									+ percentNum(data.approve, data.total)
-									+ "</td><td>"
-									+ shape(data.refuse)
-									+ "</td><td>"
-									+ percentNum(data.refuse, data.total)
-									+ "</td></tr>";
-							return newRow;
-						}
-						;
-						$("#startTimePicker").datetimepicker({
-							language : 'zh-CN',
-							format : 'yyyy-MM-dd hh:mm:ss',
-							pickDate : true,
-							pickTime : true,
-							hourStep : 1,
-							minuteStep : 15,
-							secondStep : 30,
-							inputMask : true
-						});
-						$("#endTimePicker").datetimepicker({
-							language : 'zh-CN',
-							format : 'yyyy-MM-dd hh:mm:ss',
-							pickDate : true,
-							pickTime : true,
-							hourStep : 1,
-							minuteStep : 15,
-							secondStep : 30,
-							inputMask : true
-						});
-						$("#statisticalByOrganizationButton")
-								.click(
-										function() {
-											$
-													.ajax({
-														type : "POST", //提交的类型
-														dataType : "json",
-														data : {
-															'startTime' : new Date(
-																	$(
-																			"#startTimePicker")
-																			.data(
-																					'datetimepicker')
-																			.getLocalDate())
-																	.ToString(),
-															'endTime' : new Date(
-																	$(
-																			"#endTimePicker")
-																			.data(
-																					'datetimepicker')
-																			.getLocalDate())
-																	.ToString()
-														},
-														url : /*[[@{'/normativeStatistical/analyseByOrganization'}]]*/"", //提交地址
-														success : function(data) {
-															$(
-																	"#normativeDocFilingList tr")
-																	.nextAll()
-																	.remove();
-															for (result in data.statisticalResult) {
-																var newRow = render(data.statisticalResult[result]);
-																$(
-																		"#normativeDocFilingList")
-																		.find(
-																				"tr:last")
-																		.after(
-																				newRow);
+							},
+							url : /*[[@{'/normativeStatistical/analyseByOrganization'}]]*/"", //提交地址
+							success : function(data) {
+							    $(
+								    "#normativeDocFilingList tr")
+								    .nextAll()
+								    .remove();
+							    for (result in data.statisticalResult) {
+								var newRow = render(data.statisticalResult[result]);
+								$(
+									"#normativeDocFilingList")
+									.find(
+										"tr:last")
+									.after(
+										newRow);
 
-															}
+							    }
 
-														}
-													});
-										});
-
+							}
+						    });
 					});
 
-	/*]]>*/
+		    });
+
+    /*]]>*/
 </script>
 </head>
 <body>
@@ -123,19 +102,19 @@
 				<div class="span9">
 					<div class="controls">
 						<label class="control-label text-info">开始时间：</label>
-						<div id="startTimePicker" class="input-append date">
-							<input name="startTime" class="datepicker"
-								data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-								<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-							</i>
+						<div class="input-group">
+							<input class="form-control date-picker" type="text"
+								data-date-format="mm/dd/yyyy" name="startTime" id="startTime" />
+							<span class="input-group-addon"> <i
+								class="icon-calendar bigger-110"></i>
 							</span>
 						</div>
 						<label class="control-label text-info">结束时间：</label>
-						<div id="endTimePicker" class="input-append date">
-							<input name="endTime" class="datepicker"
-								data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-								<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-							</i>
+						<div class="input-group">
+							<input class="form-control date-picker" type="text"
+								data-date-format="mm/dd/yyyy" name="endTime" id="endTime" /> <span
+								class="input-group-addon"> <i
+								class="icon-calendar bigger-110"></i>
 							</span>
 						</div>
 						<input type="button" id="statisticalByOrganizationButton"
@@ -159,7 +138,6 @@
 				<th>准予报备率</th>
 				<th>不予报备数</th>
 				<th>不予报备率</th>
-
 			</tr>
 		</thead>
 		<tbody>
@@ -173,9 +151,7 @@
 				<th>90%</th>
 				<th>10</th>
 				<th>10%</th>
-
 			</tr>
-
 		</tbody>
 	</table>
 </body>

@@ -8,11 +8,7 @@
 <!-- basic styles -->
 <link href="../../assets/css/bootstrap.min.css" rel="stylesheet"
 	th:href="@{/assets/css/bootstrap.min.css}" />
-<link href="/bootstrap/css/bootstrap-modal-bs3patch.css"
-	rel="stylesheet"
-	th:href="@{/bootstrap/css/bootstrap-modal-bs3patch.css}" />
-<link href="/bootstrap/css/bootstrap-modal.css" rel="stylesheet"
-	th:href="@{/bootstrap/css/bootstrap-modal.css}" />
+
 <link rel="stylesheet" href="../assets/css/font-awesome.min.css"
 	th:href="@{/assets/css/font-awesome.min.css}" />
 <!--[if IE 7]>
@@ -23,7 +19,6 @@
 <!-- ace styles -->
 <link rel="stylesheet" href="../../assets/css/ace.min.css"
 	th:href="@{/assets/css/ace.min.css}" />
-	
 <link rel="stylesheet" href="../../assets/css/ace-rtl.min.css"
 	th:href="@{/assets/css/ace-rtl.min.css}" />
 <link rel="stylesheet" href="../../assets/css/ace-skins.min.css"
@@ -54,39 +49,7 @@
 	    //This function is called once the DOM is ready.
 	    //It will be safe to query the DOM and manipulate
 	    //DOM nodes in this function.
-	    var browserDetectUri = /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
 
-	    require(
-		    [ browserDetectUri ],
-		    function($) {
-			// ... do stuff
-			// alert('lt IE 8');
-
-			$
-				.ajaxSetup({
-				    contentType : "application/x-www-form-urlencoded;charset=utf-8",
-				    complete : function(XMLHttpRequest,
-					    textStatus) {
-					var sessionstatus = XMLHttpRequest
-						.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
-					if (sessionstatus == "timeout") {
-					    // 如果超时就处理 ，指定要跳转的页面 
-					    //alert("会话已经超时，请重新登录。");
-					    $
-						    .teninedialog({
-							title : '系统提示',
-							content : '会话已经超时，请重新登录。',
-							dialogHidden : function() {
-							    var loginUrl = /*[[@{'/login'}]]*/'';
-							    window.location
-								    .replace(loginUrl);
-							}
-						    });
-
-					}
-				    }
-				});
-		    });
 	    /*]]>*/
 	</script>
 	</div>

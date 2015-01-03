@@ -5,213 +5,183 @@
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-    function deleteAttachment(deleteUrl, attachmentId) {
-	$.ajax({
-	    type : "POST",
-	    url : deleteUrl + attachmentId,
-	    data : {
-		_method : 'DELETE',
-	    },
-	    success : function(data) {
-		var orignList = $("#attachmentList").val();
-		orignList = orignList.replace(attachmentId + ",", "");
-		$("#attachmentList").val(orignList);
-		$("#attachment" + attachmentId).remove();
-	    }
-	});
-    };
-    $(document)
-	    .ready(
-		    function() {
-			$("#datetimepicker1").datetimepicker({
-			    language : 'zh-CN',
-			    format : 'yyyy-MM-dd hh:mm:ss',
-			    pickDate : true,
-			    pickTime : true,
-			    hourStep : 1,
-			    minuteStep : 15,
-			    secondStep : 30,
-			    inputMask : true
-			});
-			$("#datetimepicker2").datetimepicker({
-			    language : 'zh-CN',
-			    format : 'yyyy-MM-dd hh:mm:ss',
-			    pickDate : true,
-			    pickTime : true,
-			    hourStep : 1,
-			    minuteStep : 15,
-			    secondStep : 30,
-			    inputMask : true
-			});
 
-			$
-				.ajax({
-				    type : 'GET',
-				    url : /*[[@{'/organization/'}+${result.organizationId}]]*/'',
-				    async : true,
-				    success : function(data) {
-					//temp = $('#selectedUser').text();
-					//temp += data + ';';
-					$('#organizationName').text(data.text);
-					$('#organizationId').val(
-					/*[[${result.organizationId}]]*/''
-					);
-				    }
-
-				});
-			$("#submitButton")
-				.click(
-					function() {
-					    $("#myForm")
-						    .ajaxForm(
-							    {
-								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-								dataType : "text",
-								success : function(
-									data) {
-								    var ret = JSON
-									    .parse(data);
-								    alert(ret.msg);
-								}
-
-							    }).submit();
-
-					});
-			var options = {
-			    beforeSend : function() {
-				$("#progress").show();
-				//clear everything
-				$("#bar").width('0%').height('1px').css({
-				    background : "green"
-				}).fadeIn("fast");
-				;
-				$("#message").html("").fadeIn("fast");
-				$("#percent").html("0%").fadeIn("fast");
-			    },
-			    uploadProgress : function(event, position, total,
-				    percentComplete) {
-				$("#bar").width(percentComplete + '%');
-				$("#percent").html(percentComplete + '%');
-
-			    },
-			    success : function() {
-				$("#bar").width('100%').fadeOut("slow");
-
-				$("#percent").html('100%').fadeOut("slow");
-
-			    },
-			    complete : function(response) {
-				var ret = JSON.parse(response.responseText);
-				$("#message").html(
-					"<font color='green'>"
-						+ response.responseText
-						+ "</font>").fadeIn("fast")
-					.fadeOut("slow");
-				var li = $("<li></li>");
-
-				var a = $("<a>" + ret.filename + "</a>");
-				var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
-				a.attr("href", "javascript:deleteAttachment(\""
-					+ deleteUrl + "\"," + ret.attachmentId
-					+ ");");
-				var i = $("<i class=\"icon-remove\"></i>");
-				i.appendTo(a);
-				a.appendTo(li);
-				li.attr("id", "attachment" + ret.attachmentId);
-				li.appendTo($("#uploadedAttachment"));
-				var orignList = $("#attachmentList").val();
-				$("#attachmentList").val(
-					orignList + "," + ret.attachmentId);
-			    },
-			    error : function() {
-				$("#message")
-					.html(
-						"<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
-			    }
-			};
-			$("#uploadForm").ajaxForm(options);
-		    });
     /*]]>*/
 </script>
 </head>
 <body>
-	<form id="myForm" method="POST">
-		<div class="box">
-			<legend>基本信息</legend>
-			<div>
-				<label>文件名称：<input type="text" name="fileName"
-					th:value="${result.fileName}" /></label>
+	<form id="myForm" method="POST" class="form-horizontal">
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right" for="fileName">文件名称：</label>
+			<div class="col-sm-9">
+				<input type="text" name="fileName" id="fileName"
+					class="col-xs-10 col-sm-5" th:value="${result.fileName}" />
 			</div>
-			<div>
-				<label>单位名称： <span id="organizationName" class="label"></span>
-					<input type="hidden" id="organizationId" name="organizationId" />
-				</label>
+			<div class="space-4"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">单位名称：</label>
+			<div class="col-sm-9">
+				<span id="organizationName" class="col-xs-10 col-sm-5"></span> <input
+					type="hidden" id="organizationId" name="organizationId" />
 			</div>
-			<div>
-				<label>发文字号：<input type="text" name="messageNumber"
-					th:value="${result.messageNumber}" /></label>
+			<div class="space-4"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right"
+				for="messageNumber">发文字号：</label>
+			<div class="col-sm-9">
+				<input class="col-xs-10 col-sm-5" type="text" name="messageNumber"
+					id="messageNumber" th:value="${messageNumber}" />
 			</div>
-			<div>
-				<label>文件性质：<select id="fileProperty" name="fileProperty"><option
-							value="党内规范性文件" th:selected="${result.fileProperty=='党内规范性文件'}">党内规范性文件</option></select></label>
+			<div class="space-4"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right"
+				for="fileProperty">文件性质：</label>
+			<div class="col-sm-9">
+				<select id="fileProperty" name="fileProperty"
+					class="col-xs-10 col-sm-5"><option value="党内规范性文件">党内规范性文件</option></select>
 			</div>
-			<div>
-				<label>内容分类：<select id="
-							contentClassification"
-					name="contentClassification"
-					selected="${result.contentClassification}">
-						<option value="党内"
-							th:selected="${result.contentClassification=='党内'}">党内</option>
-				</select></label>
+			<div class="space-4"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right"
+				for="contentClassification">内容分类：</label>
+			<div class="col-sm-9">
+				<select id="contentClassification" name="contentClassification"><option
+						value="党员" th:selected="${result.contentClassification=='党员'}">党员</option>
+					<option value="党的组织制度"
+						th:selected="${result.contentClassification=='党的组织制度'}">党的组织制度</option>
+					<option value="党组织"
+						th:selected="${result.contentClassification=='党组织'}">党组织</option>
+					<option value="党的干部"
+						th:selected="${result.contentClassification=='党的干部'}">党的干部</option>
+					<option value="党的纪律"
+						th:selected="${result.contentClassification=='党的纪律'}">党的纪律</option>
+					<option value="政治"
+						th:selected="${result.contentClassification=='政治'}">政治</option>
+					<option value="经济"
+						th:selected="${result.contentClassification=='经济'}">经济</option>
+					<option value="社会"
+						th:selected="${result.contentClassification=='社会'}">社会</option>
+					<option value="宣传"
+						th:selected="${result.contentClassification=='宣传'}">宣传</option>
+					<option value="统战"
+						th:selected="${result.contentClassification=='统战'}">统战</option>
+					<option value="民族宗教"
+						th:selected="${result.contentClassification=='民族宗教'}">民族宗教</option>
+					<option value="外事对台"
+						th:selected="${result.contentClassification=='外事对台'}">外事对台</option>
+					<option value="其他"
+						th:selected="${result.contentClassification=='其他'}">其他</option>
+				</select>
 			</div>
-			<div id="
-							datetimepicker1" class="input-append date">
-				<label>发布时间： <input name="releaseDate" class="datepicker"
-					th:value="${result.releaseDate}"
-					data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-						<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-					</i>
-				</span></label>
+			<div class="space-4"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right"
+				for="datetimepicker1">发布时间(月/日/年)：</label>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<input class="form-control date-picker" id="datetimepicker1"
+						type="text" data-date-format="mm/dd/yyyy" name="releaseDate"
+						th:value="${result.releaseDate}" /> <span
+						class="input-group-addon"> <i
+						class="icon-calendar bigger-110"></i>
+					</span>
+				</div>
 			</div>
-			<div id="datetimepicker2" class="input-append date">
-				<label>实施时间：<input name="implementationDate"
-					th:value="${implementationDate}" class="datepicker"
-					data-date-format="yyyy-MM-dd hh:mm:ss" /> <span class="add-on">
-						<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-					</i>
-				</span></label>
+			<div class="space-4"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 controle-label no-padding-right text-right"
+				for="datetimepicker2">实施时间(月/日/年)：</label>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<input class="form-control date-picker" id="datetimepicker2"
+						type="text" data-date-format="mm/dd/yyyy"
+						name="implementationDate" th:value="${result.implementationDate}" />
+					<span class="input-group-addon"> <i
+						class="icon-calendar bigger-110"></i>
+					</span>
+				</div>
 			</div>
-			<div>
-				<label>是否公开：</label> <label class="radio inline"><input
-					name="isOpen" type="radio" value="是"
-					th:checked="${result.isOpen=='是'}"/>是</label> <label class="radio inline"><input
-					name="isOpen" type="radio" th:checked="${result.isOpen=='否'}"
-					value="否" />否</label>
-			</div>
-			<div class="box">
-				<legend>附件</legend>
-				<div th:each="attachment:${result.attachments}">
-					<label class="checkbox inline"><a
-						th:href="@{'/runtime/attachment/'+${attachment.taskId}}"><span
-							th:text="${attachment.name}">file.ext</span></a></label>
+			<div class="space-4"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 controle-label no-padding-right text-right"
+				for="isOpen">是否公开：</label>
+			<div class="col-sm-9" style="z-index: 0">
+				<div class="radio-inline">
+					<label> <input name="isOpen" type="radio" class="ace"
+						value="是" th:checked="${result.isOpen=='是'}" /> <span class="lbl">
+							是</span>
+					</label>
+				</div>
+				<div class="radio-inline">
+					<label> <input name="isOpen" type="radio" class="ace"
+						value="否" th:checked="${result.isOpen=='否'}" /> <span class="lbl">
+							否</span>
+					</label>
 				</div>
 			</div>
 		</div>
-		<div class="box">
-			<legend>审核意见</legend>
-			<div th:each="aReply:${result.replies}">
-				<blockquote>
-					<p th:text="${aReply.reply}" class="text-left" />
-					<small><span
-						th:text="${aReply.userLoginName}+'  '+${aReply.replyTime}"></span></small>
-				</blockquote>
+		<div class="form-group" th:if="${not #lists.isEmpty(result.replies)}">
+			<label class="col-sm-3 controle-label no-padding-right text-right"
+				for="isOpen">历史审核意见：</label>
+			<div id="timeline-2">
+				<div class="col-sm-9">
+					<div class="col-xs-12 col-sm-10">
+						<div class="timeline-container timeline-style2">
+							<span class="timeline-label"> <b></b>
+							</span>
+							<div class="timeline-items">
+								<div th:each="aReply:${result.replies}">
+									<div class="timeline-item clearfix">
+										<div class="timeline-info">
+											<span class="timeline-date" th:text="${aReply.replyTime}">9:00
+												am</span> <i class="timeline-indicator btn btn-info no-hover"></i>
+										</div>
+										<div class="widget-box transparent">
+											<div class="widget-body">
+												<div class="widget-main no-padding">
+													<span class="bigger-110"> <span
+														class="purple bolder" th:text="${aReply.userLoginName}">Susan</span>
+														的审核意见是：
+													</span> <br /> <i class="icon-hand-right grey bigger-125"></i> <span
+														th:text="${aReply.reply}">同意备案。</span>
+													<p></p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="control-group">
-			<div class="controls">
-				<input type="button" id="submitButton" value="提交"
-					class="btn btn-primary" /> <input type="hidden"
-					name="attachmentList" id="attachmentList" />
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">附件：</label>
+			<div class="col-sm-9">
+				<ul class="list-unstyled spaced2">
+					<li th:each="attachment:${result.attachments}"><i
+						class="icon-paper-clip"></i><a
+						th:href="@{'/runtime/attachment/'+${attachment.taskId}}"><span
+							th:text="${attachment.name}">file.ext</span></a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<button type="button" id="submitButton" class="btn btn-info">
+						<i class="icon-ok bigger-110"></i>提交
+					</button>
+					<input type="hidden" name="attachmentList" id="attachmentList" />
+				</div>
 			</div>
 		</div>
 	</form>
@@ -220,27 +190,160 @@
 		<div>
 			<ul id="uploadedAttachment"></ul>
 		</div>
-		<form id="uploadForm"
+		<form id="uploadForm" class="form-horizontal"
 			th:action="@{'/runtime/attachment/uploadAttachment/'+${taskId}}"
 			method="post" enctype="multipart/form-data">
-			<div class="row">
-				<div>
-					<div class="span3">
-						<input type="file" name="file" />
-					</div>
-				</div>
-				<div class="span1">
-					<input type="submit" value="上传" class="btn btn-info" />
-				</div>
-				<div class="span3">
-					<div id="progress">
-						<div id="bar"></div>
-						<div id="percent">0%</div>
-					</div>
-					<div id="message"></div>
-				</div>
+			<input type="file" id="id-input-file-1" name="file" />
+			<div class="form-actions center">
+				<button type="submit" class="btn btn-sm btn-success">
+					点击上传 <i class="icon-arrow-up icon-on-right bigger-110"></i>
+				</button>
 			</div>
 		</form>
 	</div>
+	<div th:replace="/common::javascriptFragment"></div>
+	<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var browserDetectUri = /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
+	//require(
+	//	[ browserDetectUri ],
+	//	function($) {
+	$('#id-input-file-1').ace_file_input({
+	    no_file : '没有文件 ...',
+	    btn_choose : '选择',
+	    btn_change : '选择',
+	    droppable : false,
+	    onchange : null,
+	    thumbnail : false
+	//| true | large
+	//whitelist:'gif|png|jpg|jpeg'
+	//blacklist:'exe|php'
+	//onchange:''
+	//
+	//
+	});
+
+	$('.date-picker').datepicker({
+	    language : 'zh-CN',
+	    autoclose : true
+	}).next().on(ace.click_event, function() {
+	    $(this).prev().focus();
+	});
+	deleteAttachment = function(deleteUrl, attachmentId) {
+	    $.ajax({
+		type : "POST",
+		url : deleteUrl + attachmentId,
+		data : {
+		    _method : 'DELETE',
+		},
+		success : function(data) {
+		    var orignList = $("#attachmentList").val();
+		    orignList = orignList.replace(attachmentId + ",", "");
+		    $("#attachmentList").val(orignList);
+		    $("#attachment" + attachmentId).remove();
+		}
+	    });
+	};
+	$
+		.ajax({
+		    type : 'GET',
+		    url : /*[[@{'/user/getOrganization/'}+${T(org.apache.shiro.SecurityUtils).subject.principal.loginName}]]*/'',
+		    async : true,
+		    success : function(data) {
+			//temp = $('#selectedUser').text();
+			//temp += data + ';';
+			$('#organizationName').text(data.text);
+			$('#organizationId').val(data.id);
+
+		    }
+
+		});
+	$("#submitButton")
+		.click(
+			function() {
+
+			    $
+				    .blockUI({
+					message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在提交...</h3>'
+				    });
+			    $("#myForm")
+				    .ajaxForm(
+					    {
+						url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
+						dataType : "text",
+						success : function(data) {
+						    var ret = JSON.parse(data);
+						    $
+							    .teninedialog({
+								title : '系统提示',
+								content : ret.msg,
+								dialogHidden : function() {
+
+								}
+							    });
+						    $("#myForm").trigger(
+							    "evtWFSuccess", {
+								msg : "OK"
+							    });
+						    $.unblockUI();
+						}
+
+					    }).submit();
+
+			});
+	var options = {
+	    beforeSend : function() {
+		//   $("#progress").show();
+		//clear everything
+		//   $("#bar").width('0%').height('1px').css({
+		//	background : "green"
+		//   }).fadeIn("fast");
+		;
+		//   $("#message").html("").fadeIn("fast");
+		//   $("#percent").html("0%").fadeIn("fast");
+	    },
+	    uploadProgress : function(event, position, total, percentComplete) {
+		//   $("#bar").width(percentComplete + '%');
+		//   $("#percent").html(percentComplete + '%');
+
+	    },
+	    success : function() {
+		// $("#bar").width('100%').fadeOut("slow");
+
+		// $("#percent").html('100%').fadeOut("slow");
+
+	    },
+	    complete : function(response) {
+		var ret = JSON.parse(response.responseText);
+		//  $("#message")
+		//	    .html(
+		//	    "<font color='green'>"
+		//		    + response.responseText
+		//		    + "</font>").fadeIn("fast")
+		//    .fadeOut("slow");
+		var li = $("<li></li>");
+
+		var a = $("<a>" + ret.filename + "</a>");
+		var deleteUrl = /*[[@{'/runtime/attachment/'}]]*/"";
+		a.attr("href", "javascript:deleteAttachment(\"" + deleteUrl
+			+ "\"," + ret.attachmentId + ");");
+		var i = $("<i class=\"icon-remove\"></i>");
+		i.appendTo(a);
+		a.appendTo(li);
+		li.attr("id", "attachment" + ret.attachmentId);
+		li.appendTo($("#uploadedAttachment"));
+		var orignList = $("#attachmentList").val();
+		$("#attachmentList").val(orignList + "," + ret.attachmentId);
+	    },
+	    error : function() {
+		//  $("#message")
+		//	    .html(
+		//		    "<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+	    }
+	};
+	$("#uploadForm").ajaxForm(options);
+	//});
+	/*]]>*/
+    </script>
 </body>
 </html>

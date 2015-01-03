@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/normativeDocFiling">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/normativeDocFiling">
   <collaboration id="Collaboration">
     <participant id="pool1" name="规范性文件备案系统" processRef="normativeDocFiling"></participant>
   </collaboration>
@@ -32,7 +32,11 @@
     <sequenceFlow id="flow6" name="审核不通过" sourceRef="exclusivegateway1" targetRef="usertask4">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${status=="revise"}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask4" name="【修改】${fileName}" activiti:assignee="${startUserId}" activiti:formKey="normativeDocFiling/alterRegistrationForm"></userTask>
+    <userTask id="usertask4" name="【修改】${fileName}" activiti:assignee="${startUserId}" activiti:formKey="normativeDocFiling/alterRegistrationForm">
+      <extensionElements>
+        <activiti:taskListener event="complete" expression="${execution.setVariable(&quot;result&quot;,normativeDocFilingService.update(execution,result,fileName,organizationId,messageNumber,fileProperty,contentClassification,releaseDate,implementationDate,isOpen,attachmentList))}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow7" sourceRef="usertask4" targetRef="usertask2"></sequenceFlow>
     <startEvent id="startevent1" name="Start" activiti:initiator="startUserId"></startEvent>
     <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
@@ -99,7 +103,7 @@
         <omgdi:waypoint x="582.0" y="197.0"></omgdi:waypoint>
         <omgdi:waypoint x="582.0" y="330.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="660.0" y="297.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="48.0" x="660.0" y="297.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
@@ -108,7 +112,7 @@
         <omgdi:waypoint x="435.0" y="260.0"></omgdi:waypoint>
         <omgdi:waypoint x="435.0" y="330.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="575.0" y="380.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="60.0" x="575.0" y="380.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
@@ -135,7 +139,7 @@
         <omgdi:waypoint x="790.0" y="151.0"></omgdi:waypoint>
         <omgdi:waypoint x="790.0" y="330.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="750.0" y="254.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="48.0" x="750.0" y="254.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
