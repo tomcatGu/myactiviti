@@ -5,10 +5,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.crusoe.dto.normativeDocFiling.NormativeDocFilingDTO;
@@ -18,6 +20,10 @@ import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingStatus;
 import org.crusoe.service.OrganizationService;
 import org.crusoe.service.workflow.normativeDocFiling.NormativeDocFilingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,8 +46,7 @@ public class NormativeDocFilingStatisticalController {
 			@RequestParam("startTime") final String startTime,
 			@RequestParam("endTime") final String endTime) {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
-		SimpleDateFormat dateformat = new SimpleDateFormat(
-				"MM/dd/yyyy");
+		SimpleDateFormat dateformat = new SimpleDateFormat("MM/dd/yyyy");
 
 		List<NormativeDocFiling> ndfs = Lists.newArrayList();
 		try {
@@ -90,7 +95,7 @@ public class NormativeDocFilingStatisticalController {
 			Calendar releaseDate = Calendar.getInstance();
 			releaseDate.setTime(ndf.getReleaseDate());
 			releaseDate.add(Calendar.DAY_OF_YEAR, 30);
-			if (ndf.getCreateOn().before(releaseDate.getTime())) {//发布日期在备案日期前30天之内
+			if (ndf.getCreateOn().before(releaseDate.getTime())) {// 发布日期在备案日期前30天之内
 				temp = (Long) statisticalResult.get("inTime");
 				if (temp == null) {
 					statisticalResult.put("inTime", 1L);
@@ -118,17 +123,26 @@ public class NormativeDocFilingStatisticalController {
 
 	@RequestMapping(value = "listNormativeDocFiling", method = RequestMethod.POST)
 	public @ResponseBody
-	List<NormativeDocFilingDTO> listNormativeDocFiling(
+	Map<String, Object> listNormativeDocFiling(
 			@RequestParam("title") String title,
 			@RequestParam("startTime") final String startTime,
 			@RequestParam("endTime") final String endTime,
-			@RequestParam("organizationName") String organizationName,
-			@RequestParam("status") String status) {
+			@RequestParam(value = "organizationName", defaultValue = "") String organizationName,
+			@RequestParam("status") String status,
+			@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size) {
 		ArrayList<NormativeDocFilingDTO> ndfDTOs = Lists.newArrayList();
 
-		SimpleDateFormat dateformat = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss");
-		List<NormativeDocFiling> ndfs = null;
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
+				Direction.DESC, new String[] { sort }) : new Sort(
+				Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size,
+				sortRequest);
+
+		SimpleDateFormat dateformat = new SimpleDateFormat("MM/dd/yyyy");
+		Page<NormativeDocFiling> ndfs = null;
 		Long organizationId = null;
 		Organization o = oService.findbyName(organizationName);
 		if (o == null) {
@@ -138,15 +152,23 @@ public class NormativeDocFilingStatisticalController {
 			organizationId = o.getId();
 
 		}
-		try {
-			ndfs = ndfService.findByTitleAndCreateTimeAndOrganizationAndStatus(title,
-					dateformat.parse(startTime), dateformat.parse(endTime),
-					organizationId,status);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		if (startTime.isEmpty() || endTime.isEmpty()) {
+			Date now = new Date();
+			ndfs = ndfService.findByTitleAndCreateTimeAndOrganizationAndStatus(
+					title, now, now, organizationId, status, pageRequest);
+		} else {
 
+			try {
+				ndfs = ndfService
+						.findByTitleAndCreateTimeAndOrganizationAndStatus(
+								title, dateformat.parse(startTime),
+								dateformat.parse(endTime), organizationId,
+								status, pageRequest);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Iterator iter = ndfs.iterator();
 		while (iter.hasNext()) {
 			NormativeDocFiling ndf = (NormativeDocFiling) iter.next();
@@ -167,6 +189,11 @@ public class NormativeDocFilingStatisticalController {
 
 		}
 
-		return ndfDTOs;
+		Map<String, Object> rets = new ConcurrentHashMap<String, Object>();
+		rets.put("count", ndfs.getTotalElements());
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", ndfDTOs);
+		return rets;
 	}
 }

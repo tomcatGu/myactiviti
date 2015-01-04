@@ -41,6 +41,8 @@ import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingStatus;
 import org.crusoe.repository.jpa.OrganizationDao;
 import org.crusoe.repository.jpa.workflow.normativeDocFiling.NormativeDocFilingDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -300,12 +302,13 @@ public class NormativeDocFilingService {
 		return ndfDao.findByCreateOnBetween(startTime, endTime);
 	}
 
-	public List<NormativeDocFiling> findByTitleAndCreateTimeAndOrganizationAndStatus(
+	public Page<NormativeDocFiling> findByTitleAndCreateTimeAndOrganizationAndStatus(
 			final String title, final Date startTime, final Date endTime,
-			final Long organizationId, final String status) {
+			final Long organizationId, final String status,
+			PageRequest pageRequest) {
 		// TODO Auto-generated method stub
-		return (List<NormativeDocFiling>) ndfDao
-				.findAll(new Specification<NormativeDocFiling>() {
+		return (Page<NormativeDocFiling>) ndfDao.findAll(
+				new Specification<NormativeDocFiling>() {
 
 					@Override
 					public Predicate toPredicate(Root<NormativeDocFiling> root,
@@ -318,7 +321,7 @@ public class NormativeDocFilingService {
 								.getExpressions();
 						if (startTime.compareTo(endTime) != 0)
 							expressions.add(builder.between(
-									root.<Date> get("createTime"), startTime,
+									root.<Date> get("createOn"), startTime,
 									endTime));
 						if (!title.isEmpty())
 							expressions.add(builder.like(
@@ -332,10 +335,10 @@ public class NormativeDocFilingService {
 						}
 						if (!status.isEmpty())
 							expressions.add(builder.equal(
-									root.<String> get("status"), title));
+									root.<String> get("status"), status));
 
 						return predicate;
 					}
-				});
+				}, pageRequest);
 	}
 }

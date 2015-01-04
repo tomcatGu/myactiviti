@@ -9,42 +9,44 @@
     $(document)
 	    .ready(
 		    function() {
-			$("#submitButton")
-				.click(
-					function() {
-					    $("#myForm")
-						    .ajaxForm(
-							    {
-								url : /*[[@{'/runtime/form/submitTaskForm/'+${taskId}}]]*/"",
-								dataType : "text",
-								success : function(
-									data) {
-								    var ret = JSON
-									    .parse(data);
-								    alert(ret.msg);
-								}
-
-							    }).submit();
-
-					});
+			$("#ndfList")
+				.simpleTable(
+					/*[[@{'/normativeStatistical/listNormativeDocFiling?sort=createOn&order=desc'}]]*/""
+						+ "&title="
+						+ $("#fileName").val()
+						+ "&status="
+						+ $("#status").val()
+						+ "&startTime="
+						+ $("#startTime").val()
+						+ "&endTime="
+						+ $("#endTime").val()
+						+ "&dateStamp="
+						+ new Date().toString(),
+					render, $("#paginator"), null, "POST");
 			function render(data) {
 			    var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
 				    + data.id
 				    + "</td><td>"
-				    + data.name
+				    + data.fileName
 				    + "</td><td>"
-				    + data.loginName
-				    + "</td><td>"
-				    + data.mobile
-				    + "</td><td>"
-				    + data.email
+				    + data.organizationId
 				    + "</td><td>"
 				    + getStatus(data.status)
-				    + "</td><td><a href=\"javascript:update('#createUser','"
-				    + /*[[@{'/user/update/'}]]*/''
-				    + data.id
-				    + "',successCallback);\"><i class='icon-edit'></i></a></td></tr>";
+				    + "</td><td>"
+				    + data.createOn
+				    + "</td></tr>";
 			    return newRow;
+			}
+			;
+			function getStatus(status) {
+			    if ("accept" == status.toLowerCase())
+				return "准予备案";
+			    if ("refuse" == status.toLowerCase())
+				return "不予备案";
+			    if ("pending" == status.toLowerCase())
+				return "待审核";
+			    if ("revise" == status.toLowerCase())
+				return "待修改";
 			}
 			;
 
@@ -55,12 +57,12 @@
 </head>
 <body>
 	<form class="form-inline">
-		<input type="text" name="fileName" class="input-samll"
+		<input type="text" name="fileName" class="input-samll" id="fileName"
 			placeholder="备案名称" /> <select id="status" name="status"><option
-				value="等待审核">等待审核</option>
-			<option value="需要修改">需要修改</option>
-			<option value="准予备案">准予备案</option>
-			<option value="不予备案">不予备案</option>
+				value="PENDING">等待审核</option>
+			<option value="REVISE">需要修改</option>
+			<option value="ACCEPT">准予备案</option>
+			<option value="REFUSE">不予备案</option>
 		</select> <label class="control-label text-info">开始时间：</label>
 		<div class="input-group">
 			<input class="form-control date-picker input-small" type="text"
@@ -80,7 +82,7 @@
 		<input type="button" id="searchBtn" value="搜索"
 			class="btn btn-primary btn-sm" />
 	</form>
-	<table id="userList" cellpadding="0" cellspacing="0" border="0"
+	<table id="ndfList" cellpadding="0" cellspacing="0" border="0"
 		class="table table-striped table-bordered">
 		<thead>
 			<tr>
@@ -102,5 +104,8 @@
 			</tr>
 		</tbody>
 	</table>
+	<div>
+		<ul id="paginator"></ul>
+	</div>
 </body>
 </html>
