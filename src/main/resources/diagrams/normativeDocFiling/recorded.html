@@ -4,7 +4,7 @@
 <title>规范文件查询</title>
 <link href="/jstree/themes/default/style.min.css" rel="stylesheet"
 	type="text/css" th:href="@{/jstree/themes/default/style.min.css}" />
-<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 
@@ -15,22 +15,21 @@
 						$("#ndfList")
 								.simpleTable(
 										/*[[@{'/normativeStatistical/listNormativeDocFiling?sort=createOn&order=desc'}]]*/""
-												+ "&title="
-												+ $("#fileName").val()
-												+ "&status="
-												+ $("#status").val()
-												+ "&startTime="
-												+ $("#startTime").val()
-												+ "&endTime="
-												+ $("#endTime").val()
-												+ "&organizationName="
-												+ $("#organizationName").val()
+
 												+ "&dateStamp="
 												+ new Date().toString(),
 										render,
 										$("#paginator"),
 										null,
-										"POST");
+										"POST",
+										{
+											"fileName" : $("#fileName").val(),
+											"status" : $("#status").val(),
+											"startTime" : $("#startTime").val(),
+											"endTime" : $("#endTime").val(),
+											"organizationName" : $(
+													"#organizationName").val()
+										});
 						function render(data) {
 							var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
 									+ data.id
@@ -53,36 +52,47 @@
 										function() {
 											$("#ndfList tbody tr").remove();
 
+											//$("#ndfList")
+											//	.simpleTable(
+											//$("#searchForm")
+											//		.ajaxForm(
+											//				{
+											//					url : /*[[@{'/normativeStatistical/listNormativeDocFiling?sort=createOn&order=desc'}]]*/"",
+											//					success : function(
+											//							data) {
+											//						$("#ndfList").simpleTableFromData(data,render,$("#paginator"));
+											//					}
+
+											//				}).submit();
+
 											$("#ndfList")
 													.simpleTable(
 															/*[[@{'/normativeStatistical/listNormativeDocFiling?sort=createOn&order=desc'}]]*/""
-																	+ "&title="
-																	+ $(
-																			"#fileName")
-																			.val()
-																	+ "&status="
-																	+ $(
-																			"#status")
-																			.val()
-																	+ "&startTime="
-																	+ $(
-																			"#startTime")
-																			.val()
-																	+ "&endTime="
-																	+ $(
-																			"#endTime")
-																			.val()
-																	+ "&organizationName="
-																	+ $(
-																			"#organizationName")
-																			.val()
+
 																	+ "&dateStamp="
 																	+ new Date()
 																			.toString(),
 															render,
 															$("#paginator"),
 															null,
-															"POST");
+															"POST",
+															{
+																"fileName" : $(
+																		"#fileName")
+																		.val(),
+																"status" : $(
+																		"#status")
+																		.val(),
+																"startTime" : $(
+																		"#startTime")
+																		.val(),
+																"endTime" : $(
+																		"#endTime")
+																		.val(),
+																"organizationName" : $(
+																		"#organizationName")
+																		.val()
+															});
 										});
 						function getStatus(status) {
 							if ("accept" == status.toLowerCase())
@@ -141,7 +151,7 @@
 </script>
 </head>
 <body>
-	<form class="form-inline">
+	<form class="form-inline" id="searchForm" method="POST">
 		<input type="text" name="fileName" class="input-samll" id="fileName"
 			placeholder="文件名" /> <select id="status" name="status"><option
 				value="">所有</option>

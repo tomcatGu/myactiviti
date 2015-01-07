@@ -124,7 +124,7 @@ public class NormativeDocFilingStatisticalController {
 	@RequestMapping(value = "listNormativeDocFiling", method = RequestMethod.POST)
 	public @ResponseBody
 	Map<String, Object> listNormativeDocFiling(
-			@RequestParam("title") String title,
+			@RequestParam("fileName") String fileName,
 			@RequestParam("startTime") final String startTime,
 			@RequestParam("endTime") final String endTime,
 			@RequestParam(value = "organizationName", defaultValue = "") String organizationName,
@@ -155,13 +155,13 @@ public class NormativeDocFilingStatisticalController {
 		if (startTime.isEmpty() || endTime.isEmpty()) {
 			Date now = new Date();
 			ndfs = ndfService.findByTitleAndCreateTimeAndOrganizationAndStatus(
-					title, now, now, organizationId, status, pageRequest);
+					fileName, now, now, organizationId, status, pageRequest);
 		} else {
 
 			try {
 				ndfs = ndfService
 						.findByTitleAndCreateTimeAndOrganizationAndStatus(
-								title, dateformat.parse(startTime),
+								fileName, dateformat.parse(startTime),
 								dateformat.parse(endTime), organizationId,
 								status, pageRequest);
 			} catch (ParseException e) {
