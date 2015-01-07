@@ -1,69 +1,155 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh_CN">
 <head thy:merge="/common::headerFragment">
-<title>已备案规范性文件列表</title>
-<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>规范文件查询</title>
+<link href="/jstree/themes/default/style.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/jstree/themes/default/style.min.css}" />
+<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
+	/*<![CDATA[*/
 
-    $(document)
-	    .ready(
-		    function() {
-			$("#ndfList")
-				.simpleTable(
-					/*[[@{'/normativeStatistical/listNormativeDocFiling?sort=createOn&order=desc'}]]*/""
-						+ "&title="
-						+ $("#fileName").val()
-						+ "&status="
-						+ $("#status").val()
-						+ "&startTime="
-						+ $("#startTime").val()
-						+ "&endTime="
-						+ $("#endTime").val()
-						+ "&dateStamp="
-						+ new Date().toString(),
-					render, $("#paginator"), null, "POST");
-			function render(data) {
-			    var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
-				    + data.id
-				    + "</td><td>"
-				    + data.fileName
-				    + "</td><td>"
-				    + data.organizationId
-				    + "</td><td>"
-				    + getStatus(data.status)
-				    + "</td><td>"
-				    + data.createOn
-				    + "</td></tr>";
-			    return newRow;
-			}
-			;
-			function getStatus(status) {
-			    if ("accept" == status.toLowerCase())
-				return "准予备案";
-			    if ("refuse" == status.toLowerCase())
-				return "不予备案";
-			    if ("pending" == status.toLowerCase())
-				return "待审核";
-			    if ("revise" == status.toLowerCase())
-				return "待修改";
-			}
-			;
+	$(document)
+			.ready(
+					function() {
 
-		    });
+						$("#ndfList")
+								.simpleTable(
+										/*[[@{'/normativeStatistical/listNormativeDocFiling?sort=createOn&order=desc'}]]*/""
+												+ "&title="
+												+ $("#fileName").val()
+												+ "&status="
+												+ $("#status").val()
+												+ "&startTime="
+												+ $("#startTime").val()
+												+ "&endTime="
+												+ $("#endTime").val()
+												+ "&organizationName="
+												+ $("#organizationName").val()
+												+ "&dateStamp="
+												+ new Date().toString(),
+										render,
+										$("#paginator"),
+										null,
+										"POST");
+						function render(data) {
+							var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+									+ data.id
+									+ "</td><td>"
+									+ data.fileName
+									+ "</td><td>"
+									+ data.organizationId
+									+ "</td><td>"
+									+ getStatus(data.status)
+									+ "</td><td>"
+									+ new Date(data.createOn).ToString()
+									+ "</td></tr>";
+							return newRow;
+						}
+						;
 
-    /*]]>*/
+						$("#searchBtn")
+								.bind(
+										"click",
+										function() {
+											$("#ndfList tbody tr").remove();
+
+											$("#ndfList")
+													.simpleTable(
+															/*[[@{'/normativeStatistical/listNormativeDocFiling?sort=createOn&order=desc'}]]*/""
+																	+ "&title="
+																	+ $(
+																			"#fileName")
+																			.val()
+																	+ "&status="
+																	+ $(
+																			"#status")
+																			.val()
+																	+ "&startTime="
+																	+ $(
+																			"#startTime")
+																			.val()
+																	+ "&endTime="
+																	+ $(
+																			"#endTime")
+																			.val()
+																	+ "&organizationName="
+																	+ $(
+																			"#organizationName")
+																			.val()
+																	+ "&dateStamp="
+																	+ new Date()
+																			.toString(),
+															render,
+															$("#paginator"),
+															null,
+															"POST");
+										});
+						function getStatus(status) {
+							if ("accept" == status.toLowerCase())
+								return "准予备案";
+							if ("refuse" == status.toLowerCase())
+								return "不予备案";
+							if ("pending" == status.toLowerCase())
+								return "待审核";
+							if ("revise" == status.toLowerCase())
+								return "待修改";
+						}
+						;
+						$('.date-picker').datepicker({
+							language : 'zh-CN',
+							autoclose : true
+						}).next().on(ace.click_event, function() {
+							$(this).prev().focus();
+						});
+
+						$("#organization")
+								.jstree(
+										{
+											"core" : {
+												"animation" : 0,
+												"check_callback" : true,
+												"themes" : {
+													"stripes" : true
+												},
+												'data' : {
+													'url' : function(node) {
+														return node.id === '#' ? /*[[@{'/organization/ajaxRoots'}]]*/'organization/ajaxRoots'
+																: /*[[@{'/organization/ajaxChildren'}]]*/'organization/ajaxChildren';
+													},
+													'data' : function(node) {
+														return {
+															'id' : node.id
+														};
+													}
+												}
+											},
+											"plugins" : [ "state", "types",
+													"wholerow" ]
+										}).on(
+										"activate_node.jstree",
+										function(e, data) {
+											alert(data.node.id);
+											alert(data.node.text);
+											$("#organizationName").val(
+													data.node.text);
+
+										});
+
+					});
+
+	/*]]>*/
 </script>
 </head>
 <body>
 	<form class="form-inline">
 		<input type="text" name="fileName" class="input-samll" id="fileName"
-			placeholder="备案名称" /> <select id="status" name="status"><option
-				value="PENDING">等待审核</option>
-			<option value="REVISE">需要修改</option>
+			placeholder="文件名" /> <select id="status" name="status"><option
+				value="">所有</option>
+			<option value="PENDING">待审核</option>
+			<option value="REVISE">待修改</option>
 			<option value="ACCEPT">准予备案</option>
 			<option value="REFUSE">不予备案</option>
-		</select> <label class="control-label text-info">开始时间：</label>
+		</select> <label class="control-label text-info">开始：</label>
 		<div class="input-group">
 			<input class="form-control date-picker input-small" type="text"
 				data-date-format="mm/dd/yyyy" name="startTime" id="startTime" /> <span
@@ -71,13 +157,38 @@
 				class="icon-calendar bigger-110"></i>
 			</span>
 		</div>
-		<label class="control-label text-info input-small">结束时间：</label>
+
+		<label class="control-label text-info">结束：</label>
 		<div class="input-group">
 			<input class="form-control date-picker" type="text"
 				data-date-format="mm/dd/yyyy" name="endTime" id="endTime" /> <span
 				class="input-group-addon"> <i
 				class="icon-calendar bigger-110"></i>
 			</span>
+		</div>
+
+		<div class="input-group">
+			<input type="text" class="form-control" name="organizationName"
+				id="organizationName" />
+			<div class="input-group-btn">
+				<button type="button" class="btn btn-default dropdown-toggle"
+					data-toggle="dropdown" aria-expanded="false">
+					选择单位 <span class="caret"></span>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right" role="menu">
+					<div id="organization">
+						<ul>
+							<li>Root node 1
+								<ul>
+									<li>Child node 1</li>
+									<li><a href="#">Child node 2</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- /btn-group -->
 		</div>
 		<input type="button" id="searchBtn" value="搜索"
 			class="btn btn-primary btn-sm" />
@@ -87,9 +198,9 @@
 		<thead>
 			<tr>
 				<th><input type="checkbox" id="checkAll" /></th>
-				<th>序号</th>
-				<th>标题</th>
-				<th>部门</th>
+				<th>编号</th>
+				<th>文件名</th>
+				<th>部门名</th>
 				<th>状态</th>
 				<th>上报时间</th>
 			</tr>

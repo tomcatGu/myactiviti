@@ -2,7 +2,7 @@
     $.fn
 	    .extend({
 		simpleTable : function(dataUrl, rowRender, paginator, callback,
-			type) {
+			type,dataParam) {
 		    var table = this;
 		    var start = dataUrl.indexOf("&start=");
 		    var orginDataUrl = dataUrl;
@@ -12,6 +12,7 @@
 			    .ajax({
 				url : dataUrl,
 				type : type,
+				data:dataParam,
 				success : function(data) {
 				    count = Number(data.count);
 				    start = Number(data.start);
