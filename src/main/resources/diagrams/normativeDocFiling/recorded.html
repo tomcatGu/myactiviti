@@ -38,7 +38,7 @@
 									+ "</td><td>"
 									+ data.organizationId
 									+ "</td><td>"
-									+ getStatus(data.status)
+									+ data.status
 									+ "</td><td>"
 									+ new Date(data.createOn).ToString()
 									+ "</td></tr>";
@@ -94,17 +94,7 @@
 																		.val()
 															});
 										});
-						function getStatus(status) {
-							if ("accept" == status.toLowerCase())
-								return "准予备案";
-							if ("refuse" == status.toLowerCase())
-								return "不予备案";
-							if ("pending" == status.toLowerCase())
-								return "待审核";
-							if ("revise" == status.toLowerCase())
-								return "待修改";
-						}
-						;
+
 						$('.date-picker').datepicker({
 							language : 'zh-CN',
 							autoclose : true

@@ -100,7 +100,7 @@ public class NormativeDocFilingService {
 		}
 		ndf.setCreateOn(new Date());
 		ndf.setOrganizationId(organizationId);
-		ndf.setStatus(NormativeDocFilingStatus.PENDING.name());
+		ndf.setStatus(NormativeDocFilingStatus.PENDING);
 		// ndf.setStatus(NormativeDocFilingStatus.PENDING);
 		ndfDao.save(ndf);
 
@@ -148,7 +148,7 @@ public class NormativeDocFilingService {
 		}
 
 		ndf.setOrganizationId(organizationId);
-		ndf.setStatus(NormativeDocFilingStatus.PENDING.name());
+		ndf.setStatus(NormativeDocFilingStatus.PENDING);
 		ndfDao.save(ndf);
 
 		return ndf;
@@ -163,7 +163,7 @@ public class NormativeDocFilingService {
 		ndfReply.setReplyTime(new Date());
 		ndf.getReplies().add(ndfReply);
 		if (isPassed) {
-			ndf.setStatus(NormativeDocFilingStatus.ACCEPT.name());
+			ndf.setStatus(NormativeDocFilingStatus.ACCEPT);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ByteArrayInputStream in = null;
 
@@ -182,6 +182,7 @@ public class NormativeDocFilingService {
 			} else {
 				hm.put("status", "不予备案");
 			}
+			ndf.getStatus().name();
 			try {
 				HWPFDocument doc = replaceDoc(hm, "templete/qrh.doc");
 				doc.write(out);
@@ -202,7 +203,7 @@ public class NormativeDocFilingService {
 			ae.setName(attachment.getName());
 			ndf.getAttachments().add(ae);
 		} else
-			ndf.setStatus(NormativeDocFilingStatus.REVISE.name());
+			ndf.setStatus(NormativeDocFilingStatus.REVISE);
 		ndfDao.save(ndf);
 		// execution
 		return ndf;
@@ -220,7 +221,7 @@ public class NormativeDocFilingService {
 		ndf.getReplies().add(ndfReply);
 		ndf.setOrderNumber(orderNumber);
 		if ("accept".equals(status)) {
-			ndf.setStatus(NormativeDocFilingStatus.ACCEPT.name());
+			ndf.setStatus(NormativeDocFilingStatus.ACCEPT);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ByteArrayInputStream in = null;
 
@@ -259,10 +260,10 @@ public class NormativeDocFilingService {
 			ae.setName(attachment.getName());
 			ndf.getAttachments().add(ae);
 		} else if ("revise".equals(status)) {
-			ndf.setStatus(NormativeDocFilingStatus.REVISE.name());
+			ndf.setStatus(NormativeDocFilingStatus.REVISE);
 
 		} else if ("refuse".equals(status)) {
-			ndf.setStatus(NormativeDocFilingStatus.REFUSE.name());
+			ndf.setStatus(NormativeDocFilingStatus.REFUSE);
 
 		}
 		ndfDao.save(ndf);

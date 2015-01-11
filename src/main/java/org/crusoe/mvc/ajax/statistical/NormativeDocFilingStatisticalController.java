@@ -173,17 +173,32 @@ public class NormativeDocFilingStatisticalController {
 		while (iter.hasNext()) {
 			NormativeDocFiling ndf = (NormativeDocFiling) iter.next();
 			NormativeDocFilingDTO ndfDTO = new NormativeDocFilingDTO();
-			try {
-				PropertyUtils.copyProperties(ndfDTO, ndf);
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			ndfDTO.setId(ndf.getId());
+			ndfDTO.setFileName(ndf.getFileName());
+			ndfDTO.setFileProperty(ndf.getFileProperty());
+			ndfDTO.setContentClassification(ndf.getContentClassification());
+			ndfDTO.setIsOpen(ndf.getIsOpen());
+			ndfDTO.setMessageNumber(ndf.getMessageNumber());
+			ndfDTO.setImplementationDate(ndf.getImplementationDate());
+			ndfDTO.setCreateOn(ndf.getCreateOn());
+			ndfDTO.setReleaseDate(ndf.getReleaseDate());
+			ndfDTO.setUsername(ndf.getUsername());
+			ndfDTO.setOrganizationId(ndf.getOrganizationId());
+			// ndfDTO.seto
+			ndfDTO.setOrderNumber(ndf.getOrderNumber());
+			switch (ndf.getStatus()) {
+			case ACCEPT:
+				ndfDTO.setStatus("准予备案");
+				break;
+			case REFUSE:
+				ndfDTO.setStatus("不予备案");
+				break;
+			case PENDING:
+				ndfDTO.setStatus("待审核");
+				break;
+			case REVISE:
+				ndfDTO.setStatus("待修改");
+				break;
 			}
 			ndfDTOs.add(ndfDTO);
 

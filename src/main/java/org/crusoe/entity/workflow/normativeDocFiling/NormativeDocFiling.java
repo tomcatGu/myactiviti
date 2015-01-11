@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,7 +34,7 @@ public class NormativeDocFiling {
 	private Date releaseDate;
 	private Date implementationDate;
 	private String isOpen;
-	private String status;
+	private NormativeDocFilingStatus status;
 	private Date createOn;
 	private String username;
 	private Long orderNumber;
@@ -116,11 +118,12 @@ public class NormativeDocFiling {
 		this.isOpen = isOpen;
 	}
 
-	public String getStatus() {
+	@Enumerated(EnumType.STRING)
+	public NormativeDocFilingStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(NormativeDocFilingStatus status) {
 		this.status = status;
 	}
 
