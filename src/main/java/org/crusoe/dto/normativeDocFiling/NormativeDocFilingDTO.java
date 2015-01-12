@@ -1,6 +1,9 @@
 package org.crusoe.dto.normativeDocFiling;
 
 import java.util.Date;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 public class NormativeDocFilingDTO {
 	private Long id;
@@ -16,6 +19,25 @@ public class NormativeDocFilingDTO {
 	private Date createOn;
 	private String username;
 	private Long orderNumber;
+	private List<NormativeDocFilingAttachmentDTO> attachments = Lists
+			.newArrayList();
+	public List<NormativeDocFilingAttachmentDTO> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<NormativeDocFilingAttachmentDTO> attachments) {
+		this.attachments = attachments;
+	}
+
+	public List<NormativeDocFilingReplyDTO> getReplies() {
+		return replies;
+	}
+
+	public void setReplies(List<NormativeDocFilingReplyDTO> replies) {
+		this.replies = replies;
+	}
+
+	private List<NormativeDocFilingReplyDTO> replies = Lists.newArrayList();
 
 	public Long getId() {
 		return id;

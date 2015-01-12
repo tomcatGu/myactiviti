@@ -13,9 +13,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.crusoe.dto.normativeDocFiling.NormativeDocFilingAttachmentDTO;
 import org.crusoe.dto.normativeDocFiling.NormativeDocFilingDTO;
+import org.crusoe.dto.normativeDocFiling.NormativeDocFilingReplyDTO;
 import org.crusoe.entity.Organization;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFiling;
+import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingAttachmentEntity;
+import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingReply;
 import org.crusoe.entity.workflow.normativeDocFiling.NormativeDocFilingStatus;
 import org.crusoe.service.OrganizationService;
 import org.crusoe.service.workflow.normativeDocFiling.NormativeDocFilingService;
@@ -25,6 +29,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -119,6 +124,79 @@ public class NormativeDocFilingStatisticalController {
 		rets.put("err", false);
 		rets.put("statisticalResult", result);
 		return rets;
+	}
+
+	@RequestMapping(value = "viewNormativeDocFiling")
+	public String viewNormativeDocFiling(@RequestParam("id") Long id,
+			Model model) {
+		NormativeDocFiling ndf = ndfService.findById(id);
+		NormativeDocFilingDTO ndfDTO = new NormativeDocFilingDTO();
+		ndfDTO.setId(ndf.getId());
+		ndfDTO.setFileName(ndf.getFileName());
+		ndfDTO.setFileProperty(ndf.getFileProperty());
+		ndfDTO.setContentClassification(ndf.getContentClassification());
+		ndfDTO.setIsOpen(ndf.getIsOpen());
+		ndfDTO.setMessageNumber(ndf.getMessageNumber());
+		ndfDTO.setImplementationDate(ndf.getImplementationDate());
+		ndfDTO.setCreateOn(ndf.getCreateOn());
+		ndfDTO.setReleaseDate(ndf.getReleaseDate());
+		ndfDTO.setUsername(ndf.getUsername());
+		ndfDTO.setOrganizationId(ndf.getOrganizationId());
+		ndfDTO.setOrderNumber(ndf.getOrderNumber());
+		switch (ndf.getStatus()) {
+		case ACCEPT:
+			ndfDTO.setStatus("准予备案");
+			break;
+		case REFUSE:
+			ndfDTO.setStatus("不予备案");
+			break;
+		case PENDING:
+			ndfDTO.setStatus("待审核");
+			break;
+		case REVISE:
+			ndfDTO.setStatus("待修改");
+			break;
+		}
+		Iterator iter = ndf.getReplies().iterator();
+		while (iter.hasNext()) {
+			NormativeDocFilingReply ndfReply = (NormativeDocFilingReply) iter
+					.next();
+			NormativeDocFilingReplyDTO ndfReplyDTO = new NormativeDocFilingReplyDTO();
+			try {
+				PropertyUtils.copyProperties(ndfReplyDTO, ndfReply);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ndfDTO.getReplies().add(ndfReplyDTO);
+		}
+		iter = ndf.getAttachments().iterator();
+		while (iter.hasNext()) {
+			NormativeDocFilingAttachmentEntity ndfAttachment = (NormativeDocFilingAttachmentEntity) iter
+					.next();
+			NormativeDocFilingAttachmentDTO ndfAttachmentDTO = new NormativeDocFilingAttachmentDTO();
+			try {
+				PropertyUtils.copyProperties(ndfAttachmentDTO, ndfAttachment);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ndfDTO.getAttachments().add(ndfAttachmentDTO);
+		}
+		model.addAttribute("result", ndfDTO);
+		return "normativeDocFiling/confirmForm.readonly";
 	}
 
 	@RequestMapping(value = "listNormativeDocFiling", method = RequestMethod.POST)

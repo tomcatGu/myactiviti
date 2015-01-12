@@ -175,7 +175,7 @@ public class NormativeDocFilingService {
 					.getName());
 			Calendar c = Calendar.getInstance();
 			hm.put("year", String.valueOf((c.get(Calendar.YEAR))));
-			hm.put("month", String.valueOf((c.get(Calendar.MONTH))));
+			hm.put("month", String.valueOf((c.get(Calendar.MONTH) + 1)));
 			hm.put("day", String.valueOf((c.get(Calendar.DAY_OF_MONTH))));
 			if (NormativeDocFilingStatus.ACCEPT.name().equals(ndf.getStatus())) {
 				hm.put("status", "准予备案");
@@ -341,5 +341,10 @@ public class NormativeDocFilingService {
 						return predicate;
 					}
 				}, pageRequest);
+	}
+
+	public NormativeDocFiling findById(Long id) {
+		// TODO Auto-generated method stub
+		return ndfDao.findOne(id);
 	}
 }

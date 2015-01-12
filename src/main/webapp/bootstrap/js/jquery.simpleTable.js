@@ -40,7 +40,7 @@
 											table.simpleTable(orginDataUrl
 													+ "&start=" + (newPage - 1)
 													* size, rowRender,
-													paginator, callback, type)
+													paginator, callback, type,dataParam);
 
 										},
 										itemContainerClass : function(type,

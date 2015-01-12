@@ -33,10 +33,11 @@
 						function render(data) {
 							var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
 									+ data.id
-									+ "</td><td>"
+									+ "</td><td><a href="+/*[[@{'/normativeStatistical/viewNormativeDocFiling'}]]*/""
+									+"?id="+data.id+" target='_blank'>"
 									+ data.fileName
-									+ "</td><td>"
-									+ data.organizationId
+									+ "</a></td><td>"
+									+ getOrganization(data.organizationId)
 									+ "</td><td>"
 									+ data.status
 									+ "</td><td>"
@@ -45,6 +46,20 @@
 							return newRow;
 						}
 						;
+						function getOrganization(organizationId) {
+						    var organizationName;
+						    $.ajax({
+							type : 'GET',
+							url : /*[[@{'/organization/'}]]*/''//load organization  
+								+ organizationId,
+							async : false,
+							success : function(data) {
+							    organizationName = data.text;
+							}
+						    });
+						    return organizationName;
+
+						};
 
 						$("#searchBtn")
 								.bind(
