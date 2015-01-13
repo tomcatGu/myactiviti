@@ -15,14 +15,26 @@ function checkAll(checkAllId) {
 };
 
 function create(createDiv, createUrl, successCallback) {
+	if (createUrl.indexOf('?') > 0) {
+		$(createDiv).load(createUrl + '&timestamp=' + (new Date()).valueOf(),
+				function(data) {
+					$(createDiv).bind("evtSuccess", function(evt, data) {
+						successCallback();
+					});
+					$(createDiv).modal();
 
-	$(createDiv).load(createUrl + '?timestamp=' + (new Date()).valueOf(), function(data) {
-		$(createDiv).bind("evtSuccess", function(evt, data) {
-			successCallback();
-		});
-		$(createDiv).modal();
+				});
+	}else{
+		
+		$(createDiv).load(createUrl + '?timestamp=' + (new Date()).valueOf(),
+				function(data) {
+					$(createDiv).bind("evtSuccess", function(evt, data) {
+						successCallback();
+					});
+					$(createDiv).modal();
 
-	});
+				});
+	}
 };
 
 function update(updateDivId, updateUrl, successCallback) {

@@ -20,5 +20,6 @@ public enum NormativeDocFilingStatus {
 		public String getName() {
 			return "待修改";
 		}
-	}
+	};
+
 }

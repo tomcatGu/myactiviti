@@ -334,10 +334,26 @@ public class NormativeDocFilingService {
 									organizationId));
 
 						}
-						if (!status.isEmpty())
-							expressions.add(builder.equal(
-									root.<String> get("status"), status));
 
+						if (!status.isEmpty()) {
+							if ("PENDING".equals(status))
+								expressions.add(builder.equal(
+										root.<String> get("status"),
+										NormativeDocFilingStatus.PENDING));
+							else if ("ACCEPT".equals(status))
+								expressions.add(builder.equal(
+										root.<String> get("status"),
+										NormativeDocFilingStatus.ACCEPT));
+							else if ("REFUSE".equals(status))
+								expressions.add(builder.equal(
+										root.<String> get("status"),
+										NormativeDocFilingStatus.REFUSE));
+							else if ("REVISE".equals(status))
+								expressions.add(builder.equal(
+										root.<String> get("status"),
+										NormativeDocFilingStatus.REVISE));
+
+						}
 						return predicate;
 					}
 				}, pageRequest);

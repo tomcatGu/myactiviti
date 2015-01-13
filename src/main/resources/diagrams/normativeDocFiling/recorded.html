@@ -33,8 +33,11 @@
 						function render(data) {
 							var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
 									+ data.id
-									+ "</td><td><a href="+/*[[@{'/normativeStatistical/viewNormativeDocFiling'}]]*/""
-									+"?id="+data.id+" target='_blank'>"
+									+ "</td><td><a href="
+									+ "'javascript:viewDetail("
+									//+ "?id="
+									+ data.id
+									+ ")'>"
 									+ data.fileName
 									+ "</a></td><td>"
 									+ getOrganization(data.organizationId)
@@ -46,20 +49,32 @@
 							return newRow;
 						}
 						;
-						function getOrganization(organizationId) {
-						    var organizationName;
-						    $.ajax({
-							type : 'GET',
-							url : /*[[@{'/organization/'}]]*/''//load organization  
-								+ organizationId,
-							async : false,
-							success : function(data) {
-							    organizationName = data.text;
-							}
-						    });
-						    return organizationName;
+
+						viewDetail = function(id) {
+							//bootbox.alert("Hello world!");
+							create('#viewDetailDialog',/*[[@{'/normativeStatistical/viewNormativeDocFiling'}]]*/''//view normativeDocFiling
+											+ "?id=" + id, successCallback);//
+						};
+						successCallback = function() {
+
+							$("#viewDetailDialog").modal("hide");
 
 						};
+						function getOrganization(organizationId) {
+							var organizationName;
+							$.ajax({
+								type : 'GET',
+								url : /*[[@{'/organization/'}]]*/''//load organization  
+										+ organizationId,
+								async : false,
+								success : function(data) {
+									organizationName = data.text;
+								}
+							});
+							return organizationName;
+
+						}
+						;
 
 						$("#searchBtn")
 								.bind(
@@ -233,5 +248,28 @@
 	<div>
 		<ul id="paginator"></ul>
 	</div>
+
+	<div class="modal fade bs-example-modal-lg" id="viewDetailDialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">πÿ±’</span>
+					</button>
+					<h4 class="modal-title">œ‘ æ</h4>
+				</div>
+				<div class="modal-body" id="viewDetailDialogBody">
+					<p></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
 </body>
 </html>

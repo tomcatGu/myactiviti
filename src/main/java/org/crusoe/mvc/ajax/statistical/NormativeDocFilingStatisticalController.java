@@ -143,6 +143,7 @@ public class NormativeDocFilingStatisticalController {
 		ndfDTO.setUsername(ndf.getUsername());
 		ndfDTO.setOrganizationId(ndf.getOrganizationId());
 		ndfDTO.setOrderNumber(ndf.getOrderNumber());
+		ndfDTO.setStatus(ndf.getStatus().name());
 		switch (ndf.getStatus()) {
 		case ACCEPT:
 			ndfDTO.setStatus("准予备案");
@@ -157,6 +158,8 @@ public class NormativeDocFilingStatisticalController {
 			ndfDTO.setStatus("待修改");
 			break;
 		}
+		ndfDTO.setOrganizationName(oService.findById(ndf.getOrganizationId())
+				.getName());
 		Iterator iter = ndf.getReplies().iterator();
 		while (iter.hasNext()) {
 			NormativeDocFilingReply ndfReply = (NormativeDocFilingReply) iter

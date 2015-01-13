@@ -9,6 +9,7 @@ public class NormativeDocFilingDTO {
 	private Long id;
 	private String fileName;
 	private Long organizationId;
+	private String organizationName;
 	private String messageNumber;
 	private String fileProperty;
 	private String contentClassification;
@@ -21,6 +22,7 @@ public class NormativeDocFilingDTO {
 	private Long orderNumber;
 	private List<NormativeDocFilingAttachmentDTO> attachments = Lists
 			.newArrayList();
+
 	public List<NormativeDocFilingAttachmentDTO> getAttachments() {
 		return attachments;
 	}
@@ -142,4 +144,13 @@ public class NormativeDocFilingDTO {
 	public void setOrderNumber(Long orderNumber) {
 		this.orderNumber = orderNumber;
 	}
+
+	public String getOrganizationName() {
+		return organizationName;
+	}
+
+	public void setOrganizationName(String organizationName) {
+		this.organizationName = organizationName;
+	}
+
 }
