@@ -3,7 +3,10 @@ package org.crusoe.mvc.ajax.task;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +27,7 @@ import org.activiti.engine.impl.persistence.entity.GroupEntity;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.shiro.SecurityUtils;
@@ -252,20 +256,40 @@ public class TaskController {
 	@RequiresUser
 	@RequestMapping(value = "listTasks", method = RequestMethod.GET)
 	public @ResponseBody
-	HashMap<String, Object> listTasks(@RequestParam("sort") String sort,
+	HashMap<String, Object> listTasks(
+			@RequestParam("sort") String sort,
 			@RequestParam("order") String order,
 			@RequestParam(value = "start", defaultValue = "0") int start,
-			@RequestParam(value = "size", defaultValue = "10") int size)
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			@RequestParam(value = "beforeDate", defaultValue = "") String beforeDate,
+			@RequestParam(value = "afterDate", defaultValue = "") String afterDate)
 			throws IllegalAccessException, InvocationTargetException {
 
-		// convertToMap定义于父类，将参数数组中的所有元素加入一个HashMap
+		SimpleDateFormat dateformat = new SimpleDateFormat("MM/dd/yyyy");
 
 		User user = accountService.findUserByLoginName(SecurityUtils
 				.getSubject().getPrincipal().toString());
+		TaskQuery taskQuery = taskService.createTaskQuery().taskAssignee(
+				user.getLoginName());
+		try {
+			Date before = dateformat.parse(beforeDate);
+			taskQuery = taskQuery.taskCreatedBefore(before);
 
-		List<Task> taskList = taskService.createTaskQuery()
-				.taskAssignee(user.getLoginName()).orderByTaskCreateTime()
-				.desc().listPage(start, size);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			Date after = dateformat.parse(afterDate);
+			taskQuery = taskQuery.taskCreatedAfter(after);
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		taskQuery = taskQuery.orderByTaskCreateTime().desc();
+		List<Task> taskList = taskQuery.listPage(start, size);
 		List<TaskDTO> todoList = new ArrayList();
 		int i = 0;
 		for (Task task : taskList) {
@@ -292,8 +316,7 @@ public class TaskController {
 
 			todoList.add(taskDTO);
 		}
-		long count = taskService.createTaskQuery()
-				.taskAssignee(user.getLoginName()).count();
+		long count = taskQuery.count();
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		rets.put("count", count);
 		rets.put("start", start);
@@ -339,8 +362,8 @@ public class TaskController {
 			// taskDTO.setAssignee(task.getAssignee());
 			taskDTO.setCreateTime(task.getCreateTime());
 			taskDTO.setDueDate(task.getDueDate());
-			//taskDTO.setAssignee(accountService.findUserByLoginName(
-			//		task.getAssignee()).getName());
+			// taskDTO.setAssignee(accountService.findUserByLoginName(
+			// task.getAssignee()).getName());
 			String initiatorUserId = historyService
 					.createHistoricProcessInstanceQuery()
 					.processInstanceId(task.getProcessInstanceId())
@@ -439,6 +462,53 @@ public class TaskController {
 			rets.put("msg", "upload failed.");
 		}
 
+		return rets;
+
+	}
+
+	public @ResponseBody
+	HashMap<String, Object> queryTaskCount(
+			@RequestParam(value = "beforeDate", defaultValue = "") String beforeDate,
+			@RequestParam(value = "afterDate", defaultValue = "") String afterDate) {
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		SimpleDateFormat dateformat = new SimpleDateFormat("MM/dd/yyyy");
+
+		User user = accountService.findUserByLoginName(SecurityUtils
+				.getSubject().getPrincipal().toString());
+		TaskQuery taskQuery = taskService.createTaskQuery().taskAssignee(
+				user.getLoginName());
+		try {
+			Date before = dateformat.parse(beforeDate);
+			taskQuery = taskQuery.taskCreatedBefore(before);
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			Date after = dateformat.parse(afterDate);
+			taskQuery = taskQuery.taskCreatedAfter(after);
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		rets.put("taskCount", taskQuery.count());
+
+		List<String> groups = Lists.newArrayList();
+		Iterator iter = user.getRoles().iterator();
+		while (iter.hasNext()) {
+
+			Role r = (Role) iter.next();
+			groups.add(r.getName());
+
+		}
+
+		taskQuery = taskService.createTaskQuery().taskCandidateGroupIn(groups);
+
+		rets.put("candidateTaskCount", taskQuery.count());
 		return rets;
 
 	}
