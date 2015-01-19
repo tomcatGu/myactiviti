@@ -85,7 +85,12 @@ public class TaskController {
 	}
 
 	@RequestMapping(value = "index")
-	public String getIndexForm() {
+	public String getIndexForm(
+			@RequestParam(value = "beforeDate", defaultValue = "") String beforeDate,
+			@RequestParam(value = "afterDate", defaultValue = "") String afterDate,
+			Model model) {
+		model.addAttribute("beforeDate", beforeDate);
+		model.addAttribute("afterDate", afterDate);
 		return "task/index";
 	}
 
@@ -466,6 +471,7 @@ public class TaskController {
 
 	}
 
+	@RequestMapping(value = "queryTaskCount", method = RequestMethod.GET)
 	public @ResponseBody
 	HashMap<String, Object> queryTaskCount(
 			@RequestParam(value = "beforeDate", defaultValue = "") String beforeDate,
@@ -496,7 +502,20 @@ public class TaskController {
 		}
 
 		rets.put("taskCount", taskQuery.count());
+		return rets;
 
+	}
+
+	@RequestMapping(value = "queryCandidateTaskCount", method = RequestMethod.GET)
+	public @ResponseBody
+	HashMap<String, Object> queryCandidateTaskCount(
+			@RequestParam(value = "beforeDate", defaultValue = "") String beforeDate,
+			@RequestParam(value = "afterDate", defaultValue = "") String afterDate) {
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		SimpleDateFormat dateformat = new SimpleDateFormat("MM/dd/yyyy");
+
+		User user = accountService.findUserByLoginName(SecurityUtils
+				.getSubject().getPrincipal().toString());
 		List<String> groups = Lists.newArrayList();
 		Iterator iter = user.getRoles().iterator();
 		while (iter.hasNext()) {
@@ -506,7 +525,8 @@ public class TaskController {
 
 		}
 
-		taskQuery = taskService.createTaskQuery().taskCandidateGroupIn(groups);
+		TaskQuery taskQuery = taskService.createTaskQuery()
+				.taskCandidateGroupIn(groups);
 
 		rets.put("candidateTaskCount", taskQuery.count());
 		return rets;

@@ -7,11 +7,19 @@
 <body>
 	<div class="navbar navbar-default" id="navbar">
 		<script type="text/javascript">
-	    try {
-		ace.settings.check('navbar', 'fixed')
-	    } catch (e) {
-	    }
-	</script>
+			try {
+				ace.settings.check('navbar', 'fixed')
+			} catch (e) {
+			}
+
+			var d = new Date();
+			var days = -20;
+			d.setDate(d.getDate() + days);
+			var limitDate = (d.getMonth() + 1) + "/" + d.getDate() + "/"
+					+ d.getFullYear();
+			var limitTaskUrl = "runtime/tasks/index?beforeDate=" + limitDate;
+			//alert(limitTaskUrl);
+		</script>
 		<div class="navbar-container" id="navbar-container">
 			<div class="navbar-header pull-left">
 				<a href="#" class="navbar-brand"> <small> <i
@@ -23,9 +31,9 @@
 			<!-- /.navbar-header -->
 			<div class="navbar-header pull-right" role="navigation">
 				<ul class="nav ace-nav">
-					<li class="grey"><a data-toggle="dropdown"
-						class="dropdown-toggle" href="#"> <i class="icon-tasks"></i> <span
-							class="badge badge-grey">4</span>
+					<li class="grey" style="display: none"><a
+						data-toggle="dropdown" class="dropdown-toggle" href="#"> <i
+							class="icon-tasks"></i> <span class="badge badge-grey">4</span>
 					</a>
 						<ul
 							class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
@@ -72,42 +80,24 @@
 					<li class="purple"><a data-toggle="dropdown"
 						class="dropdown-toggle" href="#"> <i
 							class="icon-bell-alt icon-animated-bell"></i> <span
-							class="badge badge-important">8</span>
+							id="warningTaskCount" class="badge badge-important">8</span>
 					</a>
 						<ul
 							class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
-							<li class="dropdown-header"><i class="icon-warning-sign"></i>
-								8条通知</li>
-							<li><a href="#">
+							<li class="dropdown-header" id="warningTaskCountNotify"><i
+								class="icon-warning-sign"></i> 8条通知</li>
+							<li><a href="#" onClick="load('即将过期的待办事项',limitTaskUrl)">
 									<div class="clearfix">
 										<span class="pull-left"> <i
-											class="btn btn-xs no-hover btn-pink icon-comment"></i> 新闻评论
-										</span> <span class="pull-right badge badge-info">+12</span>
+											class="btn btn-xs no-hover btn-pink icon-comment"></i>
+											即将过期的待办事项
+										</span>
 									</div>
 							</a></li>
-							<li><a href="#"> <i
-									class="btn btn-xs btn-primary icon-user"></i> 切换为编辑登录..
-							</a></li>
-							<li><a href="#">
-									<div class="clearfix">
-										<span class="pull-left"> <i
-											class="btn btn-xs no-hover btn-success icon-shopping-cart"></i>
-											新订单
-										</span> <span class="pull-right badge badge-success">+8</span>
-									</div>
-							</a></li>
-							<li><a href="#">
-									<div class="clearfix">
-										<span class="pull-left"> <i
-											class="btn btn-xs no-hover btn-info icon-twitter"></i> 粉丝
-										</span> <span class="pull-right badge badge-info">+11</span>
-									</div>
-							</a></li>
-							<li><a href="#"> 查看所有通知 <i class="icon-arrow-right"></i>
-							</a></li>
+
 						</ul></li>
-					<li class="green"><a data-toggle="dropdown"
-						class="dropdown-toggle" href="#"> <i
+					<li class="green" style="display: none"><a
+						data-toggle="dropdown" class="dropdown-toggle" href="#"> <i
 							class="icon-envelope icon-animated-vertical"></i> <span
 							class="badge badge-success">5</span>
 					</a>
@@ -149,8 +139,8 @@
 					<li class="light-blue"><a data-toggle="dropdown" href="#"
 						class="dropdown-toggle"> <img class="nav-user-photo"
 							src="assets/avatars/user.jpg" alt="Jason's Photo"
-							th:src="@{/assets/avatars/user.jpg}" /> <span class="user-info">
-								<small>欢迎光临,</small> <span
+							th:src="@{/assets/avatars/avatar.png}" /> <span
+							class="user-info"> <small>欢迎光临,</small> <span
 								th:text="${T(org.apache.shiro.SecurityUtils).subject.principal}">Jason</span>
 						</span> <i class="icon-caret-down"></i>
 					</a>
@@ -175,22 +165,22 @@
 	</div>
 	<div class="main-container" id="main-container">
 		<script type="text/javascript">
-	    try {
-		ace.settings.check('main-container', 'fixed')
-	    } catch (e) {
-	    }
-	</script>
+			try {
+				ace.settings.check('main-container', 'fixed')
+			} catch (e) {
+			}
+		</script>
 		<div class="main-container-inner">
 			<a class="menu-toggler" id="menu-toggler" href="#"> <span
 				class="menu-text"></span>
 			</a>
 			<div class="sidebar" id="sidebar">
 				<script type="text/javascript">
-		    try {
-			ace.settings.check('sidebar', 'fixed')
-		    } catch (e) {
-		    }
-		</script>
+					try {
+						ace.settings.check('sidebar', 'fixed')
+					} catch (e) {
+					}
+				</script>
 				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
 					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
 						<button class="btn btn-success">
@@ -213,12 +203,11 @@
 				</div>
 				<!-- #sidebar-shortcuts -->
 				<ul class="nav nav-list">
-					<li class="active"><a href="index.html"> <i
-							class="icon-dashboard"></i> <span class="menu-text"> 控制台 </span>
-					</a></li>
+
 					<li><a href="#" onclick="load('待办事项','runtime/tasks/index')">
 							<i class="icon-text-width"></i> <span class="menu-text">
-								待办事项</span>
+								待办事项<span id="taskCount" class="pull-right badge badge-info">12</span>
+						</span>
 					</a></li>
 					<li><a href="#" class="dropdown-toggle"> <i
 							class="icon-tag"></i> <span class="menu-text"> 规范性文件备案</span> <b
@@ -233,7 +222,9 @@
 							<li><a href="#"
 								onClick="load('待审核规范性文件','runtime/tasks/candidateTaskIndex')">
 									<i class="icon-list-alt"></i> <span class="menu-text">
-										待审核规范性文件 </span>
+										待审核规范性文件<span id="candidateTaskCount"
+										class="pull-right badge badge-info">12</span>
+								</span>
 							</a></li>
 							<li><a href="#"
 								onClick="load('规范性文件查询','workflow/resource/normativeDocFiling/recorded')">
@@ -257,43 +248,23 @@
 							class="menu-text"> 用户管理 </span> <b class="arrow icon-angle-down"></b>
 					</a>
 						<ul class="submenu">
-							<li onclick="load('用户列表','user/index')"
+							<li
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
-								href="#"> <i class="icon-double-angle-right"></i> 用户列表
+								href="#" onclick="load('用户列表','user/index')"> <i
+									class="icon-double-angle-right"></i> 用户列表
 							</a></li>
 						</ul></li>
-					<li><a href="calendar.html"> <i class="icon-calendar"></i>
-							<span class="menu-text"> 日历 <span
-								class="badge badge-transparent tooltip-error"
-								title="2&nbsp;Important&nbsp;Events"> <i
-									class="icon-warning-sign red bigger-130"></i>
-							</span>
-						</span>
-					</a></li>
-					<li><a href="gallery.html"> <i class="icon-picture"></i> <span
-							class="menu-text"> 相册 </span>
-					</a></li>
+
 					<li><a href="#" class="dropdown-toggle"> <i
-							class="icon-file-alt"></i> <span class="menu-text">统计
-						</span> <b class="arrow icon-angle-down"></b>
+							class="icon-dashboard"></i> <span class="menu-text">统计 </span> <b
+							class="arrow icon-angle-down"></b>
 					</a>
 						<ul class="submenu">
 							<li><a href="#"
 								onClick="load('规范性文件备案统计','workflow/resource/normativeDocFiling/statisticalByOrganization')">
 									<i class="icon-double-angle-right"></i> 规范性文件备案统计
 							</a></li>
-							<li><a href="error-404.html"> <i
-									class="icon-double-angle-right"></i> 404错误页面
-							</a></li>
-							<li><a href="error-500.html"> <i
-									class="icon-double-angle-right"></i> 500错误页面
-							</a></li>
-							<li><a href="grid.html"> <i
-									class="icon-double-angle-right"></i> 网格
-							</a></li>
-							<li><a href="blank.html"> <i
-									class="icon-double-angle-right"></i> 空白页面
-							</a></li>
+
 						</ul></li>
 				</ul>
 				<!-- /.nav-list -->
@@ -303,20 +274,20 @@
 						data-icon2="icon-double-angle-right"></i>
 				</div>
 				<script type="text/javascript">
-		    try {
-			ace.settings.check('sidebar', 'collapsed')
-		    } catch (e) {
-		    }
-		</script>
+					try {
+						ace.settings.check('sidebar', 'collapsed')
+					} catch (e) {
+					}
+				</script>
 			</div>
 			<div class="main-content">
 				<div class="breadcrumbs" id="breadcrumbs">
 					<script type="text/javascript">
-			try {
-			    ace.settings.check('breadcrumbs', 'fixed')
-			} catch (e) {
-			}
-		    </script>
+						try {
+							ace.settings.check('breadcrumbs', 'fixed')
+						} catch (e) {
+						}
+					</script>
 					<ul class="breadcrumb" id="breadcrumb">
 						<li><i class="icon-home home-icon"></i> <a href="#">Home</a>
 						</li>
@@ -405,111 +376,180 @@
 	<!-- /.main-container -->
 	<div th:replace="/common::javascriptFragment"></div>
 	<script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	var load, changePassword, successCallback;
-	var browserDetectUri = /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
-	require(
-		[ browserDetectUri ],
-		function($) {
-		    jQuery(function($) {
-			$('.accordion').on(
-				'hide',
-				function(e) {
-				    $(e.target).prev().children(0).addClass(
-					    'collapsed');
-				})
-			$('.accordion').on(
-				'show',
-				function(e) {
-				    $(e.target).prev().children(0).removeClass(
-					    'collapsed');
-				})
-		    });
+		/*<![CDATA[*/
+		var load, changePassword, successCallback;
+		var browserDetectUri = /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
+		require(
+				[ browserDetectUri ],
+				function($) {
+					jQuery(function($) {
+						$('.accordion').on(
+								'hide',
+								function(e) {
+									$(e.target).prev().children(0).addClass(
+											'collapsed');
+								})
+						$('.accordion').on(
+								'show',
+								function(e) {
+									$(e.target).prev().children(0).removeClass(
+											'collapsed');
+								})
+					});
+					$.ajax({//查询待办的条数
+						type : 'GET',
+						url : /*[[@{'/runtime/tasks/queryTaskCount'}]]*/'',
+						dataType : "text",
+						//data : 'oldPassword=' + $("#oldPassword").val() + '&newPassword='
+						//    + $("#newPassword").val() + '&confirmPassword='
+						//    + $("#confirmPassword").val(),
+						async : false,
+						success : function(data) {
+							obj = $.parseJSON(data);
+							$("#taskCount").text(obj.taskCount);
 
-		    load = function(title, url) {
-			$
-				.blockUI({
-				    message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h3>'
-				});
+						}
 
-			$("#page")
-				.load(
-					url + '?' + (new Date()).valueOf(),
-					function(event) {
-					    $('#breadcrumb').empty();
-					    $('#breadcrumb')
-						    .append(
-							    '<li><i class="icon-home home-icon"></i><a href="#">首页</a></li>');
-					    $('#breadcrumb').append(
-						    '<li class="active">'
-							    + title + '</li>');
-					    //$('#events').bind("evt_CandidateBadge", function(evt, data) {
-					    //	alert(event);
-					    //    alert(data);
-					    //    $("#candidateBadge").text(data.badges);
-
-					    //});
-					    var eventHandler = {
-						name : 'evt_handler'
-					    };
-					    eventHandler.handle2 = function() {
-
-						$('#page')
-							.bind(
-								'evtTasksBadge',
-								function(evt,
-									data) {
-
-								    $(
-									    "#tasksBadge")
-									    .text(
-										    data.badges);
-								});
-						$("#page")
-							.bind(
-								"evt_SaveSuccess",
-								function(evt,
-									data) {
-								    load(
-									    '所有流程',
-									    'runtime/process/userProcessIndex/admin');
-								});
-
-					    };
-
-					    //eventHandler.handle1();
-					    eventHandler.handle2();
-
-					    $('#page')
-						    .bind(
-							    'evt_CandidateBadge',
-							    function(evt, data) {
-
-								$(
-									"#candidateBadge")
-									.text(
-										data.badges);
-							    });
-
-					    $.unblockUI();
 					});
 
-		    };
+					$.ajax({//查询即将过期的条数
+						type : 'GET',
+						url : /*[[@{'/runtime/tasks/queryTaskCount'}]]*/'',
+						dataType : "text",
+						data : 'beforeDate=' + (d.getMonth() + 1) + "/"
+								+ d.getDate() + "/" + d.getFullYear(),
+						async : false,
+						success : function(data) {
+							obj = $.parseJSON(data);
+							$("#warningTaskCount").text(obj.taskCount);
+							$("#warningTaskCountNotify").text(
+									obj.taskCount + "条即将过期。");
+						}
 
-		    changePassword = function() {
-			//bootbox.alert("Hello world!");
-			create('#changePasswordDialog',/*[[@{'/user/changePassword'}]]*/'/user/changePassword'//change password dialog
-				, successCallback);//aline
-		    };
-		    successCallback = function() {
+					});
 
-			$("#changePasswordDialog").modal("hide");
+					$
+							.ajax({//查询待接收的条数
+								type : 'GET',
+								url : /*[[@{'/runtime/tasks/queryCandidateTaskCount'}]]*/'',
+								dataType : "text",
+								//data : 'oldPassword=' + $("#oldPassword").val() + '&newPassword='
+								//    + $("#newPassword").val() + '&confirmPassword='
+								//    + $("#confirmPassword").val(),
+								async : false,
+								success : function(data) {
+									obj = $.parseJSON(data);
+									//alert(obj.candidateTaskCount);
 
-		    };
+									$("#candidateTaskCount").text(
+											obj.candidateTaskCount);
+								}
 
-		});
-	/*]]>*/
-    </script>
+							});
+
+					load = function(title, url) {
+						$
+								.blockUI({
+									message : '<h3><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h3>'
+								});
+
+						$("#page")
+								.load(
+										url,
+										function(event) {
+											$('#breadcrumb').empty();
+											$('#breadcrumb')
+													.append(
+															'<li><i class="icon-home home-icon"></i><a href="#">首页</a></li>');
+											$('#breadcrumb').append(
+													'<li class="active">'
+															+ title + '</li>');
+											//$('#events').bind("evt_CandidateBadge", function(evt, data) {
+											//	alert(event);
+											//    alert(data);
+											//    $("#candidateBadge").text(data.badges);
+
+											//});
+											var eventHandler = {
+												name : 'evt_handler'
+											};
+											eventHandler.handle2 = function() {
+
+												$('#page')
+														.bind(
+																'evtTasksBadge',
+																function(evt,
+																		data) {
+
+																	$(
+																			"#tasksBadge")
+																			.text(
+																					data.badges);
+																});
+												$("#page")
+														.bind(
+																"evt_SaveSuccess",
+																function(evt,
+																		data) {
+																	load(
+																			'所有流程',
+																			'runtime/process/userProcessIndex/admin');
+																});
+
+											};
+
+											//eventHandler.handle1();
+											eventHandler.handle2();
+
+											$('#page')
+													.bind(
+															'evt_CandidateBadge',
+															function(evt, data) {
+
+																$(
+																		"#candidateBadge")
+																		.text(
+																				data.badges);
+															});
+
+											$.unblockUI();
+										});
+
+					};
+
+					var $ul = $('ul');
+					$ul.each(function(i, dom) {
+						if ($(this).hasClass("submenu"))
+							$(this).delegate('li', 'click', function() {
+								$ul.find('li').each(function(i, dom) {
+									$(this).removeClass('active');
+								});
+								$(this).addClass('active');
+							});
+					});
+					/*
+					$("li >a").click(function() {
+					if ($(this).hasClass("dropdown-toggle"))
+						return;
+
+					$(this).parent().addClass('active');
+
+					});
+					 */
+					changePassword = function() {
+						//bootbox.alert("Hello world!");
+						create('#changePasswordDialog',/*[[@{'/user/changePassword'}]]*/'/user/changePassword'//change password dialog
+										+ "", successCallback);//aline
+					};
+					successCallback = function() {
+
+						$("#changePasswordDialog").modal("hide");
+
+					};
+
+				});
+		/*]]>*/
+	</script>
 	<div tabindex="-1" class="modal fade bs-example-modal-sm"
 		id="changePasswordDialog" data-keyboard="false" data-backdrop="static"
 		style="display: none;"></div>

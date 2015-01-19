@@ -61,117 +61,117 @@
 	</div>
 	<div th:replace="/common::javascriptFragment"></div>
 	<script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function render(data) {
-	    var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"/></td><td>"
-		    + data.id
-		    + "</td><td>"
-		    + data.name
-		    + "</td><td>"
-		    + data.initiatorUser.name
-		    + "</td><td>"
-		    + getOrganization(data.initiatorUser.organizationId)
-		    + "</td><td><a href=\"javascript:loadView('"
-		    + /*[[@{'/runtime/tasks/claim/'}]]*/"1234/" //url
-		    + data.id + "')\">办理</a></td></tr>";
-	    return newRow;
-	};
-	function getOrganization(organizationId) {
-	    var organizationName;
-	    $.ajax({
-		type : 'GET',
-		url : /*[[@{'/organization/'}]]*/''//load organization  
-			+ organizationId,
-		async : false,
-		success : function(data) {
-		    organizationName = data.text;
-		}
-	    });
-	    return organizationName;
+		/*<![CDATA[*/
+		function render(data) {
+			var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"/></td><td>"
+					+ data.id
+					+ "</td><td>"
+					+ data.name
+					+ "</td><td>"
+					+ data.initiatorUser.name
+					+ "</td><td>"
+					+ getOrganization(data.initiatorUser.organizationId)
+					+ "</td><td><a href=\"javascript:loadView('"
+					+ /*[[@{'/runtime/tasks/claim/'}]]*/"1234/" //url
+					+ data.id + "')\">办理</a></td></tr>";
+			return newRow;
+		};
+		function getOrganization(organizationId) {
+			var organizationName;
+			$.ajax({
+				type : 'GET',
+				url : /*[[@{'/organization/'}]]*/''//load organization  
+						+ organizationId,
+				async : false,
+				success : function(data) {
+					organizationName = data.text;
+				}
+			});
+			return organizationName;
 
-	};
-	var browserDetectUri = /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
-	require(
-		[ browserDetectUri ],
-		function($) {
+		};
+		var browserDetectUri = /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
+		require(
+				[ browserDetectUri ],
+				function($) {
 
-		    $('#checkAll').bind('click', function() {
-			checkAll("#checkAll");
-		    });
-		    $('#yes').bind(
-			    'click',
-			    function() {
-				batchDelete(
-				/*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
-					successCallback);
-				$("#dialog-message").modal('hide');
+					$('#checkAll').bind('click', function() {
+						checkAll("#checkAll");
+					});
+					$('#yes').bind(
+							'click',
+							function() {
+								batchDelete(
+								/*[[@{'/runtime/tasks/'}]]*/"/runtime/tasks",
+										successCallback);
+								$("#dialog-message").modal('hide');
 
-			    });
-		    $('#no').bind('click', function() {
+							});
+					$('#no').bind('click', function() {
 
-			$("#dialog-message").modal('hide');
+						$("#dialog-message").modal('hide');
 
-		    });
+					});
 
-		    $('#deleteTaskBtn').bind('click', function() {
-			$("#dialog-message").modal();
+					$('#deleteTaskBtn').bind('click', function() {
+						$("#dialog-message").modal();
 
-		    });
+					});
 
-		    $("#taskList")
-			    .simpleTable(
-				    /*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
-					    + "&timestamp="
-					    + new Date().toString(), render,
-				    $("#paginatorForTaskList"), updateBadge);
+					$("#taskList")
+							.simpleTable(
+									/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc&beforeDate='+${beforeDate}+'&afterDate='+${afterDate}}]]*/""
+											+ "&timestamp="
+											+ new Date().toString(), render,
+									$("#paginatorForTaskList"), updateBadge);
 
-		});
+				});
 
-	function successCallback() {
+		function successCallback() {
 
-	    $("#taskList tr").nextAll().remove();
+			$("#taskList tr").nextAll().remove();
 
-	    $("#taskList")
-		    .simpleTable(
-			    /*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/""
-				    + "&timestamp=" + new Date().toString(),
-			    render, $("#paginatorForTaskList"), updateBadge);
+			$("#taskList")
+					.simpleTable(
+							/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc&beforeDate='+${beforeDate}+'&afterDate='+${afterDate}}]]*/""
+									+ "&timestamp=" + new Date().toString(),
+							render, $("#paginatorForTaskList"), updateBadge);
 
-	};
+		};
 
-	function updateBadge(count, start, size) {
-	    $("#listView").trigger("evtTasksBadge", {
-		badges : count
-	    });
+		function updateBadge(count, start, size) {
+			$("#listView").trigger("evtTasksBadge", {
+				badges : count
+			});
 
-	};
-	function loadView(url) {
-	    $("#view")
-		    .load(
-			    url + '?' + (new Date()).valueOf(),
-			    function(data) {
-				$("#view")
-					.bind(
-						"evtWFSuccess",
-						function(evt, data) {
-						    $("#view").hide();
-						    $("#taskList")
-							    .clearSimpleTable();
-						    $("#listView").show();
-						    $("#taskList")
-							    .simpleTable(
-								    /*[[@{'/runtime/tasks/listTasks?sort=name&order=desc'}]]*/"",
-								    render,
-								    $("#paginatorForTaskList"),
-								    updateBadge);
+		};
+		function loadView(url) {
+			$("#view")
+					.load(
+							url + '?' + (new Date()).valueOf(),
+							function(data) {
+								$("#view")
+										.bind(
+												"evtWFSuccess",
+												function(evt, data) {
+													$("#view").hide();
+													$("#taskList")
+															.clearSimpleTable();
+													$("#listView").show();
+													$("#taskList")
+															.simpleTable(
+																	/*[[@{'/runtime/tasks/listTasks?sort=name&order=desc&beforeDate='+${beforeDate}+'&afterDate='+${afterDate}}]]*/"",
+																	render,
+																	$("#paginatorForTaskList"),
+																	updateBadge);
 
-						});
-				$("#view").show();
-				$("#listView").hide();
+												});
+								$("#view").show();
+								$("#listView").hide();
 
-			    });
-	};
-	/*]]>*/
-    </script>
+							});
+		};
+		/*]]>*/
+	</script>
 </body>
 </html>
