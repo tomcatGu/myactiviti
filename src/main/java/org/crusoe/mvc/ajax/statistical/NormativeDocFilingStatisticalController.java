@@ -126,6 +126,70 @@ public class NormativeDocFilingStatisticalController {
 		return rets;
 	}
 
+	@RequestMapping(value = "analyseByContentClassification", method = RequestMethod.POST)
+	public @ResponseBody
+	Map<String, Object> statisticalByContentClassification(
+			@RequestParam("startTime") final String startTime,
+			@RequestParam("endTime") final String endTime) {
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		SimpleDateFormat dateformat = new SimpleDateFormat("MM/dd/yyyy");
+
+		List<NormativeDocFiling> ndfs = Lists.newArrayList();
+		try {
+			ndfs = ndfService.findByCreateOn(dateformat.parse(startTime),
+					dateformat.parse(endTime));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Iterator iter = ndfs.iterator();
+		HashMap<Long, Object> result = new HashMap<Long, Object>();
+		while (iter.hasNext()) {
+			HashMap<String, Object> statisticalResult;
+			NormativeDocFiling ndf = (NormativeDocFiling) iter.next();
+			if (result.containsKey(ndf.getOrganizationId())) {
+				statisticalResult = (HashMap<String, Object>) result.get(ndf
+						.getOrganizationId());
+
+			} else {
+				statisticalResult = new HashMap<String, Object>();
+				result.put(ndf.getOrganizationId(), statisticalResult);
+				statisticalResult.put("id", ndf.getOrganizationId());
+				statisticalResult.put("organizationName",
+						oService.findById(ndf.getOrganizationId()).getName());
+
+			}
+
+			Long temp = (Long) statisticalResult.get("total");
+			if (temp == null) {
+				statisticalResult.put("total", 1L);
+
+			} else {
+
+				statisticalResult.put("total", temp + 1);
+			}
+
+			if (statisticalResult.containsKey(ndf.getContentClassification())) {
+				temp = (Long) statisticalResult.get(ndf
+						.getContentClassification());
+				if (temp == null) {
+					statisticalResult.put(ndf.getContentClassification(), 1L);
+				} else {
+					statisticalResult.put(ndf.getContentClassification(),
+							temp + 1);
+				}
+
+			} else {
+				statisticalResult.put(ndf.getContentClassification(), 1L);
+
+			}
+
+		}
+		rets.put("err", false);
+		rets.put("statisticalResult", result);
+		return rets;
+	}
+
 	@RequestMapping(value = "viewNormativeDocFiling")
 	public String viewNormativeDocFiling(@RequestParam("id") Long id,
 			Model model) {
