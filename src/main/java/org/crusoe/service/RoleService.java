@@ -65,13 +65,18 @@ public class RoleService {
 		roleDao.save(role);
 	}
 
-	public Page<Role> searchRole(
-			HashMap<String, Object> paramMap, PageRequest pageRequest) {
+	public Page<Role> searchRole(HashMap<String, Object> paramMap,
+			PageRequest pageRequest) {
 		// TODO Auto-generated method stub
 		Map<String, SearchFilter> filters = SearchFilter.parse3(paramMap);
-		 Specification<Role> spec =
-		 DynamicSpecifications.bySearchFilter2(filters.values(), Role.class);
+		Specification<Role> spec = DynamicSpecifications.bySearchFilter2(
+				filters.values(), Role.class);
 
-		return roleDao.findAll(spec,pageRequest);
+		return roleDao.findAll(spec, pageRequest);
+	}
+
+	public Page<Role> searchRole(PageRequest pageRequest) {
+		// TODO Auto-generated method stub
+		return roleDao.findAll(pageRequest);
 	}
 }

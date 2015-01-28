@@ -27,7 +27,7 @@ $(document)
 									{
 										"bProcessing" : true,
 										"bServerSide" : true,
-										"sAjaxSource" : "role/getRoles",
+										"sAjaxSource" : "getRoles",
 
 										"aoColumns" : [ {
 											"mData" : "id"

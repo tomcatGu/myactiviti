@@ -226,8 +226,13 @@
 										class="pull-right badge badge-info">12</span>
 								</span>
 							</a></li>
-							<li><a href="#"
+							<li th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a href="#"
 								onClick="load('规范性文件查询','workflow/resource/normativeDocFiling/recorded')">
+									<i class="icon-list-alt"></i> <span class="menu-text">
+										规范性文件查询 </span>
+							</a></li>
+							<li><a href="#"
+								onClick="load('规范性文件查询','workflow/resource/normativeDocFiling/organizationRecorded')">
 									<i class="icon-list-alt"></i> <span class="menu-text">
 										规范性文件查询 </span>
 							</a></li>
@@ -253,14 +258,19 @@
 								href="#" onclick="load('用户列表','user/index')"> <i
 									class="icon-double-angle-right"></i> 用户列表
 							</a></li>
+							<li
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
+								href="#" onclick="load('角色列表','role/index')"> <i
+									class="icon-double-angle-right"></i> 角色列表
+							</a></li>
 						</ul></li>
 
-					<li><a href="#" class="dropdown-toggle"> <i
+					<li th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a href="#" class="dropdown-toggle" > <i
 							class="icon-dashboard"></i> <span class="menu-text">统计 </span> <b
 							class="arrow icon-angle-down"></b>
 					</a>
 						<ul class="submenu">
-							<li><a href="#"
+							<li ><a href="#"
 								onClick="load('规范性文件备案统计','workflow/resource/normativeDocFiling/statisticalByOrganization')">
 									<i class="icon-double-angle-right"></i> 规范性文件备案统计
 							</a></li>
@@ -393,13 +403,14 @@
 								function(e) {
 									$(e.target).prev().children(0).addClass(
 											'collapsed');
-								})
+								});
 						$('.accordion').on(
 								'show',
 								function(e) {
 									$(e.target).prev().children(0).removeClass(
 											'collapsed');
-								})
+								});
+						//load('待办事项','runtime/tasks/index');//init first page
 					});
 					$.ajax({//查询待办的条数
 						type : 'GET',
@@ -551,6 +562,7 @@
 						$("#changePasswordDialog").modal("hide");
 
 					};
+					
 
 				});
 		/*]]>*/

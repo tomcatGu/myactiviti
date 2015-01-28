@@ -32,26 +32,28 @@
 <script src="../../assets/js/ace-extra.min.js"
 	th:src="@{/assets/js/ace-extra.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
+	/*<![CDATA[*/
 
-    var globalUri = /*[[@{'/assets/js'}]]*/'';
-    /*]]>*/
+	var globalUri = /*[[@{'/assets/js'}]]*/'/assets/js';
+	/*]]>*/
 </script>
 </head>
 <body>
 	<div th:fragment="javascriptFragment">
+
 		<script src="../../assets/js/require.js"
 			th:src="@{/assets/js/require.js}"
 			th:attr="data-main=@{/assets/js/main}"></script>
+		<script src="../../assets/js/requireConfig.js"
+			th:src="@{/assets/js/requireConfig.js}"></script>
 		<script type="text/javascript" th:inline="javascript">
-	    /*<![CDATA[*/
+			/*<![CDATA[*/
 
-	    //This function is called once the DOM is ready.
-	    //It will be safe to query the DOM and manipulate
-	    //DOM nodes in this function.
-
-	    /*]]>*/
-	</script>
+			//This function is called once the DOM is ready.
+			//It will be safe to query the DOM and manipulate
+			//DOM nodes in this function.
+			/*]]>*/
+		</script>
 	</div>
 </body>
 </html>

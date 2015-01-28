@@ -26,7 +26,7 @@
 					    "status" : $("#status").val(),
 					    "startTime" : $("#startTime").val(),
 					    "endTime" : $("#endTime").val(),
-					    "organizationName" : organizationName
+					    "organizationName" : getOrganization()
 					});
 			function render(data) {
 			    var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
@@ -64,7 +64,7 @@
 				.ajax({
 				    type : 'GET',
 				    url : /*[[@{'/user/getOrganization/'}+${T(org.apache.shiro.SecurityUtils).subject.principal.loginName}]]*/'',
-				    async : true,
+				    async : false,
 				    success : function(data) {
 					ret=data.text;
 				    }
@@ -105,7 +105,7 @@
 								"endTime" : $(
 									"#endTime")
 									.val(),
-								"organizationName" : organizationName
+								"organizationName" : getOrganization()
 							    });
 					});
 

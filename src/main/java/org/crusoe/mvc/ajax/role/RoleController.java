@@ -14,14 +14,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.activiti.engine.impl.Direction;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.RoleDTO;
 import org.crusoe.dto.UserDTO;
 import org.crusoe.entity.Resource;
-
 import org.crusoe.entity.Role;
-
 import org.crusoe.entity.User;
 import org.crusoe.service.AccountService;
 import org.crusoe.service.RoleService;
@@ -51,6 +48,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.data.domain.Sort.Direction;
+
+import com.google.common.collect.Lists;
 
 /**
  * role管理的Controller, 使用Restful风格的Urls:
@@ -198,7 +198,7 @@ public class RoleController {
 
 		PageRequest pageRequest = new PageRequest(start / length, length,
 				new Sort(orders));
-		
+
 		Page<Role> roles = roleService.searchRole(paramMap, pageRequest);
 
 		// 将查询结果转换为一维数组
@@ -207,7 +207,7 @@ public class RoleController {
 		int i = 0;
 		while (iter.hasNext()) {
 			Role role = (Role) iter.next();
-			RoleDTO	roleDTO = new RoleDTO();
+			RoleDTO roleDTO = new RoleDTO();
 			BeanUtils.copyProperties(role, roleDTO);
 			data[i++] = roleDTO;
 
@@ -215,6 +215,42 @@ public class RoleController {
 
 		return new DataTableReturnObject(roles.getTotalElements(),
 				roles.getTotalElements(), sEcho, data);
+	}
+
+	@RequestMapping(value = "listRoles", method = RequestMethod.POST)
+	public @ResponseBody
+	Map<String, Object> listRoles(@RequestParam("sort") String sort,
+			@RequestParam("order") String order,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size) {
+
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
+				Direction.DESC, new String[] { sort }) : new Sort(
+				Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size,
+				sortRequest);
+
+		Page<Role> roles = roleService.searchRole(pageRequest);
+
+		// 将查询结果转换为一维数组
+		// Object[] data = new Object[roles.getNumberOfElements()];
+		List<RoleDTO> roleDTOs = Lists.newArrayList();
+		Iterator iter = roles.iterator();
+		int i = 0;
+		while (iter.hasNext()) {
+			Role role = (Role) iter.next();
+			RoleDTO roleDTO = new RoleDTO();
+			BeanUtils.copyProperties(role, roleDTO);
+			roleDTOs.add(roleDTO);
+			// data[i++] = roleDTO;
+
+		}
+		Map<String, Object> rets = new ConcurrentHashMap<String, Object>();
+		rets.put("count", roles.getTotalElements());
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", roleDTOs);
+		return rets;
 	}
 
 	/**

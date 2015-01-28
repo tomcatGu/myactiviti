@@ -34,55 +34,61 @@
 	</div>
 	<div th:replace="/common::javascriptFragment"></div>
 	<script type="text/javascript" th:inline="javascript">
-		/*<![CDATA[*/
-		var browserDetectUri = " http://localhost:8080"
-				+ /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
-		var simpleTable = " http://localhost:8080"
-				+ /*[[@{'/bootstrap/js/jquery.simpleTable.js'}]]*/'/bootstrap/js/jquery.simpleTable.js';
-		require([ browserDetectUri ], function($) {
-			require([ simpleTable ], function() {
-				$('#checkAll').bind('click', function() {
-					checkAll("#checkAll");
+	/*<![CDATA[*/
+		require(
+				[ 'browserDetect', 'bootstrap', 'typeaheadBs2', 'juqeryUI',
+						'jqueryUiTouchPunch', 'slimscroll',
+						'bootstrapDatepicker', 'bootstrapDatepickerCN',
+						'bootbox', 'bootstrapModal', 'bootstrapModalmanager',
+						'bootstrapPaginator', 'jqueryForm', 'jqueryValidate',
+						'json2', 'simpleTable', 'crud', 'blockUI',
+						'teninedialog', 'domReady', 'sessionTimeout', 'jstree' ],
+				function($) {
+					function successCallback() {
+
+						//$("#createUser").modal("hide");
+						$("#processList tr").nextAll().remove();
+
+						$("#processList").simpleTable(
+								"listProcessDefinitions?sort=id&order=desc", render,
+								$("#paginator"), null);
+
+					}
+					function render(data) {
+						var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+								+ data.id
+								+ "</td><td>"
+								+ data.name
+								+ "</td><td>"
+								+ data.deploymentId
+								+ "</td><td>"
+								+ data.key
+								+ "</td><td>"
+								+ data.version
+								+ "</td><td>"
+								+ data.resourceName
+								+ "</td><td>"
+								+ data.diagramResourceName
+								+ "</td><td><a href=\"./"
+					+ data.id
+					+ "/start/\"><i class='icon-play'></i></a><a href=\"finishedProcessIndex/"
+					+ data.id
+					+ "/\"><i class='icon-briefcase'></i></a><a href=\"activeProcessIndex/"
+					+ data.id
+					+ "/\"><i class='icon-tasks'></i></a></td></tr>";
+						return newRow;
+					}
+					;
+					$('#checkAll').bind('click', function() {
+						checkAll("#checkAll");
+					});
+
+					$("#processList").simpleTable(
+							"listProcessDefinitions?sort=id&order=desc",
+							render, $("#paginator"), null);
+
 				});
 
-				$("#processList").simpleTable(
-						"listProcessDefinitions?sort=id&order=desc", render,
-						$("#paginator"), null);
-			});
-		});
-		function successCallback() {
-
-			//$("#createUser").modal("hide");
-			$("#processList tr").nextAll().remove();
-
-			$("#processList").simpleTable("user/listUsers?sort=id&order=desc",
-					render, $("#paginator"), null);
-
-		}
-		function render(data) {
-			var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
-					+ data.id
-					+ "</td><td>"
-					+ data.name
-					+ "</td><td>"
-					+ data.deploymentId
-					+ "</td><td>"
-					+ data.key
-					+ "</td><td>"
-					+ data.version
-					+ "</td><td>"
-					+ data.resourceName
-					+ "</td><td>"
-					+ data.diagramResourceName
-					+ "</td><td><a href=\"./"
-				+ data.id
-				+ "/start/\"><i class='icon-play'></i></a><a href=\"finishedProcessIndex/"
-				+ data.id
-				+ "/\"><i class='icon-briefcase'></i></a><a href=\"activeProcessIndex/"
-				+ data.id
-				+ "/\"><i class='icon-tasks'></i></a></td></tr>";
-			return newRow;
-		};
 		/*]]>*/
 	</script>
 </body>

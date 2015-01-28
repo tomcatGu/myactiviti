@@ -4,41 +4,85 @@
 <title>角色列表</title>
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 
-<script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
-	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
-<script src="/bootstrap/js/bootstrap_DT.js" type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap_DT.js}"></script>
-<script src="/bootstrap/js/role.js" type="text/javascript"
-	th:src="@{/bootstrap/js/role.js}"></script>
 
-<script type="text/javascript">
-
-</script>
 </head>
 <body>
 	<div class="box span9">
-		
+
 		<table id="roleList" cellpadding="0" cellspacing="0" border="0"
 			class="table table-striped table-bordered">
 			<thead>
 				<tr>
+					<th><input type="checkbox" id="checkAll" /></th>
 					<th>Id</th>
 					<th>角色名称</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
+				<tr th:remove="all">
 					<td>1</td>
 					<td>Student01</td>
 				</tr>
-				<tr>
+				<tr th:remove="all">
 					<td>2</td>
 					<td>Student02</td>
 				</tr>
 			</tbody>
 		</table>
+		<div>
+			<ul id="paginator"></ul>
+		</div>
 		<input type="button" id="addBtn" value="增加" class="btn btn-primary" />
 	</div>
-	<div id="createRole"></div>
+	<div tabindex="-1" class="modal fade" id="createRole"
+		data-keyboard="false" data-backdrop="static" style="display: none;"></div>
+	<div th:replace="/common::javascriptFragment"></div>
+
+	<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		require(
+				[ 'browserDetect', 'bootstrap', 'typeaheadBs2', 'juqeryUI',
+						'jqueryUiTouchPunch', 'slimscroll',
+						'bootstrapDatepicker', 'bootstrapDatepickerCN',
+						'bootbox', 'bootstrapModal', 'bootstrapModalmanager',
+						'bootstrapPaginator', 'jqueryForm', 'jqueryValidate',
+						'json2', 'simpleTable', 'crud', 'blockUI',
+						'teninedialog', 'domReady', 'sessionTimeout', 'jstree' ],
+				function($) {
+					successCallback = function() {
+
+						$("#createRole").modal("hide");
+						$("#roleList tbody tr").remove();
+
+						$("#roleList")
+								.simpleTable(
+										/*[[@{'/role/listRoles?sort=id&order=desc'}]]*/""
+												+ "&dateStamp="
+												+ new Date().toString(),
+										render, $("#paginator"), null, "POST");
+
+					};
+					render = function(data) {
+						var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+								+ data.id
+								+ "</td><td>"
+								+ data.name
+								+ "</td></tr>";
+						return newRow;
+					};
+
+					$('#addBtn').bind('click', function() {
+						create('#createRole', /*[[@{'/role/create'}]]*/'' //user create page
+						, successCallback);
+					});
+
+					$("#roleList").simpleTable(
+							/*[[@{'/role/listRoles?sort=id&order=desc'}]]*/""
+									+ "&dateStamp=" + new Date().toString(),
+							render, $("#paginator"), null, "POST");
+
+				});
+		/*]]>*/
+	</script>
 </body>
 </html>

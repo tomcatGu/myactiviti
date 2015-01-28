@@ -61,9 +61,9 @@ var BrowserDetect = {
 	} ],
 };
 BrowserDetect.init();
-var url = "http://localhost:8080" + globalUri;
+//var url = "http://localhost:8080" + globalUri;
 require.config({
-	baseUrl : url,
+	//baseUrl : url,
 	paths : {
 		browserDetect : 'browserDetect',
 		domReady : 'domReady',
@@ -189,28 +189,4 @@ require.config({
 		}
 	}
 });
-if (BrowserDetect.version <= 8 && BrowserDetect.browser == "Explorer") {
-	// IE8 and below specific scripts
 
-	require([ 'html5shiv', 'respond', 'excanvas' ], function(ieScript) {
-		// ... do stuff
-		// alert('lt IE 8');
-	});
-
-	// alert($().jquery);
-
-};
-
-require([ 'browserDetect', 'bootstrap', 'typeaheadBs2', 'juqeryUI',
-		'jqueryUiTouchPunch', 'slimscroll', 'bootstrapDatepicker',
-		'bootstrapDatepickerCN', 'bootbox', 'bootstrapModal',
-		'bootstrapModalmanager', 'bootstrapPaginator', 'jqueryForm',
-		'jqueryValidate', 'json2', 'simpleTable', 'crud', 'blockUI',
-		'teninedialog', 'domReady', 'sessionTimeout', 'jstree' ], function($) {
-	//console.log($);
-	return $;
-
-});
-require([ 'aceExtra', 'aceElements', 'ace' ], function(isScript) {
-
-});

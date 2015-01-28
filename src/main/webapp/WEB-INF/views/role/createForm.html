@@ -23,61 +23,88 @@ em {
 </style>
 </head>
 <body>
-	<h1>创建角色</h1>
-	<form id="roleForm" th:object="${role}">
-		<fieldset>
-			<label for="name">角色名:</label> <input id="name" placeholder="输入角色名…"
-				type="text" th:field="*{name}" /> <input type="button"
-				id="submitButton" value="创建角色" class="btn btn-primary" />
-		</fieldset>
-		<script type="text/javascript" th:inline="javascript">
-			/*<![CDATA[*/
-			function submitForm() {
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h3>创建用户</h3>
+			</div>
+			<div class="modal-body">
+				<form id="roleForm" th:object="${role}" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="name">角色名：</label>
+						<div class="col-sm-9">
+							<input type="text" name="name" id="name"
+								class="col-xs-10 col-sm-5" th:field="*{name}" />
+						</div>
+						<div class="space-4"></div>
+					</div>
 
-				var role = $("#roleForm").serializeObject();
-				//alert(JSON.stringify(user));
-				$.postJSON(/*[[@{'/role/create'}]]*/"",
-						JSON.stringify(role), false,
-						function(data) {
-							if (data.err == "true") {
-								var errors = {};
-								for ( var obj in data) {
-									if (obj != "err")
-										errors[obj] = data[obj];
 
-								}
-								validator.showErrors(errors);
-							} else {
-								$("#dialog-message").html(
-										"Data has been saved!Its ID is:"
-												+ data.id);
-								$("#roleForm").trigger("evtSuccess", {
-									msg : "OK"
-								});
-								$("#dialog-message").dialog({
-									modal : true,
-									buttons : {
-										Ok : function() {
-											$(this).dialog("close");
+					<script type="text/javascript" th:inline="javascript">
+						/*<![CDATA[*/
+						function submitForm() {
 
-										}
-									}
+							var role = $("#roleForm").serializeObject();
+							//alert(JSON.stringify(user));
+							$
+									.postJSON(
+											/*[[@{'/role/create'}]]*/"",
+											JSON.stringify(role),
+											false,
+											function(data) {
+												if (data.err == "true") {
+													var errors = {};
+													for ( var obj in data) {
+														if (obj != "err")
+															errors[obj] = data[obj];
 
-								});
-							}
+													}
+													validator
+															.showErrors(errors);
+												} else {
+													var dialogContent = '<div tabindex="-1" class="modal fade" role="dialog"'
+									    + 'data-keyboard="false" data-backdrop="static" style="display: none;">'
+															+ '<div class="modal-dialog"><div class="modal-content"><div class="modal-header">'
+															+ '	<button type="button" class="close" data-dismiss="modal"'
+									    + 'aria-hidden="true">×</button>'
+															+ '<h3>消息</h3></div>'
+															+ '<div class="modal-body">'
+															+ '	<p>数据已经保存!其ID号为:'
+															+ data.id
+															+ '</p>'
+															+ '</div>'
+															+ '<div class="modal-footer">'
+															+ '	<button class="btn btn-warning" type="button" data-dismiss="modal"'
+									    + '>关闭</button></div></div></div></div>';
+													var dialog = $(dialogContent);
+													dialog.modal();
+													$("#roleForm").trigger(
+															"evtSuccess", {
+																msg : "OK"
+															});
 
+												}
+
+											});
+							return false;
+						};
+
+						var validator;
+						$(document).ready(function() {
+							validator = $("#roleForm").validate();
+							$("#submitButton").bind("click", submitForm);
 						});
-				return false;
-			};
-
-			var validator;
-			$(document).ready(function() {
-				validator = $("#roleForm").validate();
-				$("#submitButton").bind("click", submitForm);
-			});
-			/*]]>*/
-		</script>
-	</form>
+						/*]]>*/
+					</script>
+				</form>
+				<div class="modal-footer">
+					<button type="button" id="submitButton" class="btn btn-primary">创建角色</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="dialog-message"></div>
 </body>
 </html>
