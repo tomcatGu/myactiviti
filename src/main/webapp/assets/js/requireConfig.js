@@ -61,9 +61,9 @@ var BrowserDetect = {
 	} ],
 };
 BrowserDetect.init();
-//var url = "http://localhost:8080" + globalUri;
+var url = globalUri;
 require.config({
-	//baseUrl : url,
+	baseUrl : url,
 	paths : {
 		browserDetect : 'browserDetect',
 		domReady : 'domReady',
@@ -96,9 +96,9 @@ require.config({
 
 	},
 	shim : {
-		'jquery':{
-			
-			exports: '$'
+		'jquery' : {
+
+			exports : '$'
 		},
 
 		'bootstrap' : {
@@ -189,4 +189,3 @@ require.config({
 		}
 	}
 });
-

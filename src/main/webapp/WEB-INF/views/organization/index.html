@@ -8,7 +8,7 @@
 <body>
 	<div class="box">
 		<button type="button" class="btn btn-success btn-sm"
-			onclick="create();">
+			onclick="createNode();">
 			<i class="glyphicon glyphicon-asterisk"></i> 创建
 		</button>
 		<div id="organization" class="span3">
@@ -24,223 +24,230 @@
 	</div>
 	<div th:replace="/common::javascriptFragment"></div>
 	<script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	var jstreeUrl = /*[[@{'/jstree/jstree.min.js'}]]*/'../../jstree/jstree.min.js';
-	require(
-		[ 'browserDetect', jstreeUrl ],
-		function($) {
+		/*<![CDATA[*/
 
-		    $("#organization")
-			    .jstree(
-				    {
-					"core" : {
-					    "animation" : 0,
-					    "check_callback" : true,
-					    "themes" : {
-						"stripes" : true
-					    },
-					    'data' : {
-						'url' : function(node) {
-						    return node.id === '#' ? /*[[@{'/organization/ajaxRoots'}]]*/'ajaxRoots'
-							    : /*[[@{'/organization/ajaxChildren'}]]*/'ajaxChildren';
-						},
-						'data' : function(node) {
-						    return {
-							'id' : node.id
-						    };
-						}
-					    }
-					},
-					contextmenu : {
-					    "items" : function(node) {
-						return {
-						    "view" : {
-							label : "查看",
-							action : function(obj) {
-							    window.open("/"
-								    + node.id);
-							}
-						    },
-						    "rename" : {
-							label : "重命名",
-							action : function(obj) {
-							    $("#organization")
-								    .jstree(
-									    true)
-								    .edit(node)
-							}
-						    },
-						    "create" : {
-							label : "创建",
-							action : function() {
-							    create(node);
-							}
+		require(
+				[ 'browserDetect', 'bootstrap', 'typeaheadBs2', 'juqeryUI',
+						'jqueryUiTouchPunch', 'slimscroll',
+						'bootstrapDatepicker', 'bootstrapDatepickerCN',
+						'bootbox', 'bootstrapModal', 'bootstrapModalmanager',
+						'bootstrapPaginator', 'jqueryForm', 'jqueryValidate',
+						'json2', 'simpleTable', 'crud', 'blockUI',
+						'teninedialog', 'domReady', 'sessionTimeout', 'jstree' ],
+				function($) {
 
-						    },
-						    "delete" : {
-							label : "删除",
-							action : function() {
-							    if (confirm("真的要删除 "
-								    + node.text
-								    + "?")) {
+					$("#organization")
+							.jstree(
+									{
+										"core" : {
+											"animation" : 0,
+											"check_callback" : true,
+											"themes" : {
+												"stripes" : true
+											},
+											'data' : {
+												'url' : function(node) {
+													return node.id === '#' ? /*[[@{'/organization/ajaxRoots'}]]*/'ajaxRoots'
+															: /*[[@{'/organization/ajaxChildren'}]]*/'ajaxChildren';
+												},
+												'data' : function(node) {
+													return {
+														'id' : node.id
+													};
+												}
+											}
+										},
+										contextmenu : {
+											"items" : function(node) {
+												return {
+													"view" : {
+														label : "查看",
+														action : function(obj) {
+															window.open("/"
+																	+ node.id);
+														}
+													},
+													"rename" : {
+														label : "重命名",
+														action : function(obj) {
+															$("#organization")
+																	.jstree(
+																			true)
+																	.edit(node)
+														}
+													},
+													"create" : {
+														label : "创建",
+														action : function() {
+															createNode(node);
+														}
 
-								$(
-									"#organization")
-									.jstree(
-										"delete_node",
-										node);
+													},
+													"delete" : {
+														label : "删除",
+														action : function() {
+															if (confirm("真的要删除 "
+																	+ node.text
+																	+ "?")) {
 
-							    }
-							},
-							separator_before : true
-						    }
-						}
-					    }
-					},
-					"plugins" : [ "contextmenu", "dnd",
-						"search", "state", "types",
-						"wholerow" ]
-				    })
-			    .on(
-				    'rename_node.jstree',
-				    function(e, data) {
-					var pos;
-					var sibling = $('#organization')
-						.jstree(true).get_node(
-							data.node.parent).children;
-					for (i = 0; i < sibling.length; i++) {
-					    if (sibling[i] == data.node.id) {
-						pos = i;
-						break;
-					    }
+																$(
+																		"#organization")
+																		.jstree(
+																				"delete_node",
+																				node);
 
-					}
-					var node = {
-					    id : data.node.id,
-					    text : data.node.text,
-					    parent : data.node.parent,
-					    sequence : pos
-					};
+															}
+														},
+														separator_before : true
+													}
+												}
+											}
+										},
+										"plugins" : [ "contextmenu", "dnd",
+												"search", "state", "types",
+												"wholerow" ]
+									})
+							.on(
+									'rename_node.jstree',
+									function(e, data) {
+										var pos;
+										var sibling = $('#organization')
+												.jstree(true).get_node(
+														data.node.parent).children;
+										for (i = 0; i < sibling.length; i++) {
+											if (sibling[i] == data.node.id) {
+												pos = i;
+												break;
+											}
 
-					$
-						.postJSON(
-							/*[[@{'/organization/update'}]]*/'',
-							JSON.stringify(node),
-							false,
-							function(data) {
-							    if (data.err == "true") {
-								var errors = {};
+										}
+										var node = {
+											id : data.node.id,
+											text : data.node.text,
+											parent : data.node.parent,
+											sequence : pos
+										};
 
-								validator
-									.showErrors(errors);
-							    } else {
-								//newNode = data;
-								//newNode.id = newNode.id + "";
-							    }
+										$
+												.postJSON(
+														/*[[@{'/organization/update'}]]*/'',
+														JSON.stringify(node),
+														false,
+														function(data) {
+															if (data.err == "true") {
+																var errors = {};
+
+																validator
+																		.showErrors(errors);
+															} else {
+																//newNode = data;
+																//newNode.id = newNode.id + "";
+															}
+
+														})
+
+									})
+							.on('create_node.jstree', function(e, data) {
 
 							})
+							.on(
+									'move_node.jstree',
+									function(e, data) {
+										var pos = data.position;
+										var parent = data.parent;
 
-				    })
-			    .on('create_node.jstree', function(e, data) {
+										var sibling = $('#organization')
+												.jstree(true).get_node(
+														data.node.parent).children;
+										for (i = 0; i < sibling.length; i++) {
+											var n = $('#organization').jstree(
+													true).get_node(sibling[i]);
+											var node = {
+												id : n.id,
+												text : n.text,
+												parent : parent,
+												sequence : i
+											};
+											$
+													.postJSON(
+															/*[[@{'/organization/update'}]]*/'',
+															JSON
+																	.stringify(node),
+															false,
+															function(data) {
+																if (data.err == "true") {
+																	var errors = {};
 
-			    })
-			    .on(
-				    'move_node.jstree',
-				    function(e, data) {
-					var pos = data.position;
-					var parent = data.parent;
+																	validator
+																			.showErrors(errors);
+																} else {
+																	//newNode = data;
+																	//newNode.id = newNode.id + "";
+																}
 
-					var sibling = $('#organization')
-						.jstree(true).get_node(
-							data.node.parent).children;
-					for (i = 0; i < sibling.length; i++) {
-					    var n = $('#organization').jstree(
-						    true).get_node(sibling[i]);
-					    var node = {
-						id : n.id,
-						text : n.text,
-						parent : parent,
-						sequence : i
-					    };
-					    $
-						    .postJSON(
-							    /*[[@{'/organization/update'}]]*/'',
-							    JSON
-								    .stringify(node),
-							    false,
-							    function(data) {
-								if (data.err == "true") {
-								    var errors = {};
+															});
+										}
 
-								    validator
-									    .showErrors(errors);
-								} else {
-								    //newNode = data;
-								    //newNode.id = newNode.id + "";
+									})
+							.on('delete_node.jstree', function(e, data) {
+								var ref = $('#organization').jstree(true);
+								var selected = [ data.node.id ];
+								$.ajax({
+									type : "POST",
+									url : /*[[@{'/organization/'}]]*/'',
+									data : {
+										_method : 'DELETE',
+										items : selected
+									},
+									// contentType : 'application/json',
+									dataType : 'json',
+									success : function(data) {
+
+										//successCallback();
+
+									}
+								});
+							});
+
+					createNode = function(parent) {
+
+						var ref = $('#organization').jstree(true), sel = ref
+								.get_selected();
+						if (!sel.length) {
+							sel = null
+						} else
+							sel = sel[0];
+						var newNode = {
+							text : "name",
+							parent : sel
+						};
+
+						$.postJSON(/*[[@{'/organization/create'}]]*/'', JSON
+								.stringify(newNode), false, function(data) {
+							if (data.err == "true") {
+								var errors = {};
+								for ( var obj in data) {
+									if (obj != "err")
+										errors[obj] = data[obj];
+
 								}
+								validator.showErrors(errors);
+							} else {
+								newNode = data;
+								//newNode.id = newNode.id + "";
+							}
 
-							    });
-					}
+						});
+						var n = ref.create_node(sel, newNode, "last", null,
+								true);
+						var node = ref.get_node(n);
+						//ref.set_id(ref.get_node(n), n);
+						ref.edit(n);
 
-				    })
-			    .on('delete_node.jstree', function(e, data) {
-				var ref = $('#organization').jstree(true);
-				var selected = [ data.node.id ];
-				$.ajax({
-				    type : "POST",
-				    url : /*[[@{'/organization/'}]]*/'',
-				    data : {
-					_method : 'DELETE',
-					items : selected
-				    },
-				    // contentType : 'application/json',
-				    dataType : 'json',
-				    success : function(data) {
-
-					//successCallback();
-
-				    }
+					};
 				});
-			    });
+		/*]]>*/
+	</script>
 
-		    function create(parent) {
-
-			var ref = $('#organization').jstree(true), sel = ref
-				.get_selected();
-			if (!sel.length) {
-			    sel = null
-			} else
-			    sel = sel[0];
-			var newNode = {
-			    text : "name",
-			    parent : sel
-			};
-
-			$.postJSON(/*[[@{'/organization/create'}]]*/'', JSON
-				.stringify(newNode), false, function(data) {
-			    if (data.err == "true") {
-				var errors = {};
-				for ( var obj in data) {
-				    if (obj != "err")
-					errors[obj] = data[obj];
-
-				}
-				validator.showErrors(errors);
-			    } else {
-				newNode = data;
-				//newNode.id = newNode.id + "";
-			    }
-
-			});
-			var n = ref.create_node(sel, newNode, "last", null,
-				true);
-			var node = ref.get_node(n);
-			//ref.set_id(ref.get_node(n), n);
-			ref.edit(n);
-
-		    }
-		});
-	/*]]>*/
-    </script>
 </body>
 </html>

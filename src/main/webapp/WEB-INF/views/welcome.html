@@ -226,7 +226,9 @@
 										class="pull-right badge badge-info">12</span>
 								</span>
 							</a></li>
-							<li th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a href="#"
+							<li
+								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
+								href="#"
 								onClick="load('规范性文件查询','workflow/resource/normativeDocFiling/recorded')">
 									<i class="icon-list-alt"></i> <span class="menu-text">
 										规范性文件查询 </span>
@@ -265,12 +267,14 @@
 							</a></li>
 						</ul></li>
 
-					<li th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a href="#" class="dropdown-toggle" > <i
-							class="icon-dashboard"></i> <span class="menu-text">统计 </span> <b
+					<li
+						th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}"><a
+						href="#" class="dropdown-toggle"> <i class="icon-dashboard"></i>
+							<span class="menu-text">统计 </span> <b
 							class="arrow icon-angle-down"></b>
 					</a>
 						<ul class="submenu">
-							<li ><a href="#"
+							<li><a href="#"
 								onClick="load('规范性文件备案统计','workflow/resource/normativeDocFiling/statisticalByOrganization')">
 									<i class="icon-double-angle-right"></i> 规范性文件备案统计
 							</a></li>
@@ -395,7 +399,13 @@
 		var load, changePassword, successCallback;
 		var browserDetectUri = /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
 		require(
-				[ browserDetectUri ],
+				[ 'browserDetect', 'bootstrap', 'typeaheadBs2', 'juqeryUI',
+						'jqueryUiTouchPunch', 'slimscroll',
+						'bootstrapDatepicker', 'bootstrapDatepickerCN',
+						'bootbox', 'bootstrapModal', 'bootstrapModalmanager',
+						'bootstrapPaginator', 'jqueryForm', 'jqueryValidate',
+						'json2', 'simpleTable', 'crud', 'blockUI',
+						'teninedialog', 'domReady', 'sessionTimeout', 'jstree' ],
 				function($) {
 					jQuery(function($) {
 						$('.accordion').on(
@@ -554,15 +564,15 @@
 					 */
 					changePassword = function() {
 						//bootbox.alert("Hello world!");
-						create('#changePasswordDialog',/*[[@{'/user/changePassword'}]]*/'/user/changePassword'//change password dialog
-										+ "", successCallback);//aline
+						create('#changePasswordDialog',/*[[@{'/user/changePassword'}]]*/
+						+''//change password dialog
+								+ "", successCallback);//aline
 					};
 					successCallback = function() {
 
 						$("#changePasswordDialog").modal("hide");
 
 					};
-					
 
 				});
 		/*]]>*/
