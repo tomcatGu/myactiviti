@@ -32,9 +32,10 @@
 	<div>
 		<ul id="paginator"></ul>
 	</div>
+
 	<div th:replace="/common::javascriptFragment"></div>
 	<script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
+		/*<![CDATA[*/
 		require(
 				[ 'browserDetect', 'bootstrap', 'typeaheadBs2', 'juqeryUI',
 						'jqueryUiTouchPunch', 'slimscroll',
@@ -50,8 +51,8 @@
 						$("#processList tr").nextAll().remove();
 
 						$("#processList").simpleTable(
-								"listProcessDefinitions?sort=id&order=desc", render,
-								$("#paginator"), null);
+								"listProcessDefinitions?sort=id&order=desc",
+								render, $("#paginator"), null);
 
 					}
 					function render(data) {

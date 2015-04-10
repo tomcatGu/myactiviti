@@ -2,59 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <title>模型列表</title>
-<script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" /></td><td>" + data.id
-				+ "</td><td>" + data.name + "</td><td>" + data.version
-				+ "</td><td><a href=\""
-				+ /*[[@{'/workflow/deploy/'}]]*/"1234/" //url
-				+ data.id + "\">部署</a>&nbsp<a href=\""
-				+ /*[[@{'/modeler/service/editor?id='}]]*/"1234/" //url
-				+ data.id + "\">修改</a></td></tr>";
-		return newRow;
-	};
-	$(document)
-			.ready(
-					function() {
 
-						$("#modelList")
-								.simpleTable(
-										/*[[@{'/workflow/listModels?sort=name&order=desc'}]]*/""
-												+ "&timestamp="
-												+ new Date().toString(),
-										render, $("#paginatorForModeList"),
-										null);
-
-					});
-	function loadView(url) {
-		$("#view")
-				.load(
-						url + '?' + (new Date()).valueOf(),
-						function(data) {
-							$("#view")
-									.bind(
-											"evtWFSuccess",
-											function(evt, data) {
-												$("#view").hide();
-												$("#taskList")
-														.clearSimpleTable();
-												$("#listView").show();
-												$("#taskList")
-														.simpleTable(
-																/*[[@{'//workflow/listModels?sort=name&order=desc'}]]*/"",
-																render,
-																$("#paginatorForModeList"),
-																null);
-
-											});
-							$("#view").show();
-							$("#listView").hide();
-
-						});
-	};
-	/*]]>*/
-</script>
 <style>
 .hover {
 	background-color: #cccc00;
@@ -77,12 +25,87 @@
 			<tbody>
 			</tbody>
 		</table>
-		<div id="paginatorForModeList"></div>
+		<div>
+			<ul id="paginatorForTaskList"></ul>
+		</div>
+
 		<input type="button" id="deleteBtn" value="删除选中"
 			class="btn btn-danger" />
 	</div>
 	<div id="view"></div>
 	<div tabindex="-1" class="modal hide fade" id="selectUsers"
 		data-keyboard="false" data-backdrop="static"></div>
+
+	<div th:replace="/common::javascriptFragment"></div>
+	<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		require(
+				[ 'browserDetect', 'bootstrap', 'typeaheadBs2', 'juqeryUI',
+						'jqueryUiTouchPunch', 'slimscroll',
+						'bootstrapDatepicker', 'bootstrapDatepickerCN',
+						'bootbox', 'bootstrapModal', 'bootstrapModalmanager',
+						'bootstrapPaginator', 'jqueryForm', 'jqueryValidate',
+						'json2', 'simpleTable', 'crud', 'blockUI',
+						'teninedialog', 'domReady', 'sessionTimeout', 'jstree' ],
+				function($) {
+					function render(data) {
+						var newRow = "<tr><td><input type=\"checkbox\" /></td><td>"
+								+ data.id
+								+ "</td><td>"
+								+ data.name
+								+ "</td><td>"
+								+ data.version
+								+ "</td><td><a href=\""
+				+ /*[[@{'/workflow/deploy/'}]]*/"1234/" //url
+				+ data.id + "\">部署</a>&nbsp<a href=\""
+								+ /*[[@{'/modeler/service/editor?id='}]]*/"1234/" //url
+								+ data.id + "\">修改</a></td></tr>";
+						return newRow;
+					}
+					;
+					//$(document)
+					//		.ready(
+					///				function() {
+
+					$("#modelList")
+							.simpleTable(
+									/*[[@{'/workflow/listModels?sort=name&order=desc'}]]*/""
+											+ "&timestamp="
+											+ new Date().toString(), render,
+									$("#paginatorForModeList"), null);
+
+					//				});
+					function loadView(url) {
+						$("#view")
+								.load(
+										url + '?' + (new Date()).valueOf(),
+										function(data) {
+											$("#view")
+													.bind(
+															"evtWFSuccess",
+															function(evt, data) {
+																$("#view")
+																		.hide();
+																$("#taskList")
+																		.clearSimpleTable();
+																$("#listView")
+																		.show();
+																$("#taskList")
+																		.simpleTable(
+																				/*[[@{'//workflow/listModels?sort=name&order=desc'}]]*/"",
+																				render,
+																				$("#paginatorForModeList"),
+																				null);
+
+															});
+											$("#view").show();
+											$("#listView").hide();
+
+										});
+					}
+					;
+				});
+		/*]]>*/
+	</script>
 </body>
 </html>

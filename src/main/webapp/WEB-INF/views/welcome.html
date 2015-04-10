@@ -397,7 +397,7 @@
 	<script type="text/javascript" th:inline="javascript">
 		/*<![CDATA[*/
 		var load, changePassword, successCallback;
-		var browserDetectUri = /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
+		//var browserDetectUri = /*[[@{'/assets/js/browserDetect.js'}]]*/'/assets/js/browserDetect.js';
 		require(
 				[ 'browserDetect', 'bootstrap', 'typeaheadBs2', 'juqeryUI',
 						'jqueryUiTouchPunch', 'slimscroll',
@@ -538,6 +538,15 @@
 																				data.badges);
 															});
 
+											$('#page')
+													.bind(
+															'evtWFSuccess',
+															function(evt, data) {
+
+																load('待办事项',
+																		'runtime/tasks/index');
+															});
+
 											$.unblockUI();
 										});
 
@@ -553,20 +562,17 @@
 								$(this).addClass('active');
 							});
 					});
-					/*
-					$("li >a").click(function() {
-					if ($(this).hasClass("dropdown-toggle"))
-						return;
-
-					$(this).parent().addClass('active');
-
-					});
-					 */
+					
+					//初始化首页面
+					load('待办事项',
+					'runtime/tasks/index');
+					
+					
 					changePassword = function() {
 						//bootbox.alert("Hello world!");
 						create('#changePasswordDialog',/*[[@{'/user/changePassword'}]]*/
-						+''//change password dialog
-								+ "", successCallback);//aline
+								+''//change password dialog
+										+ "", successCallback);//aline
 					};
 					successCallback = function() {
 

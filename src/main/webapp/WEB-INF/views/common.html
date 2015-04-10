@@ -35,7 +35,7 @@
 	/*<![CDATA[*/
 
 	//var globalUri= /*[[@{'/assets/js'}]]*/'/assets/js';
-	var globalUri = /*[['http://'+${#httpServletRequest.getLocalAddr()}+':'+${#httpServletRequest.getLocalPort()}+${#httpServletRequest.getRequestURI()+'assets/js'}]]*/'/assets/js';
+	var globalUri = /*[['http://'+${#httpServletRequest.getLocalAddr()}+':'+${#httpServletRequest.getLocalPort()}+@{'/assets/js'}]]*/'/assets/js';
 	/*]]>*/
 </script>
 </head>
@@ -57,4 +57,4 @@
 		</script>
 	</div>
 </body>
-</html>                                                                                                     
+</html>
