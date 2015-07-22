@@ -90,7 +90,7 @@ public class ProcessController extends BaseServiceImpl {
 
 		List<Object> objects = new ArrayList<Object>();
 		List<ProcessDefinition> processDefinitionList = repositoryService
-				.createProcessDefinitionQuery().listPage(start, size);
+				.createProcessDefinitionQuery().orderByProcessDefinitionVersion().desc().listPage(start, size);
 
 		for (ProcessDefinition processDefinition : processDefinitionList) {
 			ProcessDefinitionDTO pdDTO = new ProcessDefinitionDTO();
