@@ -424,7 +424,10 @@ public class StatisticalController {
 			StatisticalSheet ss = sheetList.next();
 			HashMap<String, Object> aSheet = new HashMap<String, Object>();
 			aSheet.put("id", ss.getId());
-			aSheet.put("name", ss.getLoginName());
+
+			aSheet.put("name",
+					accountService.findUserByLoginName(ss.getLoginName())
+							.getName());
 			aSheet.put("fillingDate", ss.getFillingDate());
 			aSheet.put("state", ss.getStatus());
 			sheets.put(ss.getId().toString(), aSheet);
