@@ -42,7 +42,20 @@
 			<id>Activiti</id>
 			<url>https://maven.alfresco.com/nexus/content/groups/public</url>
 		</repository>
-
+		<repository>
+			<id>jboss-public-repository-group</id>
+			<name>JBoss Public Maven Repository Group</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
 
 
 	</repositories>
@@ -136,7 +149,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		<!--  -->
+		<!-- -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
@@ -147,7 +160,7 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.9</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
@@ -424,6 +437,32 @@
 			<artifactId>poi-scratchpad</artifactId>
 			<version>3.10-FINAL</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate.ogm</groupId>
+			<artifactId>hibernate-ogm-bom</artifactId>
+			<version>4.1.2.Final</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-core</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-spring</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-groovy</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-mina</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
 	</dependencies>
 
 	<modules>
@@ -441,5 +480,6 @@
 		<activiti.version>5.15.1</activiti.version>
 		<lucene.version>4.7.0</lucene.version>
 		<aspectj.version>1.7.4</aspectj.version>
+		<camel.version>2.15.3</camel.version>
 	</properties>
 </project>
