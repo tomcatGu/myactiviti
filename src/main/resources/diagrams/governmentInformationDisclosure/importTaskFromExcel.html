@@ -1,0 +1,121 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+
+<title>从excel文件导入信息公开任务</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+
+		$('#checkAll').bind('click', function() {
+			checkAll("#checkAll");
+		});
+
+	});
+	var options = {
+		beforeSend : function() {
+			$("#progress").show();
+			//clear everything
+			$("#bar").width('0%');
+			$("#message").html("");
+			$("#percent").html("0%");
+		},
+		uploadProgress : function(event, position, total, percentComplete) {
+			$("#bar").width(percentComplete + '%');
+			$("#percent").html(percentComplete + '%');
+
+		},
+		success : function() {
+			$("#bar").width('100%');
+			$("#percent").html('100%');
+
+		},
+		complete : function(response) {
+			var ret = JSON.parse(response.responseText);
+			$("#message").html("<font color='green'>" + ret.msg + "</font>");
+			var rows = ret.eRows;
+			console.log(rows);
+			for (var r = 0; r < rows.length; r++) {
+				var row = rows[r];
+				console.log(row);
+				var tr = $("<tr></tr>");
+				var selectTd = "<td><input type=\"checkbox\" name=\"selectFlag\" value=\""+row.rowNumber +"\"></input></td>"
+
+				if (r == 0) {
+
+					tr.append($("<td></td>"));
+				} else {
+					tr.append(selectTd);
+				}
+
+				var td = $("<td>" + row.rowNumber + "</td>");
+				tr.append(td);
+
+				for (i = 0; i < row.cells.length; i++) {
+					var td = $("<td>" + row.cells[i] + "</td>");
+					tr.append(td);
+
+				}
+				$("#taskTable").append(tr);
+
+			}
+
+		},
+		error : function() {
+			$("#message").html("<font color='red'> 错误: 不能上传文件,请检查文件！</font>");
+		}
+	};
+	$("#importTaskForm").ajaxForm(options);
+	/*]]>*/
+</script>
+
+</head>
+<body>
+	<div class="span9">
+		<div class="row">
+			<form th:action="@{/statistical/importTask}" method="post"
+				enctype="multipart/form-data" id="importTaskForm">
+
+
+
+				<div class="span3">
+					<input type="file" name="file" />
+				</div>
+				<div class="span1">
+					<input type="submit" value="从excel文件读取信息公开任务" class="btn btn-info" />
+
+				</div>
+				<div class="span9">
+					<div id="progress" class="span5">
+						<div id="bar"></div>
+						<div id="percent">0%</div>
+					</div>
+					<div id="message" class="span4"></div>
+				</div>
+
+
+
+			</form>
+		</div>
+		<div>
+			<input type="checkbox" id="checkAll">全选</input> <input type="button"
+				id="improtBtn" value="导入选中" class="btn btn-info" />
+
+		</div>
+		<div>
+			<table id="taskTable" cellpadding="0" cellspacing="0" border="0"
+				class="table table-striped table-bordered">
+
+
+			</table>
+
+
+
+
+		</div>
+
+	</div>
+</body>
+</html>

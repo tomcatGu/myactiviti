@@ -40,10 +40,15 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.crusoe.dto.excel.ExcelRow;
 import org.crusoe.dto.governmentInformationDisclosure.DatumDTO;
 import org.crusoe.dto.governmentInformationDisclosure.GovernmentInformationDisclosureDTO;
 import org.crusoe.entity.User;
@@ -101,19 +106,16 @@ public class StatisticalController {
 	protected DatumService datumService;
 
 	@RequestMapping(value = "counter/{processDefinitionId}", method = RequestMethod.GET)
-	public @ResponseBody
-	HashMap<String, Object> counter(@PathVariable String processDefinitionId,
+	public @ResponseBody HashMap<String, Object> counter(@PathVariable String processDefinitionId,
 			@RequestParam("statisticalRange") String statisticalRange,
-			@RequestParam("separatorChars") String separatorChars,
-			HttpServletRequest request, HttpServletResponse response) {
+			@RequestParam("separatorChars") String separatorChars, HttpServletRequest request,
+			HttpServletResponse response) {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
-		List<HistoricProcessInstance> processes = historyService
-				.createHistoricProcessInstanceQuery()
+		List<HistoricProcessInstance> processes = historyService.createHistoricProcessInstanceQuery()
 				.processDefinitionId(processDefinitionId).list();
 		HashMap<String, Integer> statisticalResult = new HashMap<String, Integer>();
 		for (HistoricProcessInstance process : processes) {
-			List<HistoricVariableInstance> variables = historyService
-					.createHistoricVariableInstanceQuery()
+			List<HistoricVariableInstance> variables = historyService.createHistoricVariableInstanceQuery()
 					.processInstanceId(process.getId()).list();
 			for (HistoricVariableInstance variable : variables) {
 				if (variable.getVariableName().equals(statisticalRange)) {
@@ -121,8 +123,7 @@ public class StatisticalController {
 					String[] keys = StringUtils.split(val, separatorChars);
 					for (String key : keys) {
 						if (statisticalResult.containsKey(key)) {
-							statisticalResult.put(key,
-									statisticalResult.get(key) + 1);
+							statisticalResult.put(key, statisticalResult.get(key) + 1);
 						} else {
 							statisticalResult.put(key, 1);
 						}
@@ -138,10 +139,8 @@ public class StatisticalController {
 	}
 
 	@RequestMapping(value = "countergid", method = RequestMethod.GET)
-	public @ResponseBody
-	HashMap<String, Object> counterGovernmentInformationDisclosure(
-			@RequestParam("startTime") final String startTime,
-			@RequestParam("endTime") final String endTime,
+	public @ResponseBody HashMap<String, Object> counterGovernmentInformationDisclosure(
+			@RequestParam("startTime") final String startTime, @RequestParam("endTime") final String endTime,
 			HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 
@@ -151,20 +150,15 @@ public class StatisticalController {
 					// Date endTime;
 
 					@Override
-					public Predicate toPredicate(
-							Root<GovernmentInformationDisclosure> root,
-							CriteriaQuery<?> query, CriteriaBuilder builder) {
+					public Predicate toPredicate(Root<GovernmentInformationDisclosure> root, CriteriaQuery<?> query,
+							CriteriaBuilder builder) {
 						// TODO Auto-generated method stub
-						SimpleDateFormat dateformat1 = new SimpleDateFormat(
-								"yyyy-MM-dd HH:mm:ss");
+						SimpleDateFormat dateformat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 						Predicate predicate = builder.conjunction();
-						List<Expression<Boolean>> expressions = predicate
-								.getExpressions();
+						List<Expression<Boolean>> expressions = predicate.getExpressions();
 
 						try {
-							expressions.add(builder.between(
-									root.<Date> get("createTime"),
-									dateformat1.parse(startTime),
+							expressions.add(builder.between(root.<Date> get("createTime"), dateformat1.parse(startTime),
 									dateformat1.parse(endTime)));
 						} catch (ParseException e) {
 							// TODO Auto-generated catch block
@@ -185,8 +179,7 @@ public class StatisticalController {
 			if (organizationName == null)
 				break;
 			if (result.containsKey(organizationName)) {
-				statisticalResult = (HashMap<String, Integer>) result
-						.get(organizationName);
+				statisticalResult = (HashMap<String, Integer>) result.get(organizationName);
 			} else {
 				statisticalResult = new HashMap<String, Integer>();
 				result.put(organizationName, statisticalResult);
@@ -202,8 +195,7 @@ public class StatisticalController {
 
 			String formOfResponse = gid.getFormOfResponse();
 			if (statisticalResult.containsKey(formOfResponse)) {
-				statisticalResult.put(formOfResponse,
-						statisticalResult.get(formOfResponse) + 1);
+				statisticalResult.put(formOfResponse, statisticalResult.get(formOfResponse) + 1);
 			} else {
 				if (formOfResponse != null)
 					statisticalResult.put(formOfResponse, 1);
@@ -218,49 +210,35 @@ public class StatisticalController {
 	}
 
 	@RequestMapping(value = "analyseByApplicant", method = RequestMethod.POST)
-	public @ResponseBody
-	HashMap<String, Object> analyseByApplicant(
-			@RequestParam("sort") String sort,
-			@RequestParam("order") String order,
-			@RequestParam(value = "start", defaultValue = "0") int start,
+	public @ResponseBody HashMap<String, Object> analyseByApplicant(@RequestParam("sort") String sort,
+			@RequestParam("order") String order, @RequestParam(value = "start", defaultValue = "0") int start,
 			@RequestParam(value = "size", defaultValue = "10") int size,
 			@RequestParam("applicantName") final String applicantName,
-			@RequestParam("startTime") final String startTime,
-			@RequestParam("endTime") final String endTime,
+			@RequestParam("startTime") final String startTime, @RequestParam("endTime") final String endTime,
 			HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
-		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
-				Direction.DESC, new String[] { sort }) : new Sort(
-				Direction.ASC, new String[] { sort });
-		PageRequest pageRequest = new PageRequest(start / size, size,
-				sortRequest);
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(Direction.DESC, new String[] { sort })
+				: new Sort(Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size, sortRequest);
 		Specification<GovernmentInformationDisclosure> spec = new Specification<GovernmentInformationDisclosure>() {
 			// Date startTime;
 			// Date endTime;
 
 			@Override
-			public Predicate toPredicate(
-					Root<GovernmentInformationDisclosure> root,
-					CriteriaQuery<?> query, CriteriaBuilder builder) {
+			public Predicate toPredicate(Root<GovernmentInformationDisclosure> root, CriteriaQuery<?> query,
+					CriteriaBuilder builder) {
 				// TODO Auto-generated method stub
-				SimpleDateFormat dateformat1 = new SimpleDateFormat(
-						"yyyy-MM-dd HH:mm:ss");
+				SimpleDateFormat dateformat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Predicate predicate = builder.conjunction();
-				List<Expression<Boolean>> expressions = predicate
-						.getExpressions();
+				List<Expression<Boolean>> expressions = predicate.getExpressions();
 
 				try {
 					if (!startTime.equals(endTime)) {
-						expressions.add(builder.between(
-								root.<Date> get("createTime"),
-								dateformat1.parse(startTime),
+						expressions.add(builder.between(root.<Date> get("createTime"), dateformat1.parse(startTime),
 								dateformat1.parse(endTime)));
 					}
 					if (!applicantName.isEmpty()) {
-						expressions
-								.add(builder.equal(
-										root.<String> get("citizenName"),
-										applicantName));
+						expressions.add(builder.equal(root.<String> get("citizenName"), applicantName));
 					}
 
 				} catch (ParseException e) {
@@ -272,8 +250,7 @@ public class StatisticalController {
 			}
 		};
 
-		Page<GovernmentInformationDisclosure> gids = gidDao.findAll(spec,
-				pageRequest);
+		Page<GovernmentInformationDisclosure> gids = gidDao.findAll(spec, pageRequest);
 		List<GovernmentInformationDisclosureDTO> result = Lists.newArrayList();
 
 		for (GovernmentInformationDisclosure gid : gids) {
@@ -302,9 +279,100 @@ public class StatisticalController {
 		return rets;
 	}
 
+	@RequestMapping(value = "importTask", method = RequestMethod.POST)
+	public @ResponseBody HashMap<String, Object> importTaskFromExcel(
+			@RequestParam(value = "file", required = false) MultipartFile file) {
+
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		List<Object> rows = new ArrayList<Object>();
+
+		try {
+			InputStream fileInputStream = file.getInputStream();
+			BufferedInputStream bis = new BufferedInputStream(fileInputStream);
+			HSSFWorkbook hssfWorkbook = new HSSFWorkbook(bis);
+
+			// 解析公式结果
+			FormulaEvaluator evaluator = hssfWorkbook.getCreationHelper().createFormulaEvaluator();
+
+			// 循环工作表Sheet
+			for (int numSheet = 0; numSheet < hssfWorkbook.getNumberOfSheets(); numSheet++) {
+				HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);
+				if (hssfSheet == null) {
+					continue;
+				}
+
+				// 循环行Row
+				Iterator<Row> iter = hssfSheet.iterator();
+				while (iter.hasNext()) {
+					HSSFRow hssfRow = (HSSFRow) iter.next();
+					// HSSFRow hssfRow = hssfSheet.getRow(rowNum);
+					if (hssfRow == null) {
+						continue;
+					}
+
+					ExcelRow eRow = new ExcelRow();
+					eRow.setRowNumber(hssfRow.getRowNum());
+
+					short minColIx = hssfRow.getFirstCellNum();
+					short maxColIx = hssfRow.getLastCellNum();
+					for (short colIx = minColIx; colIx <= maxColIx; colIx++) {
+						Cell cell = hssfRow.getCell(new Integer(colIx));
+						CellValue cellValue = evaluator.evaluate(cell);
+
+						if (cellValue == null) {
+							eRow.getCells().add("");
+							continue;
+						}
+						// 经过公式解析，最后只存在Boolean、Numeric和String三种数据类型，此外就是Error了
+						// 其余数据类型，根据官方文档，完全可以忽略http://poi.apache.org/spreadsheet/eval.html
+						switch (cellValue.getCellType()) {
+						case Cell.CELL_TYPE_BOOLEAN:
+							// sb.append(SEPARATOR +
+							// cellValue.getBooleanValue());
+							eRow.getCells().add(String.valueOf(cellValue.getBooleanValue()));
+							break;
+						case Cell.CELL_TYPE_NUMERIC:
+							// 这里的日期类型会被转换为数字类型，需要判别后区分处理
+
+							if (DateUtil.isCellDateFormatted(cell)) {
+								eRow.getCells().add(cell.getDateCellValue().toString());
+							} else {
+								eRow.getCells().add(String.valueOf(cellValue.getNumberValue()));
+							}
+
+							break;
+						case Cell.CELL_TYPE_STRING:
+							// sb.append(SEPARATOR +
+							// cellValue.getStringValue());
+							eRow.getCells().add(cellValue.getStringValue());
+							break;
+						case Cell.CELL_TYPE_FORMULA:
+							break;
+						case Cell.CELL_TYPE_BLANK:
+							eRow.getCells().add("");
+							break;
+						case Cell.CELL_TYPE_ERROR:
+							break;
+						default:
+							break;
+						}
+
+					}
+					rows.add(eRow);
+				}
+
+			}
+
+		} catch (Exception e) {
+			rets.put("msg", "upload failed.");
+		}
+		rets.put("msg", "read successfully.");
+		rets.put("eRows", rows);
+		return rets;
+	}
+
 	@RequestMapping(value = "import", method = RequestMethod.POST)
-	public @ResponseBody
-	HashMap<String, Object> importFromExcel(
+	public @ResponseBody HashMap<String, Object> importFromExcel(
 			@RequestParam(value = "file", required = false) MultipartFile file) {
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		try {
@@ -377,57 +445,45 @@ public class StatisticalController {
 	}
 
 	@RequestMapping(value = "isExists/{annual}/{username}")
-	public @ResponseBody
-	boolean isExists(@PathVariable("annual") String annual,
+	public @ResponseBody boolean isExists(@PathVariable("annual") String annual,
 			@PathVariable("username") String username) {
 		return statisticalSheetService.isExists(annual, username);
 
 	}
 
 	@RequestMapping(value = "total/{annual}/{status}")
-	public String countAnnualStatistical(@PathVariable("annual") String annual,
-			@PathVariable("status") String status, Model model) {
-		model.addAttribute("result",
-				statisticalSheetService.total(annual, status));
+	public String countAnnualStatistical(@PathVariable("annual") String annual, @PathVariable("status") String status,
+			Model model) {
+		model.addAttribute("result", statisticalSheetService.total(annual, status));
 
 		return "governmentInformationDisclosure/statisticalSheet.readonly";
 	}
 
 	@RequestMapping(value = "viewSheet/{id}")
-	public String countAnnualStatistical(@PathVariable("id") String id,
-			Model model) {
-		model.addAttribute("result",
-				statisticalSheetService.findById(Long.parseLong(id)));
+	public String countAnnualStatistical(@PathVariable("id") String id, Model model) {
+		model.addAttribute("result", statisticalSheetService.findById(Long.parseLong(id)));
 
 		return "governmentInformationDisclosure/statisticalSheet.readonly";
 	}
 
 	@RequestMapping(value = "listSheet/{annual}/{status}", method = RequestMethod.POST)
-	public @ResponseBody
-	Map<String, Object> listSheet(@PathVariable("annual") String annual,
-			@PathVariable("status") String status,
-			@RequestParam("sort") String sort,
-			@RequestParam("order") String order,
-			@RequestParam(value = "start", defaultValue = "0") int start,
-			@RequestParam(value = "size", defaultValue = "10") int size,
-			Model model) {
+	public @ResponseBody Map<String, Object> listSheet(@PathVariable("annual") String annual,
+			@PathVariable("status") String status, @RequestParam("sort") String sort,
+			@RequestParam("order") String order, @RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size, Model model) {
 		HashMap<String, Object> sheets = new HashMap<String, Object>();
 
-		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
-				Direction.DESC, new String[] { sort }) : new Sort(
-				Direction.ASC, new String[] { sort });
-		PageRequest pageRequest = new PageRequest(start / size, size,
-				sortRequest);
-		Iterator<StatisticalSheet> sheetList = statisticalSheetService
-				.findByAnnualAndStatus(annual, status, pageRequest);
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(Direction.DESC, new String[] { sort })
+				: new Sort(Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size, sortRequest);
+		Iterator<StatisticalSheet> sheetList = statisticalSheetService.findByAnnualAndStatus(annual, status,
+				pageRequest);
 		while (sheetList.hasNext()) {
 			StatisticalSheet ss = sheetList.next();
 			HashMap<String, Object> aSheet = new HashMap<String, Object>();
 			aSheet.put("id", ss.getId());
 
-			aSheet.put("name",
-					accountService.findUserByLoginName(ss.getLoginName())
-							.getName());
+			aSheet.put("name", accountService.findUserByLoginName(ss.getLoginName()).getName());
 			aSheet.put("fillingDate", ss.getFillingDate());
 			aSheet.put("state", ss.getStatus());
 			sheets.put(ss.getId().toString(), aSheet);
@@ -437,19 +493,14 @@ public class StatisticalController {
 	}
 
 	@RequestMapping(value = "listDatum", method = RequestMethod.POST)
-	public @ResponseBody
-	Map<String, Object> listDatum(@RequestParam("sort") String sort,
-			@RequestParam("order") String order,
-			@RequestParam(value = "start", defaultValue = "0") int start,
-			@RequestParam(value = "size", defaultValue = "10") int size,
-			Model model) {
+	public @ResponseBody Map<String, Object> listDatum(@RequestParam("sort") String sort,
+			@RequestParam("order") String order, @RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "size", defaultValue = "10") int size, Model model) {
 
 		List<Object> result = Lists.newArrayList();
-		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
-				Direction.DESC, new String[] { sort }) : new Sort(
-				Direction.ASC, new String[] { sort });
-		PageRequest pageRequest = new PageRequest(start / size, size,
-				sortRequest);
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(Direction.DESC, new String[] { sort })
+				: new Sort(Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size, sortRequest);
 		Iterator iter = datumService.findAll(pageRequest).iterator();
 		while (iter.hasNext()) {
 			Datum datum = (Datum) iter.next();
@@ -458,9 +509,8 @@ public class StatisticalController {
 			datumDTO.setTitle(datum.getTitle());
 			datumDTO.setContent(datum.getSubstance());
 			datumDTO.setAuthor(datum.getAuthor());
-			HistoricTaskInstance task = historyService
-					.createHistoricTaskInstanceQuery()
-					.taskId(datum.getTaskId()).singleResult();
+			HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery().taskId(datum.getTaskId())
+					.singleResult();
 			datumDTO.setTaskId(task.getId());
 			datumDTO.setProcessDefinitionId(task.getProcessDefinitionId());
 			datumDTO.setTaskDefinitionKey(task.getTaskDefinitionKey());
@@ -479,10 +529,8 @@ public class StatisticalController {
 	}
 
 	@RequestMapping(value = "datums", method = RequestMethod.DELETE)
-	public @ResponseBody
-	Map<String, ? extends Object> batchDelete(
-			@RequestParam(value = "items[]", required = false) String[] items)
-			throws Exception {
+	public @ResponseBody Map<String, ? extends Object> batchDelete(
+			@RequestParam(value = "items[]", required = false) String[] items) throws Exception {
 
 		for (int i = 0; i < items.length; i++) {
 			datumService.delete(Long.parseLong(items[i]));

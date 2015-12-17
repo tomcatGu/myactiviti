@@ -165,7 +165,7 @@ $("#time").text(new Date().toLocaleTimeString());
 						<ul class="nav nav-list bs-docs-sidenav affix-top">
 							<li class="nav-header">依申请公开</li>
 							<li><a href="#"
-								onClick="load('创建','runtime/process/governmentInformationDisclosure:67:167611/startAndRedirectToTaskForm')">创建<i
+								onClick="load('创建','runtime/process/governmentInformationDisclosure:1:30/startAndRedirectToTaskForm')">创建<i
 									class="icon-chevron-right"></i></a></li>
 							<li><a href="#"
 								onClick="load('添加资料库','runtime/process/datumProcess:21:152627/startAndRedirectToTaskForm')"
@@ -191,6 +191,9 @@ $("#time").text(new Date().toLocaleTimeString());
 								onClick="load('所有依申请公开','runtime/process/allProcessIndex/')">所有依申请公开</a></li>
 							<li><a href="#"
 								onClick="load('填报年度统计表','runtime/process/annualStatistics:105:105231/startAndRedirectToTaskForm')">填报年度统计表<i
+									class="icon-chevron-right"></i></a></li>
+							<li><a href="#"
+								onClick="load('从excel导入','workflow/resource/governmentInformationDisclosure/importTaskFromExcel')">从excel导入<i
 									class="icon-chevron-right"></i></a></li>
 							<li class="nav-header"
 								th:if="${T(org.apache.shiro.SecurityUtils).subject.hasRole('ROLE_ADMIN')==true}">用户管理</li>
