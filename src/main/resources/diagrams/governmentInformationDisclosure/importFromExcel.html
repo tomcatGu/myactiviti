@@ -1,0 +1,19 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+
+<title>从excel文件导入信息公开任务</title>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+
+
+
+<body>
+	<form th:action="@{/statistical/import}" method="post"
+		enctype="multipart/form-data">
+		<input type="file" name="file" /> <input type="submit"
+			value="从excel文件导入信息公开数据" />
+			
+			
+	</form>
+</body>
+</html>
