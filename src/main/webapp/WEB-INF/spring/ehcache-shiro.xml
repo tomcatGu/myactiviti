@@ -4,8 +4,8 @@
 		timeToLiveSeconds对象处于缓存状态的最多秒数 -->
 	<diskStore path="java.io.tmpdir" />
 	<defaultCache maxElementsInMemory="1000" eternal="false"
-		timeToIdleSeconds="300" timeToLiveSeconds="120" overflowToDisk="true" />
-	<cache name="shiroAuthorizationCache" maxElementsInMemory="300"
-		eternal="false" timeToLiveSeconds="360" timeToIdleSeconds="360" overflowToDisk="false" />
+		timeToIdleSeconds="30000" timeToLiveSeconds="12000" overflowToDisk="true" />
+	<cache name="shiroAuthorizationCache" maxElementsInMemory="30000"
+		eternal="false" timeToLiveSeconds="36000" timeToIdleSeconds="36000" overflowToDisk="false" />
 
 </ehcache>

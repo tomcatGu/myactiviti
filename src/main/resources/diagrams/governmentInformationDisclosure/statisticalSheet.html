@@ -60,7 +60,11 @@
 	});
 	$(document).ready(function() {
 		$('#submitBtn').click(function() {
- var isExists=false;
+			
+			var annual=/*[[${annual}]]*/"";
+			
+			if(""==annual){
+ 			var isExists=false;
 			$.ajax({
 				type : 'GET',
 				url : /*[[@{'/statistical/isExists/'}]]*/"" //
@@ -83,7 +87,8 @@
 				}
 
 			});
-if(isExists) return;
+				if(isExists) return;
+			}
 			var jS = $('#sheetParent').getSheet();
 
 			for (i = 2; i <= 65; i++) {
@@ -127,7 +132,9 @@ if(isExists) return;
 		});
 
 		$('#saveBtn').click(function() {
+			var annual=/*[[${annual}]]*/"";
 			
+			if(""==annual){
 			 var isExists=false;
 				$.ajax({
 					type : 'GET',
@@ -148,8 +155,9 @@ if(isExists) return;
 					}
 
 				});
-	if(isExists) return;
-			
+				
+			if(isExists) return;
+			}
 			
 			for (i = 2; i <= 65; i++) {
 				var v = $('#sheetParent').getCellValue(i, 3, 0)
@@ -204,24 +212,49 @@ if(isExists) return;
 	<div class="span9">
 		<form id="myForm">
 			<label class="control-label text-info">年度：</label> <select
-				name="annual" id="annual">
-				<option value="2014">2014</option>
-				<option value="2015q1" selected="selected">2015年第一季度</option>
-				<option value="2015q2">2015年第二季度</option>
-				<option value="2015q3">2015年第三季度</option>
-				<option value="2015q4">2015年第四季度</option>
-				<option value="2016q1">2016年第一季度</option>
-				<option value="2016q2">2016年第二季度</option>
-				<option value="2016q3">2016年第三季度</option>
-				<option value="2016q4">2016年第四季度</option>
-				<option value="2017q1">2017年第一季度</option>
-				<option value="2017q2">2017年第二季度</option>
-				<option value="2017q3">2017年第三季度</option>
-				<option value="2017q4">2017年第四季度</option>
-				<option value="2018q1">2018年第一季度</option>
-				<option value="2018q2">2018年第二季度</option>
-				<option value="2018q3">2018年第三季度</option>
-				<option value="2018q4">2018年第四季度</option>
+				name="annual" id="annual" class="selectpicker">
+				<optgroup label="2015年">
+					<option value="2015q1" th:selected="${annual=='2015q1'}">2015年第一季度</option>
+					<option value="2015q2" th:selected="${annual=='2015q2'}">2015年第二季度</option>
+					<option value="2015q3" th:selected="${annual=='2015q3'}">2015年第三季度</option>
+					<option value="2015q4" th:selected="${annual=='2015q4'}">2015年第四季度</option>
+					<option value="2015" th:selected="${annual=='2015'}">2015年度</option>
+				</optgroup>
+				<optgroup label="2016年">
+					<option value="2016q1" th:selected="${annual=='2016q1'}">2016年第一季度</option>
+					<option value="2016q2" th:selected="${annual=='2016q2'}">2016年第二季度</option>
+					<option value="2016q3" th:selected="${annual=='2016q3'}">2016年第三季度</option>
+					<option value="2016q4" th:selected="${annual=='2016q4'}">2016年第四季度</option>
+					<option value="2016" th:selected="${annual=='2016'}">2016年度</option>
+				</optgroup>
+				<optgroup label="2017年">
+					<option value="2017q1" th:selected="${annual=='2017q1'}">2017年第一季度</option>
+					<option value="2017q2" th:selected="${annual=='2017q2'}">2017年第二季度</option>
+					<option value="2017q3" th:selected="${annual=='2017q3'}">2017年第三季度</option>
+					<option value="2017q4" th:selected="${annual=='2017q4'}">2017年第四季度</option>
+					<option value="2017" th:selected="${annual=='2017'}">2017年度</option>
+				</optgroup>
+				<optgroup label="2018年">
+					<option value="2018q1" th:selected="${annual=='2018q1'}">2018年第一季度</option>
+					<option value="2018q2" th:selected="${annual=='2018q2'}">2018年第二季度</option>
+					<option value="2018q3" th:selected="${annual=='2018q3'}">2018年第三季度</option>
+					<option value="2018q4" th:selected="${annual=='2018q4'}">2018年第四季度</option>
+					<option value="2018" th:selected="${annual=='2018'}">2018年度</option>
+				</optgroup>
+				<optgroup label="2019年">
+					<option value="2019q1" th:selected="${annual=='2019q1'}">2019年第一季度</option>
+					<option value="2019q2" th:selected="${annual=='2019q2'}">2019年第二季度</option>
+					<option value="2019q3" th:selected="${annual=='2019q3'}">2019年第三季度</option>
+					<option value="2019q4" th:selected="${annual=='2019q4'}">2019年第四季度</option>
+					<option value="2019" th:selected="${annual=='2019'}">2019年度</option>
+				</optgroup>
+				<optgroup label="2020年">
+					<option value="2020q1" th:selected="${annual=='2020q1'}">2020年第一季度</option>
+					<option value="2020q2" th:selected="${annual=='2020q2'}">2020年第二季度</option>
+					<option value="2020q3" th:selected="${annual=='2020q3'}">2020年第三季度</option>
+					<option value="2020q4" th:selected="${annual=='2020q4'}">2020年第四季度</option>
+					<option value="2020" th:selected="${annual=='2020'}">2020年度</option>
+				</optgroup>
 			</select>
 			<div id="sheetParent" style="height: 450px;">
 				<table>
@@ -287,7 +320,57 @@ if(isExists) return;
 						<td data-celltype="number">0</td>
 					</tr>
 					<tr>
-						<td data-uneditable="true">二、回应解读情况情况</td>
+						<td data-uneditable="true">二、重点领域公开情况</td>
+						<td data-uneditable="true"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td data-uneditable="true">（一）、行政权力清单公开数</td>
+						<td data-uneditable="true">条</td>
+						<td data-celltype="number">0</td>
+					</tr>
+					<tr>
+						<td data-uneditable="true">（二）、财政资金信息公开数</td>
+						<td data-uneditable="true">条</td>
+						<td data-celltype="number">0</td>
+					</tr>
+					<tr>
+						<td data-uneditable="true">（三）、公共资源配置信息公开数</td>
+						<td data-uneditable="true">条</td>
+						<td data-celltype="number">0</td>
+					</tr>
+					<tr>
+						<td data-uneditable="true">（四）、重大建设项目信息公开数</td>
+						<td data-uneditable="true">条</td>
+						<td data-celltype="number">0</td>
+					</tr>
+					<tr>
+						<td data-uneditable="true">（五）、公共服务信息公开数</td>
+						<td data-uneditable="true">条</td>
+						<td data-celltype="number">0</td>
+					</tr>
+					<tr>
+						<td data-uneditable="true">（六）、国有企业信息公开数</td>
+						<td data-uneditable="true">条</td>
+						<td data-celltype="number">0</td>
+					</tr>
+					<tr>
+						<td data-uneditable="true">（七）、环境保护信息公开数</td>
+						<td data-uneditable="true">条</td>
+						<td data-celltype="number">0</td>
+					</tr>
+					<tr>
+						<td data-uneditable="true">（八）、食品药品安全信息数</td>
+						<td data-uneditable="true">条</td>
+						<td data-celltype="number">0</td>
+					</tr>
+					<tr>
+						<td data-uneditable="true">（九）、社会组织、中介机构信息公开数</td>
+						<td data-uneditable="true">条</td>
+						<td data-celltype="number">0</td>
+					</tr>
+					<tr>
+						<td data-uneditable="true">三、回应解读情况情况</td>
 						<td data-uneditable="true"></td>
 						<td></td>
 					</tr>
@@ -338,7 +421,7 @@ if(isExists) return;
 						<td data-celltype="number">0</td>
 					</tr>
 					<tr>
-						<td data-uneditable="true">三、依申请公开情况</td>
+						<td data-uneditable="true">四、依申请公开情况</td>
 						<td data-uneditable="true"></td>
 						<td></td>
 					</tr>
@@ -453,7 +536,7 @@ if(isExists) return;
 						<td data-celltype="number">0</td>
 					</tr>
 					<tr>
-						<td data-uneditable="true">四、行政复议数量</td>
+						<td data-uneditable="true">五、行政复议数量</td>
 						<td data-uneditable="true"></td>
 						<td data-celltype="number">0</td>
 					</tr>
@@ -473,7 +556,7 @@ if(isExists) return;
 						<td data-celltype="number">0</td>
 					</tr>
 					<tr>
-						<td data-uneditable="true">五、行政诉讼数量</td>
+						<td data-uneditable="true">六、行政诉讼数量</td>
 						<td data-uneditable="true"></td>
 						<td data-celltype="number">0</td>
 					</tr>
@@ -493,17 +576,17 @@ if(isExists) return;
 						<td data-celltype="number">0</td>
 					</tr>
 					<tr>
-						<td data-uneditable="true">六、举报投诉数量</td>
+						<td data-uneditable="true">七、举报投诉数量</td>
 						<td data-uneditable="true">件</td>
 						<td data-celltype="number">0</td>
 					</tr>
 					<tr>
-						<td data-uneditable="true">七、依申请公开信息收取的费用</td>
+						<td data-uneditable="true">八、依申请公开信息收取的费用</td>
 						<td data-uneditable="true">万元</td>
 						<td data-celltype="number">0</td>
 					</tr>
 					<tr>
-						<td data-uneditable="true">八、机构建设和保障经费情况</td>
+						<td data-uneditable="true">九、机构建设和保障经费情况</td>
 						<td data-uneditable="true"></td>
 						<td data-celltype="number">0</td>
 					</tr>
@@ -539,7 +622,7 @@ if(isExists) return;
 						<td data-celltype="number">0</td>
 					</tr>
 					<tr>
-						<td data-uneditable="true">九、政府信息公开会议和培训情况</td>
+						<td data-uneditable="true">十、政府信息公开会议和培训情况</td>
 						<td data-uneditable="true"></td>
 						<td data-celltype="number">0</td>
 					</tr>

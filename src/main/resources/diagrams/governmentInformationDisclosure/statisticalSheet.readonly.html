@@ -27,31 +27,31 @@
 	type="text/javascript"
 	th:src="@{/jQuery.sheet-3.1/plugins/jquery.sheet.dts.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    // $('#sheetParent').sheet.preLoad('../../../../jQuery.sheet-3.1/');
-    $(function() {
+	/*<![CDATA[*/
+	// $('#sheetParent').sheet.preLoad('../../../../jQuery.sheet-3.1/');
+	$(function() {
 
-	//$dtsValue.val(JSON.stringify(json));
-	//$('#sheetFromDts').html(tables).height($('#sheet').height()).sheet();
-	var sheetData = /*[[${result==null?'':result.statisticalData}]]*/"";
-	if (sheetData == '') {
-	    $('#sheetParent').sheet();
-	} else {
-	    tables = $.sheet.dts.toTables.xml(sheetData);
-	    tables.find("td").each(function(i) {
-		var td = $(this);
-		if (td.attr("data-celltype") != "number") {
-		    td.attr("data-uneditable", true);
+		//$dtsValue.val(JSON.stringify(json));
+		//$('#sheetFromDts').html(tables).height($('#sheet').height()).sheet();
+		var sheetData = /*[[${result==null?'':result.statisticalData}]]*/"";
+		if (sheetData == '') {
+			$('#sheetParent').sheet();
+		} else {
+			tables = $.sheet.dts.toTables.xml(sheetData);
+			tables.find("td").each(function(i) {
+				var td = $(this);
+				if (td.attr("data-celltype") != "number") {
+					td.attr("data-uneditable", true);
 
+				}
+			});
+			$('#sheetParent').html(tables).sheet();
 		}
-	    });
-	    $('#sheetParent').html(tables).sheet();
-	}
-    });
-    $(document).ready(function() {
+	});
+	$(document).ready(function() {
 
-    });
-    /*]]>*/
+	});
+	/*]]>*/
 </script>
 <style>
 .hover {
@@ -127,7 +127,57 @@
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
 				<tr>
-					<td data-uneditable="true">二、回应解读情况情况</td>
+					<td data-uneditable="true">二、重点领域公开情况</td>
+					<td data-uneditable="true"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td data-uneditable="true">（一）、行政权力清单公开数</td>
+					<td data-uneditable="true">条</td>
+					<td data-uneditable="true" data-celltype="number">0</td>
+				</tr>
+				<tr>
+					<td data-uneditable="true">（二）、财政资金信息公开数</td>
+					<td data-uneditable="true">条</td>
+					<td data-uneditable="true" data-celltype="number">0</td>
+				</tr>
+				<tr>
+					<td data-uneditable="true">（三）、公共资源配置信息公开数</td>
+					<td data-uneditable="true">条</td>
+					<td data-uneditable="true" data-celltype="number">0</td>
+				</tr>
+				<tr>
+					<td data-uneditable="true">（四）、重大建设项目信息公开数</td>
+					<td data-uneditable="true">条</td>
+					<td data-uneditable="true" data-celltype="number">0</td>
+				</tr>
+				<tr>
+					<td data-uneditable="true">（五）、公共服务信息公开数</td>
+					<td data-uneditable="true">条</td>
+					<td data-uneditable="true" data-celltype="number">0</td>
+				</tr>
+				<tr>
+					<td data-uneditable="true">（六）、国有企业信息公开数</td>
+					<td data-uneditable="true">条</td>
+					<td data-uneditable="true" data-celltype="number">0</td>
+				</tr>
+				<tr>
+					<td data-uneditable="true">（七）、环境保护信息公开数</td>
+					<td data-uneditable="true">条</td>
+					<td data-uneditable="true" data-celltype="number">0</td>
+				</tr>
+				<tr>
+					<td data-uneditable="true">（八）、食品药品安全信息数</td>
+					<td data-uneditable="true">条</td>
+					<td data-uneditable="true" data-celltype="number">0</td>
+				</tr>
+				<tr>
+					<td data-uneditable="true">（九）、社会组织、中介机构信息公开数</td>
+					<td data-uneditable="true">条</td>
+					<td data-uneditable="true" data-celltype="number">0</td>
+				</tr>
+				<tr>
+					<td data-uneditable="true">三、回应解读情况情况</td>
 					<td data-uneditable="true"></td>
 					<td data-uneditable="true"></td>
 				</tr>
@@ -178,7 +228,7 @@
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
 				<tr>
-					<td data-uneditable="true">三、依申请公开情况</td>
+					<td data-uneditable="true">四、依申请公开情况</td>
 					<td data-uneditable="true"></td>
 					<td data-uneditable="true"></td>
 				</tr>
@@ -293,7 +343,7 @@
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
 				<tr>
-					<td data-uneditable="true">四、行政复议数量</td>
+					<td data-uneditable="true">五、行政复议数量</td>
 					<td data-uneditable="true"></td>
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
@@ -313,7 +363,7 @@
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
 				<tr>
-					<td data-uneditable="true">五、行政诉讼数量</td>
+					<td data-uneditable="true">六、行政诉讼数量</td>
 					<td data-uneditable="true"></td>
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
@@ -333,17 +383,17 @@
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
 				<tr>
-					<td data-uneditable="true">六、举报投诉数量</td>
+					<td data-uneditable="true">七、举报投诉数量</td>
 					<td data-uneditable="true">件</td>
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
 				<tr>
-					<td data-uneditable="true">七、依申请公开信息收取的费用</td>
+					<td data-uneditable="true">八、依申请公开信息收取的费用</td>
 					<td data-uneditable="true">万元</td>
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
 				<tr>
-					<td data-uneditable="true">八、机构建设和保障经费情况</td>
+					<td data-uneditable="true">九、机构建设和保障经费情况</td>
 					<td data-uneditable="true"></td>
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
@@ -379,7 +429,7 @@
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>
 				<tr>
-					<td data-uneditable="true">九、政府信息公开会议和培训情况</td>
+					<td data-uneditable="true">十、政府信息公开会议和培训情况</td>
 					<td data-uneditable="true"></td>
 					<td data-uneditable="true" data-celltype="number">0</td>
 				</tr>

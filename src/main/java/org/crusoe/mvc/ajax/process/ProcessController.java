@@ -145,6 +145,29 @@ public class ProcessController extends BaseServiceImpl {
 
 		}
 	}
+	
+	@RequiresUser
+	@RequestMapping(value = "{key}/startWithLastestVersion", method = RequestMethod.GET)
+	public void startWithLastestVersion(@PathVariable String key, Model model) {
+		RuntimeService runtimeService = processEngine.getRuntimeService();
+		ProcessDefinition processDefinition = repositoryService
+				.createProcessDefinitionQuery()
+				.processDefinitionKey(key)
+				.latestVersion().singleResult();
+				
+
+		// runtimeService.addUserIdentityLink(
+		// processInstance.getProcessInstanceId(), "admin", "candidate");
+
+		Subject currentUser = SecurityUtils.getSubject();
+		if (currentUser.getPrincipal() != null)
+			identityService.setAuthenticatedUserId(currentUser.getPrincipal()
+					.toString());
+		
+		runtimeService.startProcessInstanceByKey(key);
+		
+
+	}
 
 	@RequiresUser
 	@RequestMapping(value = "{id}/startAndRedirectToTaskForm", method = RequestMethod.GET)

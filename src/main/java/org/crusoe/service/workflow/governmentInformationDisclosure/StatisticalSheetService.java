@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -61,8 +63,7 @@ public class StatisticalSheetService {
 	@Autowired
 	private StatisticalSheetDao statisticalSheetDao;
 
-	public StatisticalSheet save(String createUserName, String annual,
-			String statisticalData, String status) {
+	public StatisticalSheet save(String createUserName, String annual, String statisticalData, String status) {
 		StatisticalSheet sheet = new StatisticalSheet();
 		sheet.setLoginName(createUserName);
 		sheet.setAnnual(annual);
@@ -73,13 +74,12 @@ public class StatisticalSheetService {
 	}
 
 	public boolean isExists(String annual, String createUserName) {
-		return !statisticalSheetDao.findByAnnualAndLoginName(annual,
-				createUserName).isEmpty();
+		return !statisticalSheetDao.findByAnnualAndLoginName(annual, createUserName).isEmpty();
 
 	}
 
-	public StatisticalSheet update(StatisticalSheet ss, String createUserName,
-			String annual, String statisticalData, String status) {
+	public StatisticalSheet update(StatisticalSheet ss, String createUserName, String annual, String statisticalData,
+			String status) {
 		StatisticalSheet sheet = new StatisticalSheet();
 		sheet.setId(ss.getId());
 		sheet.setLoginName(createUserName);
@@ -90,9 +90,28 @@ public class StatisticalSheetService {
 		return statisticalSheetDao.save(sheet);
 	}
 
+	public boolean isFloat(String str) {
+		Pattern p = null;
+		Matcher m = null;
+		String floatPattern = "^([0-9]{1}[.]{0,1}[0-9]*)$";
+		p = Pattern.compile(floatPattern);
+		m = p.matcher(str);
+		boolean b = m.matches();
+		if (b)
+			return true;
+		else
+			return false;
+	}
+
 	public StatisticalSheet total(String annual, String status) {
-		List<StatisticalSheet> sheets = statisticalSheetDao
-				.findByAnnualAndStatus(annual, status);
+		String[] annualList = annual.split(",");
+		List<StatisticalSheet> sheets = new ArrayList<StatisticalSheet>();
+		for (int i = 0; i < annualList.length; i++) {
+
+			sheets.addAll(statisticalSheetDao.findByAnnualAndStatus(annualList[i], status));
+
+		}
+
 		Iterator iter = sheets.iterator();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
@@ -110,9 +129,8 @@ public class StatisticalSheetService {
 			if (srcSheet == null) {
 				srcSheet = dstSheet;
 				try {
-					srcDocument = db.parse(new InputSource(
-							new ByteArrayInputStream(srcSheet
-									.getStatisticalData().getBytes("utf-8"))));
+					srcDocument = db.parse(
+							new InputSource(new ByteArrayInputStream(srcSheet.getStatisticalData().getBytes("utf-8"))));
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -127,100 +145,98 @@ public class StatisticalSheetService {
 			}
 			try {
 
-				Document dstDocument = db.parse(new InputSource(
-						new ByteArrayInputStream(dstSheet.getStatisticalData()
-								.getBytes("utf-8"))));
+				Document dstDocument = db.parse(
+						new InputSource(new ByteArrayInputStream(dstSheet.getStatisticalData().getBytes("utf-8"))));
 
 				XPathFactory xFactory = XPathFactory.newInstance();
 				XPath xpath = xFactory.newXPath();
-				XPathExpression expr = xpath
-						.compile("//spreadsheets/spreadsheet/rows/row");
+				XPathExpression expr = xpath.compile("//spreadsheets/spreadsheet/rows/row");
 
-				Object dstResult = expr.evaluate(dstDocument,
-						XPathConstants.NODESET);
+				Object dstResult = expr.evaluate(dstDocument, XPathConstants.NODESET);
 				NodeList nodes = (NodeList) dstResult;
 				// System.out.println(nodes.getLength());
 				for (int i = 0; i < nodes.getLength(); i++) {
 					// System.out.println(nodes.item(i).getNodeValue());
 					xpath.reset();
-					String pathStr = "//spreadsheets/spreadsheet/rows/row["
-							+ (i + 1) + "]/columns/column[3]/value";
+					String pathStr = "//spreadsheets/spreadsheet/rows/row[" + (i + 1) + "]/columns/column[3]/value";
 					XPathExpression exprCol = xpath.compile(pathStr);
-					Integer dstVal = -1;
+					Number dstVal = null;
+
 					try {
-						dstVal = Integer.parseInt((String) exprCol.evaluate(
-								dstDocument, XPathConstants.STRING));
+						String dstValStr = (String) exprCol.evaluate(dstDocument, XPathConstants.STRING);
+						if (isFloat(dstValStr))
+							dstVal = Float.parseFloat(dstValStr);
+						else
+							dstVal = Integer.parseInt(dstValStr);
 					} catch (NumberFormatException nfe) {
 					}
-					Integer srcVal = -1;
+					Number srcVal = null;
 					try {
-						srcVal = Integer.parseInt((String) exprCol.evaluate(
-								srcDocument, XPathConstants.STRING));
+						String srcValStr = (String) exprCol.evaluate(srcDocument, XPathConstants.STRING);
+						if (isFloat(srcValStr))
+							srcVal = Float.parseFloat(srcValStr);
+						else
+							srcVal = Integer.parseInt(srcValStr);
 					} catch (NumberFormatException nfe) {
 					}
 
-					if (dstVal != -1 || srcVal != -1) {
+					if (dstVal != null || srcVal != null) {
 						xpath.reset();
-						XPathExpression exprColNode = xpath
-								.compile("//spreadsheets/spreadsheet/rows/row["
-										+ (i + 1)
-										+ "]/columns/column[3]/cellType");
+						XPathExpression exprColNode = xpath.compile(
+								"//spreadsheets/spreadsheet/rows/row[" + (i + 1) + "]/columns/column[3]/cellType");
 						XPathExpression exprColNodeParent = xpath
-								.compile("//spreadsheets/spreadsheet/rows/row["
-										+ (i + 1) + "]/columns/column[3]");
-						Object srcResult = exprColNode.evaluate(srcDocument,
-								XPathConstants.NODESET);
+								.compile("//spreadsheets/spreadsheet/rows/row[" + (i + 1) + "]/columns/column[3]");
+						Object srcResult = exprColNode.evaluate(srcDocument, XPathConstants.NODESET);
 						NodeList srcNodes = (NodeList) srcResult;
-						NodeList srcParentNodes = (NodeList) exprColNodeParent
-								.evaluate(srcDocument, XPathConstants.NODESET);
+						NodeList srcParentNodes = (NodeList) exprColNodeParent.evaluate(srcDocument,
+								XPathConstants.NODESET);
 						System.out.println("srcnode=" + srcNodes.getLength());
 						if (srcNodes.getLength() == 0) {// there was not
 														// a celltype
 							// node if only 3 elements
-							Element cellTypeNode = srcDocument
-									.createElement("cellType");
+							Element cellTypeNode = srcDocument.createElement("cellType");
 							cellTypeNode.setNodeValue("number");
 							srcParentNodes.item(0).appendChild(cellTypeNode);
 
 						}
 						xpath.reset();
-						exprColNode = xpath
-								.compile("//spreadsheets/spreadsheet/rows/row["
-										+ (i + 1) + "]/columns/column[3]/value");
-						srcResult = exprColNode.evaluate(srcDocument,
-								XPathConstants.NODESET);
+						exprColNode = xpath.compile(
+								"//spreadsheets/spreadsheet/rows/row[" + (i + 1) + "]/columns/column[3]/value");
+						srcResult = exprColNode.evaluate(srcDocument, XPathConstants.NODESET);
 						srcNodes = (NodeList) srcResult;
 
 						// srcNodes.item(arg0)
 						System.out.println("srcnode=" + srcNodes.getLength());
-						if (dstVal == -1)
+						if (dstVal == null)
 							dstVal = 0;
-						if (srcVal == -1)
+						if (srcVal == null)
 							srcVal = 0;
+
+						Number addResult;
+						if (isFloat(dstVal.toString()) || isFloat(srcVal.toString())) {
+							addResult = dstVal.floatValue() + srcVal.floatValue();
+
+						} else {
+							addResult = dstVal.intValue() + srcVal.intValue();
+						}
+
 						if (srcNodes.getLength() == 0) {
 							exprColNodeParent = xpath
-									.compile("//spreadsheets/spreadsheet/rows/row["
-											+ (i + 1) + "]/columns/column[3]");
-							srcParentNodes = (NodeList) exprColNodeParent
-									.evaluate(srcDocument,
-											XPathConstants.NODESET);
-							Element valueNode = srcDocument
-									.createElement("value");
-							Text text = srcDocument.createTextNode(String
-									.valueOf(dstVal.intValue()
-											+ srcVal.intValue()));
+									.compile("//spreadsheets/spreadsheet/rows/row[" + (i + 1) + "]/columns/column[3]");
+							srcParentNodes = (NodeList) exprColNodeParent.evaluate(srcDocument, XPathConstants.NODESET);
+							Element valueNode = srcDocument.createElement("value");
+							Text text = srcDocument.createTextNode(addResult.toString());
 
 							valueNode.appendChild(text);
 							srcParentNodes.item(0).appendChild(valueNode);
 
 						} else {
 							Node node = srcNodes.item(0);
-							int total = dstVal.intValue() + srcVal.intValue();
-							node.getFirstChild().setNodeValue(
-									String.valueOf(total));
+							// int total = dstVal.intValue() +
+							// srcVal.intValue();
+							node.getFirstChild().setNodeValue(addResult.toString());
 
-							System.out.println(node.getNodeName()
-									+ node.getNodeValue());
+							System.out.println(node.getNodeName() + node.getNodeValue());
 
 						}
 					}
@@ -253,8 +269,7 @@ public class StatisticalSheetService {
 		StringWriter buffer = new StringWriter();
 		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 		try {
-			transformer.transform(new DOMSource(srcDocument), new StreamResult(
-					buffer));
+			transformer.transform(new DOMSource(srcDocument), new StreamResult(buffer));
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
@@ -272,11 +287,9 @@ public class StatisticalSheetService {
 		statisticalSheetDao.delete(id);
 	}
 
-	public Iterator<StatisticalSheet> findByAnnualAndStatus(String annual,
-			String status, PageRequest pageRequest) {
+	public Iterator<StatisticalSheet> findByAnnualAndStatus(String annual, String status, PageRequest pageRequest) {
 		// TODO Auto-generated method stub
-		Page<StatisticalSheet> ss = statisticalSheetDao.findByAnnualAndStatus(
-				annual, status, pageRequest);
+		Page<StatisticalSheet> ss = statisticalSheetDao.findByAnnualAndStatus(annual, status, pageRequest);
 		if (ss != null)
 			return ss.iterator();
 		return null;

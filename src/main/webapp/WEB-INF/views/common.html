@@ -21,6 +21,8 @@
 	th:href="@{/bootstrap/css/mysite.css}" />
 <link href="/bootstrap/css/jquery.jqplot.css" rel="stylesheet"
 	type="text/css" th:href="@{/bootstrap/css/jquery.jqplot.css}" />
+<link href="/bootstrap/css/bootstrap-select.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/bootstrap-select.min.css}" />
 <script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
 	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
 <script src="/bootstrap/js/prettify.js" type="text/javascript"
@@ -66,30 +68,34 @@
 <script src="/bootstrap/js/jquery.bootstrap.teninedialog.min.js"
 	type="text/javascript"
 	th:src="@{/bootstrap/js/jquery.bootstrap.teninedialog.min.js}"></script>
+
+<script src="/bootstrap/js/bootstrap-select.min.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/bootstrap-select.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    $.ajaxSetup({
-	contentType : "application/x-www-form-urlencoded;charset=utf-8",
-	complete : function(XMLHttpRequest, textStatus) {
-	    var sessionstatus = XMLHttpRequest
-		    .getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
-	    if (sessionstatus == "timeout") {
-		// 如果超时就处理 ，指定要跳转的页面 
-		//alert("会话已经超时，请重新登录。");
-		$.teninedialog({
-		    title : '系统提示',
-		    content : '会话已经超时，请重新登录。',
-		    dialogHidden : function() {
-			var loginUrl = /*[[@{'/login'}]]*/'';
-			window.location.replace(loginUrl);
-		    }
-		});
+	/*<![CDATA[*/
+	$.ajaxSetup({
+		contentType : "application/x-www-form-urlencoded;charset=utf-8",
+		complete : function(XMLHttpRequest, textStatus) {
+			var sessionstatus = XMLHttpRequest
+					.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
+			if (sessionstatus == "timeout") {
+				// 如果超时就处理 ，指定要跳转的页面 
+				//alert("会话已经超时，请重新登录。");
+				$.teninedialog({
+					title : '系统提示',
+					content : '会话已经超时，请重新登录。',
+					dialogHidden : function() {
+						var loginUrl = /*[[@{'/login'}]]*/'';
+						window.location.replace(loginUrl);
+					}
+				});
 
-	    }
-	}
-    });
+			}
+		}
+	});
 
-    /*]]>*/
+	/*]]>*/
 </script>
 </head>
 <body>
