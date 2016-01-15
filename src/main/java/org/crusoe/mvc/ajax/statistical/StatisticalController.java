@@ -471,7 +471,7 @@ public class StatisticalController {
 			@PathVariable("status") String status, @RequestParam("sort") String sort,
 			@RequestParam("order") String order, @RequestParam(value = "start", defaultValue = "0") int start,
 			@RequestParam(value = "size", defaultValue = "10") int size, Model model) {
-		HashMap<String, Object> sheets = new HashMap<String, Object>();
+		List<Object> sheets = new ArrayList<Object>();
 
 		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(Direction.DESC, new String[] { sort })
 				: new Sort(Direction.ASC, new String[] { sort });
@@ -486,10 +486,16 @@ public class StatisticalController {
 			aSheet.put("name", accountService.findUserByLoginName(ss.getLoginName()).getName());
 			aSheet.put("fillingDate", ss.getFillingDate());
 			aSheet.put("state", ss.getStatus());
-			sheets.put(ss.getId().toString(), aSheet);
+			sheets.add(aSheet);
 
 		}
-		return sheets;
+
+		HashMap<String, Object> rets = new HashMap<String, Object>();
+		rets.put("count", statisticalSheetService.countByAnnualAndStatus(annual, status));
+		rets.put("start", start);
+		rets.put("size", size);
+		rets.put("records", sheets);
+		return rets;
 	}
 
 	@RequestMapping(value = "listDatum", method = RequestMethod.POST)

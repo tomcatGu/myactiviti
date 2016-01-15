@@ -29,7 +29,7 @@
 					function() {
 						//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
-						$('#annual').selectpicker();
+						$('.selectpicker').selectpicker();
 
 						$('#submitBtn')
 								.click(
@@ -59,34 +59,23 @@
 													.blockUI({
 														message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
 													});
-											$
-													.ajax({
-														type : 'POST',
-														url : /*[[@{'/statistical/listSheet/'}]]*/""
-																+ $("#annual")
-																		.val()
-																+ "/commited?sort=id&order=desc",
-														async : true,
-														success : function(data) {
-															$(
-																	"#statisticalList")
-																	.find("tr")
-																	.nextAll()
-																	.remove();
-															for (aSheet in data) {
-																var row = render(data[aSheet]);
-																$(
-																		"#statisticalList")
-																		.find(
-																				"tr:last")
-																		.after(
-																				row);
-															}
-															$.unblockUI();
 
-														}
+											$("#statisticalList")
+													.simpleTable(
+															/*[[@{'/statistical/listSheet/'}]]*/""
+																	+ $(
+																			"#annual")
+																			.val()
+																	+ "/commited?sort=id&order=desc"
+																	+ "&timestamp="
+																	+ new Date()
+																			.toString(),
+															render,
+															$("#paginatorForStatisticalList"),null,"POST"
+															);
+											$.unblockUI();
 
-													});
+											
 
 										});
 
@@ -155,6 +144,7 @@
 					<th>上报时间</th>
 				</tr>
 			</table>
+			<div id="paginatorForStatisticalList"></div>
 		</form>
 		<div id="totalPanel"></div>
 		<div id="sheetLoading"></div>

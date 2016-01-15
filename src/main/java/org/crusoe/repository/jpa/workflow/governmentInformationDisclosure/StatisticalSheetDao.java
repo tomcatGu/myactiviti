@@ -8,16 +8,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface StatisticalSheetDao extends
-		PagingAndSortingRepository<StatisticalSheet, Long>,
-		JpaSpecificationExecutor<StatisticalSheet> {
+public interface StatisticalSheetDao
+		extends PagingAndSortingRepository<StatisticalSheet, Long>, JpaSpecificationExecutor<StatisticalSheet> {
 	List<StatisticalSheet> findByAnnual(String annual);
 
 	List<StatisticalSheet> findByAnnualAndStatus(String annual, String status);
 
-	Page<StatisticalSheet> findByAnnualAndStatus(String annual, String status,
-			Pageable pageable);
+	Page<StatisticalSheet> findByAnnualAndStatus(String annual, String status, Pageable pageable);
 
-	List<StatisticalSheet> findByAnnualAndLoginName(String annual,
-			String createUserName);
+	int countByAnnualAndStatus(String annual, String status);
+
+	List<StatisticalSheet> findByAnnualAndLoginName(String annual, String createUserName);
 }

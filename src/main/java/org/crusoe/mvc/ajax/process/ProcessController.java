@@ -168,6 +168,29 @@ public class ProcessController extends BaseServiceImpl {
 		
 
 	}
+	
+	@RequiresUser
+	@RequestMapping(value = "{key}/startAndRunTo/{taskId}", method = RequestMethod.GET)
+	public void startAndRunTo(@PathVariable String key,@PathVariable String taskId,Model model) {
+		RuntimeService runtimeService = processEngine.getRuntimeService();
+		ProcessDefinition processDefinition = repositoryService
+				.createProcessDefinitionQuery()
+				.processDefinitionKey(key)
+				.latestVersion().singleResult();
+				
+		Subject currentUser = SecurityUtils.getSubject();
+		if (currentUser.getPrincipal() != null)
+			identityService.setAuthenticatedUserId(currentUser.getPrincipal()
+					.toString());
+		
+		ProcessInstance pi=runtimeService.startProcessInstanceByKey(key);
+		Task task=taskService.createTaskQuery().processInstanceId(pi.getId()).singleResult();
+		//task.getName()
+		
+		
+		
+
+	}
 
 	@RequiresUser
 	@RequestMapping(value = "{id}/startAndRedirectToTaskForm", method = RequestMethod.GET)

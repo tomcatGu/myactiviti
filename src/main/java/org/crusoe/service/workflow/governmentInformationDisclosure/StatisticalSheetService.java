@@ -154,7 +154,7 @@ public class StatisticalSheetService {
 
 				Object dstResult = expr.evaluate(dstDocument, XPathConstants.NODESET);
 				NodeList nodes = (NodeList) dstResult;
-				// System.out.println(nodes.getLength());
+				System.out.println(nodes.getLength());
 				for (int i = 0; i < nodes.getLength(); i++) {
 					// System.out.println(nodes.item(i).getNodeValue());
 					xpath.reset();
@@ -164,6 +164,8 @@ public class StatisticalSheetService {
 
 					try {
 						String dstValStr = (String) exprCol.evaluate(dstDocument, XPathConstants.STRING);
+						if (dstValStr.isEmpty())
+							dstValStr = "0";
 						if (isFloat(dstValStr))
 							dstVal = Float.parseFloat(dstValStr);
 						else
@@ -173,6 +175,8 @@ public class StatisticalSheetService {
 					Number srcVal = null;
 					try {
 						String srcValStr = (String) exprCol.evaluate(srcDocument, XPathConstants.STRING);
+						if (srcValStr.isEmpty())
+							srcValStr = "0";
 						if (isFloat(srcValStr))
 							srcVal = Float.parseFloat(srcValStr);
 						else
@@ -181,7 +185,11 @@ public class StatisticalSheetService {
 					}
 
 					if (dstVal != null || srcVal != null) {
+						XPathExpression testNode = xpath.compile(
+								"//spreadsheets/spreadsheet/rows/row[" + (i + 1) + "]/columns/column[1]/value");
+						String testNodeName = (String) testNode.evaluate(srcDocument, XPathConstants.STRING);
 						xpath.reset();
+
 						XPathExpression exprColNode = xpath.compile(
 								"//spreadsheets/spreadsheet/rows/row[" + (i + 1) + "]/columns/column[3]/cellType");
 						XPathExpression exprColNodeParent = xpath
@@ -190,12 +198,15 @@ public class StatisticalSheetService {
 						NodeList srcNodes = (NodeList) srcResult;
 						NodeList srcParentNodes = (NodeList) exprColNodeParent.evaluate(srcDocument,
 								XPathConstants.NODESET);
-						System.out.println("srcnode=" + srcNodes.getLength());
+						//System.out.println("srcnode=" + srcNodes.getLength());
 						if (srcNodes.getLength() == 0) {// there was not
 														// a celltype
 							// node if only 3 elements
 							Element cellTypeNode = srcDocument.createElement("cellType");
 							cellTypeNode.setNodeValue("number");
+
+
+
 							srcParentNodes.item(0).appendChild(cellTypeNode);
 
 						}
@@ -206,7 +217,7 @@ public class StatisticalSheetService {
 						srcNodes = (NodeList) srcResult;
 
 						// srcNodes.item(arg0)
-						System.out.println("srcnode=" + srcNodes.getLength());
+						//System.out.println("srcnode=" + srcNodes.getLength());
 						if (dstVal == null)
 							dstVal = 0;
 						if (srcVal == null)
@@ -293,6 +304,11 @@ public class StatisticalSheetService {
 		if (ss != null)
 			return ss.iterator();
 		return null;
+	}
+
+	public int countByAnnualAndStatus(String annual, String status) {
+		return statisticalSheetDao.countByAnnualAndStatus(annual, status);
+
 	}
 
 	public Object findById(long id) {
