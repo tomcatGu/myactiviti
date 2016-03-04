@@ -21,14 +21,18 @@
 	th:href="@{/bootstrap/css/mysite.css}" />
 <link href="/bootstrap/css/jquery.jqplot.css" rel="stylesheet"
 	type="text/css" th:href="@{/bootstrap/css/jquery.jqplot.css}" />
-<link href="/bootstrap/css/bootstrap-select.min.css" rel="stylesheet"
-	type="text/css" th:href="@{/bootstrap/css/bootstrap-select.min.css}" />
+<link href="/bootstrap/css/bootstrap-multiselect.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/bootstrap-multiselect.css}" />
+<!-- 
 <script src="/scripts/jquery-1.10.2.min.js" type="text/javascript"
 	th:src="@{/scripts/jquery-1.10.2.min.js}"></script>
 <script src="/bootstrap/js/prettify.js" type="text/javascript"
 	th:src="@{/bootstrap/js/prettify.js}"></script>
+
 <script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"
 	th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	
+	 
 <script src="/bootstrap/js/jquery.dataTables.js" type="text/javascript"
 	th:src="@{/bootstrap/js/jquery.dataTables.js}"></script>
 <script src="/bootstrap/js/bootstrap-datetimepicker.min.js"
@@ -69,35 +73,139 @@
 	type="text/javascript"
 	th:src="@{/bootstrap/js/jquery.bootstrap.teninedialog.min.js}"></script>
 
-<script src="/bootstrap/js/bootstrap-select.min.js"
+<script src="/bootstrap/js/bootstrap-multiselect.js"
 	type="text/javascript"
-	th:src="@{/bootstrap/js/bootstrap-select.min.js}"></script>
+	th:src="@{/bootstrap/js/bootstrap-multiselect.js}"></script>
+	
+	
+	
+<script src="sea-modules/sea.js" type="text/javascript"
+	th:src="@{/sea-modules/sea.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
-	$.ajaxSetup({
-		contentType : "application/x-www-form-urlencoded;charset=utf-8",
-		complete : function(XMLHttpRequest, textStatus) {
-			var sessionstatus = XMLHttpRequest
-					.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
-			if (sessionstatus == "timeout") {
-				// 如果超时就处理 ，指定要跳转的页面 
-				//alert("会话已经超时，请重新登录。");
-				$.teninedialog({
-					title : '系统提示',
-					content : '会话已经超时，请重新登录。',
-					dialogHidden : function() {
-						var loginUrl = /*[[@{'/login'}]]*/'';
-						window.location.replace(loginUrl);
-					}
-				});
+	seajs.config({
+		alias : {
+			"jquery" : /*[[@{'/scripts/jquery-1.10.2.min.js'}]]*/''
 
-			}
+		},
+		paths : {
+			"bootstrap" : /*[[@{'/bootstrap/js/'}]]*/'',
+			"scripts" : /*[[@{'/scripts/'}]]*/'',
+
 		}
+	});
+
+	var bootstrap = [ 'jquery', 'bootstrap/bootstrap.js',
+			'bootstrap/prettify.js', 'bootstrap/jquery.dataTables.js',
+			'bootstrap/bootstrap-datetimepicker.min.js',
+			'bootstrap/bootstrap-datetimepicker.zh-CN.js',
+			'scripts/jquery-ui-1.10.3.custom.min.js',
+			'bootstrap/bootstrap-modal.js',
+			'bootstrap/bootstrap-modalmanager.js',
+			'bootstrap/bootstrap-confirm.js',
+			'bootstrap/bootstrap-paginator.js', 'bootstrap/jquery.form.js',
+			'bootstrap/jquery.jqplot.min.js', 'bootstrap/crud.js',
+			'bootstrap/jquery.blockUI.js', 'bootstrap/jquery.simpleTable.js',
+			'bootstrap/jquery.bootstrap.teninedialog.min.js',
+			'bootstrap/bootstrap-multiselect.js', 'scripts/jquery.validate.js',
+			'scripts/jquery.metadata.js', 'scripts/json2.js' ];
+	seajs.use(bootstrap, function() {
+		$.ajaxSetup({
+			contentType : "application/x-www-form-urlencoded;charset=utf-8",
+			complete : function(XMLHttpRequest, textStatus) {
+				var sessionstatus = XMLHttpRequest
+						.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
+				if (sessionstatus == "timeout") {
+					// 如果超时就处理 ，指定要跳转的页面 
+					//alert("会话已经超时，请重新登录。");
+					$.teninedialog({
+						title : '系统提示',
+						content : '会话已经超时，请重新登录。',
+						dialogHidden : function() {
+							var loginUrl = /*[[@{'/login'}]]*/'';
+							window.location.replace(loginUrl);
+						}
+					});
+
+				}
+			}
+		});
 	});
 
 	/*]]>*/
 </script>
+
+-->
 </head>
 <body>
+	<div th:fragment="scriptFragment">
+
+		<script src="sea-modules/sea.js" type="text/javascript"
+			th:src="@{/sea-modules/sea.js}"></script>
+		<script type="text/javascript" th:inline="javascript">
+			/*<![CDATA[*/
+			seajs.config({
+				alias : {
+					"jquery" : /*[[@{'/scripts/jquery-1.10.2.min.js'}]]*/''
+
+				},
+				paths : {
+					"bootstrap" : /*[[@{'/bootstrap/js/'}]]*/'',
+					"scripts" : /*[[@{'/scripts/'}]]*/'',
+
+				},
+				preload: ["jquery"]
+			});
+
+			var bootstrap = [ 'jquery', 'bootstrap/bootstrap.min.js',
+					'bootstrap/prettify.js', 'bootstrap/jquery.dataTables.js',
+					'bootstrap/bootstrap-datetimepicker.min.js',
+					'bootstrap/bootstrap-datetimepicker.zh-CN.js',
+					'scripts/jquery-ui-1.10.3.custom.min.js',
+					'bootstrap/bootstrap-modal.js',
+					'bootstrap/bootstrap-modalmanager.js',
+					'bootstrap/bootstrap-confirm.js',
+					'bootstrap/bootstrap-paginator.js',
+					'bootstrap/jquery.form.js',
+					'bootstrap/jquery.jqplot.min.js', 'bootstrap/crud.js',
+					'bootstrap/jquery.blockUI.js',
+					'bootstrap/jquery.simpleTable.js',
+					'bootstrap/jquery.bootstrap.teninedialog.min.js',
+					'bootstrap/bootstrap-multiselect.js',
+					'scripts/jquery.validate.js', 'scripts/jquery.metadata.js',
+					'scripts/json2.js' ];
+			seajs
+					.use(
+							bootstrap,
+							function() {
+								$
+										.ajaxSetup({
+											contentType : "application/x-www-form-urlencoded;charset=utf-8",
+											complete : function(XMLHttpRequest,
+													textStatus) {
+												var sessionstatus = XMLHttpRequest
+														.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus， 
+												if (sessionstatus == "timeout") {
+													// 如果超时就处理 ，指定要跳转的页面 
+													//alert("会话已经超时，请重新登录。");
+													$
+															.teninedialog({
+																title : '系统提示',
+																content : '会话已经超时，请重新登录。',
+																dialogHidden : function() {
+																	var loginUrl = /*[[@{'/login'}]]*/'';
+																	window.location
+																			.replace(loginUrl);
+																}
+															});
+
+												}
+											}
+										});
+							});
+
+			/*]]>*/
+		</script>
+	</div>
 </body>
 </html>

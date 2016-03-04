@@ -1,8 +1,11 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
-
-
+<link href="/bootstrap/css/bootstrap-multiselect.css" rel="stylesheet"
+	type="text/css" th:href="@{/bootstrap/css/bootstrap-multiselect.css}" />
+<script src="/bootstrap/js/bootstrap-multiselect.js"
+	type="text/javascript"
+	th:src="@{/bootstrap/js/bootstrap-multiselect.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 
@@ -16,7 +19,8 @@
 	function viewSheet(id) {
 		$
 				.blockUI({
-					message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
+					message : '<h1><img src="'+/*[[@{'/bootstrap/img/ajax-loader.gif'}]]*/""
+					+'" /> 正在加载...</h1>'
 				});
 		$("#totalPanel").load(
 		/*[[@{'/statistical/viewSheet/'}]]*/"statistical/viewSheet/" //view statisticalSheet
@@ -29,14 +33,15 @@
 					function() {
 						//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
-						$('.selectpicker').selectpicker();
+						$('.multiselect').multiselect();
 
 						$('#submitBtn')
 								.click(
 										function() {
 											$
 													.blockUI({
-														message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
+														message : '<h1><img src="'+/*[[@{'/bootstrap/img/ajax-loader.gif'}]]*/""
+														+'" /> 正在加载...</h1>'
 													});
 											$("#totalPanel")
 													.load(
@@ -49,6 +54,7 @@
 																			.valueOf(),
 															function(event) {
 																$.unblockUI();
+																
 															});
 
 										});
@@ -57,7 +63,8 @@
 										function() {
 											$
 													.blockUI({
-														message : '<h1><img src="bootstrap/img/ajax-loader.gif" /> 正在加载...</h1>'
+														message : '<h1><img src="'+/*[[@{'/bootstrap/img/ajax-loader.gif'}]]*/""
+														+'" /> 正在加载...</h1>'
 													});
 
 											$("#statisticalList")
@@ -71,11 +78,9 @@
 																	+ new Date()
 																			.toString(),
 															render,
-															$("#paginatorForStatisticalList"),null,"POST"
-															);
+															$("#paginatorForStatisticalList"),
+															null, "POST");
 											$.unblockUI();
-
-											
 
 										});
 
@@ -89,8 +94,7 @@
 			<div>
 				<label class="control-label text-info">年度：</label>
 				<div class="input-append">
-					<select name="annual" id="annual" class="selectpicker"
-						multiple="true">
+					<select id="annual" class="multiselect" multiple="multiple">
 						<optgroup label="2015年">
 							<option value="2015q1" selected="selected">2015年第一季度</option>
 							<option value="2015q2">2015年第二季度</option>

@@ -5,144 +5,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
 <link href="/jstree/themes/default/style.min.css" rel="stylesheet"
 	type="text/css" th:href="@{/jstree/themes/default/style.min.css}" />
-<script src="/jstree/jstree.min.js" type="text/javascript"
-	th:src="@{/jstree/jstree.min.js}"></script>
-<script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
 
-	$(document)
-			.ready(
-					function() {
-						$("#organization")
-								.jstree(
-										{
-											"core" : {
-												"animation" : 0,
-												"check_callback" : true,
-												"themes" : {
-													"stripes" : true
-												},
-												'data' : {
-													'url' : function(node) {
-														return node.id === '#' ? /*[[@{'/organization/ajaxRoots'}]]*/'organization/ajaxRoots'
-																: /*[[@{'/organization/ajaxChildren'}]]*/'organization/ajaxChildren';
-													},
-													'data' : function(node) {
-														return {
-															'id' : node.id
-														};
-													}
-												}
-											},
-											"plugins" : [ "state", "types",
-													"wholerow" ]
-										})
-								.on(
-										"activate_node.jstree",
-										function(e, data) {
-											$("#userList tr").nextAll()
-													.remove();
-
-											$("#userList")
-													.simpleTable(
-															/*[[@{'/user/listUsersOfOrganization?sort=id&order=desc'}]]*/""
-																	+ "&organizationId="
-																	+ data.node.id
-																	+ "&dateStamp="
-																	+ new Date()
-																			.toString(),
-															render,
-															$("#paginator"),
-															null);
-
-										});
-
-						$('#addBtn')
-								.bind(
-										'click',
-										function() {
-
-											var ref = $('#organization')
-													.jstree(true), sel = ref
-													.get_selected();
-											create('#createUser', /*[[@{'/user/create'}]]*/'' //create url
-													+ "/" + sel,
-													successCallback);
-										});
-						$('#checkAll').bind('click', function() {
-							checkAll("#checkAll");
-						});
-
-						$('#deleteBtn').bind(
-								'click',
-								function() {
-									$("#confirmDiv").confirm(
-											{
-												heading : '确认删除',
-												body : '你真的要删除吗?',
-												yesBtn : '是',
-												noBtn : '否',
-												callback : function() {
-													batchDelete(
-													/*[[@{'/user'}]]*/"user",
-															successCallback);
-
-												}
-											});
-
-								});
-
-						$("#userList").simpleTable(/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/
-						+"&dateStamp=" + new Date().toString(), render,
-								$("#paginator"), null);
-
-					});
-
-	function successCallback() {
-
-		$("#createUser").modal("hide");
-		$("#userList tr").nextAll().remove();
-
-		$("#userList").simpleTable(
-				/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/""
-						+ "&dateStamp=" + new Date().toString(), render,
-				$("#paginator"), null);
-
-	};
-	function getStatus(status) {
-
-		if (status == "enabled")
-			return "可用";
-		else
-			return "禁用";
-	};
-	function render(data) {
-		var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
-				+ data.id
-				+ "</td><td>"
-				+ data.name
-				+ "</td><td>"
-				+ data.loginName
-				+ "</td><td>"
-				+ data.mobile
-				+ "</td><td>"
-				+ data.email
-				+ "</td><td>"
-				+ getStatus(data.status)
-				+ "</td><td><a href=\"javascript:update('#createUser','"
-				+ /*[[@{'/user/update/'}]]*/''
-				+ data.id
-				+ "',successCallback);\"><i class='icon-edit'></i></a></td></tr>";
-		return newRow;
-	};
-
-	/*]]>*/
-</script>
 </head>
 <body>
 	<!--  -->
 	<div class="box">
-		
+
 		<div id="organization" class="span3">
 			<ul>
 				<li>Root node 1
@@ -196,5 +64,162 @@
 	<div tabindex="-1" class="modal hide fade" id="createUser"
 		data-keyboard="false" data-backdrop="static"></div>
 	<div id="confirmDiv"></div>
+
+	<div th:include="/common::scriptFragment"></div>
+	<div>
+		<script src="/jstree/jstree.min.js" type="text/javascript"
+			th:src="@{/jstree/jstree.min.js}"></script>
+		<script type="text/javascript" th:inline="javascript">
+			/*<![CDATA[*/
+    seajs.config({
+		alias : {
+			"jquery" : /*[[@{'/scripts/jquery-1.10.2.min.js'}]]*/'',
+			"jstree":/*[[@{'/jstree/jstree.min.js'}]]*/''
+
+		},
+		preload: ["jquery"]
+	});
+    
+    
+   seajs.use(['jquery','jstree'],function(){
+	   
+	   
+		  // window.jQuery = window.$;
+		
+	   //seajs.use('jstree');
+			$(document)
+					.ready(
+							function() {
+								$("#organization")
+										.jstree(
+												{
+													"core" : {
+														"animation" : 0,
+														"check_callback" : true,
+														"themes" : {
+															"stripes" : true
+														},
+														'data' : {
+															'url' : function(
+																	node) {
+																return node.id === '#' ? /*[[@{'/organization/ajaxRoots'}]]*/'organization/ajaxRoots'
+																		: /*[[@{'/organization/ajaxChildren'}]]*/'organization/ajaxChildren';
+															},
+															'data' : function(
+																	node) {
+																return {
+																	'id' : node.id
+																};
+															}
+														}
+													},
+													"plugins" : [ "state",
+															"types", "wholerow" ]
+												})
+										.on(
+												"activate_node.jstree",
+												function(e, data) {
+													$("#userList tr").nextAll()
+															.remove();
+
+													$("#userList")
+															.simpleTable(
+																	/*[[@{'/user/listUsersOfOrganization?sort=id&order=desc'}]]*/""
+																			+ "&organizationId="
+																			+ data.node.id
+																			+ "&dateStamp="
+																			+ new Date()
+																					.toString(),
+																	render,
+																	$("#paginator"),
+																	null);
+
+												});
+
+								$('#addBtn').bind(
+										'click',
+										function() {
+
+											var ref = $('#organization')
+													.jstree(true), sel = ref
+													.get_selected();
+											create('#createUser', /*[[@{'/user/create'}]]*/'' 
+													//create url
+															+ "/" + sel,
+													successCallback);
+										});
+								$('#checkAll').bind('click', function() {
+									checkAll("#checkAll");
+								});
+
+								$('#deleteBtn')
+										.bind(
+												'click',
+												function() {
+													$("#confirmDiv")
+															.confirm(
+																	{
+																		heading : '确认删除',
+																		body : '你真的要删除吗?',
+																		yesBtn : '是',
+																		noBtn : '否',
+																		callback : function() {
+																			batchDelete(
+																					/*[[@{'/user'}]]*/"user",
+																					successCallback);
+
+																		}
+																	});
+
+												});
+
+								$("#userList").simpleTable(/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/
+								+"&dateStamp=" + new Date().toString(), render,
+										$("#paginator"), null);
+
+							});
+   });
+			function successCallback() {
+
+				$("#createUser").modal("hide");
+				$("#userList tr").nextAll().remove();
+
+				$("#userList").simpleTable(
+						/*[[@{'/user/listUsers?sort=id&order=desc'}]]*/""
+								+ "&dateStamp=" + new Date().toString(),
+						render, $("#paginator"), null);
+
+			};
+			function getStatus(status) {
+
+				if (status == "enabled")
+					return "可用";
+				else
+					return "禁用";
+			};
+			function render(data) {
+				var newRow = "<tr><td><input type=\"checkbox\" name=\"selectFlag\" value=\""+data.id+"\"></input></td><td>"
+						+ data.id
+						+ "</td><td>"
+						+ data.name
+						+ "</td><td>"
+						+ data.loginName
+						+ "</td><td>"
+						+ data.mobile
+						+ "</td><td>"
+						+ data.email
+						+ "</td><td>"
+						+ getStatus(data.status)
+						+ "</td><td><a href=\"javascript:update('#createUser','"
+						+ /*[[@{'/user/update/'}]]*/''
+						+ data.id
+						+ "',successCallback);\"><i class='icon-edit'></i></a></td></tr>";
+				return newRow;
+			};
+
+			/*]]>*/
+		</script>
+
+	</div>
 </body>
 </html>
