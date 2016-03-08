@@ -1,0 +1,44 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html>
+<head>
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="scriptFragment">
+
+		<script src="sea-modules/sea.js" type="text/javascript"
+			th:src="@{/sea-modules/sea.js}"></script>
+		<script type="text/javascript" th:inline="javascript">
+			/*<![CDATA[*/
+			seajs.config({
+				alias : {
+					"jquery" : /*[[@{'/scripts/jquery-1.10.2.min.js'}]]*/''
+
+				},
+				paths : {
+					"bootstrap" : /*[[@{'/bootstrap/js/'}]]*/'',
+					"scripts" : /*[[@{'/scripts/'}]]*/'',
+					'ckeditor': /*[[@{'/ckeditor/'}]]*/''
+
+				},
+				preload : [ "jquery" ]
+			});
+
+			var bootstrap = [ 'jquery', 'bootstrap/bootstrap.min.js',
+					'ckeditor/ckeditor.js'];
+			seajs
+					.use(
+							bootstrap,
+							function() {
+								
+								CKEDITOR.replace("ck1");
+
+							});
+
+			/*]]>*/
+		</script>
+	</div>
+	<textarea name="ck1"></textarea>
+
+</body>
+</html>
