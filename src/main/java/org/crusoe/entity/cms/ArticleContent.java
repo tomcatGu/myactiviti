@@ -16,29 +16,35 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 // 默认的缓存策略.
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ArticleContent {
-private Long id;
-private String articleContent;
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-public long getId() {
-	return id;
-}
-public void setId(long id) {
-	this.id = id;
-}
-public String getArticleContent() {
-	return articleContent;
-}
-public void setArticleContent(String articleContent) {
-	this.articleContent = articleContent;
-}
+	private Long id;
+	private String articleContent;
 
-@OneToOne(optional = true, cascade = CascadeType.ALL, mappedBy = "articleContent")
-public Article getArticle() {
-	return article;
-}
-public void setArticle(Article article) {
-	this.article = article;
-}
-private Article article;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getArticleContent() {
+		return articleContent;
+	}
+
+	public void setArticleContent(String articleContent) {
+		this.articleContent = articleContent;
+	}
+
+	@OneToOne(optional = true, cascade = CascadeType.ALL, mappedBy = "articleContent")
+	public Article getArticle() {
+		return article;
+	}
+
+	public void setArticle(Article article) {
+		this.article = article;
+	}
+
+	private Article article;
 }

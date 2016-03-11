@@ -27,7 +27,7 @@ import org.joda.time.DateTime;
 // 默认的缓存策略.
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Article {
-	private long id;
+	private Long id;
 	private String title;
 	private String author;
 	private long sequenceIndex;
@@ -40,11 +40,11 @@ public class Article {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
