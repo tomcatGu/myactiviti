@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -26,6 +30,8 @@ import org.joda.time.DateTime;
 @Table(name = "cms_article")
 // 默认的缓存策略.
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "articleType", discriminatorType = DiscriminatorType.STRING)
 public class Article {
 	private Long id;
 	private String title;
@@ -35,8 +41,8 @@ public class Article {
 	private long clicks;
 	private DateTime created;
 	private String createUser;
-	private ArticleContent aticleContent;
 	private List<Channel> channels = new ArrayList<Channel>();
+	private ArticleContent aticleContent;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,15 +102,6 @@ public class Article {
 		this.created = created;
 	}
 
-	@OneToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	public ArticleContent getArticleContent() {
-		return aticleContent;
-	}
-
-	public void setArticleContent(ArticleContent articleContent) {
-		this.aticleContent = articleContent;
-	}
-
 	// 多对多定义
 	@ManyToMany
 	@JoinTable(name = "cms_article_channel", joinColumns = { @JoinColumn(name = "article_id") }, inverseJoinColumns = {
@@ -129,6 +126,15 @@ public class Article {
 
 	public void setCreateUser(String createUser) {
 		this.createUser = createUser;
+	}
+
+	@OneToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	public ArticleContent getArticleContent() {
+		return aticleContent;
+	}
+
+	public void setArticleContent(ArticleContent articleContent) {
+		this.aticleContent = articleContent;
 	}
 
 }
