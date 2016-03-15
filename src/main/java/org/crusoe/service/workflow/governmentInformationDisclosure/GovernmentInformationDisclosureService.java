@@ -97,7 +97,7 @@ public class GovernmentInformationDisclosureService {
 		gid.setGroupDelegateEmail(groupDelegateEmail);
 		gid.setFormOfDisclosure(formOfDisclosure);
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		try {
 			gid.setApplicationTime(formatter.parse(applicationTime));
 		} catch (ParseException e) {
@@ -195,7 +195,7 @@ public class GovernmentInformationDisclosureService {
 		gid.setCreateTime(new Date());
 		gid.setCreateUser(SecurityUtils.getSubject().getPrincipal().toString());
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		try {
 			gid.setApplicationTime(formatter.parse(applicationTime));
 		} catch (ParseException e) {
@@ -310,7 +310,7 @@ public class GovernmentInformationDisclosureService {
 		gid.setCreateUser(SecurityUtils.getSubject().getPrincipal().toString());
 		gid.setFormOfResponse(formOfResponse);
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		try {
 			gid.setApplicationTime(formatter.parse(applicationTime));
 		} catch (ParseException e) {
