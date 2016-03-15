@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <title>首页</title>
-
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 
@@ -11,26 +12,27 @@
 <style>
 </style>
 </head>
-<body class="bs-docs-home">
-	<div tabindex="-1" class="" id="content">
-		<div class="container">
-			<div class="row">
-				<div class="span9">
-					<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-						codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0">
-						<param name="movie" value="images/top.swf" />
-						<param name="quality" value="high" />
-						<param name="wmode" value="OPAQUE" />
+<body class="">
 
-						<embed src="../images/top.swf" quality="high"
-							pluginspage="http://www.macromedia.com/go/getflashplayer"
-							type="application/x-shockwave-flash" width="870" height="184"></embed>
-					</object>
-				</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9">
+				<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+					codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0">
+					<param name="movie" value="../images/top.swf" />
+					<param name="quality" value="high" />
+					<param name="wmode" value="OPAQUE" />
 
+					<embed src="../images/top.swf" quality="high"
+						pluginspage="http://www.macromedia.com/go/getflashplayer"
+						type="application/x-shockwave-flash" class="span9"
+						style="margin-left: 0"></embed>
+				</object>
 			</div>
-			<div class="row">
-				<div class="navbar navbar-default span9">
+		</div>
+		<div class="row">
+			<div class="col-md-9">
+				<div class="navbar navbar-default">
 					<div class="container">
 						<div class="navbar-header">
 							<button type="button" class="navbar-toggle collapsed"
@@ -56,54 +58,51 @@
 					</div>
 
 				</div>
+
 			</div>
+		</div>
 
-			<div class="row">
-
-				<div class="container span9">
-
-					<div class="row">
-						<div class="col-md-3">
-
-							<div class="panel panel-default">
-								<div class="panel-heading">站内公告</div>
-								<div class="panel-body">Panel content</div>
-							</div>
-
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 class="panel-title">文章查询</h3>
-								</div>
-								<div class="panel-body">Panel content</div>
-							</div>
+		<div class="row">
 
 
-						</div>
-						<div class="col-md-6">
-							<div class="container-3">
-								<div class="act-front">
-									<p class="going-on">进行中</p>
-									<p class="act-date">3月17日</p>
-									<a href="/events/1047030337">
-										<p class="act-title">亚洲创业大赛 2016 ASIA BEAT XIMEN（3.17~3.19
-											厦门） | 深圳湾专属 50 席位</p>
-									</a>
-									<p>2016&nbsp;ASIA&nbsp;BEAT XIAMEN
-										亚洲创业大赛，将于2016年3月17日-19日于中国福建省厦门市举办。...</p>
-								</div>
-								<a class="category" href="/events?category=78805992">深圳湾峰会</a>
-							</div>
-						</div>
+			<div class="col-md-4">
 
-
-					</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">站内公告</div>
+					<div class="panel-body">Panel content</div>
 				</div>
 
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">文章查询</h3>
+					</div>
+					<div class="panel-body">Panel content</div>
+				</div>
+
+
+			</div>
+			<div class="col-md-8">
+				<div class="container-3">
+					<div class="act-front">
+						<p class="going-on">进行中</p>
+						<p class="act-date">3月17日</p>
+						<a href="/events/1047030337">
+							<p class="act-title">亚洲创业大赛 2016 ASIA BEAT XIMEN（3.17~3.19
+								厦门） | 深圳湾专属 50 席位</p>
+						</a>
+						<p>2016&nbsp;ASIA&nbsp;BEAT XIAMEN
+							亚洲创业大赛，将于2016年3月17日-19日于中国福建省厦门市举办。...</p>
+					</div>
+					<a class="category" href="/events?category=78805992">深圳湾峰会</a>
+				</div>
 			</div>
 
 
 		</div>
 	</div>
+
+
+
 
 
 
