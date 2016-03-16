@@ -2,134 +2,280 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head thy:merge="/common::headerFragment">
 <title>首页</title>
-<meta name="viewport"
-	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<link
+	href="http://cdn.alloyui.com/3.0.1/aui-css/css/sortable-layout/css/basic.css"
+	th:href="@{/alloy-3.0.1/aui-sortable-layout/assets/skins/sam/aui-sortable-layout.css}"
+	rel="stylesheet"></link>
+<link
+	href="http://cdn.alloyui.com/3.0.1/aui-css/css/sortable-layout/css/basic.css"
+	th:href="@{/alloy-3.0.1/aui-sortable-layout/assets/skins/sam/aui-sortable-layout-skin.css}"
+	rel="stylesheet"></link>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 
 	/*]]>*/
 </script>
 <style>
+.portlet {
+	border: 1px solid #DADADE;
+	border-top-color: #F0F0FE;
+	cursor: move;
+	margin: 0px 5;
+	padding: 0 5px;
+}
+
+.portlet .title {
+	background-color: #2bb2e4;
+	border-top-color: #F0F0FE;
+	cursor: move;
+	margin: 0px 0;
+	padding: 5px;
+	text-align: center;
+}
 </style>
 </head>
-<body class="">
+<body>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-md-9">
-				<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-					codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0">
-					<param name="movie" value="../images/top.swf" />
-					<param name="quality" value="high" />
-					<param name="wmode" value="OPAQUE" />
+	<div class="banner ">
+		<div class="container">
+			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+				codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0"
+				class="col-xs-12" height="200">
+				<param name="movie" value="../images/top.swf" />
+				<param name="quality" value="high" />
+				<param name="wmode" value="OPAQUE" />
 
-					<embed src="../images/top.swf" quality="high"
-						pluginspage="http://www.macromedia.com/go/getflashplayer"
-						type="application/x-shockwave-flash" class="span9"
-						style="margin-left: 0"></embed>
-				</object>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-9">
-				<div class="navbar navbar-default">
-					<div class="container">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle collapsed"
-								data-toggle="collapse"
-								data-target="#bs-example-navbar-collapse-6"
-								aria-expanded="false">
-								<span class="sr-only">Toggle navigation</span> <span
-									class="icon-bar"></span> <span class="icon-bar"></span> <span
-									class="icon-bar"></span>
-							</button>
-							<a class="navbar-brand" href="#">普法网</a>
-						</div>
-
-						<div class="collapse navbar-collapse"
-							id="bs-example-navbar-collapse-6">
-							<ul class="nav navbar-nav">
-								<li class="active"><a href="#">首页</a></li>
-								<li><a href="#">Link</a></li>
-								<li><a href="#">Link</a></li>
-							</ul>
-						</div>
-						<!-- /.navbar-collapse -->
-					</div>
-
-				</div>
-
-			</div>
-		</div>
-
-		<div class="row">
-
-
-			<div class="col-md-4">
-
-				<div class="panel panel-default">
-					<div class="panel-heading">站内公告</div>
-					<div class="panel-body">Panel content</div>
-				</div>
-
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">文章查询</h3>
-					</div>
-					<div class="panel-body">Panel content</div>
-				</div>
-
-
-			</div>
-			<div class="col-md-8">
-				<div class="container-3">
-					<div class="act-front">
-						<p class="going-on">进行中</p>
-						<p class="act-date">3月17日</p>
-						<a href="/events/1047030337">
-							<p class="act-title">亚洲创业大赛 2016 ASIA BEAT XIMEN（3.17~3.19
-								厦门） | 深圳湾专属 50 席位</p>
-						</a>
-						<p>2016&nbsp;ASIA&nbsp;BEAT XIAMEN
-							亚洲创业大赛，将于2016年3月17日-19日于中国福建省厦门市举办。...</p>
-					</div>
-					<a class="category" href="/events?category=78805992">深圳湾峰会</a>
-				</div>
-			</div>
+				<embed src="../images/top.swf" quality="high"
+					pluginspage="http://www.macromedia.com/go/getflashplayer"
+					type="application/x-shockwave-flash" class="col-xs-12"
+					style="padding: 0px;" height="200"></embed>
+			</object>
 
 
 		</div>
 	</div>
+	<div class="container">
+		<div id="myNavbar" class="navbar-default col-xs-12">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#first">首页</a></li>
+				<li class=""><a href="#second">工作动态</a></li>
+				<li class=""><a href="#third">学法专区</a></li>
+				<li class=""><a href="#third">资料中心</a></li>
+				<li class=""><a href="#third">法律法规</a></li>
+				<li class=""><a href="#third">在线学习</a></li>
+				<li class=""><a href="#third">以案释法</a></li>
+				<li class=""><a href="#third">律师答疑</a></li>
+				<li class=""><a href="#third">法律专家</a></li>
+				<li class=""><a href="#third">法制漫画</a></li>
+
+			</ul>
+		</div>
+	</div>
+	<div class="container">
+		<div class="col-xs-3 bs-docs-sidebar">
+			<p class="related" style="text-align: center;">2016年3月16日 星期三</p>
+			<div class="portlet">
+				<h4 class="title">站内公告</h4>
+				<div class="">
+					<marquee direction="up" behavior="scroll" scrollamount="1"
+						scrolldelay="0" loop="-1" height="200" bgcolor="" hspace="10"
+						vspace="10">
+						<p style="word-break: break-all; word-wrap: break-word;">各县（市）区委宣传部，各县（市）区司法局、妇联，市各有关单位：
+							为深入贯彻党的十八届四中全会精神，加强家庭法治宣传教育，提高广大家庭成员的学法、用法意识，促进家庭和谐幸福，推进全市“六五”普法，决定在全市举办“家庭学法达人赛”，普及婚姻家庭相关法律知识，掀起家庭学法热潮。现将有关事项通知如下：
+							一、参赛对象：全市广大家庭成员。 二、活动时间：2015年9月28日—10月27日。
+							三、竞赛内容：《婚姻法》、《继承法》、《妇女权益保障法》、《未成年人保护法》、《老年人权益保障法》等与家庭生活相关的法律法规。
+							四、活动平台：南通宣传网（http://xcw.nantong.gov.cn）、南通普法网（www.ntsfj.gov.cn）、南通女性网（www.ntwomen.org）、南通网（http://www.zgnt.net）、江海明珠网（www.ntjoy.com）、南通文明网（www.ntwenming.com）、濠滨论坛（http://bbs.0513.org）。
+							五、参与方式：登录以上网站，点击“全市家庭学法达人赛”，或者直接登录网址http://58.221.162.245/xfdr/进入“学法达人”网站，注册并登录后，点击“在线对决”，选择“全市家庭学法达人赛”活动名称，进入系统进行答题。注册登录手机号码和姓名必须对应，否则一旦中奖无法充值；其他信息须填写准确，以便主办方准确统计评选优秀组织奖。
+							五、奖励办法：竞赛设立优秀个人奖和优秀组织奖。优秀个人奖100名，根据个人得分确定获奖名单，如果获得最高分的人数多于奖项名额，则采取随机方式抽取获奖者；优秀组织奖若干个，根据各地区、各部门参赛的组织程度确定获奖名单。活动结束后将在活动网站公布获奖名单，优秀个人奖奖金为每人100元话费充值。
+							六、组织要求：各地区、各部门要高度重视，认真组织，广泛发动，引导广大家庭积极参与，促进婚姻家庭相关法律知识在家庭中的学习和普及。各县（市）区相关部门要整体联动，层层发动，增强活动影响力。市各有关单位要积极组织发动本部门、本系统干部职工参加知识竞赛，尽可能扩大参与面。
 
 
 
+							中共南通市委宣传部 南通市司法局 南通市妇女联合会</p>
+					</marquee>
+				</div>
+			</div>
+			<div class="portlet">
+				<h4 class="title">文章查询</h4>
+				<p></p>
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Search for..." />
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button">查找</button>
+					</span>
+				</div>
+				<!-- /input-group -->
+				<p></p>
+			</div>
+			<div class="portlet">
+				<h4 class="title">Portlet 3</h4>
+				<p>Lorem Ipsum dummy content</p>
+			</div>
+
+		</div>
+		<div class="col-xs-9">
+			<h4>工作动态</h4>
+			<div class="row">
+				<table>
+					<tr>
+						<td class="col-md-5"><div>
+								<div id="myCarousel">
+									<div class="image-viewer-base-image"
+										style="background: url(../images/1.jpg);"></div>
+									<div class="image-viewer-base-image"
+										style="background: url(../images/2.jpg);"></div>
+									<div class="image-viewer-base-image"
+										style="background: url(../images/3.jpg);"></div>
+									<div class="image-viewer-base-image"
+										style="background: url(../images/3.jpg);"></div>
+								</div>
+
+							</div></td>
+						<td class="col-md-7"><div>
+								<ol id="myList">
+									<li><a href="http://www.tzpfw.gov.cn/">五接镇开展青少年法治宣传教育系列活动</a></li>
+									<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
+									<li>通州区"农民工"学法活动周圆满收官</li>
+									<li>通州2016年度普法环区行拉开序幕</li>
+									<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+									<li>通州开展基层法治文化示范阵地建设530工程</li>
+									<li>通州区开展12.4国家宪法日宣传教</li>
+
+								</ol>
+							</div></td>
+					</tr>
+				</table>
 
 
 
-	<div th:include="/common::scriptFragment"></div>
+			</div>
+
+			<p></p>
+			<div id="myTab" class="cos-xs-9">
+
+				<ul class="nav nav-tabs">
+					<li><a href="#tab-0" class="disabled">学法专区</a></li>
+					<li><a href="#tab-1">领导干部</a></li>
+					<li class="active"><a href="#tab-2">公职人员</a></li>
+					<li><a href="#tab-3">青少年</a></li>
+					<li><a href="#tab-4">企业经营管理者</a></li>
+					<li><a href="#tab-5">农民与农民工</a></li>
+				</ul>
+
+				<div class="tab-content">
+					<div id="tab-0" class="tab-pane"></div>
+					<div id="tab-1" class="tab-pane">
+						<ol id="">
+							<li><a href="http://www.tzpfw.gov.cn/">国土资源部关于修改《地质灾害危险性评估单位资质管理办法》等5部规章的决
+									[17/8/2015]</a></li>
+							<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
+							<li>通州区"农民工"学法活动周圆满收官</li>
+							<li>通州2016年度普法环区行拉开序幕</li>
+							<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+							<li>通州开展基层法治文化示范阵地建设530工程</li>
+							<li>通州区开展12.4国家宪法日宣传教</li>
+
+						</ol>
+					</div>
+					<div id="tab-2">
+						<ol id="">
+
+							<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
+							<li>通州区"农民工"学法活动周圆满收官</li>
+							<li>通州2016年度普法环区行拉开序幕</li>
+							<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+							<li>通州开展基层法治文化示范阵地建设530工程</li>
+							<li>通州区开展12.4国家宪法日宣传教</li>
+
+						</ol>
+					</div>
+					<div id="tab-3" class="tab-pane">
+						<ol id="">
+
+							<li>通州2016年度普法环区行拉开序幕</li>
+							<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+							<li>通州开展基层法治文化示范阵地建设530工程</li>
+							<li>通州区开展12.4国家宪法日宣传教</li>
+
+						</ol>
+					</div>
+				</div>
+
+			</div>
+
+
+
+		</div>
+		<div class="col-xs-9">
+			<h4>
+				<span class="glyphicon glyphicon-subtitles"></span>工作动态
+			</h4>
+			<div class="row">
+				<ol id="">
+					<li><a href="http://www.tzpfw.gov.cn/">国土资源部关于修改《地质灾害危险性评估单位资质管理办法》等5部规章的决
+							[17/8/2015]</a></li>
+					<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
+					<li>通州区"农民工"学法活动周圆满收官</li>
+					<li>通州2016年度普法环区行拉开序幕</li>
+					<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+					<li>通州开展基层法治文化示范阵地建设530工程</li>
+					<li>通州区开展12.4国家宪法日宣传教</li>
+
+				</ol>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="footer">
+		<div class="container" style="text-align: center;">
+			<hr />
+			<p>南通市通州区普及法律常识办公室 南通市通州区司法局 主 办</p>
+			<p>地址：江苏省南通市通州区金沙镇新金西路93号</p>
+			<p>邮编：226300 电话：0513-86027830 传真：0513-86027829</p>
+			<p>你是第 1926884 位访客 苏ICP备08013417号</p>
+		</div>
+	</div>
+
 	<div>
 		<script type="text/javascript" th:inline="javascript">
 			/*<![CDATA[*/
-
-			seajs.config({
-				alias : {
-					"jquery" : /*[[@{'/scripts/jquery-1.10.2.min.js'}]]*/''
-
-				},
-				paths : {
-					"bootstrap" : /*[[@{'/bootstrap/js/'}]]*/'',
-					"scripts" : /*[[@{'/scripts/'}]]*/''
-
-				},
-				preload : [ "jquery" ]
+			YUI().use('aui-viewport');
+			YUI().use('aui-carousel', function(Y) {
+				new Y.Carousel({
+					contentBox : '#myCarousel',
+					height : 160,
+					width : 260
+				}).render();
 			});
 
-			var bootstrap = [ 'jquery', 'bootstrap/bootstrap.min.js' ];
-			seajs.use(bootstrap, function() {
-				$('#mycarousel').carousel();
-
+			YUI().use('aui-sortable-list', function(Y) {
+				new Y.SortableList({
+					dropCondition : function(event) {
+						return true;
+					},
+					dropOn : 'myList',
+					nodes : '#myList li'
+				});
+			});
+			YUI().use('aui-sortable-layout', function(Y) {
+				new Y.SortableLayout({
+					dragNodes : '.portlet',
+					dropNodes : '#mySortableLayout'
+				});
+			});
+			YUI().use('aui-toolbar', function(Y) {
+				new Y.Toolbar({
+					boundingBox : '#myToolbar'
+				}).render();
 			});
 
+			YUI().use('aui-tabview', function(Y) {
+				new Y.TabView({
+					srcNode : '#myTab'
+				}).render();
+			});
 			/*]]>*/
 		</script>
 	</div>
