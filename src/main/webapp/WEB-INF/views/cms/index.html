@@ -35,6 +35,18 @@
 	text-align: center;
 	background-color: #575756;
 }
+
+.bs-callout-info {
+	border-left-color: #1b809e !important;
+}
+
+.bs-callout {
+	padding: 20px;
+	margin: 20px 0;
+	border: 1px solid #eee;
+	border-left-width: 5px;
+	border-radius: 3px;
+}
 </style>
 </head>
 <body>
@@ -43,7 +55,7 @@
 		<div class="container">
 			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
 				codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0"
-				class="col-xs-12" height="200">
+				class="col-xs-12" height="200" style="padding: 0px;">
 				<param name="movie" value="../images/top.swf" />
 				<param name="quality" value="high" />
 				<param name="wmode" value="OPAQUE" />
@@ -58,28 +70,31 @@
 		</div>
 	</div>
 	<div class="container">
-		<div id="myNavbar" class="navbar-default col-xs-12">
-			<ul class="nav navbar-nav">
-				<li class="active"><a href="#first">首页</a></li>
-				<li class=""><a href="#second">工作动态</a></li>
-				<li class=""><a href="#third">学法专区</a></li>
-				<li class=""><a href="#third">资料中心</a></li>
-				<li class=""><a href="#third">法律法规</a></li>
-				<li class=""><a href="#third">在线学习</a></li>
-				<li class=""><a href="#third">以案释法</a></li>
-				<li class=""><a href="#third">律师答疑</a></li>
-				<li class=""><a href="#third">法律专家</a></li>
-				<li class=""><a href="#third">法制漫画</a></li>
+		<div id="myNavbar" class="navbar navbar-default col-xs-12">
+			<div class="collapse navbar-collapse"
+				id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#first">首页</a></li>
+					<li class=""><a href="#second">工作动态</a></li>
+					<li class=""><a href="#third">学法专区</a></li>
+					<li class=""><a href="#third">资料中心</a></li>
+					<li class=""><a href="#third">法律法规</a></li>
+					<li class=""><a href="#third">在线学习</a></li>
+					<li class=""><a href="#third">以案释法</a></li>
+					<li class=""><a href="#third">律师答疑</a></li>
+					<li class=""><a href="#third">法律专家</a></li>
+					<li class=""><a href="#third">法制漫画</a></li>
 
-			</ul>
+				</ul>
+			</div>
 		</div>
 	</div>
 	<div class="container" style="background-color: #f2f2f2">
 		<div class="col-xs-3 bs-docs-sidebar">
 			<p class="related" style="text-align: center;">2016年3月16日 星期三</p>
-			<div class="portlet">
-				<h4 class="title">站内公告</h4>
-				<div class="">
+			<div class="panel panel-default">
+				<div class="panel-heading">站内公告</div>
+				<div class="panel-body">
 					<marquee direction="up" behavior="scroll" scrollamount="1"
 						scrolldelay="0" loop="-1" height="200" bgcolor="" hspace="10"
 						vspace="10">
@@ -98,45 +113,147 @@
 					</marquee>
 				</div>
 			</div>
-			<div class="portlet">
-				<h4 class="title">文章查询</h4>
-				<p></p>
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Search for..." />
-					<span class="input-group-btn">
-						<button class="btn btn-default" type="button">查找</button>
-					</span>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">学法积分</div>
+				<div class="panel-body">
+					<div class="input-group">
+
+
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>单位</th>
+									<th>积分</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row">1</th>
+									<td>交通局</td>
+									<td>18973</td>
+
+								</tr>
+								<tr>
+									<th scope="row">2</th>
+									<td>行政审批中心</td>
+									<td>17777</td>
+
+								</tr>
+								<tr>
+									<th scope="row">3</th>
+									<td>五甲镇</td>
+									<td>16672</td>
+
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
 				</div>
-				<!-- /input-group -->
-				<p></p>
 			</div>
-			<div class="portlet">
-				<h4 class="title">Portlet 3</h4>
-				<p>Lorem Ipsum dummy content</p>
+			<div class="panel panel-default">
+				<div class="panel-heading">网站调查</div>
+				<div class="panel-body">
+					<p>为了提高各类普法对象的法制观念和法律意识，你认为网站应该注重哪类栏目？</p>
+					<div class="radio">
+						<label> <input type="radio" name="optionsRadios"
+							id="optionsRadios1" value="option1" /> 1.工作动态
+						</label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="optionsRadios"
+							id="optionsRadios2" value="option2" /> 2.法学专区
+						</label>
+					</div>
+					<div class="radio disabled">
+						<label> <input type="radio" name="optionsRadios"
+							id="optionsRadios3" value="option3" /> 3.资料中心
+						</label>
+					</div>
+					<button type="button" class="btn btn-primary">投票</button>
+					<button type="button" class="btn btn-primary">结果</button>
+				</div>
 			</div>
-
+			<div class="panel panel-default">
+				<div class="panel-heading">文章查询</div>
+				<div class="panel-body">
+					<div class="input-group">
+						<input type="text" class="form-control"
+							placeholder="Search for..." /> <span class="input-group-btn">
+							<button class="btn btn-default" type="button">查找</button>
+						</span>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="col-xs-9 portlet">
-			<h4 class="title" style="text-align: left;">工作动态</h4>
-			<div class="row">
-				<table>
-					<tr>
-						<td class="col-md-5"><div>
-								<div id="myCarousel">
-									<div class="image-viewer-base-image"
-										style="background: url(../images/1.jpg);"></div>
-									<div class="image-viewer-base-image"
-										style="background: url(../images/2.jpg);"></div>
-									<div class="image-viewer-base-image"
-										style="background: url(../images/3.jpg);"></div>
-									<div class="image-viewer-base-image"
-										style="background: url(../images/3.jpg);"></div>
-								</div>
+		<div class="col-xs-9 ">
+			<div class="panel panel-default ">
+				<div class="panel-heading">
+					<span>工作动态</span>
+					<div class="pull-right">
+						<button type="button" class="btn btn-link">更多...</button>
+					</div>
+				</div>
+				<div class="panel-body">
+					<table>
+						<tr>
+							<td class="col-md-5"><div>
+									<div id="myCarousel">
+										<div class="image-viewer-base-image">
+											<div>
+												<a href="www.baidu.com"><img src="../images/1.jpg" /> <span>MMM</span></a>
+											</div>
 
-							</div></td>
-						<td class="col-md-7"><div>
-								<ol id="myList">
-									<li><a href="http://www.tzpfw.gov.cn/">五接镇开展青少年法治宣传教育系列活动</a></li>
+										</div>
+										<div class="image-viewer-base-image">
+											<img src="../images/2.jpg" />
+										</div>
+										<div class="image-viewer-base-image">
+											<img src="../images/3.jpg" />
+										</div>
+
+									</div>
+
+								</div></td>
+							<td class="col-md-7"><div>
+									<ol id="myList">
+										<li><a href="http://www.tzpfw.gov.cn/">五接镇开展青少年法治宣传教育系列活动</a></li>
+										<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
+										<li>通州区"农民工"学法活动周圆满收官</li>
+										<li>通州2016年度普法环区行拉开序幕</li>
+										<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+										<li>通州开展基层法治文化示范阵地建设530工程</li>
+										<li>通州区开展12.4国家宪法日宣传教</li>
+
+									</ol>
+								</div></td>
+						</tr>
+					</table>
+
+				</div>
+
+			</div>
+
+			<p></p>
+			<div class="panel panel-default">
+
+				<div class="panel-body">
+					<div id="myTab" class="cos-xs-9">
+						<ul class="nav nav-tabs">
+							<li role="presentation" class="disabled"><span>学法专区</span></li>
+							<li><a href="#tab-1">领导干部</a></li>
+							<li class="active"><a href="#tab-2">公职人员</a></li>
+							<li><a href="#tab-3">青少年</a></li>
+							<li><a href="#tab-4">企业经营管理者</a></li>
+							<li><a href="#tab-5">农民与农民工</a></li>
+						</ul>
+						<div class="tab-content">
+							<div id="tab-1">
+								<ol id="">
+									<li><a href="http://www.tzpfw.gov.cn/">国土资源部关于修改《地质灾害危险性评估单位资质管理办法》等5部规章的决
+											[17/8/2015]</a></li>
 									<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
 									<li>通州区"农民工"学法活动周圆满收官</li>
 									<li>通州2016年度普法环区行拉开序幕</li>
@@ -145,89 +262,157 @@
 									<li>通州区开展12.4国家宪法日宣传教</li>
 
 								</ol>
-							</div></td>
-					</tr>
-				</table>
+							</div>
+							<div id="tab-2">
+								<ol id="">
 
+									<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
+									<li>通州区"农民工"学法活动周圆满收官</li>
+									<li>通州2016年度普法环区行拉开序幕</li>
+									<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+									<li>通州开展基层法治文化示范阵地建设530工程</li>
+									<li>通州区开展12.4国家宪法日宣传教</li>
 
+								</ol>
+							</div>
+							<div id="tab-3" class="tab-pane">
+								<ol id="">
 
-			</div>
+									<li>通州2016年度普法环区行拉开序幕</li>
+									<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+									<li>通州开展基层法治文化示范阵地建设530工程</li>
+									<li>通州区开展12.4国家宪法日宣传教</li>
 
-			<p></p>
-			<div id="myTab" class="cos-xs-9">
+								</ol>
+							</div>
+							<div id="tab-4" class="tab-pane">
+								<ol id="">
 
-				<ul class="nav nav-tabs">
-					<li><a href="#tab-0" class="disabled">学法专区</a></li>
-					<li><a href="#tab-1">领导干部</a></li>
-					<li class="active"><a href="#tab-2">公职人员</a></li>
-					<li><a href="#tab-3">青少年</a></li>
-					<li><a href="#tab-4">企业经营管理者</a></li>
-					<li><a href="#tab-5">农民与农民工</a></li>
-				</ul>
+									<li>通州2016年度普法环区行拉开序幕</li>
+									<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+									<li>通州开展基层法治文化示范阵地建设530工程</li>
+									<li>通州区开展12.4国家宪法日宣传教</li>
 
-				<div class="tab-content">
-					<div id="tab-0" class="tab-pane"></div>
-					<div id="tab-1" class="tab-pane">
-						<ol id="">
-							<li><a href="http://www.tzpfw.gov.cn/">国土资源部关于修改《地质灾害危险性评估单位资质管理办法》等5部规章的决
-									[17/8/2015]</a></li>
-							<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
-							<li>通州区"农民工"学法活动周圆满收官</li>
-							<li>通州2016年度普法环区行拉开序幕</li>
-							<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
-							<li>通州开展基层法治文化示范阵地建设530工程</li>
-							<li>通州区开展12.4国家宪法日宣传教</li>
+								</ol>
+							</div>
+							<div id="tab-5" class="tab-pane">
+								<ol id="">
 
-						</ol>
-					</div>
-					<div id="tab-2">
-						<ol id="">
+									<li>通州2016年度普法环区行拉开序幕</li>
+									<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+									<li>通州开展基层法治文化示范阵地建设530工程</li>
+									<li>通州区开展12.4国家宪法日宣传教</li>
 
-							<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
-							<li>通州区"农民工"学法活动周圆满收官</li>
-							<li>通州2016年度普法环区行拉开序幕</li>
-							<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
-							<li>通州开展基层法治文化示范阵地建设530工程</li>
-							<li>通州区开展12.4国家宪法日宣传教</li>
-
-						</ol>
-					</div>
-					<div id="tab-3" class="tab-pane">
-						<ol id="">
-
-							<li>通州2016年度普法环区行拉开序幕</li>
-							<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
-							<li>通州开展基层法治文化示范阵地建设530工程</li>
-							<li>通州区开展12.4国家宪法日宣传教</li>
-
-						</ol>
+								</ol>
+							</div>
+						</div>
 					</div>
 				</div>
-
 			</div>
 
 
 
 		</div>
-		<div class="col-xs-9">
-			<h4>
-				<span class="glyphicon glyphicon-subtitles"></span>工作动态
-			</h4>
-			<div class="row">
-				<ol id="">
-					<li><a href="http://www.tzpfw.gov.cn/">国土资源部关于修改《地质灾害危险性评估单位资质管理办法》等5部规章的决
-							[17/8/2015]</a></li>
-					<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
-					<li>通州区"农民工"学法活动周圆满收官</li>
-					<li>通州2016年度普法环区行拉开序幕</li>
-					<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
-					<li>通州开展基层法治文化示范阵地建设530工程</li>
-					<li>通州区开展12.4国家宪法日宣传教</li>
+		<div class="col-xs-9 pull-right">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<span>每日一法</span>
+					<div class="pull-right">
+						<button type="button" class="btn btn-link">更多...</button>
+					</div>
+				</div>
+				<div class="panel-body">
+					<ol id="">
+						<li><a href="http://www.tzpfw.gov.cn/">国土资源部关于修改《地质灾害危险性评估单位资质管理办法》等5部规章的决
+								[17/8/2015]</a></li>
+						<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
+						<li>通州区"农民工"学法活动周圆满收官</li>
+						<li>通州2016年度普法环区行拉开序幕</li>
+						<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+						<li>通州开展基层法治文化示范阵地建设530工程</li>
+						<li>通州区开展12.4国家宪法日宣传教</li>
 
-				</ol>
+					</ol>
+				</div>
 			</div>
 		</div>
+		<div class="col-xs-9 pull-right">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<span>以案释法</span>
+					<div class="pull-right">
+						<button type="button" class="btn btn-link">更多...</button>
+					</div>
+				</div>
+				<div class="panel-body">
+					<ol id="">
+						<li><a href="http://www.tzpfw.gov.cn/">国土资源部关于修改《地质灾害危险性评估单位资质管理办法》等5部规章的决
+								[17/8/2015]</a></li>
+						<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
+						<li>通州区"农民工"学法活动周圆满收官</li>
+						<li>通州2016年度普法环区行拉开序幕</li>
+						<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+						<li>通州开展基层法治文化示范阵地建设530工程</li>
+						<li>通州区开展12.4国家宪法日宣传教</li>
 
+					</ol>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-9 pull-right">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<span>法制漫画</span>
+					<div class="pull-right">
+						<button type="button" class="btn btn-link">更多...</button>
+					</div>
+				</div>
+				<div class="panel-body">
+					<ol id="">
+						<li><a href="http://www.tzpfw.gov.cn/">国土资源部关于修改《地质灾害危险性评估单位资质管理办法》等5部规章的决
+								[17/8/2015]</a></li>
+						<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
+						<li>通州区"农民工"学法活动周圆满收官</li>
+						<li>通州2016年度普法环区行拉开序幕</li>
+						<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+						<li>通州开展基层法治文化示范阵地建设530工程</li>
+						<li>通州区开展12.4国家宪法日宣传教</li>
+
+					</ol>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-9 pull-right">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<span>律师答疑</span>
+					<div class="pull-right">
+						<button type="button" class="btn btn-link">更多...</button>
+					</div>
+				</div>
+				<div class="panel-body">
+					<ol id="">
+						<li><a href="http://www.tzpfw.gov.cn/">国土资源部关于修改《地质灾害危险性评估单位资质管理办法》等5部规章的决
+								[17/8/2015]</a></li>
+						<li>通州区防范通讯网络诈骗宣传活动如火如荼</li>
+						<li>通州区"农民工"学法活动周圆满收官</li>
+						<li>通州2016年度普法环区行拉开序幕</li>
+						<li>南通市通州区组织中学生观摩庭审零距离开展法</li>
+						<li>通州开展基层法治文化示范阵地建设530工程</li>
+						<li>通州区开展12.4国家宪法日宣传教</li>
+
+					</ol>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-9 pull-right">
+
+			<div class="bs-callout bs-callout-info" id="callout-type-dl-truncate">
+				<h4>友情链接</h4>
+				中国通州网站 中国普法网 江苏司法行政网 法制网 中国律师网 中国平安网 中国法学会 人民网 法润江苏网
+			</div>
+
+		</div>
 	</div>
 
 	<div class="footer">
