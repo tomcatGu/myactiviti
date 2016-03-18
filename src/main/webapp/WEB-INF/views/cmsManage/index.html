@@ -56,7 +56,7 @@
 			<div class="navbar-header">
 				<a class="navbar-brand" href="http://alloyui.com"> <img
 					src="http://alloyui.com/website/img/logo.png" alt="AlloyUI Logo"
-					width="149" height="34">
+					width="149" height="34" />
 				</a> <a href="#" id="version"> v3.0.x <span class="caret"></span>
 				</a>
 				<ul id="version-dropdown" class="dropdown-menu" role="menu"
@@ -81,24 +81,53 @@
 			</ul>
 		</div>
 	</nav>
-
+	<div class="banner page-banner">
+		<div class="container">
+			<div class="presentation">
+				<h2>网站后台管理</h2>
+			</div>
+		</div>
+	</div>
 
 	<div class="container">
-		<div id="myNavbar" class="navbar navbar-default col-xs-12">
+
+		<div id="Mynav" class="col-xs-3 bs-docs-sidebar">
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
-				<div class="list-group">
-					<a href="#" class="list-group-item active"> Cras justo odio </a> <a
-						href="#" class="list-group-item">文章管理</a> <a href="#"
-						class="list-group-item">栏目管理</a> <a href="#"
-						class="list-group-item">用户管理</a> <a href="#"
-						class="list-group-item">角色管理</a>
+				<div class="list-group bs-docs-sidenav affix-top">
+					<a href="#" class="list-group-item active list-group-item"
+						shape="rect"> CMS </a> <a href="../cms/index"
+						class="yui3-pjax list-group-item" shape="rect">文章管理</a> <a
+						th:href="@{/cmsManage/channel/index}" href="channel/index"
+						class="yui3-pjax list-group-item" shape="rect">栏目管理</a> <a
+						href="#" class="yui3-pjax list-group-item" shape="rect">用户管理</a> <a
+						href="#" class="yui3-pjax list-group-item" shape="rect">角色管理</a>
 				</div>
 
 			</div>
 		</div>
+		<div id="Mynav" class="col-xs-3 bs-docs-sidebar">
+			<div class="collapse navbar-collapse"
+				id="bs-example-navbar-collapse-1">
+				<div class="list-group bs-docs-sidenav affix-top">
+					<a href="#" class="list-group-item active list-group-item"
+						shape="rect"> CMS </a>
+					<ul id="nav">
+						<li class="yui3-pjax list-group-item"><a href="install.html">文章管理</a></li>
+						<li class="yui3-pjax list-group-item"><a
+							th:href="@{/cmsManage/channel/index}" href="examples.html">栏目管理</a></li>
+						<li class="yui3-pjax list-group-item"><a href="api.html">用户管理</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<h1></h1>
+		<div id="main">
+			<p>Some great documentation is about to appear here!</p>
+			<p>Boy howdy!</p>
+		</div>
+
 	</div>
-	<div class="container" style="background-color: #f2f2f2"></div>
 
 
 
@@ -107,41 +136,36 @@
 	<div>
 		<script type="text/javascript" th:inline="javascript">
 			/*<![CDATA[*/
-			YUI().use('aui-viewport');
-			YUI().use('aui-carousel', function(Y) {
-				new Y.Carousel({
-					contentBox : '#myCarousel',
-					height : 160,
-					width : 260
-				}).render();
-			});
 
-			YUI().use('aui-sortable-list', function(Y) {
-				new Y.SortableList({
-					dropCondition : function(event) {
-						return true;
-					},
-					dropOn : 'myList',
-					nodes : '#myList li'
+			YUI().use('node-load', function(Y) {
+				var main = Y.one('#main');
+
+				Y.all('#nav a').on('click', function(ev) {
+					ev.preventDefault();
+					main.load(ev.target.get('href'), '#content');
+					Y.one('h1').setHTML(ev.target.getHTML());
 				});
 			});
-			YUI().use('aui-sortable-layout', function(Y) {
-				new Y.SortableLayout({
-					dragNodes : '.portlet',
-					dropNodes : '#mySortableLayout'
-				});
-			});
-			YUI().use('aui-toolbar', function(Y) {
-				new Y.Toolbar({
-					boundingBox : '#myToolbar'
-				}).render();
-			});
 
-			YUI().use('aui-tabview', function(Y) {
-				new Y.TabView({
-					srcNode : '#myTab'
-				}).render();
-			});
+			/*
+			 YUI().use('pjax', function(Y) {
+			 var pjax = new Y.Pjax({
+			 container : '#content'
+			 });
+
+			 // Listen for the `navigate` event and add the "loading" CSS class. The styles
+			 // for the this CSS class can add a loading spinner or dim the container node.
+			 pjax.on('navigate', function(e) {
+			 this.get('container').addClass('loading');
+			 });
+
+			 // Listen for either the `load` or `error` events and remove the "loading" CSS
+			 // class from the container node.
+			 pjax.on([ 'error', 'load' ], function(e) {
+			 this.get('container').removeClass('loading');
+			 });
+			 });
+			 */
 			/*]]>*/
 		</script>
 	</div>

@@ -1,0 +1,146 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<title></title>
+<link
+	href="http://cdn.alloyui.com/3.0.1/aui-css/css/sortable-layout/css/basic.css"
+	th:href="@{/alloy-3.0.1/aui-sortable-layout/assets/skins/sam/aui-sortable-layout.css}"
+	rel="stylesheet"></link>
+<link
+	href="http://cdn.alloyui.com/3.0.1/aui-css/css/sortable-layout/css/basic.css"
+	th:href="@{/alloy-3.0.1/aui-sortable-layout/assets/skins/sam/aui-sortable-layout-skin.css}"
+	rel="stylesheet"></link>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	/////create on20162016年3月18日下午2:17:49 byxxb1029//////
+	/*]]>*/
+</script>
+<style>
+</style>
+</head>
+<body>
+	<div id="content">
+		<div id="myDropdown" class="dropdown">
+			<button id="myTrigger" class="btn btn-default dropdown-toggle"
+				type="button">
+				Dropdown <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a tabindex="-1" href="#">Action</a></li>
+			</ul>
+		</div>
+		<div class="col-xs-3">
+			<div id="myTreeView"></div>
+
+		</div>
+
+
+		<div>
+			<script type="text/javascript" th:inline="javascript">
+				/*<![CDATA[*/
+
+				YUI().use('aui-dropdown', function(Y) {
+					new Y.Dropdown({
+						boundingBox : '#myDropdown',
+						trigger : '#myTrigger'
+					}).render();
+
+				});
+				YUI().use('aui-tree-view', function(Y) {
+					new Y.TreeViewDD({
+						boundingBox : '#myTreeView',
+						children : [ {
+							children : [ {
+								label : 'Watermelon',
+								leaf : true,
+								type : 'check'
+							}, {
+								label : 'Apricot',
+								leaf : true,
+								type : 'check'
+							}, {
+								label : 'Pineapple',
+								leaf : true,
+								type : 'check'
+							}, {
+								label : 'Kiwi',
+								leaf : true,
+								type : 'check'
+							}, {
+								label : 'Orange',
+								leaf : true,
+								type : 'check'
+							}, {
+								label : 'Pomegranate',
+								leaf : true,
+								type : 'check'
+							} ],
+							expanded : true,
+							label : 'Checkboxes'
+						}, {
+							children : [ {
+								label : 'Watermelon',
+								leaf : true,
+								type : 'radio'
+							}, {
+								label : 'Apricot',
+								leaf : true,
+								type : 'radio'
+							}, {
+								label : 'Pineapple',
+								leaf : true,
+								type : 'radio'
+							}, {
+								label : 'Kiwi',
+								leaf : true,
+								type : 'radio'
+							}, {
+								label : 'Orange',
+								leaf : true,
+								type : 'radio'
+							}, {
+								label : 'Pomegranate',
+								leaf : true,
+								type : 'radio'
+							} ],
+							expanded : true,
+							label : 'Radio'
+						}, {
+							children : [ {
+								label : 'Watermelon',
+								leaf : true,
+								type : 'task'
+							}, {
+								label : 'Apricot',
+								leaf : true,
+								type : 'task'
+							}, {
+								label : 'Pineapple',
+								leaf : true,
+								type : 'task'
+							}, {
+								label : 'Kiwi',
+								leaf : true,
+								type : 'task'
+							}, {
+								label : 'Orange',
+								leaf : true,
+								type : 'task'
+							}, {
+								label : 'Pomegranate',
+								leaf : true,
+								type : 'task'
+							} ],
+							expanded : true,
+							label : 'Task',
+							type : 'task'
+						} ]
+					}).render();
+				});
+				/*]]>*/
+			</script>
+		</div>
+
+	</div>
+</body>
+</html>
