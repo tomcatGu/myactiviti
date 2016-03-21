@@ -1,144 +1,133 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
-<head thy:merge="/common::headerFragment">
+<head>
 <title>网站后台管理</title>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/dojo-release-1.10.4/dijit/themes/claro/claro.css}"
+	href="/dojo-release-1.10.4/dijit/themes/claro/claro.css"
+	data-dojo-config="async: true" media="screen" />
 
-<link
-	href="http://cdn.alloyui.com/3.0.1/aui-css/css/sortable-layout/css/basic.css"
-	th:href="@{/alloy-3.0.1/aui-sortable-layout/assets/skins/sam/aui-sortable-layout.css}"
-	rel="stylesheet"></link>
-<link
-	href="http://cdn.alloyui.com/3.0.1/aui-css/css/sortable-layout/css/basic.css"
-	th:href="@{/alloy-3.0.1/aui-sortable-layout/assets/skins/sam/aui-sortable-layout-skin.css}"
-	rel="stylesheet"></link>
-<script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
 
-	/*]]>*/
-</script>
 <style>
-.portlet {
-	border: 1px solid #DADADE;
-	border-top-color: #F0F0FE;
-	cursor: move;
-	margin: 0px 5;
-	padding: 0 5px;
+* {
+	outline: none !important;
 }
 
-.portlet .title {
-	color: #fff;
-	background-color: #575756;
-	border-top-color: #F0F0FE;
-	cursor: move;
-	margin: 0px 0;
-	padding: 5px;
-	text-align: center;
-	background-color: #575756;
+body {
+	margin: 0;
+	padding: 2em;
+	font-family: Lucida Sans, Lucida Grande, Arial !important;
+	font-size: 13px !important;
+	background: white;
+	color: #333;
 }
 
-.bs-callout-info {
-	border-left-color: #1b809e !important;
+button {
+	-webkit-transition: background-color 0.2s linear;
+	border-radius: 4px;
+	-moz-border-radius: 4px 4px 4px 4px;
+	-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+	background-color: #E4F2FF;
+	background-image:
+		url("//ajax.googleapis.com/ajax/libs/dojo/1.7.4/dijit/themes/claro/form/images/button.png");
+	background-position: center top;
+	background-repeat: repeat-x;
+	border: 1px solid #769DC0;
+	padding: 2px 8px 4px;
+	font-size: 1em;
 }
 
-.bs-callout {
-	padding: 20px;
-	margin: 20px 0;
-	border: 1px solid #eee;
-	border-left-width: 5px;
-	border-radius: 3px;
+button:hover {
+	background-color: #AFD9FF;
+	color: #000000;
+}
+
+h1 {
+	font-size: 1.5em;
+}
+
+.break {
+	float: none;
+	clear: both;
+}
+
+/* Any demo specific styling needed for this tutorial only */
+html, body {
+	height: 100%;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+}
+
+#appLayout {
+	height: 100%;
+}
+
+#leftCol {
+	width: 14em;
+}
+
+.claro .demoLayout .edgePanel {
+	background-color: #d0e9fc;
+}
+
+#viewsChart {
+	width: 550px;
+	height: 550px;
 }
 </style>
 </head>
-<body>
 
-	<nav class="navbar navbar-inverse navbar-fixed-top" id="siteNavigation">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="http://alloyui.com"> <img
-					src="http://alloyui.com/website/img/logo.png" alt="AlloyUI Logo"
-					width="149" height="34" />
-				</a> <a href="#" id="version"> v3.0.x <span class="caret"></span>
-				</a>
-				<ul id="version-dropdown" class="dropdown-menu" role="menu"
-					aria-labelledby="drop">
-					<li><a tabindex="-1" href="/versions/2.5.x">v2.5.x</a></li>
-					<li><a tabindex="-1" href="/versions/2.0.x">v2.0.x</a></li>
-					<li><a tabindex="-1" href="/versions/1.5.x">v1.5.x</a></li>
-					<li><a tabindex="-1" href="/versions/1.0.x">v1.0.x</a></li>
-				</ul>
+<body class="claro">
+	<div id="appLayout" class="demoLayout"
+		data-dojo-type="dijit/layout/BorderContainer"
+		data-dojo-props="design: 'headline'">
+		<div class="centerPanel" data-dojo-type="dijit/layout/TabContainer"
+			data-dojo-props="region: 'center', tabPosition: 'bottom'">
+			<div data-dojo-type="dijit/layout/ContentPane" title="Group 1">
+				<h4>Group 1 Content</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
+					do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+					enim ad minim veniam, quis nostrud exercitation ullamco laboris
+					nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+					reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+					pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+					culpa qui officia deserunt mollit anim id est laborum.</p>
 			</div>
-
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="http://alloyui.com/examples/">Examples</a></li>
-				<li><a href="http://alloyui.com/tutorials/">Tutorials</a></li>
-				<li><a href="http://alloyui.com/api/" target="_blank">API
-						Docs</a></li>
-				<li><a href="http://alloyui.com/rosetta-stone/" target="_blank">Rosetta
-						Stone</a></li>
-				<li><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a></li>
-				<li><a href="http://alloyui.com/contributing/">Contributing</a></li>
-				<li><a href="http://alloyui.com/about/">About</a></li>
-			</ul>
-		</div>
-	</nav>
-	<div class="banner page-banner">
-		<div class="container">
-			<div class="presentation">
-				<h2>网站后台管理</h2>
+			<div data-dojo-type="dijit/layout/ContentPane" title="Group Two">
+				<h4>Group 2 Content</h4>
+			</div>
+			<div data-dojo-type="dijit/layout/ContentPane" title="Group 3">
+				<h4>Group 3 Content</h4>
 			</div>
 		</div>
+
+		<div class="edgePanel" data-dojo-type="dijit/layout/ContentPane"
+			data-dojo-props="region: 'top'">Header content (top)</div>
+		<div id="leftCol" class="edgePanel"
+			data-dojo-type="dijit/layout/ContentPane"
+			data-dojo-props="region: 'left', splitter: true">Sidebar
+			content (left)</div>
 	</div>
 
-	<div class="container">
+	<script type="text/javascript"
+		th:src="@{/dojo-release-1.10.4/dojo/dojo.js}"
+		src="Scripts/dojo/dojo.js" data-dojo-config="async: 1, parseOnLoad: 1"></script>
+	<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
 
-		<div id="Mynav" class="col-xs-3 bs-docs-sidebar">
-			<div class="collapse navbar-collapse"
-				id="bs-example-navbar-collapse-1">
-				<div class="list-group bs-docs-sidenav affix-top">
-					<a href="#" class="list-group-item active list-group-item"
-						shape="rect"> CMS </a> <a href="../cms/index"
-						class="yui3-pjax list-group-item" shape="rect">文章管理</a> <a
-						th:href="@{/cmsManage/channel/index}" href="channel/index"
-						class="yui3-pjax list-group-item" shape="rect">栏目管理</a> <a
-						href="#" class="yui3-pjax list-group-item" shape="rect">用户管理</a> <a
-						href="#" class="yui3-pjax list-group-item" shape="rect">角色管理</a>
-				</div>
-
-			</div>
-		</div>
-		<div id="Mynav" class="col-xs-3 bs-docs-sidebar">
-			<div class="collapse navbar-collapse"
-				id="bs-example-navbar-collapse-1">
-				<div class="list-group bs-docs-sidenav affix-top">
-					<a href="#" class="list-group-item active list-group-item"
-						shape="rect"> CMS </a>
-					<ul id="nav">
-						<li class="yui3-pjax list-group-item"><a href="install.html">文章管理</a></li>
-						<li class="yui3-pjax list-group-item"><a
-							th:href="@{/cmsManage/channel/index}" href="examples.html">栏目管理</a></li>
-						<li class="yui3-pjax list-group-item"><a href="api.html">用户管理</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<h1></h1>
-		<div id="main">
-			<p>Some great documentation is about to appear here!</p>
-			<p>Boy howdy!</p>
-		</div>
-
-	</div>
-
-
-
-
-	<div th:include="/common::scriptFragment"></div>
-	<div>
-		<script type="text/javascript" th:inline="javascript">
-			/*<![CDATA[*/
-
-			/*]]>*/
-		</script>
-	</div>
+		require([ 'dojo/dom', 'dojo/dom-construct' ], function(dom,
+				domConstruct) {
+			//var greetingNode = dom.byId('greeting');
+			//domConstruct.place('<em> Dojo!</em>', greetingNode);
+		});
+		require([ "dojo/parser", "dijit/layout/BorderContainer",
+				"dijit/layout/TabContainer", "dijit/layout/ContentPane",
+				"dojo/domReady!" ], function(parser) {
+			//parser.parse();
+		});
+		/*]]>*/
+	</script>
 </body>
+
 </html>
