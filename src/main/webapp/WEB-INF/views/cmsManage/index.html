@@ -76,14 +76,27 @@ html, body {
 	height: 550px;
 }
 </style>
+
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	dojoConfig = {
+		'packages' : [
+
+		{
+			location : /*[[@{'/dojo-release-1.10.4/dbootstrap'}]]*/'dojo-release-1.10.4/dbootstrap',
+			name : 'dbootstrap'
+		} ]
+	};
+	/*]]>*/
+</script>
 </head>
 
-<body class="claro">
+<body class="dbootstrap">
 	<div id="appLayout" class="demoLayout"
 		data-dojo-type="dijit/layout/BorderContainer"
 		data-dojo-props="design: 'headline'">
 		<div class="centerPanel" data-dojo-type="dijit/layout/TabContainer"
-			data-dojo-props="region: 'center', tabPosition: 'bottom'">
+			data-dojo-props="region: 'center', tabPosition: 'top'">
 			<div data-dojo-type="dijit/layout/ContentPane" title="Group 1">
 				<h4>Group 1 Content</h4>
 				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
@@ -102,12 +115,32 @@ html, body {
 			</div>
 		</div>
 
-		<div class="edgePanel" data-dojo-type="dijit/layout/ContentPane"
-			data-dojo-props="region: 'top'">Header content (top)</div>
+		<div id="header" data-dojo-type="dijit/MenuBar"
+			data-dojo-props="
+            region:'top', 'class':'primary inverse'
+    ">
+			<span class='brand'>网站后台管理V1.0</span>
+		</div>
 		<div id="leftCol" class="edgePanel"
 			data-dojo-type="dijit/layout/ContentPane"
-			data-dojo-props="region: 'left', splitter: true">Sidebar
-			content (left)</div>
+			data-dojo-props="region: 'left', splitter: true">
+			<div data-dojo-type="dijit/layout/AccordionContainer"
+				data-dojo-props="minSize:20,region:'right',splitter:true"
+				style="width: 300px;" id="leftAccordion">
+				<div data-dojo-type="dijit/layout/AccordionPane" title="文章管理"
+					selected="true">
+					<ul id="menu">
+						<li><a href="index.html">Home</a></li>
+						<li><a href="about.html">About us</a></li>
+					</ul>
+				</div>
+				<div data-dojo-type="dijit/layout/AccordionPane" title="栏目管理">
+				</div>
+				<div data-dojo-type="dijit/layout/AccordionPane" title="用户管理"></div>
+				<div data-dojo-type="dijit/layout/AccordionPane" title="角色管理">
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<script type="text/javascript"
@@ -115,7 +148,9 @@ html, body {
 		src="Scripts/dojo/dojo.js" data-dojo-config="async: 1, parseOnLoad: 1"></script>
 	<script type="text/javascript" th:inline="javascript">
 		/*<![CDATA[*/
-
+		require([ 'dbootstrap' ], function(dbootstrap) {
+			// Start application.
+		});
 		require([ 'dojo/dom', 'dojo/dom-construct' ], function(dom,
 				domConstruct) {
 			//var greetingNode = dom.byId('greeting');
