@@ -33,55 +33,58 @@
 	<script type="text/javascript" th:inline="javascript">
 		/*<![CDATA[*/
 		/////create on20162016年3月18日下午2:17:49 byxxb1029//////
-
 		require([ "dbootstrap" ], function(dbootstrap) {
 			// Start application.
 		});
 
 		require(
-				[ "dojo/dom", "dojo/json", "dojo/store/Memory",
+				[ "dojo/dom", "dojo/json", "dojo/store/JsonRest",
 						"dijit/tree/ObjectStoreModel", "dijit/Tree",
 						"dojo/domReady!" ],
-				function(dom, json, Memory, ObjectStoreModel, Tree) {
+				function(dom, json, JsonRest, ObjectStoreModel, Tree) {
 
 					// set up the store to get the tree data
 
 					var data = '{"name" : "US Government","id" : "root","children" : [ {"name" : "Congress","id" : "congress"}, {"name" : "Executive","id" : "exec"	}, {"name" : "Judicial","id" : "judicial"} ]}';
 
-					var governmentStore = new Memory({
-						data : [ json.parse(data) ],
+					var channelStore = new JsonRest({
+						target : /*[[@{'/cmsManage/channel/data/'}]]*/"channel/data/",
+						//data : [ json.parse(data) ],
 						getChildren : function(object) {
-							return object.children || [];
+							return this.get(object.id).then(
+									function(fullObject) {
+										return fullObject.children;
+									})
 						}
 					});
 
 					// set up the model, assigning governmentStore, and assigning method to identify leaf nodes of tree
-					var governmentModel = new ObjectStoreModel({
-						store : governmentStore,
-						query : {
-							id : 'root'
+					var channelModel = new ObjectStoreModel({
+						store : channelStore,
+						getRoot : function(onItem) {
+							this.store.get("root").then(onItem);
 						},
-						mayHaveChildren : function(item) {
-							return "children" in item;
+
+						mayHaveChildren : function(object) {
+							return "children" in object;
 						}
 					});
 
 					// set up the tree, assigning governmentModel;
-					var governmentTree = new Tree(
-							{
-								model : governmentModel,
-								onOpenClick : true,
-								onLoad : function() {
-									dom.byId('image').src = '../resources/images/root.jpg';
-								},
-								onClick : function(item) {
-									dom.byId('image').src = '../resources/images/'
-											+ item.id + '.jpg';
+					var channelTree = new Tree({
+						model : channelModel
+					/*onOpenClick : true,
+					onLoad : function() {
+						dom.byId('image').src = '../resources/images/root.jpg';
+					},
+					onClick : function(item) {
+						dom.byId('image').src = '../resources/images/'
+								+ item.id + '.jpg';
 
-								},
-								persist : false
-							}, "divTree");
-					governmentTree.startup();
+					},
+					persist : false*/
+					}, "divTree");
+					channelTree.startup();
 				});
 		/*]]>*/
 	</script>

@@ -13,39 +13,51 @@ public class ChannelDTO {
 	private int sequenceIndex;
 	private String state;
 	private List<Article> articles = new ArrayList<Article>();
+
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
 	public Channel getParent() {
 		return parent;
 	}
+
 	public void setParent(Channel parent) {
 		this.parent = parent;
 	}
-	public String getTitle() {
+
+	public String getName() {
 		return title;
 	}
-	public void setTitle(String title) {
+
+	public void setName(String title) {
 		this.title = title;
 	}
+
 	public int getSequenceIndex() {
 		return sequenceIndex;
 	}
+
 	public void setSequenceIndex(int sequenceIndex) {
 		this.sequenceIndex = sequenceIndex;
 	}
+
 	public String getState() {
 		return state;
 	}
+
 	public void setState(String state) {
 		this.state = state;
 	}
+
 	public List<Article> getArticles() {
 		return articles;
 	}
+
 	public void setArticles(List<Article> articles) {
 		this.articles = articles;
 	}
