@@ -158,9 +158,34 @@ html, body {
 		});
 		require([ "dojo/parser", "dijit/layout/BorderContainer",
 				"dijit/layout/TabContainer", "dijit/layout/ContentPane",
-				"dojo/domReady!" ], function(parser) {
+				"dojo/domReady!", "dojo/hash", ], function(parser,
+				borderContainer, tabContainer, contentPane, domReady, hash) {
 			//parser.parse();
+			var contentNode = dom.byId("content"), prefix = "!",
+			// store the last requested page so we do not make multiple requests for the same content
+			lastPage = (/([^\/]+).html$/.exec(location.pathname) || [])[1]
+					|| "index";
+
+			topic.subscribe("/dojo/hashchange", function(newHash) {
+				// parse the plain hash value, e.g. "index" from "!index"
+				loadPage(newHash.substr(prefix.length));
+			});
+
+			hash(prefix + (location.hash || lastPage), true); // set the default page hash
 		});
+
+		function loadPage(page) {
+			hash(page);
+
+			// get the page content using an Ajax GET
+			request(page + ".json", {
+				handleAs : "json"
+			}).then(function(data) {
+				// update the page title and content
+				document.title = data.title;
+				contentNode.innerHTML = data.content;
+			});
+		};
 		/*]]>*/
 	</script>
 </body>
