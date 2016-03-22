@@ -141,6 +141,19 @@
 -->
 </head>
 <body>
+
+	<div th:fragment="dojoScriptFragment">
+		<script type="text/javascript"
+			th:src="@{/dojo-release-1.10.4/dojo/dojo.js}"
+			src="Scripts/dojo/dojo.js"
+			data-dojo-config="async: 1, parseOnLoad: 1"></script>
+		<script type="text/javascript" th:inline="javascript">
+			/*<![CDATA[*/
+
+			/*]]>*/
+		</script>
+	</div>
+
 	<div th:fragment="scriptFragment">
 
 		<script src="sea-modules/sea.js" type="text/javascript"

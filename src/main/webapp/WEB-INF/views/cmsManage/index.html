@@ -99,13 +99,7 @@ html, body {
 			data-dojo-props="region: 'center', tabPosition: 'top'">
 			<div data-dojo-type="dijit/layout/ContentPane" title="Group 1">
 				<h4>Group 1 Content</h4>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-					do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-					enim ad minim veniam, quis nostrud exercitation ullamco laboris
-					nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-					reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-					pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-					culpa qui officia deserunt mollit anim id est laborum.</p>
+				<div id="content"></div>
 			</div>
 			<div data-dojo-type="dijit/layout/ContentPane" title="Group Two">
 				<h4>Group 2 Content</h4>
@@ -129,12 +123,18 @@ html, body {
 				style="width: 300px;" id="leftAccordion">
 				<div data-dojo-type="dijit/layout/AccordionPane" title="文章管理"
 					selected="true">
-					<ul id="menu">
-						<li><a href="index.html">Home</a></li>
+					<ul class="menu">
+						<li><a th:href="@{/cms/index}" href="cms/index">Home</a></li>
 						<li><a href="about.html">About us</a></li>
 					</ul>
 				</div>
 				<div data-dojo-type="dijit/layout/AccordionPane" title="栏目管理">
+
+					<ul class="menu">
+						<li><a th:href="@{/cmsManage/channel/index}"
+							href="cmsManage/channel/index">所有栏目</a></li>
+
+					</ul>
 				</div>
 				<div data-dojo-type="dijit/layout/AccordionPane" title="用户管理"></div>
 				<div data-dojo-type="dijit/layout/AccordionPane" title="角色管理">
@@ -156,36 +156,45 @@ html, body {
 			//var greetingNode = dom.byId('greeting');
 			//domConstruct.place('<em> Dojo!</em>', greetingNode);
 		});
-		require([ "dojo/parser", "dijit/layout/BorderContainer",
+		require([ "dojo/dom", "dojo/parser", "dijit/layout/BorderContainer",
 				"dijit/layout/TabContainer", "dijit/layout/ContentPane",
-				"dojo/domReady!", "dojo/hash", ], function(parser,
-				borderContainer, tabContainer, contentPane, domReady, hash) {
+				"dojo/domReady!", "dojo/hash", "dojo/topic", "dojo/request",
+				"dojo/on", "dojo/dom-attr", "dojo/query" ], function(dom,
+				parser, borderContainer, tabContainer, contentPane, domReady,
+				hash, topic, request, on, domAttr, query) {
 			//parser.parse();
 			var contentNode = dom.byId("content"), prefix = "!",
 			// store the last requested page so we do not make multiple requests for the same content
-			lastPage = (/([^\/]+).html$/.exec(location.pathname) || [])[1]
-					|| "index";
-
+			//lastPage = (/([^\/]+).html$/.exec(location.pathname) || [])[1]
+			//		|| "index";
+			lastPage = location.pathname;
 			topic.subscribe("/dojo/hashchange", function(newHash) {
 				// parse the plain hash value, e.g. "index" from "!index"
-				loadPage(newHash.substr(prefix.length));
+				loadPage(newHash);
 			});
 
-			hash(prefix + (location.hash || lastPage), true); // set the default page hash
+			on(query(".menu"), "a:click", function(event) {
+				// prevent loading a new page - we're doing a single page app
+				event.preventDefault();
+				var page = domAttr.get(this, "href").replace(".html", "");
+				loadPage(page);
+			});
+
+			hash((location.hash || lastPage), true); // set the default page hash
+
+			function loadPage(page) {
+				hash(page);
+
+				// get the page content using an Ajax GET
+				request(page).then(function(data) {
+					// update the page title and content
+					document.title = data.title;
+					contentNode.innerHTML = data;
+				});
+			}
+			;
 		});
 
-		function loadPage(page) {
-			hash(page);
-
-			// get the page content using an Ajax GET
-			request(page + ".json", {
-				handleAs : "json"
-			}).then(function(data) {
-				// update the page title and content
-				document.title = data.title;
-				contentNode.innerHTML = data.content;
-			});
-		};
 		/*]]>*/
 	</script>
 </body>
