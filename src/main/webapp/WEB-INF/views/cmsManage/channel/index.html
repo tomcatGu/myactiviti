@@ -47,23 +47,24 @@
 
 					var data = '{"name" : "US Government","id" : "root","children" : [ {"name" : "Congress","id" : "congress"}, {"name" : "Executive","id" : "exec"	}, {"name" : "Judicial","id" : "judicial"} ]}';
 
-					var channelStore = new JsonRest({
-						target : /*[[@{'/cmsManage/channel/data/'}]]*/"channel/data/",
-						//data : [ json.parse(data) ],
-						getChildren : function(object) {
-							return this.get(object.id).then(
-									function(fullObject) {
-										return fullObject.children;
-									})
-						}
-					});
+					var channelStore = new JsonRest(
+							{
+								target : /*[[@{'/cmsManage/channel/data/'}]]*/"channel/data/",
+								//data : [ json.parse(data) ],
+								getChildren : function(object) {
+									return this.get(object.id).then(
+											function(fullObject) {
+												return fullObject.children;
+											})
+								}
+							});
 
-					// set up the model, assigning governmentStore, and assigning method to identify leaf nodes of tree
+					// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
 					var channelModel = new ObjectStoreModel({
 						store : channelStore,
-						getRoot : function(onItem) {
-							this.store.get("root").then(onItem);
-						},
+						//getRoot : function(onItem) {
+						//	this.store.get("root").then(onItem);
+						//},
 
 						mayHaveChildren : function(object) {
 							return "children" in object;

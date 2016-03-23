@@ -11,7 +11,9 @@ import org.crusoe.entity.cms.Channel;
 import org.crusoe.service.cms.ChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -33,21 +35,25 @@ public class CmsManageController {
 		return "cmsManage/channel/index";
 	}
 
-	@RequestMapping(value = "channel/data/root")
-	public @ResponseBody List<ChannelDTO> channelRoot() {
+	@RequestMapping(value = "channel/data/{id:^(\\d+|\\-){7,}}")
+	public @ResponseBody List<ChannelDTO> channelRoot(@PathVariable(value = "id") Long id) {
 		List<ChannelDTO> channelDTORootList = new ArrayList();
-		List<Channel> crl=channelService.findRoot();
-		Iterator iter=crl.iterator();
-		while(iter.hasNext()){
-			Channel c=(Channel) iter.next();
-			ChannelDTO cDTO=new ChannelDTO();
+		List<Channel> crl = channelService.findRoot();
+		Iterator iter = crl.iterator();
+		while (iter.hasNext()) {
+			Channel c = (Channel) iter.next();
+			ChannelDTO cDTO = new ChannelDTO();
 			cDTO.setId(c.getId());
 			cDTO.setName(c.getTitle());
 			channelDTORootList.add(cDTO);
-			
-			
 		}
-		
+
+		/// for test
+		ChannelDTO cDTO = new ChannelDTO();
+		cDTO.setId(-1L);
+		cDTO.setName("根栏目");
+		channelDTORootList.add(cDTO);
+
 		return channelDTORootList;
 
 	}
