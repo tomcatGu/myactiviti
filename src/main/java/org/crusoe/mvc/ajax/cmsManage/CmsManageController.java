@@ -35,26 +35,32 @@ public class CmsManageController {
 		return "cmsManage/channel/index";
 	}
 
-	@RequestMapping(value = "channel/data/{id:^(\\d+|\\-){7,}}")
-	public @ResponseBody List<ChannelDTO> channelRoot(@PathVariable(value = "id") Long id) {
-		List<ChannelDTO> channelDTORootList = new ArrayList();
-		List<Channel> crl = channelService.findRoot();
+	@RequestMapping(value = "channel/data/{id}")
+	public @ResponseBody ChannelDTO channelById(@PathVariable(value = "id") Long id) {
+
+		List<Channel> crl = channelService.findById(id);
 		Iterator iter = crl.iterator();
 		while (iter.hasNext()) {
 			Channel c = (Channel) iter.next();
 			ChannelDTO cDTO = new ChannelDTO();
 			cDTO.setId(c.getId());
 			cDTO.setName(c.getTitle());
-			channelDTORootList.add(cDTO);
-		}
 
+		}
 		/// for test
 		ChannelDTO cDTO = new ChannelDTO();
 		cDTO.setId(-1L);
 		cDTO.setName("根栏目");
-		channelDTORootList.add(cDTO);
 
-		return channelDTORootList;
+//		ChannelDTO firstDTO = new ChannelDTO();
+//		firstDTO.setId(1L);
+//		firstDTO.setName("第一个节点");
+//
+//		cDTO.getChildren().add(firstDTO);
+
+		return cDTO;
 
 	}
+
+
 }

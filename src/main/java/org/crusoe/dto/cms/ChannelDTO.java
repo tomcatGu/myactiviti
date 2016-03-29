@@ -12,7 +12,8 @@ public class ChannelDTO {
 	private String title;
 	private int sequenceIndex;
 	private String state;
-	private List<Article> articles = new ArrayList<Article>();
+	private List<ArticleDTO> articles = new ArrayList<ArticleDTO>();
+	private List<ChannelDTO> children=new ArrayList<ChannelDTO>();
 
 	public long getId() {
 		return id;
@@ -54,11 +55,19 @@ public class ChannelDTO {
 		this.state = state;
 	}
 
-	public List<Article> getArticles() {
+	public List<ArticleDTO> getArticles() {
 		return articles;
 	}
 
-	public void setArticles(List<Article> articles) {
+	public void setArticles(List<ArticleDTO> articles) {
 		this.articles = articles;
+	}
+
+	public List<ChannelDTO> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<ChannelDTO> children) {
+		this.children = children;
 	}
 }

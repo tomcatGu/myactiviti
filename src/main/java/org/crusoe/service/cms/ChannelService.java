@@ -17,4 +17,9 @@ public class ChannelService {
 		return channelDao.findById(-1L);
 	}
 
+	public List<Channel> findById(Long id) {
+		// TODO Auto-generated method stub
+		return channelDao.findById(id);
+	}
+
 }

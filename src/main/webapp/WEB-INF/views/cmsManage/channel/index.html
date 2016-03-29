@@ -24,10 +24,7 @@
 		<h1>Tree</h1>
 		<div id="divTree"></div>
 	</div>
-	<div class="column">
-		<h1>Image</h1>
-		<img id="image" />
-	</div>
+	<button id="add-new-child">Add new child to selected item</button>
 	<div th:include="/common::dojoScriptFragment"></div>
 
 	<script type="text/javascript" th:inline="javascript">
@@ -38,10 +35,12 @@
 		});
 
 		require(
-				[ "dojo/dom", "dojo/json", "dojo/store/JsonRest",
-						"dijit/tree/ObjectStoreModel", "dijit/Tree",
-						"dojo/domReady!" ],
-				function(dom, json, JsonRest, ObjectStoreModel, Tree) {
+				[ "dojo/aspect", "dojo/dom", "dojo/json",
+						"dojo/store/JsonRest", "dijit/tree/ObjectStoreModel",
+						"dijit/Tree", "dojo/domReady!", "dojo/query",
+						"dojo/store/Observable" ],
+				function(aspect, dom, json, JsonRest, ObjectStoreModel, Tree,
+						domReady, query, Observable) {
 
 					// set up the store to get the tree data
 
@@ -59,17 +58,38 @@
 								}
 							});
 
+					// To support dynamic data changes, including DnD,
+					// the store must support put(child, {parent: parent}).
+					// But dojo/store/Memory doesn't, so we have to implement it.
+					// Since our store is relational, that just amounts to setting child.parent
+					// to the parent's id.
+					aspect.around(channelStore, "put",
+							function(originalPut) {
+								return function(obj, options) {
+									if (options && options.parent) {
+										obj.parent = options.parent.id;
+									}
+									return originalPut.call(channelStore, obj,
+											options);
+								}
+							});
+
 					// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
 					var channelModel = new ObjectStoreModel({
 						store : channelStore,
 						//getRoot : function(onItem) {
 						//	this.store.get("root").then(onItem);
 						//},
-
+						getRoot : function(onItem) {
+							this.store.get(-1).then(onItem);
+						},
 						mayHaveChildren : function(object) {
 							return "children" in object;
 						}
 					});
+
+					// give store Observable interface so Tree can track updates
+					channelModel = new Observable(channelModel);
 
 					// set up the tree, assigning governmentModel;
 					var channelTree = new Tree({
@@ -86,6 +106,28 @@
 					persist : false*/
 					}, "divTree");
 					channelTree.startup();
+
+					query("#add-new-child").on(
+							"click",
+							function() {
+								// get the selected object from the tree
+								var selectedObject = channelTree
+										.get("selectedItems")[0];
+								if (!selectedObject) {
+									return alert("No object selected");
+								}
+
+								// add a new child item
+								var childItem = {
+									name : "New child",
+									id : Math.random()
+								};
+								channelModel.put(childItem, {
+									overwrite : true,
+									parent : selectedObject
+								});
+							});
+
 				});
 		/*]]>*/
 	</script>
