@@ -122,9 +122,10 @@
 									name : "New child",
 									id : Math.random()
 								};
-								channelModel.put(childItem, {
-									overwrite : true,
-									parent : selectedObject
+								channelStore.add({
+									id : '2',
+									name : 'United States',
+									parent : selectedObject.id
 								});
 							});
 

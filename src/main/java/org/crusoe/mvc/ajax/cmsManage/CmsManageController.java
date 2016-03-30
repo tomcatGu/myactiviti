@@ -12,7 +12,9 @@ import org.crusoe.service.cms.ChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -52,15 +54,16 @@ public class CmsManageController {
 		cDTO.setId(-1L);
 		cDTO.setName("根栏目");
 
-//		ChannelDTO firstDTO = new ChannelDTO();
-//		firstDTO.setId(1L);
-//		firstDTO.setName("第一个节点");
-//
-//		cDTO.getChildren().add(firstDTO);
+
 
 		return cDTO;
 
 	}
 
+	@RequestMapping(value = "channel/data/{id}", method = RequestMethod.PUT)
+	public @ResponseBody ChannelDTO add(@RequestBody ChannelDTO c) {
+		//channelService.add(c);
+		return c;
+	}
 
 }
