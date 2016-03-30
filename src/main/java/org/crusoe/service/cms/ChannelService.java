@@ -12,14 +12,19 @@ public class ChannelService {
 	@Autowired
 	ChannelDao channelDao;
 
-	public List<Channel> findRoot() {
+	public Channel findRoot() {
 		// TODO Auto-generated method stub
 		return channelDao.findById(-1L);
 	}
 
-	public List<Channel> findById(Long id) {
+	public Channel findById(Long id) {
 		// TODO Auto-generated method stub
 		return channelDao.findById(id);
+	}
+
+	public Channel save(Channel channel) {
+		// TODO Auto-generated method stub
+		return channelDao.save(channel);
 	}
 
 }

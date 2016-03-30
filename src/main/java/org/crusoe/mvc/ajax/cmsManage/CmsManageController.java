@@ -37,32 +37,29 @@ public class CmsManageController {
 		return "cmsManage/channel/index";
 	}
 
-	@RequestMapping(value = "channel/data/{id}")
+	@RequestMapping(value = "channel/data/{id}", method = RequestMethod.GET)
 	public @ResponseBody ChannelDTO channelById(@PathVariable(value = "id") Long id) {
 
-		List<Channel> crl = channelService.findById(id);
-		Iterator iter = crl.iterator();
-		while (iter.hasNext()) {
-			Channel c = (Channel) iter.next();
-			ChannelDTO cDTO = new ChannelDTO();
-			cDTO.setId(c.getId());
-			cDTO.setName(c.getTitle());
+		Channel c = channelService.findById(id);
 
-		}
-		/// for test
 		ChannelDTO cDTO = new ChannelDTO();
-		cDTO.setId(-1L);
-		cDTO.setName("根栏目");
-
-
+		cDTO.setId(c.getId());
+		cDTO.setName(c.getTitle());
 
 		return cDTO;
 
 	}
 
-	@RequestMapping(value = "channel/data/{id}", method = RequestMethod.PUT)
-	public @ResponseBody ChannelDTO add(@RequestBody ChannelDTO c) {
-		//channelService.add(c);
+	@RequestMapping(value = "channel/data/{id}", method ={ RequestMethod.POST,RequestMethod.PUT})
+	public @ResponseBody ChannelDTO add(@PathVariable(value = "id") Long id, @RequestBody ChannelDTO c) {
+		Channel channel = new Channel();
+		channel.setTitle(c.getName());
+		channel.setSequenceIndex(c.getSequenceIndex());
+		Channel parent = (Channel) channelService.findById(c.getParent().getId());
+		channel.setParent(parent);
+		Channel savedChannel = channelService.save(channel);
+
+		c.setId(savedChannel.getId());
 		return c;
 	}
 

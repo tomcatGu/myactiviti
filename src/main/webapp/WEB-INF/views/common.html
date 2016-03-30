@@ -1,7 +1,7 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html>
 <head th:fragment="headerFragment" th:remove="tag">
-<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
@@ -117,13 +117,13 @@
 			contentType : "application/x-www-form-urlencoded;charset=utf-8",
 			complete : function(XMLHttpRequest, textStatus) {
 				var sessionstatus = XMLHttpRequest
-						.getResponseHeader("sessionstatus"); // Í¨¹ıXMLHttpRequestÈ¡µÃÏìÓ¦Í·£¬sessionstatus£¬ 
+						.getResponseHeader("sessionstatus"); // é€šè¿‡XMLHttpRequestå–å¾—å“åº”å¤´ï¼Œsessionstatusï¼Œ 
 				if (sessionstatus == "timeout") {
-					// Èç¹û³¬Ê±¾Í´¦Àí £¬Ö¸¶¨ÒªÌø×ªµÄÒ³Ãæ 
-					//alert("»á»°ÒÑ¾­³¬Ê±£¬ÇëÖØĞÂµÇÂ¼¡£");
+					// å¦‚æœè¶…æ—¶å°±å¤„ç† ï¼ŒæŒ‡å®šè¦è·³è½¬çš„é¡µé¢ 
+					//alert("ä¼šè¯å·²ç»è¶…æ—¶ï¼Œè¯·é‡æ–°ç™»å½•ã€‚");
 					$.teninedialog({
-						title : 'ÏµÍ³ÌáÊ¾',
-						content : '»á»°ÒÑ¾­³¬Ê±£¬ÇëÖØĞÂµÇÂ¼¡£',
+						title : 'ç³»ç»Ÿæç¤º',
+						content : 'ä¼šè¯å·²ç»è¶…æ—¶ï¼Œè¯·é‡æ–°ç™»å½•ã€‚',
 						dialogHidden : function() {
 							var loginUrl = /*[[@{'/login'}]]*/'';
 							window.location.replace(loginUrl);
@@ -200,14 +200,14 @@
 											complete : function(XMLHttpRequest,
 													textStatus) {
 												var sessionstatus = XMLHttpRequest
-														.getResponseHeader("sessionstatus"); // Í¨¹ıXMLHttpRequestÈ¡µÃÏìÓ¦Í·£¬sessionstatus£¬ 
+														.getResponseHeader("sessionstatus"); // é€šè¿‡XMLHttpRequestå–å¾—å“åº”å¤´ï¼Œsessionstatusï¼Œ 
 												if (sessionstatus == "timeout") {
-													// Èç¹û³¬Ê±¾Í´¦Àí £¬Ö¸¶¨ÒªÌø×ªµÄÒ³Ãæ 
-													//alert("»á»°ÒÑ¾­³¬Ê±£¬ÇëÖØĞÂµÇÂ¼¡£");
+													// å¦‚æœè¶…æ—¶å°±å¤„ç† ï¼ŒæŒ‡å®šè¦è·³è½¬çš„é¡µé¢ 
+													//alert("ä¼šè¯å·²ç»è¶…æ—¶ï¼Œè¯·é‡æ–°ç™»å½•ã€‚");
 													$
 															.teninedialog({
-																title : 'ÏµÍ³ÌáÊ¾',
-																content : '»á»°ÒÑ¾­³¬Ê±£¬ÇëÖØĞÂµÇÂ¼¡£',
+																title : 'ç³»ç»Ÿæç¤º',
+																content : 'ä¼šè¯å·²ç»è¶…æ—¶ï¼Œè¯·é‡æ–°ç™»å½•ã€‚',
 																dialogHidden : function() {
 																	var loginUrl = /*[[@{'/login'}]]*/'';
 																	window.location

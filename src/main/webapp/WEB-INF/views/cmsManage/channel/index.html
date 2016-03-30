@@ -122,10 +122,13 @@
 									name : "New child",
 									id : Math.random()
 								};
+								console.log(selectedObject.name);
 								channelStore.add({
-									id : '2',
+									id : 2,
 									name : 'United States',
-									parent : selectedObject.id
+									parent : {
+										id : selectedObject.id
+									}
 								});
 							});
 
