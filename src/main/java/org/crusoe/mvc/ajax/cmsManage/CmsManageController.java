@@ -50,13 +50,29 @@ public class CmsManageController {
 
 	}
 
-	@RequestMapping(value = "channel/data/{id}", method ={ RequestMethod.POST,RequestMethod.PUT})
-	public @ResponseBody ChannelDTO add(@PathVariable(value = "id") Long id, @RequestBody ChannelDTO c) {
+	@RequestMapping(value = "channel/data/", method = { RequestMethod.POST, RequestMethod.PUT })
+	public @ResponseBody ChannelDTO add(@RequestBody ChannelDTO c) {
 		Channel channel = new Channel();
 		channel.setTitle(c.getName());
+		channel.setState(c.getState());
 		channel.setSequenceIndex(c.getSequenceIndex());
 		Channel parent = (Channel) channelService.findById(c.getParent().getId());
 		channel.setParent(parent);
+		Channel savedChannel = channelService.save(channel);
+
+		c.setId(savedChannel.getId());
+		return c;
+	}
+
+	@RequestMapping(value = "channel/data/{id}", method = { RequestMethod.POST, RequestMethod.PUT })
+	public @ResponseBody ChannelDTO update(@PathVariable(value = "id") Long id, @RequestBody ChannelDTO c) {
+		Channel channel = channelService.findById(id);
+		//channel.setId(c.getId());
+		channel.setTitle(c.getName());
+		channel.setSequenceIndex(c.getSequenceIndex());
+		channel.setParent(channelService.findById(c.getParent().getId()));
+		
+		
 		Channel savedChannel = channelService.save(channel);
 
 		c.setId(savedChannel.getId());

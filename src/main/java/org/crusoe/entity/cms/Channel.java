@@ -5,11 +5,13 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -26,6 +28,7 @@ public class Channel {
 	private int sequenceIndex;
 	private String state;
 	private List<Article> articles = new ArrayList<Article>();
+	private List<Channel> children = new ArrayList<Channel>();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,6 +80,15 @@ public class Channel {
 
 	public void setParent(Channel parent) {
 		this.parent = parent;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "parent")
+	public List<Channel> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<Channel> children) {
+		this.children = children;
 	}
 
 }
