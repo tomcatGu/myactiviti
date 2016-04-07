@@ -37,14 +37,17 @@
 		require(
 				[ "dojo/aspect", "dojo/dom", "dojo/json",
 						"dojo/store/JsonRest", "dijit/tree/ObjectStoreModel",
-						"dijit/Tree", "dojo/domReady!", "dojo/query",
-						"dojo/store/Observable", "dojo/_base/Deferred" ],
-				function(aspect, dom, json, JsonRest, ObjectStoreModel, Tree,
-						domReady, query, Observable, Deferred) {
+						"dijit/tree/ForestStoreModel", "dijit/Tree",
+						"dojo/domReady!", "dojo/query",
+						"dojo/store/Observable", "dojo/_base/Deferred",
+						"dijit/tree/dndSource" ],
+				function(aspect, dom, json, JsonRest, ObjectStoreModel,
+						ForestStoreModel, Tree, domReady, query, Observable,
+						Deferred, dndSource) {
 
 					// set up the store to get the tree data
 
-					var data = '{"name" : "US Government","id" : "root","children" : [ {"name" : "Congress","id" : "congress"}, {"name" : "Executive","id" : "exec"	}, {"name" : "Judicial","id" : "judicial"} ]}';
+					//var data = '{"name" : "US Government","id" : "root","children" : [ {"name" : "Congress","id" : "congress"}, {"name" : "Executive","id" : "exec"	}, {"name" : "Judicial","id" : "judicial"} ]}';
 
 					var channelStore = new JsonRest(
 							{
@@ -54,7 +57,12 @@
 									this.get(-1).then(onItem);
 								},
 								mayHaveChildren : function(object) {
-									return "children" in object;
+									if ("children" in object) {
+										if (object["children"].length > 0)
+											return true;
+
+									}
+									return false;
 								},
 								getChildren : function(object) {
 									return this.get(object.id).then(
@@ -143,9 +151,9 @@
 													});
 								},
 								put : function(object, options) {
-									this.onChildrenChange(object,
-											object.children);
-									this.onChange(object);
+									//this.onChildrenChange(object,
+									//		object.children);
+									//this.onChange(object);
 									return JsonRest.prototype.put.apply(this,
 											arguments);
 								}
@@ -184,11 +192,11 @@
 					});
 
 					// give store Observable interface so Tree can track updates
-					channelModel = new Observable(channelModel);
+					//channelModel = new Observable(channelModel);
 
 					// set up the tree, assigning governmentModel;
 					var channelTree = new Tree({
-						model : channelStore
+						model : channelModel,
 					/*onOpenClick : true,
 					onLoad : function() {
 						dom.byId('image').src = '../resources/images/root.jpg';
@@ -199,6 +207,8 @@
 
 					},
 					persist : false*/
+					
+						dndController: dndSource
 					}, "divTree");
 					channelTree.startup();
 
@@ -223,7 +233,7 @@
 																	&& name != "") {
 
 																var newItem = {
-																	
+
 																	name : name,
 																	state : "∆Ù”√",
 																	parent : {

@@ -27,4 +27,9 @@ public class ChannelService {
 		return channelDao.save(channel);
 	}
 
+	public Channel findByParentId(Long id) {
+		// TODO Auto-generated method stub
+		return channelDao.findByParent(id);
+	}
+
 }
