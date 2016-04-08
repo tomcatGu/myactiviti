@@ -8,7 +8,7 @@ import org.crusoe.entity.cms.Channel;
 
 public class ChannelDTO {
 	private Long id;
-	private Long parent;
+	private ChannelDTO parent;
 	private String title;
 	private int sequenceIndex;
 	private String state;
@@ -23,11 +23,11 @@ public class ChannelDTO {
 		this.id = id;
 	}
 
-	public Long getParent() {
+	public ChannelDTO getParent() {
 		return parent;
 	}
 
-	public void setParent(Long parent) {
+	public void setParent(ChannelDTO parent) {
 		this.parent = parent;
 	}
 

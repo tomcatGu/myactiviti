@@ -57,12 +57,8 @@
 									this.get(-1).then(onItem);
 								},
 								mayHaveChildren : function(object) {
-									if ("children" in object) {
-										if (object["children"].length > 0)
-											return true;
+									return "children" in object ;
 
-									}
-									return false;
 								},
 								getChildren : function(object) {
 									return this.get(object.id).then(
@@ -290,7 +286,7 @@
 
 					function reloadNode(id) {
 						channelStore.get(id).then(function(Object) {
-							channelStore.put(Object);
+							//channelStore.put(Object);
 						});
 					}
 					;

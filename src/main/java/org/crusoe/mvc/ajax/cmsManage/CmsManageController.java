@@ -55,7 +55,7 @@ public class CmsManageController {
 			ccDTO.setName(cc.getTitle());
 			ccDTO.setState(cc.getState());
 			ccDTO.setSequenceIndex(cc.getSequenceIndex());
-			ccDTO.setParent(cc.getParent().getId());
+			//ccDTO.setParent(cc.getParent());
 			cDTO.getChildren().add(ccDTO);
 		}
 
@@ -69,7 +69,7 @@ public class CmsManageController {
 		channel.setTitle(c.getName());
 		channel.setState(c.getState());
 		channel.setSequenceIndex(c.getSequenceIndex());
-		Channel parent = (Channel) channelService.findById(c.getParent());
+		Channel parent = (Channel) channelService.findById(c.getParent().getId());
 		channel.setParent(parent);
 		Channel savedChannel = channelService.save(channel);
 
@@ -85,7 +85,7 @@ public class CmsManageController {
 		channel.setSequenceIndex(c.getSequenceIndex());
 		channel.setState(c.getState());
 
-		channel.setParent(channelService.findById(c.getParent()));
+		channel.setParent(channelService.findById(c.getParent().getId()));
 
 		Channel savedChannel = channelService.save(channel);
 
