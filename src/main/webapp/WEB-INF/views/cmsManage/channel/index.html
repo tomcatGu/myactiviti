@@ -57,7 +57,7 @@
 									this.get(-1).then(onItem);
 								},
 								mayHaveChildren : function(object) {
-									return "children" in object ;
+									return "children" in object;
 
 								},
 								getChildren : function(object) {
@@ -69,6 +69,51 @@
 								getLabel : function(object) {
 									// just get the name
 									return object.name;
+								}
+							});
+
+					// To support dynamic data changes, including DnD,
+					// the store must support put(child, {parent: parent}).
+					// But dojo/store/Memory doesn't, so we have to implement it.
+					// Since our store is relational, that just amounts to setting child.parent
+					// to the parent's id.
+
+					///*
+					aspect.around(channelStore, "put",
+							function(originalPut) {
+								return function(obj, options) {
+									if (options && options.parent) {
+										obj.parent = options.parent.id;
+									}
+									return originalPut.call(channelStore, obj,
+											options);
+								}
+							});
+					 //*/
+
+					// give store Observable interface so Tree can track updates
+					channelStore = new Observable(channelStore);
+					// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
+					var channelModel = new ObjectStoreModel(
+							{
+								store : channelStore,
+								//getRoot : function(onItem) {
+								//	this.store.get("root").then(onItem);
+								//},
+								getRoot : function(onItem) {
+									this.store.get(-1).then(onItem);
+								},
+								mayHaveChildren : function(object) {
+									return "children" in object;
+								}
+								/*
+								,
+								put : function(object, options) {
+									this.onChildrenChange(object,
+											object.children);
+									this.onChange(object);
+									return JsonRest.prototype.put.apply(this,
+											arguments);
 								},
 								pasteItem : function(child, oldParent,
 										newParent, bCopy, insertIndex) {
@@ -145,66 +190,26 @@
 														alert("Error loading "
 																+ oldParent.NodeName);
 													});
-								},
-								put : function(object, options) {
-									//this.onChildrenChange(object,
-									//		object.children);
-									//this.onChange(object);
-									return JsonRest.prototype.put.apply(this,
-											arguments);
 								}
+								
+								*/
 							});
-
-					// To support dynamic data changes, including DnD,
-					// the store must support put(child, {parent: parent}).
-					// But dojo/store/Memory doesn't, so we have to implement it.
-					// Since our store is relational, that just amounts to setting child.parent
-					// to the parent's id.
-
-					/*
-					aspect.around(channelStore, "put",
-							function(originalPut) {
-								return function(obj, options) {
-									if (options && options.parent) {
-										obj.parent = options.parent.id;
-									}
-									return originalPut.call(channelStore, obj,
-											options);
-								}
-							});
-					 */
-					// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
-					var channelModel = new ObjectStoreModel({
-						store : channelStore,
-						//getRoot : function(onItem) {
-						//	this.store.get("root").then(onItem);
-						//},
-						getRoot : function(onItem) {
-							this.store.get(-1).then(onItem);
-						},
-						mayHaveChildren : function(object) {
-							return "children" in object;
-						}
-					});
-
-					// give store Observable interface so Tree can track updates
-					//channelModel = new Observable(channelModel);
 
 					// set up the tree, assigning governmentModel;
 					var channelTree = new Tree({
 						model : channelModel,
-					/*onOpenClick : true,
-					onLoad : function() {
-						dom.byId('image').src = '../resources/images/root.jpg';
-					},
-					onClick : function(item) {
-						dom.byId('image').src = '../resources/images/'
-								+ item.id + '.jpg';
+						/*onOpenClick : true,
+						onLoad : function() {
+							dom.byId('image').src = '../resources/images/root.jpg';
+						},
+						onClick : function(item) {
+							dom.byId('image').src = '../resources/images/'
+									+ item.id + '.jpg';
 
-					},
-					persist : false*/
-					
-						dndController: dndSource
+						},
+						persist : false*/
+
+						dndController : dndSource
 					}, "divTree");
 					channelTree.startup();
 
@@ -287,6 +292,7 @@
 					function reloadNode(id) {
 						channelStore.get(id).then(function(Object) {
 							//channelStore.put(Object);
+
 						});
 					}
 					;
