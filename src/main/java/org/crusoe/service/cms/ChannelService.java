@@ -32,4 +32,11 @@ public class ChannelService {
 		return channelDao.findByParent(id);
 	}
 
+	public void deleteById(Long id) {
+		// TODO Auto-generated method stub
+
+		channelDao.delete(id);
+
+	}
+
 }

@@ -19,12 +19,14 @@
 <style>
 </style>
 </head>
-<body class="dbootstrap">
+<body class="">
 	<div class="column" id="tree">
 		<h1>Tree</h1>
 		<div id="divTree"></div>
 	</div>
 	<button id="add-new-child">Add new child to selected item</button>
+
+	<button id="delete-channel-node">Delete selected item</button>
 	<div th:include="/common::dojoScriptFragment"></div>
 
 	<script type="text/javascript" th:inline="javascript">
@@ -212,6 +214,12 @@
 						dndController : dndSource
 					}, "divTree");
 					channelTree.startup();
+					
+					query("#delete-channel-node").on("click",function(){
+						
+						del();
+						
+					});
 
 					query("#add-new-child")
 							.on(
@@ -310,6 +318,14 @@
 						});
 					}
 					;
+					
+					
+				 function del() {
+						
+						var selectedObject = channelTree
+						.get("selectedItems")[0];
+						channelStore.remove(selectedObject.id);
+					};
 
 				});
 

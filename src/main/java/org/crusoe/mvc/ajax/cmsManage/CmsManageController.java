@@ -1,8 +1,10 @@
 package org.crusoe.mvc.ajax.cmsManage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
@@ -55,7 +57,7 @@ public class CmsManageController {
 			ccDTO.setName(cc.getTitle());
 			ccDTO.setState(cc.getState());
 			ccDTO.setSequenceIndex(cc.getSequenceIndex());
-			//ccDTO.setParent(cc.getParent());
+			// ccDTO.setParent(cc.getParent());
 			cDTO.getChildren().add(ccDTO);
 		}
 
@@ -90,6 +92,17 @@ public class CmsManageController {
 		Channel savedChannel = channelService.save(channel);
 
 		return c;
+	}
+
+	@RequestMapping(value = "channel/data/{id}", method = { RequestMethod.DELETE })
+	public @ResponseBody Map<String, ? extends Object>  delete(@PathVariable(value = "id") Long id) {
+		channelService.deleteById(id);
+
+		Map<String, String> msgs = new HashMap<String, String>();
+
+		msgs.put("msg", "删除成功");
+		return msgs;
+		
 	}
 
 }
