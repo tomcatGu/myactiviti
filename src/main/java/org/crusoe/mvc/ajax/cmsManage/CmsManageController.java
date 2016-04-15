@@ -39,8 +39,8 @@ public class CmsManageController {
 		return "cmsManage/channel/index";
 	}
 
-	@RequestMapping(value = "channel/data/{id}", method = RequestMethod.GET)
-	public @ResponseBody ChannelDTO channelById(@PathVariable(value = "id") Long id) {
+	@RequestMapping(value = "channel/data", method = RequestMethod.GET)
+	public @ResponseBody ChannelDTO channelById(@RequestParam(value = "id") Long id) {
 
 		Channel c = channelService.findById(id);
 
@@ -65,7 +65,7 @@ public class CmsManageController {
 
 	}
 
-	@RequestMapping(value = "channel/data/", method = { RequestMethod.POST })
+	@RequestMapping(value = "channel/data", method = { RequestMethod.POST })
 	public @ResponseBody ChannelDTO add(@RequestBody ChannelDTO c) {
 		Channel channel = new Channel();
 		channel.setTitle(c.getName());
@@ -95,14 +95,14 @@ public class CmsManageController {
 	}
 
 	@RequestMapping(value = "channel/data/{id}", method = { RequestMethod.DELETE })
-	public @ResponseBody Map<String, ? extends Object>  delete(@PathVariable(value = "id") Long id) {
+	public @ResponseBody Map<String, ? extends Object> delete(@PathVariable(value = "id") Long id) {
 		channelService.deleteById(id);
 
 		Map<String, String> msgs = new HashMap<String, String>();
 
 		msgs.put("msg", "删除成功");
 		return msgs;
-		
+
 	}
 
 }

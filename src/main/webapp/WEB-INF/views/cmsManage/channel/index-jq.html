@@ -1,0 +1,306 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head thy:merge="/common::headerFragment">
+<title>组织架构</title>
+<link href="/jstree/themes/default/style.min.css" rel="stylesheet"
+	type="text/css" th:href="@{/jstree/themes/default/style.min.css}" />
+
+
+</head>
+<body>
+	<div class="box">
+		<button type="button" class="btn btn-success btn-sm"
+			onclick="create();">
+			<i class="glyphicon glyphicon-asterisk"></i> 创建
+		</button>
+		<div id="organization" class="span3">
+			<ul>
+				<li>Root node 1
+					<ul>
+						<li>Child node 1</li>
+						<li><a href="#">Child node 2</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+
+	<div th:include="/common::scriptFragment"></div>
+
+	<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		seajs.config({
+			alias : {
+				"jquery" : /*[[@{'/scripts/jquery-1.10.2.min.js'}]]*/''
+
+			},
+			preload : [ "jquery" ]
+		});
+
+		seajs
+				.use(
+						'jquery',
+						function() {
+
+							$(document)
+									.ready(
+											function() {
+												$("#organization")
+														.jstree(
+																{
+																	"core" : {
+																		"animation" : 0,
+																		"check_callback" : true,
+																		"themes" : {
+																			"stripes" : true
+																		},
+																		'data' : {
+																			'url' : /*[[@{'/cmsManage/channel/data'}]]*/'channel/data/'
+																			,
+																			'data' : function(
+																					node) {
+																				return {
+																					'id' : node.id
+																				};
+																			}
+																		}
+																	},
+																	contextmenu : {
+																		"items" : function(
+																				node) {
+																			return {
+																				"view" : {
+																					label : "查看",
+																					action : function(
+																							obj) {
+																						window
+																								.open("/"
+																										+ node.id);
+																					}
+																				},
+																				"rename" : {
+																					label : "重命名",
+																					action : function(
+																							obj) {
+																						$(
+																								"#organization")
+																								.jstree(
+																										true)
+																								.edit(
+																										node)
+																					}
+																				},
+																				"create" : {
+																					label : "创建",
+																					action : function() {
+																						create(node);
+																					}
+
+																				},
+																				"delete" : {
+																					label : "删除",
+																					action : function() {
+																						if (confirm("真的要删除 "
+																								+ node.text
+																								+ "?")) {
+
+																							$(
+																									"#organization")
+																									.jstree(
+																											"delete_node",
+																											node);
+
+																						}
+																					},
+																					separator_before : true
+																				}
+																			}
+																		}
+																	},
+																	"plugins" : [
+																			"contextmenu",
+																			"dnd",
+																			"search",
+																			"state",
+																			"types",
+																			"wholerow" ]
+																})
+														.on(
+																'rename_node.jstree',
+																function(e,
+																		data) {
+																	var pos;
+																	var sibling = $(
+																			'#organization')
+																			.jstree(
+																					true)
+																			.get_node(
+																					data.node.parent).children;
+																	for (i = 0; i < sibling.length; i++) {
+																		if (sibling[i] == data.node.id) {
+																			pos = i;
+																			break;
+																		}
+
+																	}
+																	var node = {
+																		id : data.node.id,
+																		text : data.node.text,
+																		parent : data.node.parent,
+																		sequence : pos
+																	};
+
+																	$
+																			.postJSON(
+																					/*[[@{'/organization/update'}]]*/'',
+																					JSON
+																							.stringify(node),
+																					false,
+																					function(
+																							data) {
+																						if (data.err == "true") {
+																							var errors = {};
+
+																							validator
+																									.showErrors(errors);
+																						} else {
+																							//newNode = data;
+																							//newNode.id = newNode.id + "";
+																						}
+
+																					})
+
+																})
+														.on(
+																'create_node.jstree',
+																function(e,
+																		data) {
+
+																})
+														.on(
+																'move_node.jstree',
+																function(e,
+																		data) {
+																	var pos = data.position;
+																	var parent = data.parent;
+
+																	var sibling = $(
+																			'#organization')
+																			.jstree(
+																					true)
+																			.get_node(
+																					data.node.parent).children;
+																	for (i = 0; i < sibling.length; i++) {
+																		var n = $(
+																				'#organization')
+																				.jstree(
+																						true)
+																				.get_node(
+																						sibling[i]);
+																		var node = {
+																			id : n.id,
+																			text : n.text,
+																			parent : parent,
+																			sequence : i
+																		};
+																		$
+																				.postJSON(
+																						/*[[@{'/organization/update'}]]*/'',
+																						JSON
+																								.stringify(node),
+																						false,
+																						function(
+																								data) {
+																							if (data.err == "true") {
+																								var errors = {};
+
+																								validator
+																										.showErrors(errors);
+																							} else {
+																								//newNode = data;
+																								//newNode.id = newNode.id + "";
+																							}
+
+																						});
+																	}
+
+																})
+														.on(
+																'delete_node.jstree',
+																function(e,
+																		data) {
+																	var ref = $(
+																			'#organization')
+																			.jstree(
+																					true);
+																	var selected = [ data.node.id ];
+																	$
+																			.ajax({
+																				type : "POST",
+																				url : /*[[@{'/organization/'}]]*/'',
+																				data : {
+																					_method : 'DELETE',
+																					items : selected
+																				},
+																				// contentType : 'application/json',
+																				dataType : 'json',
+																				success : function(
+																						data) {
+
+																					//successCallback();
+
+																				}
+																			});
+																});
+
+											});
+							function create(parent) {
+
+								var ref = $('#organization').jstree(true), sel = ref
+										.get_selected();
+								if (!sel.length) {
+									sel = null
+								} else
+									sel = sel[0];
+								var newNode = {
+									text : "name",
+									parent : sel
+								};
+
+								$
+										.postJSON(
+												/*[[@{'/organization/create'}]]*/'',
+												JSON.stringify(newNode),
+												false,
+												function(data) {
+													if (data.err == "true") {
+														var errors = {};
+														for ( var obj in data) {
+															if (obj != "err")
+																errors[obj] = data[obj];
+
+														}
+														validator
+																.showErrors(errors);
+													} else {
+														newNode = data;
+														//newNode.id = newNode.id + "";
+													}
+
+												});
+								var n = ref.create_node(sel, newNode, "last",
+										null, true);
+								var node = ref.get_node(n);
+								//ref.set_id(ref.get_node(n), n);
+								ref.edit(n);
+
+							}
+
+						});
+		/*]]>*/
+	</script>
+
+
+</body>
+</html>

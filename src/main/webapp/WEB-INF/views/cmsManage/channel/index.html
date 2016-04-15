@@ -36,299 +36,288 @@
 			// Start application.
 		});
 
-		require(
-				[ "dojo/aspect", "dojo/dom", "dojo/json",
-						"dojo/store/JsonRest", "dijit/tree/ObjectStoreModel",
-						"dijit/tree/ForestStoreModel", "dijit/Tree",
-						"dojo/domReady!", "dojo/query",
-						"dojo/store/Observable", "dojo/_base/Deferred",
-						"dijit/tree/dndSource" ],
-				function(aspect, dom, json, JsonRest, ObjectStoreModel,
-						ForestStoreModel, Tree, domReady, query, Observable,
-						Deferred, dndSource) {
+		require([ "dojo/aspect", "dojo/dom", "dojo/json",
+				"dojo/store/JsonRest", "dijit/tree/ObjectStoreModel",
+				"dijit/tree/ForestStoreModel", "dijit/Tree", "dojo/domReady!",
+				"dojo/query", "dojo/store/Observable", "dojo/_base/Deferred",
+				"dijit/tree/dndSource" ], function(aspect, dom, json, JsonRest,
+				ObjectStoreModel, ForestStoreModel, Tree, domReady, query,
+				Observable, Deferred, dndSource) {
 
-					// set up the store to get the tree data
+			// set up the store to get the tree data
 
-					//var data = '{"name" : "US Government","id" : "root","children" : [ {"name" : "Congress","id" : "congress"}, {"name" : "Executive","id" : "exec"	}, {"name" : "Judicial","id" : "judicial"} ]}';
+			//var data = '{"name" : "US Government","id" : "root","children" : [ {"name" : "Congress","id" : "congress"}, {"name" : "Executive","id" : "exec"	}, {"name" : "Judicial","id" : "judicial"} ]}';
 
-					var channelStore = new JsonRest(
-							{
-								target : /*[[@{'/cmsManage/channel/data/'}]]*/"channel/data/",
-								//data : [ json.parse(data) ],
-								getRoot : function(onItem) {
-									this.get(-1).then(onItem);
-								},
-								mayHaveChildren : function(object) {
-									return "children" in object;
+			var channelStore = new JsonRest({
+				target : /*[[@{'/cmsManage/channel/data'}]]*/"channel/data",
+				//data : [ json.parse(data) ],
+				getRoot : function(onItem) {
+					this.query({
+						"id" : -1,
+						"timeStamp" : Math.random()
+					}).then(onItem);
+				},
+				mayHaveChildren : function(object) {
+					return "children" in object;
 
-								},
-								getChildren : function(object) {
-									return this.get(object.id).then(
-											function(fullObject) {
-												return fullObject.children;
-											})
-								},
-								getLabel : function(object) {
-									// just get the name
-									return object.name;
-								}
-							});
+				},
+				getChildren : function(object) {
+					return this.query({
+						"id" : object.id,
+						"timeStamp" : Math.random()
+					}).then(function(fullObject) {
+						return fullObject.children;
+					})
+				},
+				getLabel : function(object) {
+					// just get the name
+					return object.name;
+				}
+			});
 
-					// To support dynamic data changes, including DnD,
-					// the store must support put(child, {parent: parent}).
-					// But dojo/store/Memory doesn't, so we have to implement it.
-					// Since our store is relational, that just amounts to setting child.parent
-					// to the parent's id.
+			// To support dynamic data changes, including DnD,
+			// the store must support put(child, {parent: parent}).
+			// But dojo/store/Memory doesn't, so we have to implement it.
+			// Since our store is relational, that just amounts to setting child.parent
+			// to the parent's id.
 
-					///*
-					aspect.around(channelStore, "put",
-							function(originalPut) {
-								return function(obj, options) {
-									if (options && options.parent) {
-										obj.parent = options.parent.id;
-									}
-									return originalPut.call(channelStore, obj,
-											options);
-								}
-							});
-					 //*/
+			///*
+			aspect.around(channelStore, "put", function(originalPut) {
+				return function(obj, options) {
+					if (options && options.parent) {
+						obj.parent = options.parent.id;
+					}
+					return originalPut.call(channelStore, obj, options);
+				}
+			});
+			//*/
 
-					// give store Observable interface so Tree can track updates
-					channelStore = new Observable(channelStore);
-					// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
-					var channelModel = new ObjectStoreModel(
-							{
-								store : channelStore,
-								//getRoot : function(onItem) {
-								//	this.store.get("root").then(onItem);
-								//},
-								getRoot : function(onItem) {
-									this.store.get(-1).then(onItem);
-								},
-								mayHaveChildren : function(object) {
-									return "children" in object;
-								}
-								/*
-								,
-								put : function(object, options) {
-									this.onChildrenChange(object,
-											object.children);
-									this.onChange(object);
-									return JsonRest.prototype.put.apply(this,
-											arguments);
-								},
-								pasteItem : function(child, oldParent,
-										newParent, bCopy, insertIndex) {
+			// give store Observable interface so Tree can track updates
+			channelStore = new Observable(channelStore);
+			// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
+			var channelModel = new ObjectStoreModel({
+				store : channelStore,
+				//getRoot : function(onItem) {
+				//	this.store.get("root").then(onItem);
+				//},
+				getRoot : function(onItem) {
+					this.store.query({
+						"id" : -1,
+						"timeStamp" : Math.random()
+					}).then(onItem);
+				},
+				mayHaveChildren : function(object) {
+					return "children" in object;
+				}
+			/*
+			,
+			put : function(object, options) {
+				this.onChildrenChange(object,
+						object.children);
+				this.onChange(object);
+				return JsonRest.prototype.put.apply(this,
+						arguments);
+			},
+			pasteItem : function(child, oldParent,
+					newParent, bCopy, insertIndex) {
 
-									// This will prevent to add a child to its parent again.
-									if (child.ParentId == newParent.id) {
-										return false;
-									}
+				// This will prevent to add a child to its parent again.
+				if (child.ParentId == newParent.id) {
+					return false;
+				}
 
-									var store = this;
+				var store = this;
+				store
+						.get(oldParent.id)
+						.then(
+								function(oldParent) {
 									store
-											.get(oldParent.id)
+											.get(
+													newParent.id)
 											.then(
-													function(oldParent) {
+													function(
+															newParent) {
 														store
 																.get(
-																		newParent.id)
+																		child.id)
 																.then(
 																		function(
-																				newParent) {
-																			store
-																					.get(
-																							child.id)
-																					.then(
+																				child) {
+																			var oldChildren = oldParent.children;
+																			dojo
+																					.some(
+																							oldChildren,
 																							function(
-																									child) {
-																								var oldChildren = oldParent.children;
-																								dojo
-																										.some(
-																												oldChildren,
-																												function(
-																														oldChild,
-																														i) {
-																													if (oldChild.id == child.id) {
-																														oldChildren
-																																.splice(
-																																		i,
-																																		1);
-																														return true; // done
-																													}
-																												});
-
-																								store
-																										.put(oldParent);
-
-																								//This will change the parent of the moved Node
-																								child.ParentId = newParent.id;
-																								store
-																										.put(child);
-
-																								newParent.children
-																										.splice(
-																												insertIndex || 0,
-																												0,
-																												child);
-
-																								store
-																										.put(newParent);
-
-																							},
-																							function(
-																									error) {
-																								alert("Error loading "
-																										+ child.NodeName);
+																									oldChild,
+																									i) {
+																								if (oldChild.id == child.id) {
+																									oldChildren
+																											.splice(
+																													i,
+																													1);
+																									return true; // done
+																								}
 																							});
+
+																			store
+																					.put(oldParent);
+
+																			//This will change the parent of the moved Node
+																			child.ParentId = newParent.id;
+																			store
+																					.put(child);
+
+																			newParent.children
+																					.splice(
+																							insertIndex || 0,
+																							0,
+																							child);
+
+																			store
+																					.put(newParent);
+
 																		},
 																		function(
 																				error) {
 																			alert("Error loading "
-																					+ newParent.NodeName);
+																					+ child.NodeName);
 																		});
 													},
-													function(error) {
+													function(
+															error) {
 														alert("Error loading "
-																+ oldParent.NodeName);
+																+ newParent.NodeName);
 													});
-								}
-								
-								*/
-							});
+								},
+								function(error) {
+									alert("Error loading "
+											+ oldParent.NodeName);
+								});
+			}
+			
+			 */
+			});
 
-					// set up the tree, assigning governmentModel;
-					var channelTree = new Tree({
-						model : channelModel,
-						/*onOpenClick : true,
-						onLoad : function() {
-							dom.byId('image').src = '../resources/images/root.jpg';
-						},
-						onClick : function(item) {
-							dom.byId('image').src = '../resources/images/'
-									+ item.id + '.jpg';
+			// set up the tree, assigning governmentModel;
+			var channelTree = new Tree({
+				model : channelModel,
+				/*onOpenClick : true,
+				onLoad : function() {
+					dom.byId('image').src = '../resources/images/root.jpg';
+				},
+				onClick : function(item) {
+					dom.byId('image').src = '../resources/images/'
+							+ item.id + '.jpg';
 
-						},
-						*/
-						persist : false,
+				},
+				 */
+				persist : false,
 
-						dndController : dndSource
-					}, "divTree");
-					channelTree.startup();
-					
-					query("#delete-channel-node").on("click",function(){
-						
-						del();
-						
-					});
+				dndController : dndSource
+			}, "divTree");
+			channelTree.startup();
 
-					query("#add-new-child")
-							.on(
-									"click",
-									function() {
-										// get the selected object from the tree
-										var selectedObject = channelTree
-												.get("selectedItems")[0];
-										if (!selectedObject) {
-											return alert("No object selected");
-										}
+			query("#delete-channel-node").on("click", function() {
 
-										//Sync selectedObject with server
-										channelStore
-												.get(selectedObject.id)
-												.then(
-														function(selectedObject) {
-															var name = prompt("Enter a name for new node");
-															if (name != null
-																	&& name != "") {
+				del();
 
-																var newItem = {
+			});
 
-																	name : name,
-																	state : "ÆôÓÃ",
-																	parent : {
-																		id : selectedObject.id
-																	}
+			query("#add-new-child").on("click", function() {
+				// get the selected object from the tree
+				var selectedObject = channelTree.get("selectedItems")[0];
+				if (!selectedObject) {
+					return alert("No object selected");
+				}
 
-																};
+				//Sync selectedObject with server
+				channelStore.query({
+					"id" : selectedObject.id,
+					"timeStamp" : Math.random()
+				}).then(function(selectedObject) {
+					var name = prompt("Enter a name for new node");
+					if (name != null && name != "") {
 
-																selectedObject.children
-																		.push(newItem);
+						var newItem = {
 
-																channelStore
-																		.put(newItem);
-
-																//Loading recently added node 500ms after puting it
-																var nodeId = new Deferred();
-																Deferred
-																		.when(
-																				nodeId,
-																				reloadNode);
-																setTimeout(
-																		function() {
-																			nodeId
-																					.resolve(selectedObject.id);
-																		}, 500);
-
-															} else {
-																return alert("Name can not be empty.");
-															}
-
-														},
-														function(error) {
-															alert("Error loading "
-																	+ selectedObject.NodeName);
-														});
-
-										// add a new child item
-										/*
-										var childItem = {
-											name : "New child",
-											id : Math.random()
-										};
-										console.log(selectedObject.name);
-										channelStore.add({
-											id : 2,
-											name : 'United States',
-											parent : {
-												id : selectedObject.id
-											}
-										});
-										
-										 */
-									});
-
-					function reloadNode(id) {
-						channelStore.get(id).then(function(Object) {
-							//channelStore.put(Object);
-
-						});
-					}
-					;
-
-					function removeAllChildren(node) {
-						treeStore.get(node.id).then(function(node) {
-
-							var nodeChildren = node.children;
-							for (n in nodeChildren) {
-								removeAllChildren(nodeChildren[n]);
+							name : name,
+							state : "ÆôÓÃ",
+							parent : {
+								id : selectedObject.id
 							}
-							treeStore.remove(node.id);
-						}, function(error) {
-							alert(error);
-						});
+
+						};
+
+						selectedObject.children.push(newItem);
+
+						channelStore.put(newItem);
+
+						//Loading recently added node 500ms after puting it
+						var nodeId = new Deferred();
+						Deferred.when(nodeId, reloadNode);
+						setTimeout(function() {
+							nodeId.resolve(selectedObject.id);
+						}, 500);
+
+					} else {
+						return alert("Name can not be empty.");
 					}
-					;
-					
-					
-				 function del() {
-						
-						var selectedObject = channelTree
-						.get("selectedItems")[0];
-						channelStore.remove(selectedObject.id);
-					};
+
+				}, function(error) {
+					alert("Error loading " + selectedObject.NodeName);
+				});
+
+				// add a new child item
+				/*
+				var childItem = {
+					name : "New child",
+					id : Math.random()
+				};
+				console.log(selectedObject.name);
+				channelStore.add({
+					id : 2,
+					name : 'United States',
+					parent : {
+						id : selectedObject.id
+					}
+				});
+				
+				 */
+			});
+
+			function reloadNode(id) {
+				channelStore.query({
+					"id" : id,
+					"timeStamp" : Math.random()
+				}).then(function(fullObject) {
+					return fullObject.children;
 
 				});
+			}
+			;
+
+			function removeAllChildren(node) {
+				treeStore.get(node.id).then(function(node) {
+
+					var nodeChildren = node.children;
+					for (n in nodeChildren) {
+						removeAllChildren(nodeChildren[n]);
+					}
+					treeStore.remove(node.id);
+				}, function(error) {
+					alert(error);
+				});
+			}
+			;
+
+			function del() {
+
+				var selectedObject = channelTree.get("selectedItems")[0];
+				channelStore.remove(selectedObject.id);
+			}
+			;
+
+		});
 
 		/*]]>*/
 	</script>
