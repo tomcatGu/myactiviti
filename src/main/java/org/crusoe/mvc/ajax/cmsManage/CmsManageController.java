@@ -8,10 +8,16 @@ import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
+import org.crusoe.dto.cms.ArticleDTO;
 import org.crusoe.dto.cms.ChannelDTO;
+import org.crusoe.entity.cms.Article;
 import org.crusoe.entity.cms.Channel;
+import org.crusoe.service.cms.ArticleService;
 import org.crusoe.service.cms.ChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +32,8 @@ public class CmsManageController {
 
 	@Autowired
 	ChannelService channelService;
+	@Autowired
+	ArticleService articleService;
 
 	@RequestMapping(value = "index")
 	public String index(ServletRequest request) {
@@ -102,6 +110,24 @@ public class CmsManageController {
 
 		msgs.put("msg", "删除成功");
 		return msgs;
+
+	}
+
+	@RequestMapping(value = "article/data", method = RequestMethod.GET)
+	public @ResponseBody List<ArticleDTO> articleByChannnelId(@RequestParam(value = "channelId") Long channelId,
+			@RequestParam(value = "start", defaultValue = "0") int start,
+			@RequestParam(value = "count", defaultValue = "10") int count,
+			@RequestParam(value = "sort", defaultValue = "id") String sort,
+			@RequestParam(value = "sortDesc", defaultValue = "true") boolean sortDesc) {
+		Sort sortRequest = sortDesc ? new Sort(Direction.DESC, new String[] { sort })
+				: new Sort(Direction.ASC, new String[] { sort });
+
+		PageRequest pageRequest = new PageRequest(start / count, count, sortRequest);
+		List<ArticleDTO> articleDTOs = new ArrayList<ArticleDTO>();
+
+		List<Article> articles = articleService.findByChannelId(channelId, pageRequest);
+
+		return articleDTOs;
 
 	}
 

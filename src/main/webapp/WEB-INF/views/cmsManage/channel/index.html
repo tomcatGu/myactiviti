@@ -82,6 +82,9 @@
 			// to the parent's id.
 
 			///*
+
+			channelStore = new Cache(channelStore, new Memory());
+
 			aspect.around(channelStore, "put", function(originalPut) {
 				return function(obj, options) {
 					if (options && options.parent) {
