@@ -19,4 +19,9 @@ public class ArticleService {
 		return articleDao.findByChannelId(channelId, pageable);
 	}
 
+	public Article saveArticle(Article a) {
+		// TODO Auto-generated method stub
+		return articleDao.save(a);
+	}
+
 }

@@ -11,7 +11,9 @@ import javax.servlet.ServletRequest;
 import org.crusoe.dto.cms.ArticleDTO;
 import org.crusoe.dto.cms.ChannelDTO;
 import org.crusoe.entity.cms.Article;
+import org.crusoe.entity.cms.ArticleContent;
 import org.crusoe.entity.cms.Channel;
+import org.crusoe.service.cms.ArticleContentService;
 import org.crusoe.service.cms.ArticleService;
 import org.crusoe.service.cms.ChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,8 @@ public class CmsManageController {
 	ChannelService channelService;
 	@Autowired
 	ArticleService articleService;
+	@Autowired
+	ArticleContentService articleContentService;
 
 	@RequestMapping(value = "index")
 	public String index(ServletRequest request) {
@@ -127,7 +131,55 @@ public class CmsManageController {
 
 		List<Article> articles = articleService.findByChannelId(channelId, pageRequest);
 
+		Iterator iter = articles.iterator();
+		while (iter.hasNext()) {
+			Article a = (Article) iter.next();
+			ArticleDTO aDTO = new ArticleDTO();
+			aDTO.setId(a.getId());
+			aDTO.setAuthor(a.getAuthor());
+			aDTO.setClicks(a.getClicks());
+			aDTO.setCreated(a.getCreated());
+			aDTO.setSequenceIndex(a.getSequenceIndex());
+			aDTO.setState(a.getState());
+			aDTO.setTitle(a.getTitle());
+
+			articleDTOs.add(aDTO);
+
+		}
+
 		return articleDTOs;
+
+	}
+
+	@RequestMapping(value = "article/data", method = RequestMethod.POST)
+	public @ResponseBody ArticleDTO addArticle(@RequestBody ArticleDTO aDTO) {
+		Article a = new Article();
+		ArticleContent aContent = new ArticleContent();
+
+		aContent.setArticleContent(aDTO.getArticleContentDTO().getArticleContent());
+		aContent = articleContentService.saveArticleContent(aContent);
+
+		a.setAuthor(aDTO.getAuthor());
+		a.setClicks(aDTO.getClicks());
+		a.setCreated(aDTO.getCreated());
+		a.setCreateUser(aDTO.getCreateUser());
+		a.setSequenceIndex(aDTO.getSequenceIndex());
+		a.setState(aDTO.getState());
+		a.setTitle(aDTO.getTitle());
+		a.setArticleContent(aContent);
+		Iterator iter = aDTO.getChannelDTOs().iterator();
+		while (iter.hasNext()) {
+			ChannelDTO channelDTO = (ChannelDTO) iter.next();
+
+			a.getChannels().add(channelService.findById(channelDTO.getId()));
+
+		}
+
+		a = articleService.saveArticle(a);
+
+		aDTO.setId(a.getId());
+
+		return aDTO;
 
 	}
 
