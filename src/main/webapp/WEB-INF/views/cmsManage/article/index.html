@@ -36,74 +36,86 @@
 			// Start application.
 		});
 
-		require([ "dojo/query", "dojo/json", "dojo/data/ObjectStore",
-				"dojox/grid/enhanced/plugins/Pagination",
-				"dojox/grid/enhanced/plugins/Filter", "dojox/grid/DataGrid",
-				"dojo/store/JsonRest", "dojo/store/Memory", "dojo/store/Cache",
-				"dojo/domReady!" ], function(query, JSON, ObjectStore,
-				Pagination, Filter, DataGrid, JsonRest, Memory, Cache) {
+		require(
+				[ "dojo/aspect", "dojo/query", "dojo/json",
+						"dojo/data/ObjectStore",
+						"dojox/grid/enhanced/plugins/Pagination",
+						"dojox/grid/enhanced/plugins/Filter",
+						"dojox/grid/EnhancedGrid", "dojo/store/JsonRest",
+						"dojo/store/Memory", "dojo/store/Cache",
+						"dojo/store/Observable", 'dojo/parser',
+						"dojo/domReady!" ],
+				function(aspect, query, JSON, ObjectStore, Pagination, Filter,
+						EnhancedGrid, JsonRest, Memory, Cache, Observable,
+						parser) {
+					parser.parse();
+					// set up the store to get the tree data
 
-			// set up the store to get the tree data
+					var articleStore = new JsonRest(
+							{
+								target : /*[[@{'/cmsManage/article/data'}]]*/"article/data"
+										+ "?channelId=1"
 
-			var articleStore = new JsonRest({
-				target : /*[[@{'/cmsManage/article/data'}]]*/"article/data"
+							});
 
-			});
+					articleStore = new Cache(articleStore, new Memory({
+						idProperty : "id"
+					}));
 
-			articleStore = new Cache(articleStore, new Memory());
+					//*/
 
-			//*/
+					// give store Observable interface so Tree can track updates
+					articleStore = new Observable(articleStore);
 
-			// give store Observable interface so Tree can track updates
-			//articleStore = new Observable(articleStore);
-			// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
-			var articleModel = new ObjectStore({
-				store : articleStore
-			});
+					// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
+					var articleModel = new ObjectStore({
+						objectStore : articleStore
+					});
 
-			// set up the tree, assigning governmentModel;
-			var articleGrid = new DataGrid({
-				store : articleModel,
-				structure : [ {
-					name : "ID",
-					field : "id",
-					width : "auto"
-				}, {
-					name : "Title",
-					field : "title",
-					width : "auto"
-				}, {
-					name : "created",
-					field : "created",
-					width : "auto"
-				}, {
-					name : "clicks",
-					field : "clicks",
-					width : "auto"
-				} ],
-				columnReordering : true,
-				clientSort : true,
-				rowSelector : '20px',
-				rowsPerPage : 5,
-				autoHeight : true
-			}, "articleGrid");
-			articleGrid.startup();
+					// set up the tree, assigning governmentModel;
+					var articleGrid = new EnhancedGrid({
+						store : articleModel,
 
-			query("#delete-channel-node").on("click", function() {
+						structure : [ {
+							name : "ID",
+							field : "id",
+							width : "auto"
+						}, {
+							name : "Title",
+							field : "title",
+							width : "auto"
+						}, {
+							name : "created",
+							field : "created",
+							width : "auto"
+						}, {
+							name : "clicks",
+							field : "clicks",
+							width : "auto"
+						} ],
+						columnReordering : true,
+						clientSort : true,
+						rowSelector : '20px',
+						rowsPerPage : 5,
+						autoHeight : true
+					}, "articleGrid");
+					articleGrid.startup();
 
-				del();
+					query("#delete-channel-node").on("click", function() {
 
-			});
+						del();
 
-			query("#add-new-article").on("click", function() {
-			});
+					});
 
-			function del() {
+					query("#add-new-article").on("click", function() {
+					});
 
-			}
-			;
+					function del() {
 
-		});
+					}
+					;
+
+				});
 
 		/*]]>*/
 	</script>
