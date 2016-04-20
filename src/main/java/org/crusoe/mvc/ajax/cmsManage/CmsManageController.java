@@ -50,7 +50,11 @@ public class CmsManageController {
 
 		return "cmsManage/channel/index";
 	}
+	@RequestMapping(value = "article/index")
+	public String articleIndex(ServletRequest request) {
 
+		return "cmsManage/article/index";
+	}
 	@RequestMapping(value = "channel/data", method = RequestMethod.GET)
 	public @ResponseBody ChannelDTO channelById(@RequestParam(value = "id") Long id) {
 

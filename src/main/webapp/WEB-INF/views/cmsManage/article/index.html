@@ -21,8 +21,8 @@
 </head>
 <body class="dbootstrap">
 	<div class="column" id="tree">
-		<h1>Tree</h1>
-		<div id="divTree"></div>
+		<h1>ArticleGrid</h1>
+		<div id="articleGrid"></div>
 	</div>
 	<button id="add-new-article">Add an article</button>
 
@@ -36,64 +36,58 @@
 			// Start application.
 		});
 
-		require([ "dojo/json", "dojo/data/ObjectStore",
+		require([ "dojo/query", "dojo/json", "dojo/data/ObjectStore",
 				"dojox/grid/enhanced/plugins/Pagination",
-				"dojox/grid/enhanced/plugins/Filter",
-				"dojox/grid/EnhancedGrid", "dojo/store/JsonRest",
-				"dojo/domReady!" ], function(JSON, ObjectStore, Pagination,
-				Filter, EnhancedGrid, JsonRest) {
+				"dojox/grid/enhanced/plugins/Filter", "dojox/grid/DataGrid",
+				"dojo/store/JsonRest", "dojo/store/Memory", "dojo/store/Cache",
+				"dojo/domReady!" ], function(query, JSON, ObjectStore,
+				Pagination, Filter, DataGrid, JsonRest, Memory, Cache) {
 
 			// set up the store to get the tree data
 
-	
-			var channelStore = new JsonRest({
+			var articleStore = new JsonRest({
 				target : /*[[@{'/cmsManage/article/data'}]]*/"article/data"
 
 			});
 
-
-
-			channelStore = new Cache(channelStore, new Memory());
+			articleStore = new Cache(articleStore, new Memory());
 
 			//*/
 
 			// give store Observable interface so Tree can track updates
-			channelStore = new Observable(channelStore);
+			//articleStore = new Observable(articleStore);
 			// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
-			var channelModel = new ObjectStoreModel({
-				store : channelStore,
-				//getRoot : function(onItem) {
-				//	this.store.get("root").then(onItem);
-				//},
-				getRoot : function(onItem) {
-					this.store.query({
-						"id" : -1,
-						"timeStamp" : Math.random()
-					}).then(onItem);
-				},
-				mayHaveChildren : function(object) {
-					return "children" in object;
-				}
+			var articleModel = new ObjectStore({
+				store : articleStore
 			});
 
 			// set up the tree, assigning governmentModel;
-			var channelTree = new Tree({
-				model : channelModel,
-				/*onOpenClick : true,
-				onLoad : function() {
-					dom.byId('image').src = '../resources/images/root.jpg';
-				},
-				onClick : function(item) {
-					dom.byId('image').src = '../resources/images/'
-							+ item.id + '.jpg';
-
-				},
-				 */
-				persist : false,
-
-				dndController : dndSource
-			}, "divTree");
-			channelTree.startup();
+			var articleGrid = new DataGrid({
+				store : articleModel,
+				structure : [ {
+					name : "ID",
+					field : "id",
+					width : "auto"
+				}, {
+					name : "Title",
+					field : "title",
+					width : "auto"
+				}, {
+					name : "created",
+					field : "created",
+					width : "auto"
+				}, {
+					name : "clicks",
+					field : "clicks",
+					width : "auto"
+				} ],
+				columnReordering : true,
+				clientSort : true,
+				rowSelector : '20px',
+				rowsPerPage : 5,
+				autoHeight : true
+			}, "articleGrid");
+			articleGrid.startup();
 
 			query("#delete-channel-node").on("click", function() {
 
@@ -102,96 +96,10 @@
 			});
 
 			query("#add-new-article").on("click", function() {
-				// get the selected object from the tree
-				var selectedObject = channelTree.get("selectedItems")[0];
-				if (!selectedObject) {
-					return alert("No object selected");
-				}
-
-				//Sync selectedObject with server
-				channelStore.query({
-					"id" : selectedObject.id,
-					"timeStamp" : Math.random()
-				}).then(function(selectedObject) {
-					var name = prompt("Enter a name for new node");
-					if (name != null && name != "") {
-
-						var newItem = {
-
-							name : name,
-							state : "∆Ù”√",
-							parent : {
-								id : selectedObject.id
-							}
-
-						};
-
-						selectedObject.children.push(newItem);
-
-						channelStore.put(newItem);
-
-						//Loading recently added node 500ms after puting it
-						var nodeId = new Deferred();
-						Deferred.when(nodeId, reloadNode);
-						setTimeout(function() {
-							nodeId.resolve(selectedObject.id);
-						}, 500);
-
-					} else {
-						return alert("Name can not be empty.");
-					}
-
-				}, function(error) {
-					alert("Error loading " + selectedObject.NodeName);
-				});
-
-				// add a new child item
-				/*
-				var childItem = {
-					name : "New child",
-					id : Math.random()
-				};
-				console.log(selectedObject.name);
-				channelStore.add({
-					id : 2,
-					name : 'United States',
-					parent : {
-						id : selectedObject.id
-					}
-				});
-				
-				 */
 			});
-
-			function reloadNode(id) {
-				channelStore.query({
-					"id" : id,
-					"timeStamp" : Math.random()
-				}).then(function(fullObject) {
-					return fullObject.children;
-
-				});
-			}
-			;
-
-			function removeAllChildren(node) {
-				treeStore.get(node.id).then(function(node) {
-
-					var nodeChildren = node.children;
-					for (n in nodeChildren) {
-						removeAllChildren(nodeChildren[n]);
-					}
-					treeStore.remove(node.id);
-				}, function(error) {
-					alert(error);
-				});
-			}
-			;
 
 			function del() {
 
-				var selectedObject = channelTree.get("selectedItems")[0];
-				channelStore.remove(selectedObject.id);
 			}
 			;
 
