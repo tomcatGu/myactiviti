@@ -132,8 +132,7 @@ public class CmsManageController {
 
 	}
 
-	@RequestMapping(value = "article/data", method = RequestMethod.GET, headers = { ACCEPT_JSON,
-			"Range" })
+	@RequestMapping(value = "article/data", method = RequestMethod.GET, headers = { ACCEPT_JSON, "Range" })
 	public @ResponseBody HttpEntity<List<ArticleDTO>> articleByChannnelId(
 			@RequestParam(value = "channelId") Long channelId, @RequestHeader("Range") String range,
 			@RequestParam(value = "sort", defaultValue = "id") String sort,
@@ -149,7 +148,7 @@ public class CmsManageController {
 				parsedRange.getMaxResults(), sortRequest);
 		List<ArticleDTO> articleDTOs = new ArrayList<ArticleDTO>();
 
-		Page<Article> articles = articleService.findByChannelId(channelId, pageRequest);
+		List<Article> articles = articleService.findByChannelId(channelId, pageRequest);
 
 		Iterator iter = articles.iterator();
 		while (iter.hasNext()) {
@@ -168,7 +167,7 @@ public class CmsManageController {
 		}
 
 		headers.add(CONTENT_RANGE_HEADER, parsedRange.getContentRangeValue(parsedRange.getFirstResult(),
-				articles.getSize(), articles.getTotalElements()));
+				articles.size(), articleService.countByChannelId(channelId)));
 		return new HttpEntity<List<ArticleDTO>>(articleDTOs, headers);
 
 	}

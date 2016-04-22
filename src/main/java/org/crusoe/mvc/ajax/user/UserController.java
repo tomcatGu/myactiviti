@@ -20,7 +20,6 @@ import org.crusoe.dto.OrganizationDTO;
 import org.crusoe.dto.ResourceDTO;
 import org.crusoe.dto.RoleDTO;
 import org.crusoe.dto.UserDTO;
-import org.crusoe.dynamic.DynamicDeployBeans2;
 import org.crusoe.entity.Organization;
 import org.crusoe.entity.Resource;
 import org.crusoe.entity.Role;
@@ -76,17 +75,18 @@ public class UserController {
 	protected RoleService roleService;
 	@Autowired
 	protected OrganizationService organizationService;
-	@Autowired
-	private DynamicDeployBeans2 dynamicDeployBeans2;
 
 	@RequestMapping(value = "index")
 	public String list(
-	// @RequestParam(value = "pageNumber") List<SearchFilter> filtes,
-	// @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
-	// @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
-	// @RequestParam(value = "sortDirection", defaultValue = "DESC") String
-	// sortDirection,
-	// @RequestParam(value = "sortBy") String sortBy, Model model,
+			// @RequestParam(value = "pageNumber") List<SearchFilter> filtes,
+			// @RequestParam(value = "pageNumber", defaultValue = "1") int
+			// pageNumber,
+			// @RequestParam(value = "pageSize", defaultValue = "20") int
+			// pageSize,
+			// @RequestParam(value = "sortDirection", defaultValue = "DESC")
+			// String
+			// sortDirection,
+			// @RequestParam(value = "sortBy") String sortBy, Model model,
 			ServletRequest request) {
 		// PageRequest pageRequest = new PageRequest(pageNumber, pageSize,
 		// "DESC".equals(sortDirection.toUpperCase()) ? Sort.Direction.DESC
@@ -104,8 +104,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "name/{id}", produces = "text/plain;charset=UTF-8")
-	public @ResponseBody
-	String getUsername(@PathVariable("id") Long id) {
+	public @ResponseBody String getUsername(@PathVariable("id") Long id) {
 
 		User user = accountService.getUser(id);
 		if (user == null)
@@ -120,8 +119,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "create/{organizationId}", method = RequestMethod.GET)
-	public String createForm(
-			@PathVariable("organizationId") String organizationId, Model model) {
+	public String createForm(@PathVariable("organizationId") String organizationId, Model model) {
 		UserDTO userDTO = new UserDTO();
 		// userDTO.setRoles(new HashSet());
 		List<Role> roles = roleService.getAllRoles();
@@ -142,13 +140,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "changePassword", method = RequestMethod.POST)
-	public @ResponseBody
-	String changePassword(@RequestParam("oldPassword") String oldPassword,
-			@RequestParam("newPassword") String newPassword,
-			@RequestParam("confirmPassword") String confirmPassword) {
+	public @ResponseBody String changePassword(@RequestParam("oldPassword") String oldPassword,
+			@RequestParam("newPassword") String newPassword, @RequestParam("confirmPassword") String confirmPassword) {
 		// Map<String, String> errs = new HashMap<String, String>();
-		User user = accountService.findUserByLoginName(SecurityUtils
-				.getSubject().getPrincipal().toString());
+		User user = accountService.findUserByLoginName(SecurityUtils.getSubject().getPrincipal().toString());
 		if (user != null && newPassword.equals(confirmPassword)
 				&& accountService.isCorrectPassword(user, oldPassword)) {
 			user.setPassword(newPassword);
@@ -167,8 +162,7 @@ public class UserController {
 
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
-	public @ResponseBody
-	Map<String, ? extends Object> create(@Valid @RequestBody UserDTO newUser,
+	public @ResponseBody Map<String, ? extends Object> create(@Valid @RequestBody UserDTO newUser,
 			RedirectAttributes redirectAttributes) {
 
 		User user = new User();
@@ -192,8 +186,7 @@ public class UserController {
 		}
 
 		user.setStatus("enabled");
-		Organization o = organizationService.findById(newUser
-				.getOrganizationId());
+		Organization o = organizationService.findById(newUser.getOrganizationId());
 		if (o != null) {
 			o.getUsers().add(user);
 			user.setOrganization(o);
@@ -211,8 +204,7 @@ public class UserController {
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public @ResponseBody
-	Map<String, ? extends Object> handleMethodArgumentNotValidException(
+	public @ResponseBody Map<String, ? extends Object> handleMethodArgumentNotValidException(
 			MethodArgumentNotValidException error) {
 
 		List<ObjectError> fes = error.getBindingResult().getAllErrors();
@@ -270,8 +262,7 @@ public class UserController {
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
-	public @ResponseBody
-	Map<String, ? extends Object> update(@Valid @RequestBody UserDTO newUser,
+	public @ResponseBody Map<String, ? extends Object> update(@Valid @RequestBody UserDTO newUser,
 			RedirectAttributes redirectAttributes) {
 		User user = accountService.findById(newUser.getId());
 		user.setLoginName(newUser.getLoginName());
@@ -294,8 +285,7 @@ public class UserController {
 			}
 
 		}
-		Organization o = organizationService.findById(newUser
-				.getOrganizationId());
+		Organization o = organizationService.findById(newUser.getOrganizationId());
 		if (o != null) {
 			o.getUsers().add(user);
 			user.setOrganization(o);
@@ -314,8 +304,7 @@ public class UserController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
-	public @ResponseBody
-	Map<String, ? extends Object> delete(@PathVariable("id") Long id,
+	public @ResponseBody Map<String, ? extends Object> delete(@PathVariable("id") Long id,
 			RedirectAttributes redirectAttributes) throws Exception {
 		// taskService.deleteTask(id);
 		User user = accountService.getUser(id);
@@ -329,7 +318,7 @@ public class UserController {
 	}
 
 	/**
-	 * 　批量删除　
+	 * 批量删除
 	 * 
 	 * @throws Exception
 	 */
@@ -340,10 +329,8 @@ public class UserController {
 	 */
 	@RequestMapping(method = RequestMethod.DELETE)
 	@CacheEvict(value = "shiroAuthorizationCache", allEntries = true)
-	public @ResponseBody
-	Map<String, ? extends Object> batchDelete(
-			@RequestParam(value = "items[]", required = false) int[] items)
-			throws Exception {
+	public @ResponseBody Map<String, ? extends Object> batchDelete(
+			@RequestParam(value = "items[]", required = false) int[] items) throws Exception {
 		// String[] items = request.getParameterValues("items");
 		for (int i = 0; i < items.length; i++) {
 			java.lang.Long id = new java.lang.Long(items[i]);
@@ -357,25 +344,20 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public String get(@PathVariable("id") Long id,
-			RedirectAttributes redirectAttributes) {
+	public String get(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		// taskService.deleteTask(id);
 		redirectAttributes.addFlashAttribute("message", "获取用户成功");
 		return "redirect:/task/";
 	}
 
 	@RequestMapping(value = "listUsers", method = RequestMethod.GET)
-	public @ResponseBody
-	Map<String, Object> listlUsers(@RequestParam("sort") String sort,
-			@RequestParam("order") String order,
-			@RequestParam(value = "start", defaultValue = "0") int start,
+	public @ResponseBody Map<String, Object> listlUsers(@RequestParam("sort") String sort,
+			@RequestParam("order") String order, @RequestParam(value = "start", defaultValue = "0") int start,
 			@RequestParam(value = "size", defaultValue = "10") int size) {
 
-		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
-				Direction.DESC, new String[] { sort }) : new Sort(
-				Direction.ASC, new String[] { sort });
-		PageRequest pageRequest = new PageRequest(start / size, size,
-				sortRequest);
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(Direction.DESC, new String[] { sort })
+				: new Sort(Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size, sortRequest);
 		Page<User> users = accountService.searchUser(pageRequest);
 
 		// 将查询结果转换为一维数组
@@ -411,21 +393,15 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "listUsersOfOrganization", method = RequestMethod.GET)
-	public @ResponseBody
-	Map<String, Object> listUsersOfOrganization(
-			@RequestParam("sort") String sort,
-			@RequestParam("order") String order,
-			@RequestParam(value = "start", defaultValue = "0") int start,
+	public @ResponseBody Map<String, Object> listUsersOfOrganization(@RequestParam("sort") String sort,
+			@RequestParam("order") String order, @RequestParam(value = "start", defaultValue = "0") int start,
 			@RequestParam(value = "size", defaultValue = "10") int size,
 			@RequestParam(value = "organizationId") Long organizationId) {
 
-		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(
-				Direction.DESC, new String[] { sort }) : new Sort(
-				Direction.ASC, new String[] { sort });
-		PageRequest pageRequest = new PageRequest(start / size, size,
-				sortRequest);
-		Page<User> users = accountService.findByOrganization(organizationId,
-				pageRequest);
+		Sort sortRequest = "desc".equals(order.toLowerCase()) ? new Sort(Direction.DESC, new String[] { sort })
+				: new Sort(Direction.ASC, new String[] { sort });
+		PageRequest pageRequest = new PageRequest(start / size, size, sortRequest);
+		Page<User> users = accountService.findByOrganization(organizationId, pageRequest);
 
 		// 将查询结果转换为一维数组
 		List<UserDTO> userDTOList = new ArrayList<UserDTO>();
@@ -473,8 +449,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "getOrganization/{loginName}")
-	public @ResponseBody
-	OrganizationDTO getorganization(@PathVariable("loginName") String loginName) {
+	public @ResponseBody OrganizationDTO getorganization(@PathVariable("loginName") String loginName) {
 
 		User user = accountService.findUserByLoginName(loginName);
 		Organization o = user.getOrganization();

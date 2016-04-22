@@ -32,7 +32,6 @@ import org.apache.shiro.authz.annotation.RequiresUser;
 //import org.codehaus.jackson.map.ObjectMapper;
 //import org.codehaus.jackson.node.ObjectNode;
 import org.crusoe.dto.repository.ModelDTO;
-import org.crusoe.dynamic.DynamicDeployBeans2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,27 +60,21 @@ public class ActivitiWorkflowController {
 	@Autowired
 	private FormService formService;
 
-
-
 	@RequestMapping(value = "index", method = RequestMethod.GET)
 	public String getIndexForm(Model model) {
-
 
 		return "/workflow/index";
 	}
 
 	@RequiresUser
 	@RequestMapping(value = "listModels", method = RequestMethod.GET)
-	public @ResponseBody
-	HashMap<String, Object> listTasks(@RequestParam("sort") String sort,
-			@RequestParam("order") String order,
-			@RequestParam(value = "start", defaultValue = "0") int start,
+	public @ResponseBody HashMap<String, Object> listTasks(@RequestParam("sort") String sort,
+			@RequestParam("order") String order, @RequestParam(value = "start", defaultValue = "0") int start,
 			@RequestParam(value = "size", defaultValue = "10") int size)
 			throws IllegalAccessException, InvocationTargetException {
 
-		List<org.activiti.engine.repository.Model> list = repositoryService
-				.createModelQuery().orderByCreateTime().desc()
-				.listPage(start, size);
+		List<org.activiti.engine.repository.Model> list = repositoryService.createModelQuery().orderByCreateTime()
+				.desc().listPage(start, size);
 		List<ModelDTO> todoList = new ArrayList<ModelDTO>();
 		HashMap<String, Object> rets = new HashMap<String, Object>();
 		for (org.activiti.engine.repository.Model model : list) {
@@ -108,8 +101,7 @@ public class ActivitiWorkflowController {
 	}
 
 	@RequestMapping(value = "process/start", method = RequestMethod.GET)
-	public String startProcessInstance(
-			@RequestParam("processKey") String processKey) {
+	public String startProcessInstance(@RequestParam("processKey") String processKey) {
 
 		runtimeService.startProcessInstanceByKey(processKey);
 
@@ -126,10 +118,8 @@ public class ActivitiWorkflowController {
 	}
 
 	@RequestMapping(value = "create")
-	public void create(@RequestParam("name") String name,
-			@RequestParam("key") String key,
-			@RequestParam("description") String description,
-			HttpServletRequest request, HttpServletResponse response) {
+	public void create(@RequestParam("name") String name, @RequestParam("key") String key,
+			@RequestParam("description") String description, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -137,28 +127,23 @@ public class ActivitiWorkflowController {
 			editorNode.put("id", "canvas");
 			editorNode.put("resourceId", "canvas");
 			ObjectNode stencilSetNode = objectMapper.createObjectNode();
-			stencilSetNode.put("namespace",
-					"http://b3mn.org/stencilset/bpmn2.0#");
+			stencilSetNode.put("namespace", "http://b3mn.org/stencilset/bpmn2.0#");
 			editorNode.put("stencilset", stencilSetNode);
-			org.activiti.engine.repository.Model modelData = repositoryService
-					.newModel();
+			org.activiti.engine.repository.Model modelData = repositoryService.newModel();
 
 			ObjectNode modelObjectNode = objectMapper.createObjectNode();
 			modelObjectNode.put(ModelDataJsonConstants.MODEL_NAME, name);
 			modelObjectNode.put(ModelDataJsonConstants.MODEL_REVISION, 1);
 			description = StringUtils.defaultString(description);
-			modelObjectNode.put(ModelDataJsonConstants.MODEL_DESCRIPTION,
-					description);
+			modelObjectNode.put(ModelDataJsonConstants.MODEL_DESCRIPTION, description);
 			modelData.setMetaInfo(modelObjectNode.toString());
 			modelData.setName(name);
 			modelData.setKey(StringUtils.defaultString(key));
 
 			repositoryService.saveModel(modelData);
-			repositoryService.addModelEditorSource(modelData.getId(),
-					editorNode.toString().getBytes("UTF-8"));
+			repositoryService.addModelEditorSource(modelData.getId(), editorNode.toString().getBytes("UTF-8"));
 			response.setCharacterEncoding("UTF-8");
-			response.sendRedirect(request.getContextPath()
-					+ "/modeler/service/editor?id=" + modelData.getId());
+			response.sendRedirect(request.getContextPath() + "/modeler/service/editor?id=" + modelData.getId());
 
 		} catch (Exception e) {
 
@@ -169,27 +154,21 @@ public class ActivitiWorkflowController {
 	 * 根据Model部署流程
 	 */
 	@RequestMapping(value = "deploy/{modelId}")
-	public String deploy(@PathVariable("modelId") String modelId,
-			RedirectAttributes redirectAttributes) {
+	public String deploy(@PathVariable("modelId") String modelId, RedirectAttributes redirectAttributes) {
 		try {
-			org.activiti.engine.repository.Model modelData = repositoryService
-					.getModel(modelId);
+			org.activiti.engine.repository.Model modelData = repositoryService.getModel(modelId);
 			JsonNode modelNode = (JsonNode) new ObjectMapper()
-					.readTree(repositoryService.getModelEditorSource(modelData
-							.getId()));
+					.readTree(repositoryService.getModelEditorSource(modelData.getId()));
 
 			byte[] bpmnBytes = null;
 
-			BpmnModel model = new BpmnJsonConverter()
-					.convertToBpmnModel(modelNode);
+			BpmnModel model = new BpmnJsonConverter().convertToBpmnModel(modelNode);
 			bpmnBytes = new BpmnXMLConverter().convertToXML(model);
 
 			String processName = modelData.getName() + ".bpmn20.xml";
-			Deployment deployment = repositoryService.createDeployment()
-					.name(modelData.getName())
+			Deployment deployment = repositoryService.createDeployment().name(modelData.getName())
 					.addString(processName, new String(bpmnBytes)).deploy();
-			redirectAttributes.addFlashAttribute("message", "部署成功，部署ID="
-					+ deployment.getId());
+			redirectAttributes.addFlashAttribute("message", "部署成功，部署ID=" + deployment.getId());
 		} catch (Exception e) {
 			// logger.error("根据模型部署流程失败：modelId={}", modelId, e);
 		}
@@ -197,8 +176,7 @@ public class ActivitiWorkflowController {
 	}
 
 	@RequestMapping(value = "/deployments", method = RequestMethod.POST)
-	public String deploy(
-			@RequestParam(value = "file", required = false) MultipartFile file) {
+	public String deploy(@RequestParam(value = "file", required = false) MultipartFile file) {
 
 		String fileName = file.getOriginalFilename();
 
@@ -207,52 +185,42 @@ public class ActivitiWorkflowController {
 
 			String extension = FilenameUtils.getExtension(fileName);
 			if (extension.equals("zip") || extension.equals("bar")) {
-				ZipInputStream zip = new ZipInputStream(
-						new BufferedInputStream(fileInputStream));
-				repositoryService.createDeployment().addZipInputStream(zip)
-						.deploy();
+				ZipInputStream zip = new ZipInputStream(new BufferedInputStream(fileInputStream));
+				repositoryService.createDeployment().addZipInputStream(zip).deploy();
 
 			} else if (extension.equals("png")) {
-				repositoryService.createDeployment()
-						.addInputStream(fileName, fileInputStream).deploy();
+				repositoryService.createDeployment().addInputStream(fileName, fileInputStream).deploy();
 			} else if (extension.indexOf("bpmn20.xml") != -1) {
-				repositoryService.createDeployment()
-						.addInputStream(fileName, fileInputStream).deploy();
+				repositoryService.createDeployment().addInputStream(fileName, fileInputStream).deploy();
 			} else if (extension.equals("bpmn")) {
 				/*
 				 * bpmn扩展名特殊处理，转换为bpmn20.xml
 				 */
 				String baseName = FilenameUtils.getBaseName(fileName);
-				repositoryService
-						.createDeployment()
-						.addInputStream(baseName + ".bpmn20.xml",
-								fileInputStream).deploy();
+				repositoryService.createDeployment().addInputStream(baseName + ".bpmn20.xml", fileInputStream).deploy();
 			} else {
-				throw new ActivitiException("no support file type of "
-						+ extension);
+				throw new ActivitiException("no support file type of " + extension);
 			}
 		} catch (Exception e) {
-			// logger.error("error on deploy process, because of file input stream");
+			// logger.error("error on deploy process, because of file input
+			// stream");
 		}
 
 		return "redirect:/workflow/index";
 	}
 
 	@RequestMapping(value = "deployments", method = RequestMethod.GET)
-	public String getDeployments(@RequestParam("sort") String sort,
-			@RequestParam("order") String order,
+	public String getDeployments(@RequestParam("sort") String sort, @RequestParam("order") String order,
 			@RequestParam(value = "start", defaultValue = "0") int start,
-			@RequestParam(value = "size", defaultValue = "10") int size,
-			Model model) {
+			@RequestParam(value = "size", defaultValue = "10") int size, Model model) {
 
 		List<Object[]> objects = new ArrayList<Object[]>();
 
-		List<ProcessDefinition> processDefinitionList = repositoryService
-				.createProcessDefinitionQuery().listPage(start, size);
+		List<ProcessDefinition> processDefinitionList = repositoryService.createProcessDefinitionQuery().listPage(start,
+				size);
 		for (ProcessDefinition processDefinition : processDefinitionList) {
 			String deploymentId = processDefinition.getDeploymentId();
-			Deployment deployment = repositoryService.createDeploymentQuery()
-					.deploymentId(deploymentId).singleResult();
+			Deployment deployment = repositoryService.createDeploymentQuery().deploymentId(deploymentId).singleResult();
 			objects.add(new Object[] { processDefinition, deployment });
 
 		}
@@ -272,12 +240,9 @@ public class ActivitiWorkflowController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "deployment", method = RequestMethod.GET)
-	public void loadByDeployment(
-			@RequestParam("deploymentId") String deploymentId,
-			@RequestParam("resourceName") String resourceName,
-			HttpServletResponse response) throws Exception {
-		InputStream resourceAsStream = repositoryService.getResourceAsStream(
-				deploymentId, resourceName);
+	public void loadByDeployment(@RequestParam("deploymentId") String deploymentId,
+			@RequestParam("resourceName") String resourceName, HttpServletResponse response) throws Exception {
+		InputStream resourceAsStream = repositoryService.getResourceAsStream(deploymentId, resourceName);
 		byte[] b = new byte[1024];
 		int len = -1;
 		while ((len = resourceAsStream.read(b, 0, 1024)) != -1) {
@@ -286,8 +251,7 @@ public class ActivitiWorkflowController {
 	}
 
 	@RequestMapping(value = "submit", method = RequestMethod.POST)
-	public ModelAndView submitForm(HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView submitForm(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, String> map = null;
 		Map<String, String[]> map1 = request.getParameterMap();
 		Map returnMap = new HashMap();
