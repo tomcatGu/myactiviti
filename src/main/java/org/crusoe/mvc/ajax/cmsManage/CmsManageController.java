@@ -13,16 +13,21 @@ import org.crusoe.dto.cms.ChannelDTO;
 import org.crusoe.entity.cms.Article;
 import org.crusoe.entity.cms.ArticleContent;
 import org.crusoe.entity.cms.Channel;
+import org.crusoe.mvc.ajax.util.Range;
 import org.crusoe.service.cms.ArticleContentService;
 import org.crusoe.service.cms.ArticleService;
 import org.crusoe.service.cms.ChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +36,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "/cmsManage")
 public class CmsManageController {
+	private static final String RANGE_PREFIX = "items=";
 
+	private static final String CONTENT_RANGE_HEADER = "Content-Range";
+
+	private static final String ACCEPT_JSON = "Accept=application/json";
 	@Autowired
 	ChannelService channelService;
 	@Autowired
@@ -50,11 +59,13 @@ public class CmsManageController {
 
 		return "cmsManage/channel/index";
 	}
+
 	@RequestMapping(value = "article/index")
 	public String articleIndex(ServletRequest request) {
 
 		return "cmsManage/article/index";
 	}
+
 	@RequestMapping(value = "channel/data", method = RequestMethod.GET)
 	public @ResponseBody ChannelDTO channelById(@RequestParam(value = "id") Long id) {
 
@@ -121,19 +132,24 @@ public class CmsManageController {
 
 	}
 
-	@RequestMapping(value = "article/data", method = RequestMethod.GET)
-	public @ResponseBody List<ArticleDTO> articleByChannnelId(@RequestParam(value = "channelId") Long channelId,
-			@RequestParam(value = "start", defaultValue = "0") int start,
-			@RequestParam(value = "count", defaultValue = "10") int count,
+	@RequestMapping(value = "article/data", method = RequestMethod.GET, headers = { ACCEPT_JSON,
+			"Range" })
+	public @ResponseBody HttpEntity<List<ArticleDTO>> articleByChannnelId(
+			@RequestParam(value = "channelId") Long channelId, @RequestHeader("Range") String range,
 			@RequestParam(value = "sort", defaultValue = "id") String sort,
 			@RequestParam(value = "sortDesc", defaultValue = "true") boolean sortDesc) {
 		Sort sortRequest = sortDesc ? new Sort(Direction.DESC, new String[] { sort })
 				: new Sort(Direction.ASC, new String[] { sort });
 
-		PageRequest pageRequest = new PageRequest(start / count, count, sortRequest);
+		HttpHeaders headers = new HttpHeaders();
+
+		Range parsedRange = new Range(range.replaceAll(RANGE_PREFIX, ""));
+
+		PageRequest pageRequest = new PageRequest(parsedRange.getFirstResult() / parsedRange.getMaxResults(),
+				parsedRange.getMaxResults(), sortRequest);
 		List<ArticleDTO> articleDTOs = new ArrayList<ArticleDTO>();
 
-		List<Article> articles = articleService.findByChannelId(channelId, pageRequest);
+		Page<Article> articles = articleService.findByChannelId(channelId, pageRequest);
 
 		Iterator iter = articles.iterator();
 		while (iter.hasNext()) {
@@ -151,7 +167,9 @@ public class CmsManageController {
 
 		}
 
-		return articleDTOs;
+		headers.add(CONTENT_RANGE_HEADER, parsedRange.getContentRangeValue(parsedRange.getFirstResult(),
+				articles.getSize(), articles.getTotalElements()));
+		return new HttpEntity<List<ArticleDTO>>(articleDTOs, headers);
 
 	}
 
