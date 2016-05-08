@@ -148,7 +148,7 @@ public class CmsManageController {
 				parsedRange.getMaxResults(), sortRequest);
 		List<ArticleDTO> articleDTOs = new ArrayList<ArticleDTO>();
 
-		List<Article> articles = articleService.findByChannelId(channelId, pageRequest);
+		Page<Article> articles = articleService.findByChannelId(channelId, pageRequest);
 
 		Iterator iter = articles.iterator();
 		while (iter.hasNext()) {
@@ -167,7 +167,7 @@ public class CmsManageController {
 		}
 
 		headers.add(CONTENT_RANGE_HEADER, parsedRange.getContentRangeValue(parsedRange.getFirstResult(),
-				articles.size(), articleService.countByChannelId(channelId)));
+				articles.getNumber(), articles.getTotalElements()));
 		return new HttpEntity<List<ArticleDTO>>(articleDTOs, headers);
 
 	}

@@ -15,7 +15,7 @@ public class ArticleService {
 	@Autowired
 	ArticleDao articleDao;
 
-	public List<Article> findByChannelId(Long channelId, Pageable pageable) {
+	public Page<Article> findByChannelId(Long channelId, Pageable pageable) {
 		// TODO Auto-generated method stub
 
 		return articleDao.findByChannelId(channelId, pageable);
@@ -26,10 +26,6 @@ public class ArticleService {
 		return articleDao.save(a);
 	}
 
-	public long countByChannelId(Long channelId) {
 
-		return articleDao.countByChannelId(channelId);
-
-	}
 
 }

@@ -11,10 +11,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface ArticleDao extends PagingAndSortingRepository<Article, Long>, JpaSpecificationExecutor<Article> {
 
-	@Query("select c.articles from Channel c where c.id=?1")
-	List<Article> findByChannelId(Long channelId, Pageable pageable);
+	@Query("select a from Article a JOIN a.channels c where c.id=?1")
+	Page<Article> findByChannelId(Long channelId, Pageable pageable);
 
-	@Query("select count(c.articles) from Channel c where c.id=?1")
-	long countByChannelId(Long channelId);
 
 }

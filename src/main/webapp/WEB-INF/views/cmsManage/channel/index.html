@@ -19,7 +19,7 @@
 <style>
 </style>
 </head>
-<body class="dbootstrap">
+<body class="claro">
 	<div class="column" id="tree">
 		<h1>Tree</h1>
 		<div id="divTree"></div>
@@ -83,7 +83,7 @@
 
 			///*
 
-			channelStore = new Cache(channelStore, new Memory());
+			//channelStore = new Cache(channelStore, new Memory());
 
 			aspect.around(channelStore, "put", function(originalPut) {
 				return function(obj, options) {
@@ -261,6 +261,10 @@
 						setTimeout(function() {
 							nodeId.resolve(selectedObject.id);
 						}, 500);
+
+						setTimeout(function() {
+							window.location.reload();
+						}, 2000);
 
 					} else {
 						return alert("Name can not be empty.");
