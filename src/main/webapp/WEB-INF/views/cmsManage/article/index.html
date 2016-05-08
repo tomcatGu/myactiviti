@@ -8,6 +8,10 @@
 	th:href="@{/dojo-release-1.11.1/dojox/grid/resources/claroGrid.css}" />
 
 
+<link
+	href="/dojo-release-1.11.1/dojox/grid/enhanced/resources/claro/EnhancedGrid.css"
+	rel="stylesheet" type="text/css"
+	th:href="@{/dojo-release-1.11.1/dojox/grid/enhanced/resources/claro/EnhancedGrid.css}" />
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	/////create on20162016年3月18日下午2:17:49 byxxb1029//////
@@ -102,7 +106,19 @@
 						clientSort : true,
 						rowSelector : '20px',
 						rowsPerPage : 5,
-						autoHeight : true
+						autoHeight : true,
+						plugins : {
+							pagination : {
+								pageSizes : [ "10", "25", "50", "100" ],
+								description : true,
+								sizeSwitch : true,
+								pageStepper : true,
+								gotoButton : true,
+								maxPageStep : 5,
+								position : "bottom"
+							}
+						}
+
 					}, "articleGrid");
 					articleGrid.startup();
 
