@@ -29,13 +29,34 @@
 </style>
 </head>
 <body class="claro">
-	<div class="column" id="tree">
-		<h1>ArticleGrid</h1>
-		<div id="articleGrid"></div>
-	</div>
-	<button id="add-new-article">Add an article</button>
+	<div class="column">
+		<h1>文章列表</h1>
 
-	<button id="delete-channel-node">Delete selected item</button>
+		<div data-dojo-type="dijit/layout/BorderContainer" id="articleLayout"
+			data-dojo-props="design: 'headline'"
+			style="border: 2px solid black; padding: 10px;">
+			<div data-dojo-type="dijit/layout/ContentPane"
+				data-dojo-props="region:'left'">
+				<div id="channelTree"></div>
+			</div>
+			<div data-dojo-type="dijit/layout/ContentPane"
+				data-dojo-props="region:'center'">
+				<div id="articleGrid"></div>
+
+				<button id="add-new-article">Add an article</button>
+
+				<button id="delete-channel-node">Delete selected item</button>
+			</div>
+
+		</div>
+
+
+
+
+
+
+	</div>
+
 	<div th:include="/common::dojoScriptFragment"></div>
 
 	<script type="text/javascript" th:inline="javascript">
@@ -43,6 +64,92 @@
 		/////create on20162016年3月18日下午2:17:49 byxxb1029//////
 		require([ "dbootstrap" ], function(dbootstrap) {
 			// Start application.
+		});
+
+		require([ "dojo/aspect", "dojo/dom", "dojo/json",
+				"dojo/store/JsonRest", "dijit/tree/ObjectStoreModel",
+				"dijit/tree/ForestStoreModel", "dijit/Tree", "dojo/domReady!",
+				"dojo/query", "dojo/store/Observable", "dojo/_base/Deferred",
+				"dijit/tree/dndSource" ], function(aspect, dom, json, JsonRest,
+				ObjectStoreModel, ForestStoreModel, Tree, domReady, query,
+				Observable, Deferred, dndSource) {
+
+			var channelStore = new JsonRest({
+				target : /*[[@{'/cmsManage/channel/data'}]]*/"channel/data",
+				//data : [ json.parse(data) ],
+				getRoot : function(onItem) {
+					this.query({
+						"id" : -1,
+						"timeStamp" : Math.random()
+					}).then(onItem);
+				},
+				mayHaveChildren : function(object) {
+					return "children" in object;
+
+				},
+				getChildren : function(object) {
+					return this.query({
+						"id" : object.id,
+						"timeStamp" : Math.random()
+					}).then(function(fullObject) {
+						return fullObject.children;
+					})
+				},
+				getLabel : function(object) {
+					// just get the name
+					return object.name;
+				}
+			});
+
+			// To support dynamic data changes, including DnD,
+			// the store must support put(child, {parent: parent}).
+			// But dojo/store/Memory doesn't, so we have to implement it.
+			// Since our store is relational, that just amounts to setting child.parent
+			// to the parent's id.
+
+			///*
+
+			//channelStore = new Cache(channelStore, new Memory());
+
+			// give store Observable interface so Tree can track updates
+			channelStore = new Observable(channelStore);
+			// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
+			var channelModel = new ObjectStoreModel({
+				store : channelStore,
+				//getRoot : function(onItem) {
+				//	this.store.get("root").then(onItem);
+				//},
+				getRoot : function(onItem) {
+					this.store.query({
+						"id" : -1,
+						"timeStamp" : Math.random()
+					}).then(onItem);
+				},
+				mayHaveChildren : function(object) {
+					return "children" in object;
+				}
+
+			});
+
+			// set up the tree, assigning governmentModel;
+			var channelTree = new Tree({
+				model : channelModel,
+				/*onOpenClick : true,
+				onLoad : function() {
+					dom.byId('image').src = '../resources/images/root.jpg';
+				},
+				onClick : function(item) {
+					dom.byId('image').src = '../resources/images/'
+							+ item.id + '.jpg';
+
+				},
+				 */
+				persist : false,
+
+				dndController : dndSource
+			}, "channelTree");
+			channelTree.startup();
+
 		});
 
 		require(
