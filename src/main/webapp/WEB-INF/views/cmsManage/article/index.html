@@ -12,6 +12,11 @@
 	href="/dojo-release-1.11.1/dojox/grid/enhanced/resources/claro/EnhancedGrid.css"
 	rel="stylesheet" type="text/css"
 	th:href="@{/dojo-release-1.11.1/dojox/grid/enhanced/resources/claro/EnhancedGrid.css}" />
+
+
+<script src="/ckeditor/ckeditor.js" type="text/javascript"
+	th:src="@{/ckeditor/ckeditor.js}"></script>
+
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	/////create on20162016年3月18日下午2:17:49 byxxb1029//////
@@ -26,11 +31,8 @@
 </style>
 </head>
 <body class="claro">
-	<div style="width: 100%; height:500px;">
+	<div style="width: 100%; height: 500px;">
 		<h1>文章列表</h1>
-
-
-
 		<div data-dojo-type="dijit/layout/LayoutContainer" id="articleLayout"
 			data-dojo-props="design: 'sidebar'"
 			style="width: 100%; height: 100%;">
@@ -51,7 +53,21 @@
 
 		</div>
 
+		<div data-dojo-type="dijit.form.Form" id="articleForm"
+			data-dojo-id="articleForm" encType="multipart/form-data" action=""
+			method="">
+			<label class="titleLabel" for="title">标题 *</label> <input type="text"
+				id="title" name="title" class="medium"
+				dojoType="dijit.form.ValidationTextBox" required="true"
+				ucfirst="true" invalidMessage="" /> <br /> <label
+				class="titleLabel" for="author">作者 *</label> <input type="text"
+				id="author" name="author" class="medium"
+				dojoType="dijit.form.ValidationTextBox" required="true"
+				ucfirst="true" invalidMessage="" /> <br /> <label
+				class="titleLabel" for="content">内容 *</label>
+			<textarea id="content" name="content"></textarea>
 
+		</div>
 
 
 
@@ -63,6 +79,7 @@
 	<script type="text/javascript" th:inline="javascript">
 		/*<![CDATA[*/
 		/////create on20162016年3月18日下午2:17:49 byxxb1029//////
+		CKEDITOR.replace("content");
 		require([ "dojo/aspect", "dojo/dom", "dojo/json",
 				"dojo/store/JsonRest", "dijit/tree/ObjectStoreModel",
 				"dijit/tree/ForestStoreModel", "dijit/Tree", "dojo/domReady!",
