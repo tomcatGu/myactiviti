@@ -52,24 +52,25 @@
 			</div>
 
 		</div>
-
-		<div data-dojo-type="dijit.form.Form" id="articleForm"
-			data-dojo-id="articleForm" encType="multipart/form-data" action=""
-			method="">
-			<label class="titleLabel" for="title">标题 *</label> <input type="text"
-				id="title" name="title" class="medium"
-				dojoType="dijit.form.ValidationTextBox" required="true"
-				ucfirst="true" invalidMessage="" /> <br /> <label
-				class="titleLabel" for="author">作者 *</label> <input type="text"
-				id="author" name="author" class="medium"
-				dojoType="dijit.form.ValidationTextBox" required="true"
-				ucfirst="true" invalidMessage="" /> <br /> <label
-				class="titleLabel" for="content">内容 *</label>
-			<textarea id="content" name="content"></textarea>
+		<div id="articleDialog" data-dojo-type="dijit/Dialog" title="添加文章">
+			<div data-dojo-type="dijit/form/Form" id="articleForm"
+				data-dojo-id="articleForm" encType="multipart/form-data" action=""
+				method="">
+				<label class="titleLabel" for="title">标题 *</label> <input
+					type="text" id="title" name="title" class="medium"
+					dojoType="dijit/form/ValidationTextBox" required="true"
+					ucfirst="true" invalidMessage="" /> <br /> <label
+					class="titleLabel" for="author">作者 *</label> <input type="text"
+					id="author" name="author" class="medium"
+					dojoType="dijit/form/ValidationTextBox" required="true"
+					ucfirst="true" invalidMessage="" /> <br /> <label
+					class="titleLabel" for="content">内容 *</label>
+				<textarea id="content" name="content"></textarea>
+				<button data-dojo-type="dijit/form/Button" type="submit"
+					name="submitButtonThree" value="Submit">提交</button>
+			</div>
 
 		</div>
-
-
 
 
 	</div>
@@ -79,7 +80,13 @@
 	<script type="text/javascript" th:inline="javascript">
 		/*<![CDATA[*/
 		/////create on20162016年3月18日下午2:17:49 byxxb1029//////
-		CKEDITOR.replace("content");
+		require([ "dijit/form/Form", "dijit/form/Button",
+				"dijit/form/ValidationTextBox", "dijit/Dialog" ], function() {
+
+			CKEDITOR.replace("content");
+
+		});
+
 		require([ "dojo/aspect", "dojo/dom", "dojo/json",
 				"dojo/store/JsonRest", "dijit/tree/ObjectStoreModel",
 				"dijit/tree/ForestStoreModel", "dijit/Tree", "dojo/domReady!",
@@ -247,6 +254,8 @@
 			});
 
 			query("#add-new-article").on("click", function() {
+
+				dijit.byId("articleDialog").show();
 			});
 
 			function del() {
