@@ -3,8 +3,8 @@
 <head>
 <title>网站后台管理</title>
 <link rel="stylesheet" type="text/css"
-	th:href="@{/dojo-release-1.10.4/dijit/themes/claro/claro.css}"
-	href="/dojo-release-1.10.4/dijit/themes/claro/claro.css"
+	th:href="@{/dojo-release-1.11.1/dijit/themes/claro/claro.css}"
+	href="/dojo-release-1.11.1/dijit/themes/claro/claro.css"
 	data-dojo-config="async: true" media="screen" />
 
 
@@ -82,16 +82,13 @@ html, body {
 	dojoConfig = {
 		'packages' : [
 
-		{
-			location : /*[[@{'/dojo-release-1.10.4/dbootstrap'}]]*/'dojo-release-1.10.4/dbootstrap',
-			name : 'dbootstrap'
-		} ]
+		 ]
 	};
 	/*]]>*/
 </script>
 </head>
 
-<body class="dbootstrap">
+<body class="claro">
 	<div id="appLayout" class="demoLayout"
 		data-dojo-type="dijit/layout/BorderContainer"
 		data-dojo-props="design: 'headline'">
@@ -148,9 +145,7 @@ html, body {
 		src="Scripts/dojo/dojo.js" data-dojo-config="async: 1, parseOnLoad: 1"></script>
 	<script type="text/javascript" th:inline="javascript">
 		/*<![CDATA[*/
-		require([ 'dbootstrap' ], function(dbootstrap) {
-			// Start application.
-		});
+
 		require([ 'dojo/dom', 'dojo/dom-construct' ], function(dom,
 				domConstruct) {
 			//var greetingNode = dom.byId('greeting');
