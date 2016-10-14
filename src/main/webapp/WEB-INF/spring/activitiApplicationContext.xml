@@ -59,11 +59,14 @@
 				<value>classpath:META-INF/persistence.xml</value>
 			</list>
 		</property>
+		<!-- 
 		<property name="dataSources">
 			<map>
 				<entry key="dataSource" value-ref="dataSource" />
 			</map>
 		</property>
+		
+		 -->
 	</bean>
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">

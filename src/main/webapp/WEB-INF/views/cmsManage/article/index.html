@@ -87,222 +87,325 @@
 			CKEDITOR.replace("content");
 
 		});
-		
-		var selectedChannelId=1;
 
-		require([ "dojo/aspect", "dojo/dom", "dojo/json",
-				"dojo/store/JsonRest", "dijit/tree/ObjectStoreModel",
-				"dijit/tree/ForestStoreModel", "dijit/Tree", "dojo/domReady!",
-				"dojo/query", "dojo/store/Observable", "dojo/_base/Deferred",
-				"dijit/tree/dndSource" ], function(aspect, dom, json, JsonRest,
-				ObjectStoreModel, ForestStoreModel, Tree, domReady, query,
-				Observable, Deferred, dndSource) {
+		var selectedChannelId = 1;
 
-			var channelStore = new JsonRest({
-				target : /*[[@{'/cmsManage/channel/data'}]]*/"channel/data",
-				//data : [ json.parse(data) ],
-				getRoot : function(onItem) {
-					this.query({
-						"id" : -1,
-						"timeStamp" : Math.random()
-					}).then(onItem);
-				},
-				mayHaveChildren : function(object) {
-					return "children" in object;
+		var articleGrid;
 
-				},
-				getChildren : function(object) {
-					return this.query({
-						"id" : object.id,
-						"timeStamp" : Math.random()
-					}).then(function(fullObject) {
-						return fullObject.children;
-					})
-				},
-				getLabel : function(object) {
-					// just get the name
-					return object.name;
-				}
-			});
+		var channelTree;
 
-			// To support dynamic data changes, including DnD,
-			// the store must support put(child, {parent: parent}).
-			// But dojo/store/Memory doesn't, so we have to implement it.
-			// Since our store is relational, that just amounts to setting child.parent
-			// to the parent's id.
+		require(
+				[ "dojo/aspect", "dojo/dom", "dojo/json",
+						"dojo/store/JsonRest", "dijit/tree/ObjectStoreModel",
+						"dijit/tree/ForestStoreModel", "dijit/Tree",
+						"dojo/domReady!", "dojo/query",
+						"dojo/store/Observable", "dojo/_base/Deferred",
+						"dijit/tree/dndSource", "dojo/store/Memory",
+						"dojo/store/Cache", "dojo/data/ObjectStore" ],
+				function(aspect, dom, json, JsonRest, ObjectStoreModel,
+						ForestStoreModel, Tree, domReady, query, Observable,
+						Deferred, dndSource, Memory, Cache, ObjectStore) {
 
-			///*
+					var channelStore = new JsonRest(
+							{
+								target : /*[[@{'/cmsManage/channel/data'}]]*/"channel/data",
+								//data : [ json.parse(data) ],
+								getRoot : function(onItem) {
+									this.query({
+										"id" : -1,
+										"timeStamp" : Math.random()
+									}).then(onItem);
+								},
+								mayHaveChildren : function(object) {
+									return "children" in object;
 
-			//channelStore = new Cache(channelStore, new Memory());
+								},
+								getChildren : function(object) {
+									return this.query({
+										"id" : object.id,
+										"timeStamp" : Math.random()
+									}).then(function(fullObject) {
+										return fullObject.children;
+									})
+								},
+								getLabel : function(object) {
+									// just get the name
+									return object.name;
+								}
+							});
 
-			// give store Observable interface so Tree can track updates
-			channelStore = new Observable(channelStore);
-			// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
-			var channelModel = new ObjectStoreModel({
-				store : channelStore,
-				//getRoot : function(onItem) {
-				//	this.store.get("root").then(onItem);
-				//},
-				getRoot : function(onItem) {
-					this.store.query({
-						"id" : -1,
-						"timeStamp" : Math.random()
-					}).then(onItem);
-				},
-				mayHaveChildren : function(object) {
-					return "children" in object;
-				}
+					// To support dynamic data changes, including DnD,
+					// the store must support put(child, {parent: parent}).
+					// But dojo/store/Memory doesn't, so we have to implement it.
+					// Since our store is relational, that just amounts to setting child.parent
+					// to the parent's id.
 
-			});
+					///*
 
-			// set up the tree, assigning governmentModel;
-			var channelTree = new Tree({
-				model : channelModel,
-				/*onOpenClick : true,
-				onLoad : function() {
-					dom.byId('image').src = '../resources/images/root.jpg';
-				},
-				onClick : function(item) {
-					dom.byId('image').src = '../resources/images/'
-							+ item.id + '.jpg';
+					//channelStore = new Cache(channelStore, new Memory());
 
-				},
-				 */
-				persist : false,
-				onClick : function(item) {
-					selectedChannelId = item.id;
-					
-					
-					articleGrid.render();
-					console.log(item.id);
+					// give store Observable interface so Tree can track updates
+					channelStore = new Observable(channelStore);
+					// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
+					var channelModel = new ObjectStoreModel({
+						store : channelStore,
+						//getRoot : function(onItem) {
+						//	this.store.get("root").then(onItem);
+						//},
+						getRoot : function(onItem) {
+							this.store.query({
+								"id" : -1,
+								"timeStamp" : Math.random()
+							}).then(onItem);
+						},
+						mayHaveChildren : function(object) {
+							return "children" in object;
+						}
 
-				},
-				dndController : dndSource
-			}, "channelTree");
-			channelTree.startup();
+					});
 
-		});
+					// set up the tree, assigning governmentModel;
+					channelTree = new Tree(
+							{
+								model : channelModel,
+								/*onOpenClick : true,
+								onLoad : function() {
+									dom.byId('image').src = '../resources/images/root.jpg';
+								},
+								onClick : function(item) {
+									dom.byId('image').src = '../resources/images/'
+											+ item.id + '.jpg';
 
-		require([ "dojo/request", "dojo/aspect", "dojo/query", "dojo/json",
-				"dojo/data/ObjectStore",
-				"dojox/grid/enhanced/plugins/Pagination",
-				"dojox/grid/enhanced/plugins/Filter",
-				"dojox/grid/EnhancedGrid", "dojo/store/JsonRest",
-				"dojo/store/Memory", "dojo/store/Cache",
-				"dojo/store/Observable", "dijit/layout/LayoutContainer",
-				"dijit/layout/ContentPane", "dojo/domReady!" ], function(
-				request, aspect, query, JSON, ObjectStore, Pagination, Filter,
-				EnhancedGrid, JsonRest, Memory, Cache, Observable) {
-			//parser.parse();
-			// set up the store to get the tree data
+								},
+								 */
+								persist : false,
+								onClick : function(item) {
+									selectedChannelId = item.id;
 
-			var articleStore = new JsonRest({
-				target : /*[[@{'/cmsManage/article/data'}]]*/"article/data"
-						+ "?channelId="+selectedChannelId
+									//var sel=dijit.byId("channelTree").attr("selectedItem");
+									//var path = this.attr("path");
 
-			});
+									//var node=dijit.byId("channelTree").attr("selectedItem");
 
-			articleStore = new Cache(articleStore, new Memory({
-				idProperty : "id"
-			}));
+									//channelTree.focusNode(node);
 
-			//*/
+									articleStore = new JsonRest(
+											{
+												target : /*[[@{'/cmsManage/article/data'}]]*/"article/data"
+														+ "?channelId="
+														+ selectedChannelId
 
-			// give store Observable interface so Tree can track updates
-			articleStore = new Observable(articleStore);
+											});
 
-			// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
-			var articleModel = new ObjectStore({
-				objectStore : articleStore
-			});
+									articleStore = new Cache(articleStore,
+											new Memory({
+												idProperty : "id"
+											}));
 
-			// set up the tree, assigning governmentModel;
-			var articleGrid = new EnhancedGrid({
-				store : articleModel,
+									//*/
 
-				structure : [ {
-					name : "ID",
-					field : "id",
-					width : "auto"
-				}, {
-					name : "Title",
-					field : "title",
-					width : "auto"
-				}, {
-					name : "created",
-					field : "created",
-					width : "auto"
-				}, {
-					name : "clicks",
-					field : "clicks",
-					width : "auto"
-				} ],
-				columnReordering : true,
-				clientSort : true,
-				rowSelector : '20px',
-				rowsPerPage : 5,
-				autoHeight : true,
-				plugins : {
-					pagination : {
-						pageSizes : [ "10", "25", "50", "100" ],
-						description : true,
-						sizeSwitch : true,
-						pageStepper : true,
-						gotoButton : true,
-						maxPageStep : 5,
-						position : "bottom"
-					}
-				}
+									// give store Observable interface so Tree can track updates
+									articleStore = new Observable(articleStore);
 
-			}, "articleGrid");
-			articleGrid.startup();
-			
+									// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
+									var articleModel = new ObjectStore({
+										objectStore : articleStore
+									});
+									articleGrid.setStore(articleModel);
+									console.log(item.id);
 
-			query("#delete-channel-node").on("click", function() {
-
-				del();
-
-			});
-
-			query("#add-new-article").on("click", function() {
-
-				dijit.byId("articleDialog").show();
-			});
-
-			query("#newArticle").on("click", function() {
-
-				var formData = {
-
-					author : dijit.byId("author").get("value"),
-					articleContentDTO : {
-						articleContent : CKEDITOR.instances.content.getData()
-					}
-
-				};
-				//alert(escape(CKEDITOR.instances.content.getData()));
-				request.post("data", {
-					handleAs : "json",
-					headers : {
-						"Content-Type" : 'application/json; charset=utf-8'
-					},
-					data : JSON.stringify(formData)
-
-				}).then(function(text) {
-					alert(text);
-
-				}, function(error) {
-					alert(error);
+								},
+								dndController : dndSource
+							}, "channelTree");
+					channelTree.startup();
 
 				});
 
-			});
+		require(
+				[ "dijit/Dialog", "dojo/request", "dojo/aspect", "dojo/query",
+						"dojo/json", "dojo/data/ObjectStore",
+						"dojox/grid/enhanced/plugins/Pagination",
+						"dojox/grid/enhanced/plugins/Filter",
+						"dojox/grid/EnhancedGrid", "dojo/store/JsonRest",
+						"dojo/store/Memory", "dojo/store/Cache",
+						"dojo/store/Observable",
+						"dijit/layout/LayoutContainer",
+						"dijit/layout/ContentPane", "dojo/domReady!" ],
+				function(Dialog, request, aspect, query, JSON, ObjectStore,
+						Pagination, Filter, EnhancedGrid, JsonRest, Memory,
+						Cache, Observable) {
+					//parser.parse();
+					// set up the store to get the tree data
 
-			function del() {
+					var articleStore = new JsonRest(
+							{
+								target : /*[[@{'/cmsManage/article/data'}]]*/"article/data"
+										+ "?channelId=" + selectedChannelId
 
-			}
-			;
+							});
 
-		});
+					articleStore = new Cache(articleStore, new Memory({
+						idProperty : "id"
+					}));
+
+					//*/
+
+					// give store Observable interface so Tree can track updates
+					articleStore = new Observable(articleStore);
+
+					// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
+					var articleModel = new ObjectStore({
+						objectStore : articleStore
+					});
+
+					// set up the tree, assigning governmentModel;
+					articleGrid = new EnhancedGrid({
+						store : articleModel,
+
+						structure : [ {
+							name : "ID",
+							field : "id",
+							width : "auto"
+						}, {
+							name : "Title",
+							field : "title",
+							width : "auto"
+						}, {
+							name : "created",
+							field : "created",
+							width : "auto"
+						}, {
+							name : "clicks",
+							field : "clicks",
+							width : "auto"
+						} ],
+						columnReordering : true,
+						clientSort : true,
+						rowSelector : '20px',
+						rowsPerPage : 5,
+						autoHeight : true,
+						plugins : {
+							pagination : {
+								pageSizes : [ "10", "25", "50", "100" ],
+								description : true,
+								sizeSwitch : true,
+								pageStepper : true,
+								gotoButton : true,
+								maxPageStep : 5,
+								position : "bottom"
+							}
+						}
+
+					}, "articleGrid");
+					articleGrid.startup();
+
+					query("#delete-channel-node").on("click", function() {
+
+						del();
+
+					});
+
+					query("#add-new-article").on("click", function() {
+
+						dijit.byId("articleDialog").show();
+					});
+
+					query("#newArticle")
+							.on(
+									"click",
+									function(evt) {
+
+										// prevent the page from navigating after submit
+										evt.stopPropagation();
+										evt.preventDefault();
+
+										var formData = {
+
+											author : dijit.byId("author").get(
+													"value"),
+											title : dijit.byId("title").get(
+													"value"),
+											articleContentDTO : {
+												articleContent : CKEDITOR.instances.content
+														.getData()
+											},
+											channelDTOs : [ {
+												id : selectedChannelId
+											}
+
+											]
+
+										};
+										//alert(escape(CKEDITOR.instances.content.getData()));
+										request
+												.post(
+														"data",
+														{
+															handleAs : "json",
+															headers : {
+																"Content-Type" : 'application/json; charset=utf-8'
+															},
+															data : JSON
+																	.stringify(formData)
+
+														})
+												.then(
+														function(text) {
+
+															dijit
+																	.byId(
+																			"articleDialog")
+																	.hide();
+
+															// Create a new dialog  
+															var dialog = new Dialog(
+																	{
+																		id : "dlg",
+																		// Dialog title  
+																		title : "消息",
+																		// Create Dialog content  
+																		content : "成功保存"
+																				+ "<br /><br /><button onclick='dijit.byId('dlg').hide();'>关闭</button>"
+																	});
+															dialog.show();
+
+															articleStore = new JsonRest(
+																	{
+																		target : /*[[@{'/cmsManage/article/data'}]]*/"article/data"
+																				+ "?channelId="
+																				+ selectedChannelId
+
+																	});
+
+															articleStore = new Cache(articleStore,
+																	new Memory({
+																		idProperty : "id"
+																	}));
+
+															//*/
+
+															// give store Observable interface so Tree can track updates
+															articleStore = new Observable(articleStore);
+
+															// set up the model, assigning channelStore, and assigning method to identify leaf nodes of tree
+															var articleModel = new ObjectStore({
+																objectStore : articleStore
+															});
+															articleGrid.setStore(articleModel);
+															
+														}, function(error) {
+															alert(error);
+
+														});
+
+									});
+
+					function del() {
+
+					}
+					;
+
+				});
 
 		/*]]>*/
 	</script>

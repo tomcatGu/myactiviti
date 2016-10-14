@@ -463,6 +463,11 @@
 			<artifactId>camel-mina</artifactId>
 			<version>${camel.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate.ogm</groupId>
+			<artifactId>hibernate-ogm-mongodb</artifactId>
+			<version>${hibernate.ogm.mongdb.version}</version>
+		</dependency>
 	</dependencies>
 
 	<modules>
@@ -481,5 +486,6 @@
 		<lucene.version>4.7.0</lucene.version>
 		<aspectj.version>1.7.4</aspectj.version>
 		<camel.version>2.15.3</camel.version>
+		<hibernate.ogm.mongdb.version>5.1.0.Alpha1</hibernate.ogm.mongdb.version>
 	</properties>
 </project>
