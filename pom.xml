@@ -466,7 +466,7 @@
 		<dependency>
 			<groupId>org.hibernate.ogm</groupId>
 			<artifactId>hibernate-ogm-mongodb</artifactId>
-			<version>${hibernate.ogm.mongdb.version}</version>
+			<version>${hibernate.ogm.mongodb.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -486,6 +486,6 @@
 		<lucene.version>4.7.0</lucene.version>
 		<aspectj.version>1.7.4</aspectj.version>
 		<camel.version>2.15.3</camel.version>
-		<hibernate.ogm.mongdb.version>5.1.0.Alpha1</hibernate.ogm.mongdb.version>
+		<hibernate.ogm.mongodb.version>5.1.0.Alpha1</hibernate.ogm.mongodb.version>
 	</properties>
 </project>
